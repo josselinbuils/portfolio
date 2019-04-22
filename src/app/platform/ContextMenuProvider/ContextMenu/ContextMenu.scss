@@ -1,0 +1,15 @@
+@import '../../platform.constants';
+
+.context-menu {
+  position: fixed;
+  background: $background-color;
+  border-radius: 4px;
+  margin: 0;
+  z-index: 1000;
+  padding: 0;
+  min-width: 120px;
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 0.8em;
+  user-select: none;
+  color: $text-color;
+}

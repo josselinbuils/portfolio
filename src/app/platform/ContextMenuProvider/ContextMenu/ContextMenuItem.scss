@@ -1,0 +1,32 @@
+@import '../../platform.constants';
+
+.item {
+  padding: 3px 10px 3px 0;
+  list-style: none;
+  cursor: pointer;
+  height: 20px;
+  line-height: 20px;
+
+  &:first-child {
+    margin-top: 4px;
+  }
+
+  &:hover {
+    background: lighten($background-color, 15%);
+  }
+
+  &:last-child {
+    margin-bottom: 4px;
+  }
+
+  .icon {
+    display: inline-block;
+    width: 25px;
+    text-align: center;
+    padding-left: 3px;
+  }
+
+  .title {
+    display: inline-block;
+  }
+}
