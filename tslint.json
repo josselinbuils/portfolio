@@ -5,6 +5,13 @@
     "jsx-no-multiline-js": false,
     "no-implicit-dependencies": [true, ["~"]],
     "quotemark": [true, "single", "avoid-template", "jsx-double"],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    ],
     "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"]
   }
 }

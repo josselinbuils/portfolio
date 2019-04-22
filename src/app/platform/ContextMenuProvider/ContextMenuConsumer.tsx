@@ -3,14 +3,14 @@ import React, { Children, cloneElement, FC, ReactElement } from 'react';
 import { ContextMenuDescriptor } from './ContextMenu';
 import {
   ContextMenuContext,
-  ContextMenuDescriptorSetter,
+  ContextMenuDescriptorSetter
 } from './ContextMenuContext';
 
 export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
   const child = Children.only(children) as ReactElement;
 
   const contextMenuHandlerFactory = (showMenu: ContextMenuDescriptorSetter) => (
-    event: MouseEvent,
+    event: MouseEvent
   ) => {
     const { clientX, clientY } = event;
     const { position, ...rest } = descriptor;
@@ -19,7 +19,7 @@ export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
 
     showMenu({
       position: position || { left: clientX, top: clientY },
-      ...rest,
+      ...rest
     });
   };
 
@@ -27,7 +27,7 @@ export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
     <ContextMenuContext.Consumer>
       {showMenu =>
         cloneElement(child, {
-          onContextMenu: contextMenuHandlerFactory(showMenu),
+          onContextMenu: contextMenuHandlerFactory(showMenu)
         })
       }
     </ContextMenuContext.Consumer>

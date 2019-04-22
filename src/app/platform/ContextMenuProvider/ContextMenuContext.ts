@@ -5,9 +5,9 @@ import { ContextMenuDescriptor } from './ContextMenu';
 export const ContextMenuContext = createContext<ContextMenuDescriptorSetter>(
   () => {
     throw new Error('ContextMenuContext not initialized');
-  },
+  }
 );
 
 export type ContextMenuDescriptorSetter = (
-  descriptor: ContextMenuDescriptor,
+  descriptor: ContextMenuDescriptor
 ) => void;

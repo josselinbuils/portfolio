@@ -10,7 +10,7 @@
  */
 export function closest(
   element: HTMLElement,
-  selector: string,
+  selector: string
 ): HTMLElement | undefined {
   let closestElement: HTMLElement | null = element;
 
