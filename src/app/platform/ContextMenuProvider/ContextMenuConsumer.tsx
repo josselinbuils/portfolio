@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { Children, cloneElement, FC, ReactElement } from 'react';
 
 import { ContextMenuDescriptor } from './ContextMenu';
 import {
@@ -7,7 +7,7 @@ import {
 } from './ContextMenuContext';
 
 export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
-  const child = React.Children.only(children) as ReactElement;
+  const child = Children.only(children) as ReactElement;
 
   const contextMenuHandlerFactory = (showMenu: ContextMenuDescriptorSetter) => (
     event: MouseEvent,
@@ -26,7 +26,7 @@ export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
   return (
     <ContextMenuContext.Consumer>
       {showMenu =>
-        React.cloneElement(child, {
+        cloneElement(child, {
           onContextMenu: contextMenuHandlerFactory(showMenu),
         })
       }
