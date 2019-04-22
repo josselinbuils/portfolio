@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
     "lint": "tslint -p tsconfig.json src/**/*.tsx",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test"
   },
   "dependencies": {
     "@types/classnames": "^2.2.7",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@josselinbuils/tslint": "^1.0.0",
+    "react-app-rewired": "^2.1.1",
     "tslint": "^5.16.0",
     "tslint-react": "^4.0.0"
   },
@@ -31,5 +32,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "jest": {
+    "moduleNameMapper": {
+      "~/(.*)": "<rootDir>/src/app/$1"
+    }
+  }
 }
