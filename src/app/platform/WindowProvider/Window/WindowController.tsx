@@ -1,155 +1,137 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useObject } from '~/platform/utils';
 
-import { getSize, startAnimation } from './utils';
+import { ANIMATION_DURATION, LEFT_OFFSET } from '../constants';
+
+import {
+  applyContentRatio,
+  bound,
+  boundWindowPosition,
+  getRefElement,
+  getRefElementSize,
+  startAnimation
+} from './utils';
 import { Window } from './Window';
 
 export const WindowContainer: FC<Props> = ({
   defaultHeight,
   defaultWidth,
   keepContentRatio = false,
-  maxHeight,
-  maxWidth,
+  maxHeight = Infinity,
+  maxWidth = Infinity,
   minHeight = 100,
   minWidth = 100,
   onResize = () => {},
+  resizable = true,
   visible,
   ...rest
 }) => {
   const [animate, setAnimate] = useState(false);
-  const [contentRatio, setContentRatio] = useState<number | undefined>(
-    undefined
-  );
+  const contentRatio = useRef(0);
   const [maximized, setMaximized] = useState(false);
   const [minimized, setMinimized] = useState(false);
-  const [windowHeight, setWindowHeight] = useState<number | undefined>(
-    defaultHeight
-  );
-  const [windowLeft, setWindowLeft] = useState(0);
-  const [windowTop, setWindowTop] = useState(0);
-  const [windowWidth, setWindowWidth] = useState<number | undefined>(
-    defaultWidth
-  );
-  const lastDisplayProperties = useMemo<DisplayProperties>(() => ({}), []);
+  const [size, setSize] = useState({
+    height: defaultHeight,
+    width: defaultWidth
+  });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const lastDisplayProperties = useObject<DisplayProperties>({});
   const contentRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
 
-  const setPosition = useCallback(
-    (x: number, y: number, force: boolean = false) => {
-      if (!force) {
-        // This cannot be done when showing again a minimized window because its
-        // dimensions are null
-        const xMin = -getSize(windowRef.current).width + 90;
-        const yMin = -1;
-        const xMax = window.innerWidth - 30;
-        const yMax = window.innerHeight - 21;
+  const setMaxSize = () => {
+    updateSize(window.innerWidth - LEFT_OFFSET, window.innerHeight, true);
+  };
 
-        x = Math.min(Math.max(x, xMin), xMax);
-        y = Math.min(Math.max(y, yMin), yMax);
+  const updatePosition = (x: number, y: number, force: boolean = false) => {
+    setPosition(force ? { x, y } : boundWindowPosition(windowRef, x, y));
+  };
+
+  const updateSize = (
+    width: number,
+    height: number,
+    force: boolean = false
+  ) => {
+    if (!force) {
+      const ratio = contentRatio.current;
+
+      width = bound(width, minWidth, maxWidth);
+      height = bound(height, minHeight, maxHeight);
+
+      if (ratio > 0) {
+        height = applyContentRatio(windowRef, contentRef, ratio, width);
       }
+    }
 
-      setWindowLeft(x);
-      setWindowTop(y);
-    },
-    [contentRatio, windowRef]
-  );
+    setSize({ width, height });
+    onResize({ width, height });
+  };
 
-  const setSize = useCallback(
-    (width: number, height: number, force: boolean = false) => {
-      if (!force) {
-        width = Math.max(width, minWidth);
-        height = Math.max(height, minHeight);
+  const toggleMaximize = async (
+    keepPosition: boolean = false,
+    animationDelay: number = ANIMATION_DURATION
+  ) => {
+    if (!resizable) {
+      return;
+    }
 
-        if (maxWidth !== undefined) {
-          width = Math.min(width, maxWidth);
-        }
+    const [endPromise] = await startAnimation(setAnimate, animationDelay);
 
-        if (maxHeight !== undefined) {
-          height = Math.min(height, maxHeight);
-        }
+    if (maximized && lastDisplayProperties.maximize !== undefined) {
+      const { left, top, width, height } = lastDisplayProperties.maximize;
 
-        if (contentRatio !== undefined) {
-          const size = getSize(windowRef.current);
-          const contentSize = getSize(contentRef.current);
-          const dx = size.width - contentSize.width;
-          const dy = size.height - contentSize.height;
-          height = Math.round((width - dx) / contentRatio) + dy;
-        }
+      if (!keepPosition) {
+        updatePosition(left, top);
       }
+      updateSize(width, height);
+    } else {
+      const windowElement = getRefElement(windowRef);
+      lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
 
-      setWindowWidth(width);
-      setWindowHeight(height);
-      onResize({ width, height });
-    },
-    [
-      contentRatio,
-      contentRef,
-      maxHeight,
-      maxWidth,
-      minHeight,
-      minWidth,
-      windowRef
-    ]
-  );
+      if (!keepPosition) {
+        updatePosition(LEFT_OFFSET, 0);
+      }
+      setMaxSize();
+    }
+
+    await endPromise;
+    setMaximized(!maximized);
+  };
 
   useEffect(() => {
-    startAnimation()
-      .ready(() => {
-        if (visible) {
-          if (lastDisplayProperties.minimize !== undefined) {
-            const { left, top, width, height } = lastDisplayProperties.minimize;
-            setMinimized(false);
-            setSize(width, height);
-            setPosition(left, top, true);
-          }
-        } else {
-          const windowElement = windowRef.current;
+    (async () => {
+      await startAnimation(setAnimate);
 
-          if (windowElement === null) {
-            throw new Error('Unable to retrieve window element');
-          }
-
-          lastDisplayProperties.minimize = windowElement.getBoundingClientRect();
-          setMinimized(true);
-          setSize(0, 0, true);
+      if (visible) {
+        if (lastDisplayProperties.minimize !== undefined) {
+          const { left, top, width, height } = lastDisplayProperties.minimize;
+          setMinimized(false);
+          updateSize(width, height);
+          updatePosition(left, top, true);
         }
-      })
-      .finished(() => setAnimate(false));
+      } else {
+        const windowElement = getRefElement(windowRef);
+        lastDisplayProperties.minimize = windowElement.getBoundingClientRect();
+        setMinimized(true);
+        updateSize(0, 0, true);
+      }
+    })();
   }, [visible]);
 
   useEffect(() => {
-    const windowElement = windowRef.current;
+    const windowSize = getRefElementSize(windowRef);
+    const { width = windowSize.width, height = windowSize.height } = size;
 
-    if (windowElement === null) {
-      throw new Error('Unable to retrieve window element');
-    }
+    updateSize(width, height);
 
-    if (windowWidth === undefined) {
-      setWindowWidth(getSize(windowElement).width);
-    }
+    const x = Math.round((window.innerWidth - width) * 0.5);
+    const y = Math.round((window.innerHeight - height) * 0.2);
 
-    if (windowHeight === undefined) {
-      setWindowHeight(getSize(windowElement).height);
-    }
-
-    const x = Math.round(
-      (window.innerWidth - getSize(windowElement).width) * 0.5
-    );
-    const y = Math.round(
-      (window.innerHeight - getSize(windowElement).height) * 0.2
-    );
-
-    setPosition(x, y);
+    updatePosition(x, y);
 
     if (keepContentRatio) {
-      const contentSize = getSize(contentRef.current);
-      setContentRatio(contentSize.width / contentSize.height);
+      const contentSize = getRefElementSize(contentRef);
+      contentRatio.current = contentSize.width / contentSize.height;
     }
   }, []);
 
@@ -158,14 +140,13 @@ export const WindowContainer: FC<Props> = ({
       {...rest}
       animate={animate}
       contentRef={contentRef}
-      height={windowHeight}
-      left={windowLeft}
       maximized={maximized}
       minimized={minimized}
+      onMaximize={toggleMaximize}
       onResizeStart={() => {}}
+      position={position}
       ref={windowRef}
-      top={windowTop}
-      width={windowWidth}
+      size={size}
     />
   );
 };
@@ -185,13 +166,13 @@ interface Props {
   maxWidth?: number;
   minHeight?: number;
   minWidth?: number;
+  resizable?: boolean;
   titleBackground: string;
   titleColor: string;
   visible: boolean;
   windowTitle: string;
   zIndex: number;
   onClose(): void;
-  onMaximize(): void;
   onMinimise(): void;
   onResize?(size: { width: number; height: number }): void;
   onSelect(): void;

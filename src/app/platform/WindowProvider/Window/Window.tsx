@@ -11,8 +11,6 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       background,
       children,
       contentRef,
-      height,
-      left,
       maximized,
       minimized,
       onClose,
@@ -22,11 +20,11 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       onSelect,
       onTitleDoubleClick,
       onTitleMouseDown,
+      position,
       resizable = true,
+      size = {},
       titleBackground,
       titleColor,
-      top,
-      width,
       zIndex,
       windowTitle
     },
@@ -38,13 +36,15 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       maximized,
       minimized
     });
+    const { x, y } = position;
+    const { height, width } = size;
 
     return (
       <div
         className={className}
         onMouseDown={onSelect}
         ref={ref}
-        style={{ background, height, left, top, width, zIndex }}
+        style={{ background, height, left: x, top: y, width, zIndex }}
       >
         <div
           className="titlebar"
@@ -53,14 +53,14 @@ export const Window = forwardRef<HTMLDivElement, Props>(
           onDoubleClick={onTitleDoubleClick}
         >
           <div className="buttons">
-            <div className="button close" onClick={onClose}>
+            <div className="button close" onClick={() => onClose()}>
               <i className="fas fa-times" />
             </div>
-            <div className="button minimize" onClick={onMinimise}>
+            <div className="button minimize" onClick={() => onMinimise()}>
               <i className="fas fa-minus" />
             </div>
             {resizable && (
-              <div className="button maximize" onClick={onMaximize}>
+              <div className="button maximize" onClick={() => onMaximize()}>
                 <i className="fas fa-plus" />
               </div>
             )}
@@ -81,15 +81,13 @@ interface Props {
   animate: boolean;
   background: string;
   contentRef: RefObject<HTMLDivElement>;
-  height?: number;
-  left: number;
   maximized: boolean;
   minimized: boolean;
+  position: { x: number; y: number };
   resizable?: boolean;
   titleBackground: string;
   titleColor: string;
-  top: number;
-  width?: number;
+  size?: { height?: number; width?: number };
   windowTitle: string;
   zIndex: number;
   onClose(): void;

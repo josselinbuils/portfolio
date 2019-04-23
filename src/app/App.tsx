@@ -34,14 +34,13 @@ export const App = () => (
       </header>
       <WindowContainer
         active={true}
-        background="white"
+        background="lightgrey"
         titleBackground="grey"
         titleColor="black"
         visible={true}
         windowTitle="Hello"
         zIndex={1}
         onClose={() => {}}
-        onMaximize={() => {}}
         onMinimise={() => {}}
         onSelect={() => {}}
         onTitleDoubleClick={() => {}}

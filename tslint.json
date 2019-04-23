@@ -4,6 +4,7 @@
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
     "no-implicit-dependencies": [true, ["~"]],
+    "no-unnecessary-callback-wrapper": false,
     "quotemark": [true, "single", "avoid-template", "jsx-double"],
     "trailing-comma": [
       true,
