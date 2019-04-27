@@ -17,13 +17,12 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       onClose,
       onMaximize,
       onMinimise,
+      onMoveStart,
       onResizeStart,
       onSelect,
-      onTitleDoubleClick,
-      onTitleMouseDown,
       position = { x: undefined, y: undefined },
       resizable = true,
-      size = {},
+      size = { height: undefined, width: undefined },
       titleBackground,
       titleColor,
       zIndex,
@@ -40,27 +39,23 @@ export const Window = forwardRef<HTMLDivElement, Props>(
     });
     const { x, y } = position;
     const { height, width } = size;
+    const style = {
+      background,
+      height,
+      left: x,
+      top: y,
+      transitionDuration: `${animationDurationMs}ms`,
+      width,
+      zIndex
+    };
 
     return (
-      <div
-        className={className}
-        onMouseDown={onSelect}
-        ref={ref}
-        style={{
-          background,
-          height,
-          left: x,
-          top: y,
-          transitionDuration: `${animationDurationMs}ms`,
-          width,
-          zIndex
-        }}
-      >
+      <div className={className} onMouseDown={onSelect} ref={ref} style={style}>
         <div
           className="titlebar"
           style={{ background: titleBackground, color: titleColor }}
-          onMouseDown={onTitleMouseDown}
-          onDoubleClick={onTitleDoubleClick}
+          onMouseDown={onMoveStart}
+          onDoubleClick={() => onMaximize()}
         >
           <div className="buttons">
             <div className="button close" onClick={() => onClose()}>
@@ -98,14 +93,13 @@ interface Props {
   resizable: boolean;
   titleBackground: string;
   titleColor: string;
-  size: { height?: number; width?: number };
+  size?: { height?: number; width?: number };
   windowTitle: string;
   zIndex: number;
   onClose(): void;
   onMaximize(): void;
   onMinimise(): void;
+  onMoveStart(): void;
   onResizeStart(): void;
   onSelect(): void;
-  onTitleDoubleClick(): void;
-  onTitleMouseDown(): void;
 }

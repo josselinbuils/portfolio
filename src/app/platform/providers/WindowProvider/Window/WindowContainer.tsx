@@ -1,70 +1,45 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 
 import { ANIMATION_DURATION, LEFT_OFFSET } from '../constants';
 
-import { useAnimation, useMount, useStore } from './hooks';
-import {
-  applyContentRatio,
-  bound,
-  boundWindowPosition,
-  getRefElement,
-  getRefElementSize
-} from './utils';
+import { useAnimation, useMount, useSize, useStore } from './hooks';
+import { boundWindowPosition, getRefElement, getRefElementSize } from './utils';
 import { Window } from './Window';
 
 export const WindowContainer: FC<Props> = ({
-  defaultHeight,
-  defaultWidth,
+  defaultSize,
   keepContentRatio = false,
-  maxHeight = Infinity,
-  maxWidth = Infinity,
-  minHeight = 100,
-  minWidth = 100,
+  maxSize = { height: Infinity, width: Infinity },
+  minSize = { height: 100, width: 100 },
   onResize = noop,
   resizable = true,
   visible,
   ...rest
 }) => {
-  const [animationDurationMs, animate] = useAnimation();
-  const contentRatio = useRef<number | undefined>();
   const [maximized, setMaximized] = useState(false);
   const [minimized, setMinimized] = useState(false);
-  const [size, setSize] = useState<Size>({
-    height: defaultHeight,
-    width: defaultWidth
-  });
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const lastDisplayProperties = useStore<DisplayProperties>();
+
   const contentRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
 
-  const setMaxSize = () => {
-    updateSize(window.innerWidth - LEFT_OFFSET, window.innerHeight, true);
-  };
+  const [animationDurationMs, animate] = useAnimation();
+  const lastDisplayProperties = useStore<DisplayProperties>();
+  const [size, setSize, setMaxSize] = useSize(
+    defaultSize,
+    maxSize,
+    minSize,
+    keepContentRatio,
+    windowRef,
+    contentRef,
+    onResize
+  );
 
   const updatePosition = (x: number, y: number, force: boolean = false) => {
     setPosition(force ? { x, y } : boundWindowPosition(windowRef, x, y));
   };
-
-  const updateSize = useCallback(
-    (width: number, height: number, force: boolean = false) => {
-      if (!force) {
-        const ratio = contentRatio.current;
-
-        width = bound(width, minWidth, maxWidth);
-        height = bound(height, minHeight, maxHeight);
-
-        if (ratio !== undefined) {
-          height = applyContentRatio(windowRef, contentRef, ratio, width);
-        }
-      }
-
-      setSize({ width, height });
-      onResize({ width, height });
-    },
-    [maxHeight, maxWidth, minHeight, minWidth, onResize]
-  );
 
   const toggleMaximize = async (
     keepPosition: boolean = false,
@@ -82,7 +57,7 @@ export const WindowContainer: FC<Props> = ({
       if (!keepPosition) {
         updatePosition(left, top);
       }
-      updateSize(width, height);
+      setSize(width, height);
     } else {
       const windowElement = getRefElement(windowRef);
       lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
@@ -102,38 +77,30 @@ export const WindowContainer: FC<Props> = ({
       if (lastDisplayProperties.minimize !== undefined) {
         const { left, top, width, height } = lastDisplayProperties.minimize;
         setMinimized(false);
-        updateSize(width, height);
+        setSize(width, height);
         updatePosition(left, top, true);
       }
     } else {
       const windowElement = getRefElement(windowRef);
       lastDisplayProperties.minimize = windowElement.getBoundingClientRect();
       setMinimized(true);
-      updateSize(0, 0, true);
+      setSize(0, 0, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   useMount(() => {
     const windowSize = getRefElementSize(windowRef);
-    const { width = windowSize.width, height = windowSize.height } = size;
+    const width = size !== undefined ? size.width : windowSize.width;
+    const height = size !== undefined ? size.height : windowSize.height;
 
-    updateSize(width, height);
+    setSize(width, height);
 
     const x = Math.round((window.innerWidth - width) * 0.5);
     const y = Math.round((window.innerHeight - height) * 0.2);
 
     updatePosition(x, y);
   });
-
-  useEffect(() => {
-    if (keepContentRatio) {
-      const contentSize = getRefElementSize(contentRef);
-      contentRatio.current = contentSize.width / contentSize.height;
-    } else {
-      contentRatio.current = undefined;
-    }
-  }, [keepContentRatio]);
 
   return (
     <Window
@@ -144,6 +111,7 @@ export const WindowContainer: FC<Props> = ({
       maximized={maximized}
       minimized={minimized}
       onMaximize={toggleMaximize}
+      onMoveStart={() => {}}
       onResizeStart={() => {}}
       position={position}
       ref={windowRef}
@@ -158,21 +126,13 @@ interface DisplayProperties {
   minimize?: ClientRect;
 }
 
-interface Size {
-  height: number | undefined;
-  width: number | undefined;
-}
-
 interface Props {
   active: boolean;
   background: string;
-  defaultHeight?: number;
-  defaultWidth?: number;
+  defaultSize?: Size;
   keepContentRatio?: boolean;
-  maxHeight?: number;
-  maxWidth?: number;
-  minHeight?: number;
-  minWidth?: number;
+  maxSize?: Size;
+  minSize?: Size;
   resizable?: boolean;
   titleBackground: string;
   titleColor: string;
@@ -183,6 +143,4 @@ interface Props {
   onMinimise(): void;
   onResize?(size: { width: number; height: number }): void;
   onSelect(): void;
-  onTitleDoubleClick(): void;
-  onTitleMouseDown(): void;
 }

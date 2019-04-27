@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { getRefElement } from '~/platform/WindowProvider/Window/utils/getRefElement';
+import { getRefElement } from '~/platform/providers/WindowProvider/Window/utils/getRefElement';
 
 export function getRefElementSize(
   ref: RefObject<HTMLElement>

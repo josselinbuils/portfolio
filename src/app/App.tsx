@@ -2,8 +2,8 @@ import React from 'react';
 import {
   WithContextMenu,
   ContextMenuProvider
-} from '~/platform/ContextMenuProvider';
-import { WindowContainer } from '~/platform/WindowProvider/Window';
+} from '~/platform/providers/ContextMenuProvider';
+import { WindowContainer } from '~/platform/providers/WindowProvider/Window';
 
 import './App.scss';
 
@@ -25,8 +25,6 @@ export const App = () => (
         onClose={() => {}}
         onMinimise={() => {}}
         onSelect={() => {}}
-        onTitleDoubleClick={() => {}}
-        onTitleMouseDown={() => {}}
       >
         <WithContextMenu descriptor={descriptor}>
           <p>
