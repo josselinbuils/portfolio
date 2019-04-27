@@ -1,1 +1,1 @@
-export * from './WindowController';
+export * from './WindowContainer';

@@ -14,8 +14,9 @@
     }
   }
 
-  &.animate {
-    transition: all 0.2s ease-in-out;
+  &.animated {
+    transition-property: all;
+    transition-timing-function: ease-in-out;
   }
 
   &.minimized {

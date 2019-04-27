@@ -7,7 +7,8 @@ export const Window = forwardRef<HTMLDivElement, Props>(
   (
     {
       active,
-      animate,
+      animationDurationMs,
+      centered,
       background,
       children,
       contentRef,
@@ -20,7 +21,7 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       onSelect,
       onTitleDoubleClick,
       onTitleMouseDown,
-      position,
+      position = { x: undefined, y: undefined },
       resizable = true,
       size = {},
       titleBackground,
@@ -32,7 +33,8 @@ export const Window = forwardRef<HTMLDivElement, Props>(
   ) => {
     const className = classNames('window', {
       active,
-      animate,
+      animated: animationDurationMs !== undefined,
+      centered,
       maximized,
       minimized
     });
@@ -44,7 +46,15 @@ export const Window = forwardRef<HTMLDivElement, Props>(
         className={className}
         onMouseDown={onSelect}
         ref={ref}
-        style={{ background, height, left: x, top: y, width, zIndex }}
+        style={{
+          background,
+          height,
+          left: x,
+          top: y,
+          transitionDuration: `${animationDurationMs}ms`,
+          width,
+          zIndex
+        }}
       >
         <div
           className="titlebar"
@@ -78,16 +88,17 @@ export const Window = forwardRef<HTMLDivElement, Props>(
 
 interface Props {
   active: boolean;
-  animate: boolean;
+  animationDurationMs?: number;
+  centered: boolean;
   background: string;
   contentRef: RefObject<HTMLDivElement>;
   maximized: boolean;
   minimized: boolean;
-  position: { x: number; y: number };
-  resizable?: boolean;
+  position?: { x: number; y: number };
+  resizable: boolean;
   titleBackground: string;
   titleColor: string;
-  size?: { height?: number; width?: number };
+  size: { height?: number; width?: number };
   windowTitle: string;
   zIndex: number;
   onClose(): void;
