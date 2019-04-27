@@ -6,7 +6,7 @@ import {
   ContextMenuDescriptorSetter
 } from './ContextMenuContext';
 
-export const ContextMenuConsumer: FC<Props> = ({ children, descriptor }) => {
+export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
   const child = Children.only(children) as ReactElement;
 
   const contextMenuHandlerFactory = (showMenu: ContextMenuDescriptorSetter) => (
