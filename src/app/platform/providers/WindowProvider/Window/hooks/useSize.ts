@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
 
-import { applyContentRatio, bound, getRefElementSize } from '../utils';
+import { bound, getRefElementSize } from '../utils';
 import { LEFT_OFFSET } from '~/platform/providers/WindowProvider/constants';
 
 export function useSize(
@@ -25,13 +25,15 @@ export function useSize(
       if (!force) {
         width = bound(width, minSize.width, maxSize.width);
         height = bound(height, minSize.height, maxSize.height);
-        height = applyContentRatio(
-          windowRef,
-          contentRef,
-          contentRatioRef,
-          width,
-          height
-        );
+
+        if (contentRatioRef.current !== undefined) {
+          const windowSize = getRefElementSize(windowRef);
+          const contentSize = getRefElementSize(contentRef);
+          const dx = windowSize.width - contentSize.width;
+          const dy = windowSize.height - contentSize.height;
+
+          height = Math.round((width - dx) / contentRatioRef.current) + dy;
+        }
       }
 
       setSize({ width, height });

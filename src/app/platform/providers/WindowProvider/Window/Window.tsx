@@ -20,7 +20,7 @@ export const Window = forwardRef<HTMLDivElement, Props>(
       onMoveStart,
       onResizeStart,
       onSelect,
-      position = { x: undefined, y: undefined },
+      position,
       resizable = true,
       size = { height: undefined, width: undefined },
       titleBackground,
@@ -89,7 +89,7 @@ interface Props {
   contentRef: RefObject<HTMLDivElement>;
   maximized: boolean;
   minimized: boolean;
-  position?: { x: number; y: number };
+  position: { x: number; y: number };
   resizable: boolean;
   titleBackground: string;
   titleColor: string;

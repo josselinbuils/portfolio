@@ -1,11 +1,17 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 
 import { ANIMATION_DURATION, LEFT_OFFSET } from '../constants';
 
-import { useAnimation, useMount, useSize, useStore } from './hooks';
-import { boundWindowPosition, getRefElement, getRefElementSize } from './utils';
+import {
+  useAnimation,
+  useMount,
+  usePosition,
+  useSize,
+  useStore
+} from './hooks';
+import { getRefElement, getRefElementSize } from './utils';
 import { Window } from './Window';
 
 export const WindowContainer: FC<Props> = ({
@@ -20,12 +26,12 @@ export const WindowContainer: FC<Props> = ({
 }) => {
   const [maximized, setMaximized] = useState(false);
   const [minimized, setMinimized] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const contentRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
 
   const [animationDurationMs, animate] = useAnimation();
+  const [position, setPosition] = usePosition(windowRef);
   const lastDisplayProperties = useStore<DisplayProperties>();
   const [size, setSize, setMaxSize] = useSize(
     defaultSize,
@@ -37,38 +43,45 @@ export const WindowContainer: FC<Props> = ({
     onResize
   );
 
-  const updatePosition = (x: number, y: number, force: boolean = false) => {
-    setPosition(force ? { x, y } : boundWindowPosition(windowRef, x, y));
-  };
-
-  const toggleMaximize = async (
-    keepPosition: boolean = false,
-    animationDuration: number = ANIMATION_DURATION
-  ) => {
-    if (!resizable) {
-      return;
-    }
-
-    animate(animationDuration);
-
-    if (maximized && lastDisplayProperties.maximize !== undefined) {
-      const { left, top, width, height } = lastDisplayProperties.maximize;
-
-      if (!keepPosition) {
-        updatePosition(left, top);
+  const toggleMaximize = useCallback(
+    async (
+      keepPosition: boolean = false,
+      animationDuration: number = ANIMATION_DURATION
+    ) => {
+      if (!resizable) {
+        return;
       }
-      setSize(width, height);
-    } else {
-      const windowElement = getRefElement(windowRef);
-      lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
 
-      if (!keepPosition) {
-        updatePosition(LEFT_OFFSET, 0);
+      animate(animationDuration);
+
+      if (maximized && lastDisplayProperties.maximize !== undefined) {
+        const { left, top, width, height } = lastDisplayProperties.maximize;
+
+        if (!keepPosition) {
+          setPosition(left, top);
+        }
+        setSize(width, height);
+      } else {
+        const windowElement = getRefElement(windowRef);
+        lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
+
+        if (!keepPosition) {
+          setPosition(LEFT_OFFSET, 0);
+        }
+        setMaxSize();
       }
-      setMaxSize();
-    }
-    setMaximized(!maximized);
-  };
+      setMaximized(!maximized);
+    },
+    [
+      animate,
+      lastDisplayProperties,
+      maximized,
+      resizable,
+      setMaxSize,
+      setPosition,
+      setSize
+    ]
+  );
 
   useEffect(() => {
     animate(ANIMATION_DURATION);
@@ -78,7 +91,7 @@ export const WindowContainer: FC<Props> = ({
         const { left, top, width, height } = lastDisplayProperties.minimize;
         setMinimized(false);
         setSize(width, height);
-        updatePosition(left, top, true);
+        setPosition(left, top, true);
       }
     } else {
       const windowElement = getRefElement(windowRef);
@@ -99,7 +112,7 @@ export const WindowContainer: FC<Props> = ({
     const x = Math.round((window.innerWidth - width) * 0.5);
     const y = Math.round((window.innerHeight - height) * 0.2);
 
-    updatePosition(x, y);
+    setPosition(x, y);
   });
 
   return (
