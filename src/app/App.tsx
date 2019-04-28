@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { TestApp } from '~/apps/TestApp';
+import { Notes } from '~/apps/Notes';
 import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider';
 import {
   WindowManager,
@@ -10,7 +10,7 @@ import './App.scss';
 export const App = () => {
   const windowManager = useContext(WindowProviderContext) as WindowManager;
 
-  useEffect(() => windowManager.openWindow(TestApp), [windowManager]);
+  useEffect(() => windowManager.openWindow(Notes), [windowManager]);
 
   return (
     <ContextMenuProvider>
