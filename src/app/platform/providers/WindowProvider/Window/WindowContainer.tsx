@@ -1,11 +1,19 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces';
-import { noop } from '~/platform/utils';
-
-import { ANIMATION_DURATION, LEFT_OFFSET } from '../constants';
+import { findClosestElement, noop } from '~/platform/utils';
+import { ANIMATION_DURATION, BUTTONS_WIDTH, LEFT_OFFSET } from '../constants';
 
 import {
   useAnimation,
+  useEventListener,
   useMount,
   usePosition,
   useSize,
@@ -31,6 +39,7 @@ export const WindowContainer: FC<Props> = ({
   const windowRef = useRef<HTMLDivElement>(null);
 
   const [animationDurationMs, animate] = useAnimation();
+  const listenEvent = useEventListener();
   const [position, setPosition] = usePosition(windowRef);
   const lastDisplayProperties = useStore<DisplayProperties>();
   const [size, setSize, setMaxSize] = useSize(
@@ -44,7 +53,7 @@ export const WindowContainer: FC<Props> = ({
   );
 
   const toggleMaximize = useCallback(
-    async (
+    (
       keepPosition: boolean = false,
       animationDuration: number = ANIMATION_DURATION
     ) => {
@@ -61,6 +70,8 @@ export const WindowContainer: FC<Props> = ({
           setPosition(left, top);
         }
         setSize(width, height);
+
+        delete lastDisplayProperties.maximize;
       } else {
         const windowElement = getRefElement(windowRef);
         lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
@@ -115,6 +126,69 @@ export const WindowContainer: FC<Props> = ({
     setPosition(x, y);
   });
 
+  const onMoveStart = useCallback(
+    (downEvent: MouseEvent) => {
+      if (downEvent.button !== MouseButton.Left) {
+        return;
+      }
+
+      downEvent.preventDefault();
+      downEvent.persist();
+
+      const target = downEvent.target as HTMLElement;
+
+      if (findClosestElement(target, '.button') !== undefined) {
+        return;
+      }
+
+      const windowElement = getRefElement(windowRef);
+      const windowBoundingRect = windowElement.getBoundingClientRect();
+      const dy = windowBoundingRect.top - downEvent.clientY;
+      let dx = windowBoundingRect.left - downEvent.clientX;
+
+      // this.setSelectable(false);
+
+      const cancelMouseMove = listenEvent(
+        window,
+        'mousemove',
+        (moveEvent: MouseEvent) => {
+          // Sometimes a move event is triggered with down event, to verify with
+          // react
+          if (
+            moveEvent.clientX === downEvent.clientX &&
+            moveEvent.clientY === downEvent.clientY
+          ) {
+            return;
+          }
+          // maximized value is always the one when the listener was registered
+          // working because lastDisplayProperties.maximize is deleted but
+          // should find a cleaner way
+          if (maximized && lastDisplayProperties.maximize !== undefined) {
+            const offsetX = downEvent.nativeEvent.offsetX;
+            const widthRatio =
+              lastDisplayProperties.maximize.width / windowBoundingRect.width;
+
+            // Keeps the same position on the title bar in proportion to its width
+            dx +=
+              offsetX * widthRatio > BUTTONS_WIDTH
+                ? offsetX * (1 - widthRatio)
+                : offsetX - BUTTONS_WIDTH;
+
+            toggleMaximize(true, 50);
+          }
+          setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
+        }
+      );
+
+      const cancelMouseUp = listenEvent(window, 'mouseup', () => {
+        // this.setSelectable(true);
+        cancelMouseMove();
+        cancelMouseUp();
+      });
+    },
+    [lastDisplayProperties, listenEvent, maximized, setPosition, toggleMaximize]
+  );
+
   return (
     <Window
       {...rest}
@@ -124,7 +198,7 @@ export const WindowContainer: FC<Props> = ({
       maximized={maximized}
       minimized={minimized}
       onMaximize={toggleMaximize}
-      onMoveStart={() => {}}
+      onMoveStart={onMoveStart}
       onResizeStart={() => {}}
       position={position}
       ref={windowRef}

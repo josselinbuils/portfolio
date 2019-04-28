@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { forwardRef, RefObject } from 'react';
+import React, { CSSProperties, forwardRef, MouseEvent, RefObject } from 'react';
 
 import './Window.scss';
 
@@ -39,15 +39,18 @@ export const Window = forwardRef<HTMLDivElement, Props>(
     });
     const { x, y } = position;
     const { height, width } = size;
-    const style = {
+    const style: CSSProperties = {
       background,
       height,
       left: x,
       top: y,
-      transitionDuration: `${animationDurationMs}ms`,
       width,
       zIndex
     };
+
+    if (animationDurationMs !== undefined) {
+      style.transitionDuration = `${animationDurationMs}ms`;
+    }
 
     return (
       <div className={className} onMouseDown={onSelect} ref={ref} style={style}>
@@ -99,7 +102,7 @@ interface Props {
   onClose(): void;
   onMaximize(): void;
   onMinimise(): void;
-  onMoveStart(): void;
+  onMoveStart(downEvent: MouseEvent): void;
   onResizeStart(): void;
   onSelect(): void;
 }

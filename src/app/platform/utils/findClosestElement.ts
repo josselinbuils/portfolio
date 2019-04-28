@@ -8,7 +8,7 @@
  * @param selector Selector to find
  * @returns Element if found, null otherwise
  */
-export function closest(
+export function findClosestElement(
   element: HTMLElement,
   selector: string
 ): HTMLElement | undefined {

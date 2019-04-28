@@ -6,7 +6,7 @@ export function usePosition(
 ): [{ x: number; y: number }, (x: number, y: number, force?: boolean) => void] {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const updatePosition = (x: number, y: number, force: boolean = false) => {
+  function updatePosition(x: number, y: number, force: boolean = false) {
     if (!force) {
       // TODO move all that magic numbers
       const xMin = -getRefElementSize(windowRef).width + 90;
@@ -20,7 +20,7 @@ export function usePosition(
       setPosition({ x, y });
     }
     setPosition({ x, y });
-  };
+  }
 
   return [position, updatePosition];
 }
