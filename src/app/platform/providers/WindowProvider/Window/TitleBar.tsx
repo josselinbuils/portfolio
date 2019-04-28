@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import { findClosestElement } from '~/platform/utils';
 import { MouseButton } from '~/platform/constants';
+import { hasButtonTarget } from './utils';
 import styles from './TitleBar.module.scss';
 
 export const TitleBar: FC<Props> = ({
@@ -16,14 +16,18 @@ export const TitleBar: FC<Props> = ({
   showMaximizeButton,
   title
 }) => {
+  const doubleClickHandler = (event: MouseEvent) => {
+    if (!hasButtonTarget(event)) {
+      event.preventDefault();
+      onMaximize();
+    }
+  };
+
   const moveStartHandler = (downEvent: MouseEvent) => {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
-
-    const target = downEvent.target as HTMLElement;
-
-    if (findClosestElement(target, 'button') === undefined) {
+    if (!hasButtonTarget(downEvent)) {
       downEvent.preventDefault();
       onMoveStart(downEvent);
     }
@@ -34,7 +38,7 @@ export const TitleBar: FC<Props> = ({
       className={cn(styles.titlebar, { [styles.maximized]: maximized })}
       style={{ background, color }}
       onMouseDown={moveStartHandler}
-      onDoubleClick={() => onMaximize()}
+      onDoubleClick={doubleClickHandler}
     >
       <div className={cn(styles.buttons, { [styles.frozen]: frozen })}>
         <button

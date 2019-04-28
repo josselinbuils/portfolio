@@ -16,6 +16,7 @@ export const Window: FC<Props> = ({
   background,
   children,
   keepContentRatio = false,
+  id,
   maxHeight = Infinity,
   maxWidth = Infinity,
   minHeight,
@@ -44,6 +45,8 @@ export const Window: FC<Props> = ({
   const [unmaximizeProps, setUnmaximizeProps] = useState<Position & Size>();
   const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
   const maximized = unmaximizeProps !== undefined;
+
+  console.log(visible);
 
   const toggleMaximize = useCallback(
     (
@@ -87,6 +90,8 @@ export const Window: FC<Props> = ({
 
   const onMoveStart = useCallback(
     (downEvent: MouseEvent) => {
+      downEvent.persist();
+
       const dy = position.y - downEvent.clientY;
       let dx = position.x - downEvent.clientX;
 
@@ -176,6 +181,10 @@ export const Window: FC<Props> = ({
     });
   }, [listenEvent, maximized, setMaxSize]);
 
+  const closeHandler = useCallback(() => onClose(id), [id, onClose]);
+  const minimizeHandler = useCallback(() => onMinimise(id), [id, onMinimise]);
+  const selectHandler = useCallback(() => onSelect(id), [id, onSelect]);
+
   const animated = animationDurationMs !== undefined;
   const className = cn(styles.window, {
     [styles.active]: active,
@@ -196,7 +205,7 @@ export const Window: FC<Props> = ({
   };
 
   return (
-    <div className={className} onMouseDown={onSelect} style={style}>
+    <div className={className} onMouseDown={selectHandler} style={style}>
       <TitleBar
         background={titleBackground}
         color={titleColor}
@@ -204,9 +213,9 @@ export const Window: FC<Props> = ({
         showMaximizeButton={resizable}
         title={title}
         maximized={maximized}
-        onClose={onClose}
+        onClose={closeHandler}
         onMaximize={toggleMaximize}
-        onMinimise={onMinimise}
+        onMinimise={minimizeHandler}
         onMoveStart={onMoveStart}
       />
       <main className={cn(styles.content, { [styles.frozen]: frozen })}>
@@ -221,6 +230,7 @@ interface Props {
   active: boolean;
   background: string;
   keepContentRatio?: boolean;
+  id: number;
   maxHeight?: number;
   maxWidth?: number;
   minHeight: number;
@@ -231,8 +241,8 @@ interface Props {
   titleColor: string;
   visible: boolean;
   zIndex: number;
-  onClose(): void;
-  onMinimise(): void;
+  onClose(id: number): void;
+  onMinimise(id: number): void;
   onResize?(size: Size): void;
-  onSelect(): void;
+  onSelect(id: number): void;
 }
