@@ -196,6 +196,14 @@ export const WindowContainer: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
+  useEffect(() => {
+    return listenEvent('resize', () => {
+      if (maximized) {
+        setMaxSize();
+      }
+    });
+  }, [listenEvent, maximized, setMaxSize]);
+
   return (
     <Window
       {...rest}
