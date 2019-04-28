@@ -93,6 +93,6 @@ interface Props {
   onMaximize(): void;
   onMinimise(): void;
   onMoveStart(downEvent: MouseEvent): void;
-  onResizeStart(): void;
+  onResizeStart(downEvent: MouseEvent): void;
   onSelect(): void;
 }

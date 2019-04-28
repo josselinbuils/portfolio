@@ -123,16 +123,13 @@ export const WindowContainer: FC<Props> = ({
 
       let width = size.width;
 
-      const removeMoveListener = listenEvent(
-        'mousemove',
-        ({ clientX, clientY }) => {
-          if (shouldToggleMaximize) {
-            width = toggleMaximize(true, 50).width;
-            shouldToggleMaximize = false;
-          }
-          setPosition(clientX + dx, clientY + dy, width);
+      const removeMoveListener = listenEvent('mousemove', moveEvent => {
+        if (shouldToggleMaximize) {
+          width = toggleMaximize(true, 50).width;
+          shouldToggleMaximize = false;
         }
-      );
+        setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy, width);
+      });
 
       const removeUpListener = listenEvent('mouseup', () => {
         setFrozen(false);
@@ -149,6 +146,36 @@ export const WindowContainer: FC<Props> = ({
       size,
       toggleMaximize
     ]
+  );
+
+  const onResizeStart = useCallback(
+    (downEvent: MouseEvent) => {
+      if (downEvent.button !== MouseButton.Left) {
+        return;
+      }
+
+      downEvent.preventDefault();
+      downEvent.persist();
+
+      if (maximized) {
+        return;
+      }
+
+      setFrozen(true);
+
+      const removeMoveListener = listenEvent('mousemove', moveEvent => {
+        const width = size.width + moveEvent.clientX - downEvent.clientX;
+        const height = size.height + moveEvent.clientY - downEvent.clientY;
+        setSize(width, height);
+      });
+
+      const removeUpListener = listenEvent('mouseup', () => {
+        setFrozen(false);
+        removeMoveListener();
+        removeUpListener();
+      });
+    },
+    [listenEvent, maximized, setSize, size]
   );
 
   useEffect(() => {
@@ -179,7 +206,7 @@ export const WindowContainer: FC<Props> = ({
       minimized={minimized}
       onMaximize={toggleMaximize}
       onMoveStart={onMoveStart}
-      onResizeStart={() => {}}
+      onResizeStart={onResizeStart}
       position={position}
       resizable={true}
       size={size}
