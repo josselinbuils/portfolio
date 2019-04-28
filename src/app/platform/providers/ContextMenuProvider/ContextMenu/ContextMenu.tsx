@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-
-import './ContextMenu.scss';
 import { ContextMenuItem, ContextMenuItemDescriptor } from './ContextMenuItem';
+import './ContextMenu.scss';
 
 export const ContextMenu: FC<Props> = ({ items, onHide, position, style }) => {
   if (position === undefined) {

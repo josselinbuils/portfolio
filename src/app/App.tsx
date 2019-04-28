@@ -4,7 +4,6 @@ import {
   ContextMenuProvider
 } from '~/platform/providers/ContextMenuProvider';
 import { WindowContainer } from '~/platform/providers/WindowProvider/Window';
-
 import './App.scss';
 
 const descriptor = {
@@ -19,12 +18,14 @@ export const App = () => (
         background="lightgrey"
         titleBackground="grey"
         titleColor="black"
+        minHeight={300}
+        minWidth={600}
         visible={true}
-        windowTitle="Hello"
-        zIndex={1}
         onClose={() => {}}
         onMinimise={() => {}}
         onSelect={() => {}}
+        windowTitle="Hello"
+        zIndex={1}
       >
         <WithContextMenu descriptor={descriptor}>
           <p>

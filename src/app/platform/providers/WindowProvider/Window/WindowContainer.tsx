@@ -1,56 +1,47 @@
-import React, {
-  FC,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces';
 import { findClosestElement, noop } from '~/platform/utils';
-import { ANIMATION_DURATION, BUTTONS_WIDTH, LEFT_OFFSET } from '../constants';
-
+import {
+  ANIMATION_DURATION,
+  BUTTONS_MAX_WIDTH,
+  TASKBAR_WIDTH
+} from '../constants';
 import {
   useAnimation,
   useEventListener,
-  useMount,
   usePosition,
   useSize,
   useStore
 } from './hooks';
-import { getRefElement, getRefElementSize } from './utils';
 import { Window } from './Window';
 
 export const WindowContainer: FC<Props> = ({
-  defaultSize,
   keepContentRatio = false,
-  maxSize = { height: Infinity, width: Infinity },
-  minSize = { height: 100, width: 100 },
+  maxHeight = Infinity,
+  maxWidth = Infinity,
+  minHeight,
+  minWidth,
   onResize = noop,
   resizable = true,
   visible,
   ...rest
 }) => {
+  const [frozen, setFrozen] = useState(false);
   const [maximized, setMaximized] = useState(false);
   const [minimized, setMinimized] = useState(false);
 
-  const contentRef = useRef<HTMLDivElement>(null);
-  const windowRef = useRef<HTMLDivElement>(null);
-
   const [animationDurationMs, animate] = useAnimation();
   const listenEvent = useEventListener();
-  const [position, setPosition] = usePosition(windowRef);
   const lastDisplayProperties = useStore<DisplayProperties>();
+
   const [size, setSize, setMaxSize] = useSize(
-    defaultSize,
-    maxSize,
-    minSize,
+    { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
-    windowRef,
-    contentRef,
     onResize
   );
+
+  const [position, setPosition] = usePosition(size);
 
   const toggleMaximize = useCallback(
     (
@@ -58,73 +49,42 @@ export const WindowContainer: FC<Props> = ({
       animationDuration: number = ANIMATION_DURATION
     ) => {
       if (!resizable) {
-        return;
+        return size;
       }
 
       animate(animationDuration);
 
       if (maximized && lastDisplayProperties.maximize !== undefined) {
-        const { left, top, width, height } = lastDisplayProperties.maximize;
+        const { height, width, x, y } = lastDisplayProperties.maximize;
 
         if (!keepPosition) {
-          setPosition(left, top);
+          setPosition(x, y, width);
         }
-        setSize(width, height);
-
+        setMaximized(false);
         delete lastDisplayProperties.maximize;
+        return setSize(width, height);
       } else {
-        const windowElement = getRefElement(windowRef);
-        lastDisplayProperties.maximize = windowElement.getBoundingClientRect();
+        lastDisplayProperties.maximize = { ...position, ...size };
 
         if (!keepPosition) {
-          setPosition(LEFT_OFFSET, 0);
+          setPosition(TASKBAR_WIDTH, 0, size.width);
         }
-        setMaxSize();
+        setMaximized(true);
+        return setMaxSize();
       }
-      setMaximized(!maximized);
     },
     [
       animate,
       lastDisplayProperties,
       maximized,
+      position,
       resizable,
       setMaxSize,
       setPosition,
-      setSize
+      setSize,
+      size
     ]
   );
-
-  useEffect(() => {
-    animate(ANIMATION_DURATION);
-
-    if (visible) {
-      if (lastDisplayProperties.minimize !== undefined) {
-        const { left, top, width, height } = lastDisplayProperties.minimize;
-        setMinimized(false);
-        setSize(width, height);
-        setPosition(left, top, true);
-      }
-    } else {
-      const windowElement = getRefElement(windowRef);
-      lastDisplayProperties.minimize = windowElement.getBoundingClientRect();
-      setMinimized(true);
-      setSize(0, 0, true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
-
-  useMount(() => {
-    const windowSize = getRefElementSize(windowRef);
-    const width = size !== undefined ? size.width : windowSize.width;
-    const height = size !== undefined ? size.height : windowSize.height;
-
-    setSize(width, height);
-
-    const x = Math.round((window.innerWidth - width) * 0.5);
-    const y = Math.round((window.innerHeight - height) * 0.2);
-
-    setPosition(x, y);
-  });
 
   const onMoveStart = useCallback(
     (downEvent: MouseEvent) => {
@@ -141,67 +101,86 @@ export const WindowContainer: FC<Props> = ({
         return;
       }
 
-      const windowElement = getRefElement(windowRef);
-      const windowBoundingRect = windowElement.getBoundingClientRect();
-      const dy = windowBoundingRect.top - downEvent.clientY;
-      let dx = windowBoundingRect.left - downEvent.clientX;
+      const dy = position.y - downEvent.clientY;
+      let dx = position.x - downEvent.clientX;
 
-      // this.setSelectable(false);
+      setFrozen(true);
 
-      const cancelMouseMove = listenEvent(
-        window,
+      let shouldToggleMaximize = false;
+
+      if (maximized && lastDisplayProperties.maximize !== undefined) {
+        const offsetX = downEvent.nativeEvent.offsetX;
+        const widthRatio = lastDisplayProperties.maximize.width / size.width;
+
+        // Keeps the same position on the title bar in proportion to its width
+        dx +=
+          offsetX * widthRatio > BUTTONS_MAX_WIDTH
+            ? offsetX * (1 - widthRatio)
+            : offsetX - BUTTONS_MAX_WIDTH;
+
+        shouldToggleMaximize = true;
+      }
+
+      let width = size.width;
+
+      const removeMoveListener = listenEvent(
         'mousemove',
-        (moveEvent: MouseEvent) => {
-          // Sometimes a move event is triggered with down event, to verify with
-          // react
-          if (
-            moveEvent.clientX === downEvent.clientX &&
-            moveEvent.clientY === downEvent.clientY
-          ) {
-            return;
+        ({ clientX, clientY }) => {
+          if (shouldToggleMaximize) {
+            width = toggleMaximize(true, 50).width;
+            shouldToggleMaximize = false;
           }
-          // maximized value is always the one when the listener was registered
-          // working because lastDisplayProperties.maximize is deleted but
-          // should find a cleaner way
-          if (maximized && lastDisplayProperties.maximize !== undefined) {
-            const offsetX = downEvent.nativeEvent.offsetX;
-            const widthRatio =
-              lastDisplayProperties.maximize.width / windowBoundingRect.width;
-
-            // Keeps the same position on the title bar in proportion to its width
-            dx +=
-              offsetX * widthRatio > BUTTONS_WIDTH
-                ? offsetX * (1 - widthRatio)
-                : offsetX - BUTTONS_WIDTH;
-
-            toggleMaximize(true, 50);
-          }
-          setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
+          setPosition(clientX + dx, clientY + dy, width);
         }
       );
 
-      const cancelMouseUp = listenEvent(window, 'mouseup', () => {
-        // this.setSelectable(true);
-        cancelMouseMove();
-        cancelMouseUp();
+      const removeUpListener = listenEvent('mouseup', () => {
+        setFrozen(false);
+        removeMoveListener();
+        removeUpListener();
       });
     },
-    [lastDisplayProperties, listenEvent, maximized, setPosition, toggleMaximize]
+    [
+      lastDisplayProperties,
+      listenEvent,
+      maximized,
+      position,
+      setPosition,
+      size,
+      toggleMaximize
+    ]
   );
+
+  useEffect(() => {
+    if (visible) {
+      if (lastDisplayProperties.minimize !== undefined) {
+        const { height, width, x, y } = lastDisplayProperties.minimize;
+        animate(ANIMATION_DURATION);
+        setMinimized(false);
+        setSize(width, height);
+        setPosition(x, y, width, true);
+      }
+    } else {
+      animate(ANIMATION_DURATION);
+      lastDisplayProperties.minimize = { ...position, ...size };
+      setMinimized(true);
+      setSize(0, 0, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   return (
     <Window
       {...rest}
       animationDurationMs={animationDurationMs}
       centered={position === undefined}
-      contentRef={contentRef}
+      frozen={frozen}
       maximized={maximized}
       minimized={minimized}
       onMaximize={toggleMaximize}
       onMoveStart={onMoveStart}
       onResizeStart={() => {}}
       position={position}
-      ref={windowRef}
       resizable={true}
       size={size}
     />
@@ -209,17 +188,18 @@ export const WindowContainer: FC<Props> = ({
 };
 
 interface DisplayProperties {
-  maximize?: ClientRect;
-  minimize?: ClientRect;
+  maximize?: { height: number; width: number; x: number; y: number };
+  minimize?: { height: number; width: number; x: number; y: number };
 }
 
 interface Props {
   active: boolean;
   background: string;
-  defaultSize?: Size;
   keepContentRatio?: boolean;
-  maxSize?: Size;
-  minSize?: Size;
+  maxHeight?: number;
+  maxWidth?: number;
+  minHeight: number;
+  minWidth: number;
   resizable?: boolean;
   titleBackground: string;
   titleColor: string;
@@ -228,6 +208,6 @@ interface Props {
   zIndex: number;
   onClose(): void;
   onMinimise(): void;
-  onResize?(size: { width: number; height: number }): void;
+  onResize?(size: Size): void;
   onSelect(): void;
 }

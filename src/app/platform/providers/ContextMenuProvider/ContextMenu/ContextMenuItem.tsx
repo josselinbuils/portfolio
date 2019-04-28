@@ -1,12 +1,11 @@
 import classNames from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-
 import './ContextMenuItem.scss';
 
 export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   onClick,
   iconClass,
-  title,
+  title
 }) => {
   return (
     <li className="item" key={title} onClick={onClick}>

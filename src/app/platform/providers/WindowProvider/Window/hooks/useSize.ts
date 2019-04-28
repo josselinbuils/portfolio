@@ -1,59 +1,63 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
-
-import { bound, getRefElementSize } from '../utils';
-import { LEFT_OFFSET } from '~/platform/providers/WindowProvider/constants';
+import { TASKBAR_WIDTH, TITLEBAR_HEIGHT } from '../../constants';
+import { bound } from '../utils';
 
 export function useSize(
-  defaultSize: Size | undefined,
-  maxSize: Size,
-  minSize: Size,
+  sizeLimits: SizeLimits,
   keepContentRatio: boolean,
-  windowRef: RefObject<HTMLDivElement>,
-  contentRef: RefObject<HTMLDivElement>,
   callback: (size: Size) => void
 ): [
-  Size | undefined,
-  (width: number, height: number, force?: boolean) => void,
-  () => void
+  Size,
+  (width: number, height: number, force?: boolean) => Size,
+  () => Size
 ] {
-  const [size, setSize] = useState<Size | undefined>();
+  const { maxHeight, maxWidth, minHeight, minWidth } = sizeLimits;
+  const [size, setSize] = useState({ height: minHeight, width: minWidth });
   const contentRatioRef = useRef<number | undefined>();
 
   const updateSize = useCallback(
-    (width: number, height: number, force: boolean = false) => {
+    (width, height, force = false) => {
       if (!force) {
-        width = bound(width, minSize.width, maxSize.width);
-        height = bound(height, minSize.height, maxSize.height);
+        width = bound(width, minWidth, maxWidth);
+        height = bound(height, minHeight, maxHeight);
 
         if (contentRatioRef.current !== undefined) {
-          const windowSize = getRefElementSize(windowRef);
-          const contentSize = getRefElementSize(contentRef);
-          const dx = windowSize.width - contentSize.width;
-          const dy = windowSize.height - contentSize.height;
-
-          height = Math.round((width - dx) / contentRatioRef.current) + dy;
+          height =
+            Math.round(width / contentRatioRef.current) + TITLEBAR_HEIGHT;
         }
       }
 
-      setSize({ width, height });
-      callback({ width, height });
+      const newSize = Object.freeze({ width, height });
+
+      setSize(newSize);
+      callback(newSize);
+
+      return newSize;
     },
-    [callback, contentRatioRef, contentRef, maxSize, minSize, windowRef]
+    [callback, maxHeight, maxWidth, minHeight, minWidth]
   );
 
-  const setMaxSize = useCallback(() => {
-    updateSize(window.innerWidth - LEFT_OFFSET, window.innerHeight, true);
-  }, [updateSize]);
+  const setMaxSize = useCallback(
+    () =>
+      updateSize(window.innerWidth - TASKBAR_WIDTH, window.innerHeight, true),
+    [updateSize]
+  );
 
   useEffect(() => {
     if (keepContentRatio) {
-      const contentSize = getRefElementSize(contentRef);
-      contentRatioRef.current = contentSize.width / contentSize.height;
+      contentRatioRef.current = size.width / (size.height - TITLEBAR_HEIGHT);
     } else {
       contentRatioRef.current = undefined;
     }
-  }, [contentRef, keepContentRatio]);
+  }, [keepContentRatio, size]);
 
   return [size, updateSize, setMaxSize];
+}
+
+interface SizeLimits {
+  maxHeight: number;
+  maxWidth: number;
+  minHeight: number;
+  minWidth: number;
 }

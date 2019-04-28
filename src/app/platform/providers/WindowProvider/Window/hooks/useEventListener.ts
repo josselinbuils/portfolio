@@ -1,32 +1,32 @@
 import { useCallback, useEffect, useMemo } from 'react';
 
-export function useEventListener() {
-  const listeners: any[] = useMemo(() => [], []);
+export function useEventListener(): <EventType extends keyof WindowEventMap>(
+  event: EventType,
+  handler: EventHandler<EventType>,
+  target?: ListenerTarget
+) => () => void {
+  const listeners: EventListener<any>[] = useMemo(() => [], []);
 
   useEffect(
     () => () => {
-      listeners.forEach(({ element, event, listener }) => {
-        element.removeEventListener(event, listener);
+      listeners.forEach(({ event, handler, target }) => {
+        target.removeEventListener(event, handler);
       });
     },
     [listeners]
   );
 
   return useCallback(
-    <EventType extends keyof WindowEventMap>(
-      element: Window | HTMLElement,
-      event: EventType,
-      listener: (event: WindowEventMap[EventType]) => void
-    ) => {
-      const entry = { element, event, listener };
+    (event, handler, target = window) => {
+      const listener = { event, handler, target };
 
-      listeners.push(entry);
-      element.addEventListener(event, listener);
+      listeners.push(listener);
+      target.addEventListener(event, handler);
 
       return () => {
-        element.removeEventListener(event, listener);
+        target.removeEventListener(event, handler);
 
-        const index = listeners.indexOf(entry);
+        const index = listeners.indexOf(listener);
 
         if (index > -1) {
           listeners.splice(index, 1);
@@ -35,4 +35,15 @@ export function useEventListener() {
     },
     [listeners]
   );
+}
+
+type EventHandler<EventType extends keyof WindowEventMap> = (
+  event: WindowEventMap[EventType]
+) => void;
+type ListenerTarget = Window | HTMLElement;
+
+interface EventListener<EventType extends keyof WindowEventMap> {
+  event: EventType;
+  handler: EventHandler<EventType>;
+  target: ListenerTarget;
 }

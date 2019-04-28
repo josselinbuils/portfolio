@@ -1,25 +1,41 @@
-import { RefObject, useState } from 'react';
-import { getRefElementSize } from '../utils';
+import { useState } from 'react';
+import { Size } from '~/platform/interfaces';
+import {
+  BUTTONS_MAX_WIDTH,
+  TASKBAR_WIDTH,
+  TITLEBAR_HEIGHT
+} from '../../constants';
+import { bound } from '../utils';
+
+const MIN_USABLE_WIDTH = 10;
 
 export function usePosition(
-  windowRef: RefObject<HTMLDivElement>
-): [{ x: number; y: number }, (x: number, y: number, force?: boolean) => void] {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  initialSize: Size
+): [
+  { x: number; y: number },
+  (x: number, y: number, windowWidth: number, force?: boolean) => void
+] {
+  const [position, setPosition] = useState({
+    x: Math.round((window.innerWidth - initialSize.width) * 0.5),
+    y: Math.round((window.innerHeight - initialSize.height) * 0.2)
+  });
 
-  function updatePosition(x: number, y: number, force: boolean = false) {
+  function updatePosition(
+    x: number,
+    y: number,
+    windowWidth: number,
+    force = false
+  ) {
     if (!force) {
-      // TODO move all that magic numbers
-      const xMin = -getRefElementSize(windowRef).width + 90;
-      const yMin = -1;
-      const xMax = window.innerWidth - 30;
-      const yMax = window.innerHeight - 21;
+      const xMin = -windowWidth + TASKBAR_WIDTH + MIN_USABLE_WIDTH;
+      const yMin = 0;
+      const xMax = window.innerWidth - BUTTONS_MAX_WIDTH - MIN_USABLE_WIDTH;
+      const yMax = window.innerHeight - TITLEBAR_HEIGHT;
 
-      x = Math.min(Math.max(x, xMin), xMax);
-      y = Math.min(Math.max(y, yMin), yMax);
-
-      setPosition({ x, y });
+      x = bound(x, xMin, xMax);
+      y = bound(y, yMin, yMax);
     }
-    setPosition({ x, y });
+    setPosition(Object.freeze({ x, y }));
   }
 
   return [position, updatePosition];

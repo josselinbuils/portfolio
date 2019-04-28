@@ -1,5 +1,4 @@
 import React, { Children, cloneElement, FC, ReactElement } from 'react';
-
 import { ContextMenuDescriptor } from './ContextMenu';
 import {
   ContextMenuContext,

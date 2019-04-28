@@ -3,9 +3,8 @@ import React, {
   cloneElement,
   FC,
   ReactElement,
-  useState,
+  useState
 } from 'react';
-
 import { ContextMenu, ContextMenuDescriptor } from './ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
 
