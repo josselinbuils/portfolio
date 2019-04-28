@@ -1,0 +1,56 @@
+@import '../../../platform.constants';
+
+.content {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+
+.frozen {
+  pointer-events: none;
+}
+
+.resize {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  cursor: nwse-resize;
+  user-select: none;
+}
+
+.window {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  opacity: 0.9;
+
+  &.active {
+    opacity: 1;
+
+    .content {
+      user-select: inherit;
+    }
+  }
+
+  &.animated {
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+  }
+
+  &.minimized {
+    opacity: 0;
+  }
+
+  &:not(.maximized) {
+    border-radius: 6px; /* Needed by box shadow */
+    box-shadow: 0 0 10px #1f1f1f;
+
+    .content {
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+  }
+}

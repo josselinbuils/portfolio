@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ContextMenuItem, ContextMenuItemDescriptor } from './ContextMenuItem';
-import './ContextMenu.scss';
+import styles from './ContextMenu.module.scss';
 
 export const ContextMenu: FC<Props> = ({ items, onHide, position, style }) => {
   if (position === undefined) {
@@ -9,7 +9,7 @@ export const ContextMenu: FC<Props> = ({ items, onHide, position, style }) => {
   const { left, top } = position;
 
   return (
-    <ul className="context-menu" style={{ ...style, left, top }}>
+    <ul className={styles.contextMenu} style={{ ...style, left, top }}>
       {items.map(({ onClick, iconClass, title }) => (
         <ContextMenuItem
           key={title}

@@ -1,0 +1,67 @@
+@import '../../../platform.constants';
+
+.button {
+  width: 22px;
+  height: 100%;
+  float: left;
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+
+  &.close:hover {
+    background: #e20000;
+  }
+
+  &.minimize:hover,
+  &.maximize:hover {
+    background: $primary-color;
+  }
+
+  &:hover {
+    color: #f0f0f0;
+  }
+
+  i {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+.buttons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+}
+
+.frozen {
+  pointer-events: none;
+}
+
+.title {
+  line-height: 22px;
+  cursor: default;
+}
+
+.titlebar {
+  height: 22px;
+  text-align: center;
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 0.9em;
+
+  &,
+  & * {
+    user-select: none;
+    cursor: default;
+  }
+
+  &:not(.maximized) {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+
+    .close {
+      border-top-left-radius: 6px;
+    }
+  }
+}

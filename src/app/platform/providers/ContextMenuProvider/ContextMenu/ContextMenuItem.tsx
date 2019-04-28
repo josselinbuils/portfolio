@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import './ContextMenuItem.scss';
+import styles from './ContextMenuItem.module.scss';
 
 export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   onClick,
@@ -8,11 +8,11 @@ export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   title
 }) => {
   return (
-    <li className="item" key={title} onClick={onClick}>
-      <div className="icon">
+    <li className={styles.item} key={title} onClick={onClick}>
+      <div className={styles.icon}>
         {iconClass && <i className={classNames('fas', iconClass)} />}
       </div>
-      <div className="title">{title}</div>
+      <div className={styles.title}>{title}</div>
     </li>
   );
 };

@@ -3,7 +3,7 @@ import {
   WithContextMenu,
   ContextMenuProvider
 } from '~/platform/providers/ContextMenuProvider';
-import { WindowContainer } from '~/platform/providers/WindowProvider/Window';
+import { Window } from '~/platform/providers/WindowProvider/Window';
 import './App.scss';
 
 const descriptor = {
@@ -13,7 +13,7 @@ const descriptor = {
 export const App = () => (
   <ContextMenuProvider>
     <main className="App">
-      <WindowContainer
+      <Window
         active={true}
         background="lightgrey"
         titleBackground="grey"
@@ -24,7 +24,7 @@ export const App = () => (
         onClose={() => {}}
         onMinimise={() => {}}
         onSelect={() => {}}
-        windowTitle="Hello"
+        title="Hello"
         zIndex={1}
       >
         <WithContextMenu descriptor={descriptor}>
@@ -46,7 +46,7 @@ export const App = () => (
             and rest parameters.
           </p>
         </WithContextMenu>
-      </WindowContainer>
+      </Window>
     </main>
   </ContextMenuProvider>
 );
