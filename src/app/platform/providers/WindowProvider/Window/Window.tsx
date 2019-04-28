@@ -46,8 +46,6 @@ export const Window: FC<Props> = ({
   const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
   const maximized = unmaximizeProps !== undefined;
 
-  console.log(visible);
-
   const toggleMaximize = useCallback(
     (
       keepPosition: boolean = false,

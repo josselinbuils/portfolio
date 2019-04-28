@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { WindowInstance } from './WindowInstance';
 import { WindowManager } from './WindowManager';
-import { TestWindow } from '~/TestWindow';
 
 export const WindowProviderContext = React.createContext<
   WindowManager | undefined
@@ -13,7 +12,6 @@ export const WindowProvider: FC = ({ children }) => {
 
   useEffect(() => {
     windowManager.windowInstancesSubject.subscribe(setWindowInstances);
-    windowManager.openWindow(TestWindow);
   }, [windowManager]);
 
   return (

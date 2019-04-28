@@ -6,7 +6,7 @@ const descriptor = {
   items: [{ onClick: () => console.log('Hello'), title: 'Hello' }]
 };
 
-export const TestWindow = (props: any) => (
+export const TestApp = (props: any) => (
   <Window
     background="lightgrey"
     titleBackground="grey"
