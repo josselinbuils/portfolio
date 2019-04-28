@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
-import { TASKBAR_WIDTH, TITLEBAR_HEIGHT } from '../../constants';
-import { bound } from '../utils';
+import { TITLEBAR_HEIGHT } from '../../constants';
+import { bound, getDesktopSize } from '../utils';
 
 export function useSize(
   sizeLimits: SizeLimits,
@@ -38,11 +38,10 @@ export function useSize(
     [callback, maxHeight, maxWidth, minHeight, minWidth]
   );
 
-  const setMaxSize = useCallback(
-    () =>
-      updateSize(window.innerWidth - TASKBAR_WIDTH, window.innerHeight, true),
-    [updateSize]
-  );
+  const setMaxSize = useCallback(() => {
+    const { width, height } = getDesktopSize();
+    return updateSize(width, height, true);
+  }, [updateSize]);
 
   useEffect(() => {
     if (keepContentRatio) {
