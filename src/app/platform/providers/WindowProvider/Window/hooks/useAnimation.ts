@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function useAnimation(): [number | undefined, (delay: number) => void] {
-  const [duration, setDuration] = useState<number | undefined>();
+  const [duration, setDuration] = useState<number>();
 
   useEffect(() => {
     if (duration !== undefined) {

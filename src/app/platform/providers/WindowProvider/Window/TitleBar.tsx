@@ -1,7 +1,8 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import styles from './TitleBar.module.scss';
 import { findClosestElement } from '~/platform/utils';
+import { MouseButton } from '~/platform/constants';
+import styles from './TitleBar.module.scss';
 
 export const TitleBar: FC<Props> = ({
   background,
@@ -16,9 +17,14 @@ export const TitleBar: FC<Props> = ({
   title
 }) => {
   const moveStartHandler = (downEvent: MouseEvent) => {
+    if (downEvent.button !== MouseButton.Left) {
+      return;
+    }
+
     const target = downEvent.target as HTMLElement;
 
     if (findClosestElement(target, 'button') === undefined) {
+      downEvent.preventDefault();
       onMoveStart(downEvent);
     }
   };
