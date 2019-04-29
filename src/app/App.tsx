@@ -6,12 +6,12 @@ import styles from './App.module.scss';
 
 export const App = () => {
   return (
-    <main className={styles.app}>
-      <ContextMenuProvider>
+    <ContextMenuProvider>
+      <main className={styles.app}>
         <WindowProvider>
           <TaskBar />
         </WindowProvider>
-      </ContextMenuProvider>
-    </main>
+      </main>
+    </ContextMenuProvider>
   );
 };
