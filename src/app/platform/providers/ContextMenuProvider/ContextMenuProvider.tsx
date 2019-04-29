@@ -10,6 +10,7 @@ import {
   ContextMenuDescriptor
 } from '~/platform/components/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
+import { decorateHandler } from '~/platform/utils';
 
 export const ContextMenuProvider: FC = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
@@ -19,7 +20,9 @@ export const ContextMenuProvider: FC = ({ children }) => {
 
   return (
     <ContextMenuContext.Provider value={setDescriptor}>
-      {cloneElement(child, { onMouseDown: hide })}
+      {cloneElement(child, {
+        onMouseDown: decorateHandler(hide, child.props.onMouseDown)
+      })}
       {descriptor && <ContextMenu {...descriptor} onHide={hide} />}
     </ContextMenuContext.Provider>
   );

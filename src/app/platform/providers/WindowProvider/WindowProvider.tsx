@@ -1,36 +1,13 @@
-import React, { createContext, FC, useEffect, useState } from 'react';
-import { WindowInstance } from './WindowInstance';
+import React, { FC, useState } from 'react';
 import { WindowManager } from './WindowManager';
-
-export const WindowProviderContext = createContext<WindowManager | undefined>(
-  undefined
-);
+import { WindowProviderContext } from './WindowProviderContext';
 
 export const WindowProvider: FC = ({ children }) => {
-  const [windowManager] = useState(new WindowManager());
-  const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
-
-  useEffect(() => {
-    windowManager.windowInstancesSubject.subscribe(setWindowInstances);
-  }, [windowManager]);
+  const [windowManager] = useState(() => new WindowManager());
 
   return (
     <WindowProviderContext.Provider value={windowManager}>
       {children}
-      {windowInstances.map(
-        ({ active, component: Component, id, visible, zIndex }) => (
-          <Component
-            active={active}
-            key={id}
-            id={id}
-            onClose={windowManager.closeWindow}
-            onMinimise={windowManager.hideWindow}
-            onSelect={windowManager.selectWindow}
-            visible={visible}
-            zIndex={zIndex}
-          />
-        )
-      )}
     </WindowProviderContext.Provider>
   );
 };

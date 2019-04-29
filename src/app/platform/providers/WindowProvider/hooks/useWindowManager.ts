@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { WindowManager } from '../WindowManager';
-import { WindowProviderContext } from '../WindowProvider';
+import { WindowProviderContext } from '../WindowProviderContext';
 
 export function useWindowManager(): WindowManager {
   const windowManager = useContext(WindowProviderContext);

@@ -16,10 +16,10 @@ export function usePosition(
   (x: number, y: number, windowWidth: number, force?: boolean) => void
 ] {
   const desktopSize = getDesktopSize();
-  const [position, setPosition] = useState({
+  const [position, setPosition] = useState(() => ({
     x: Math.round((desktopSize.width - initialSize.width) * 0.5),
     y: Math.round((desktopSize.height - initialSize.height) * 0.2)
-  });
+  }));
 
   function updatePosition(
     x: number,

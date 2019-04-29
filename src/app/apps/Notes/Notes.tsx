@@ -13,7 +13,7 @@ const smileys: { [smiley: string]: string } = {
 };
 
 export const Notes: WindowComponent = (props: any) => {
-  const [notes, setNotes] = useState(getDefaultNotes());
+  const [notes, setNotes] = useState(getDefaultNotes);
 
   const saveNotes = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newNotes = Object.keys(smileys).reduce((notes, smiley) => {

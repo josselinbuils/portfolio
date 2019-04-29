@@ -1,10 +1,10 @@
 import cn from 'classnames';
-import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useDragAndDrop, useEventListener } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 import { ANIMATION_DURATION, TASKBAR_WIDTH } from './constants';
-import { useAnimation, useEventListener, usePosition, useSize } from './hooks';
-import { ResizeArea } from './ResizeArea';
+import { useAnimation, usePosition, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
 import { getRelativeOffset } from './utils';
 import styles from './Window.module.scss';
@@ -35,6 +35,7 @@ export const Window: FC<Props> = ({
   const [frozen, setFrozen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [animationDurationMs, animate] = useAnimation();
+  const dragAndDropHandler = useDragAndDrop();
   const listenEvent = useEventListener();
   const [size, setSize, setMaxSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
@@ -86,10 +87,8 @@ export const Window: FC<Props> = ({
     ]
   );
 
-  const onMoveStart = useCallback(
+  const moveStartHandler = dragAndDropHandler(
     (downEvent: MouseEvent) => {
-      downEvent.persist();
-
       const dy = position.y - downEvent.clientY;
       let dx = position.x - downEvent.clientX;
 
@@ -99,13 +98,13 @@ export const Window: FC<Props> = ({
 
       if (unmaximizeProps !== undefined) {
         const nextWidth = unmaximizeProps.width;
-        dx += getRelativeOffset(downEvent.nativeEvent, size.width, nextWidth);
+        dx += getRelativeOffset(downEvent, size.width, nextWidth);
         shouldToggleMaximize = true;
       }
 
       let width = size.width;
 
-      const removeMoveListener = listenEvent('mousemove', moveEvent => {
+      return (moveEvent: MouseEvent) => {
         if (
           shouldToggleMaximize &&
           moveEvent.clientY < downEvent.clientY + VERTICAL_OFFSET_TO_UNMAXIMIZE
@@ -117,40 +116,25 @@ export const Window: FC<Props> = ({
           shouldToggleMaximize = false;
         }
         setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy, width);
-      });
-
-      const removeUpListener = listenEvent('mouseup', () => {
-        setFrozen(false);
-        removeMoveListener();
-        removeUpListener();
-      });
+      };
     },
-    [listenEvent, position, setPosition, size, toggleMaximize, unmaximizeProps]
+    () => setFrozen(false)
   );
 
-  const onResizeStart = useCallback(
+  const resizeStartHandler = dragAndDropHandler(
     (downEvent: MouseEvent) => {
-      downEvent.persist();
-
       if (maximized) {
         return;
       }
-
       setFrozen(true);
 
-      const removeMoveListener = listenEvent('mousemove', moveEvent => {
+      return (moveEvent: MouseEvent) => {
         const width = size.width + moveEvent.clientX - downEvent.clientX;
         const height = size.height + moveEvent.clientY - downEvent.clientY;
         setSize(width, height);
-      });
-
-      const removeUpListener = listenEvent('mouseup', () => {
-        setFrozen(false);
-        removeMoveListener();
-        removeUpListener();
-      });
+      };
     },
-    [listenEvent, maximized, setSize, size]
+    () => setFrozen(false)
   );
 
   useEffect(() => {
@@ -214,12 +198,14 @@ export const Window: FC<Props> = ({
         onClose={closeHandler}
         onMaximize={toggleMaximize}
         onMinimise={minimizeHandler}
-        onMoveStart={onMoveStart}
+        onMoveStart={moveStartHandler}
       />
       <main className={cn(styles.content, { [styles.frozen]: frozen })}>
         {children}
       </main>
-      {resizable && <ResizeArea onResizeStart={onResizeStart} />}
+      {resizable && (
+        <div className={styles.resize} onMouseDown={resizeStartHandler} />
+      )}
     </div>
   );
 };

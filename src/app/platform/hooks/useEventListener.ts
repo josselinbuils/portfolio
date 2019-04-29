@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
+import { EventHandler } from '~/platform/interfaces';
 
 export function useEventListener(): <EventType extends keyof WindowEventMap>(
   event: EventType,
@@ -37,9 +38,6 @@ export function useEventListener(): <EventType extends keyof WindowEventMap>(
   );
 }
 
-type EventHandler<EventType extends keyof WindowEventMap> = (
-  event: WindowEventMap[EventType]
-) => void;
 type ListenerTarget = Window | HTMLElement;
 
 interface EventListener<EventType extends keyof WindowEventMap> {
