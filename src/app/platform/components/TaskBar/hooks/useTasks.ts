@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { ElementType, useEffect, useState } from 'react';
 import { useWindowManager } from '~/platform/providers/WindowProvider';
 import { addNewTasks, removeOutdatedTasks } from '../utils';
 import { Task } from '../Task';
 
-export function useTasks(defaultTasks: Task[]): Task[] {
-  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
+export function useTasks(defaultComponents: ElementType[]): Task[] {
+  const [tasks, setTasks] = useState<Task[]>(
+    defaultComponents.map(component => new Task(component, true))
+  );
   const windowManager = useWindowManager();
 
   useEffect(() => {
