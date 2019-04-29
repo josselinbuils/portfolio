@@ -5,7 +5,10 @@ import React, {
   ReactElement,
   useState
 } from 'react';
-import { ContextMenu, ContextMenuDescriptor } from './ContextMenu';
+import {
+  ContextMenu,
+  ContextMenuDescriptor
+} from '~/platform/components/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
 
 export const ContextMenuProvider: FC = ({ children }) => {

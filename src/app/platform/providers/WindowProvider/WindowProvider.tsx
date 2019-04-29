@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { createContext, FC, useEffect, useState } from 'react';
 import { WindowInstance } from './WindowInstance';
 import { WindowManager } from './WindowManager';
 
-export const WindowProviderContext = React.createContext<
-  WindowManager | undefined
->(undefined);
+export const WindowProviderContext = createContext<WindowManager | undefined>(
+  undefined
+);
 
 export const WindowProvider: FC = ({ children }) => {
   const [windowManager] = useState(new WindowManager());

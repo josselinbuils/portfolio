@@ -2,12 +2,12 @@ import cn from 'classnames';
 import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
-import { ANIMATION_DURATION, TASKBAR_WIDTH } from '../constants';
+import { ANIMATION_DURATION, TASKBAR_WIDTH } from './constants';
 import { useAnimation, useEventListener, usePosition, useSize } from './hooks';
 import { ResizeArea } from './ResizeArea';
 import { TitleBar } from './TitleBar';
+import { getRelativeOffset } from './utils';
 import styles from './Window.module.scss';
-import { getRelativeOffset } from '~/platform/providers/WindowProvider/Window/utils';
 
 const VERTICAL_OFFSET_TO_UNMAXIMIZE = 20;
 

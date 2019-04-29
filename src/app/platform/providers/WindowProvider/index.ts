@@ -1,4 +1,4 @@
-export * from './Window';
+export * from './hooks';
 export * from './WindowComponent';
-export * from './WindowManager';
+export * from './WindowInstance';
 export * from './WindowProvider';

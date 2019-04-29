@@ -1,20 +1,17 @@
-import React, { useContext, useEffect } from 'react';
-import { Notes } from '~/apps/Notes';
+import React from 'react';
+import { TaskBar } from '~/platform/components/TaskBar';
 import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider';
-import {
-  WindowManager,
-  WindowProviderContext
-} from '~/platform/providers/WindowProvider';
-import './App.scss';
+import { WindowProvider } from '~/platform/providers/WindowProvider';
+import styles from './App.module.scss';
 
 export const App = () => {
-  const windowManager = useContext(WindowProviderContext) as WindowManager;
-
-  useEffect(() => windowManager.openWindow(Notes), [windowManager]);
-
   return (
-    <ContextMenuProvider>
-      <main className="App" />
-    </ContextMenuProvider>
+    <main className={styles.app}>
+      <ContextMenuProvider>
+        <WindowProvider>
+          <TaskBar />
+        </WindowProvider>
+      </ContextMenuProvider>
+    </main>
   );
 };

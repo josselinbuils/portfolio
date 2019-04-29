@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { ContextMenuDescriptor } from './ContextMenu';
+import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
 
 export const ContextMenuContext = createContext<ContextMenuDescriptorSetter>(
   () => {

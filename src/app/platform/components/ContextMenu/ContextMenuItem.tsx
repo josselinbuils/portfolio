@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import React, { FC, MouseEvent } from 'react';
+import React, { FC } from 'react';
+import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 import styles from './ContextMenuItem.module.scss';
 
 export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
@@ -16,9 +17,3 @@ export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
     </li>
   );
 };
-
-export interface ContextMenuItemDescriptor {
-  iconClass?: string;
-  title: string;
-  onClick(event: MouseEvent): void;
-}

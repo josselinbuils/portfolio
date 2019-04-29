@@ -1,5 +1,5 @@
 import { Size } from '~/platform/interfaces';
-import { TASKBAR_WIDTH } from '../../constants';
+import { TASKBAR_WIDTH } from '../constants';
 
 export function getDesktopSize(): Size {
   return {

@@ -4,7 +4,7 @@ import {
   BUTTONS_MAX_WIDTH,
   TASKBAR_WIDTH,
   TITLEBAR_HEIGHT
-} from '../../constants';
+} from '../constants';
 import { bound, getDesktopSize } from '../utils';
 
 const MIN_USABLE_WIDTH = 10;

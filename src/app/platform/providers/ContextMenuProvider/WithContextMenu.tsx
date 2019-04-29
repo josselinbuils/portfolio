@@ -1,5 +1,5 @@
 import React, { Children, cloneElement, FC, ReactElement } from 'react';
-import { ContextMenuDescriptor } from './ContextMenu';
+import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
 import {
   ContextMenuContext,
   ContextMenuDescriptorSetter
@@ -12,12 +12,13 @@ export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
     event: MouseEvent
   ) => {
     const { clientX, clientY } = event;
-    const { position, ...rest } = descriptor;
+    const { position, ...rest } =
+      typeof descriptor === 'function' ? descriptor() : descriptor;
 
     event.preventDefault();
 
     showMenu({
-      position: position || { left: clientX, top: clientY },
+      position: position || { x: clientX, y: clientY },
       ...rest
     });
   };
@@ -34,5 +35,5 @@ export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
 };
 
 interface Props {
-  descriptor: ContextMenuDescriptor;
+  descriptor: ContextMenuDescriptor | (() => ContextMenuDescriptor);
 }

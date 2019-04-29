@@ -1,4 +1,4 @@
-import { BUTTONS_MAX_WIDTH } from '~/platform/providers/WindowProvider/constants';
+import { BUTTONS_MAX_WIDTH } from '../constants';
 
 /**
  * Provides the x offset to keep the same position on the title bar in

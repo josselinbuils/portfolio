@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
-import { TITLEBAR_HEIGHT } from '../../constants';
+import { TITLEBAR_HEIGHT } from '../constants';
 import { bound, getDesktopSize } from '../utils';
 
 export function useSize(
