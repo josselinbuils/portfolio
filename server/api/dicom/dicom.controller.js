@@ -8,7 +8,7 @@ const ENV = process.env.NODE_ENV || ENV_DEV;
 const dicomPath = join(
   process.cwd(),
   ENV === ENV_DEV ? ASSETS_DIR_DEV : ASSETS_DIR,
-  '/dicom',
+  '/dicom'
 );
 const datasetsPath = join(dicomPath, '/datasets');
 const previewsPath = join(dicomPath, '/previews');
@@ -44,7 +44,7 @@ function getDatasetDescriptors() {
     })
     .filter(
       (descriptor, index, descriptors) =>
-        descriptors.findIndex(d => d.name === descriptor.name) === index,
+        descriptors.findIndex(d => d.name === descriptor.name) === index
     );
 }
 
@@ -53,7 +53,7 @@ function getFiles(folderPath, name) {
 
   return lstatSync(path).isDirectory()
     ? readdirSync(path).map(
-        fileName => `${name}/${fileName.replace('.gz', '')}`,
+        fileName => `${name}/${fileName.replace('.gz', '')}`
       )
     : [name.replace('.gz', '')];
 }

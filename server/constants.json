@@ -8,5 +8,5 @@
   "MAX_AGE_DAYS": 365,
   "PORT": 9000,
   "PUBLIC_DIR": "/dist",
-  "USER_AGENT": "Portfolio by youbi325"
+  "USER_AGENT": "Portfolio by Josselin Buils"
 }

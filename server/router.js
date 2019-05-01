@@ -12,7 +12,7 @@ const {
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   MAX_AGE_DAYS,
-  PUBLIC_DIR,
+  PUBLIC_DIR
 } = require('./constants.json');
 const DependenciesRoutes = require('./api/dependencies/dependencies.routes');
 const DicomRoutes = require('./api/dicom/dicom.routes');
@@ -23,7 +23,7 @@ const RedditRoutes = require('./api/reddit/reddit.routes');
 const ENV = process.env.NODE_ENV || ENV_DEV;
 const ASSETS_PATH = join(
   process.cwd(),
-  ENV === ENV_DEV ? ASSETS_DIR_DEV : ASSETS_DIR,
+  ENV === ENV_DEV ? ASSETS_DIR_DEV : ASSETS_DIR
 );
 const CLIENT_PATH = join(process.cwd(), PUBLIC_DIR);
 const HTTP_PREFIX = process.env.HTTP_PREFIX || HTTP_DEFAULT_PREFIX;
@@ -41,7 +41,7 @@ module.exports = class Router {
         res.set('Access-Control-Allow-Origin', '*');
         res.set(
           'Access-Control-Allow-Headers',
-          'Origin, X-Requested-With, Content-Type, Accept',
+          'Origin, X-Requested-With, Content-Type, Accept'
         );
       }
       next();
@@ -62,8 +62,8 @@ module.exports = class Router {
       ASSETS_DIR,
       serveStatic(ASSETS_PATH, {
         immutable: true,
-        maxAge: MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
-      }),
+        maxAge: MAX_AGE_DAYS * 24 * 60 * 60 * 1000
+      })
     );
     router.use(serveStatic(CLIENT_PATH));
     router.use(bodyParser.json());
