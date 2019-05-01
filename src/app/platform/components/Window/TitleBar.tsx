@@ -22,12 +22,14 @@ export const TitleBar: FC<Props> = ({
       <button
         className={cn(styles.button, styles.close)}
         onClick={() => onClose()}
+        style={{ color }}
       >
         <i className="fas fa-times" />
       </button>
       <button
         className={cn(styles.button, styles.minimize)}
         onClick={() => onMinimise()}
+        style={{ color }}
       >
         <i className="fas fa-minus" />
       </button>
@@ -35,6 +37,7 @@ export const TitleBar: FC<Props> = ({
         <button
           className={cn(styles.button, styles.maximize)}
           onClick={() => onMaximize()}
+          style={{ color }}
         >
           <i className="fas fa-plus" />
         </button>
@@ -47,7 +50,7 @@ export const TitleBar: FC<Props> = ({
 );
 
 interface Props {
-  background: string;
+  background?: string;
   color: string;
   frozen: boolean;
   maximized: boolean;

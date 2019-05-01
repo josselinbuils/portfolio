@@ -1,0 +1,9 @@
+.iframe {
+  position: absolute;
+  user-select: none;
+  border: none;
+}
+
+.inactive {
+  pointer-events: none;
+}

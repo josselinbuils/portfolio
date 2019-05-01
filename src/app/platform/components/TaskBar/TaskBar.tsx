@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import React, { FC, useEffect, useRef } from 'react';
 import { Notes } from '~/apps/Notes';
+import { Teravia } from '~/apps/Teravia';
 import { useWindowManager } from '~/platform/providers/WindowProvider';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
 import { useDescriptorFactory, useTaskRunner, useTasks } from './hooks';
@@ -8,7 +9,7 @@ import { isTaskActive } from './utils';
 import styles from './TaskBar.module.scss';
 
 export const TaskBar: FC = () => {
-  const tasks = useTasks([Notes]);
+  const tasks = useTasks([Teravia, Notes]);
   const windowManager = useWindowManager();
   const taskBarRef = useRef(null);
   const descriptorFactory = useDescriptorFactory(taskBarRef);

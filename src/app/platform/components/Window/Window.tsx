@@ -221,7 +221,7 @@ interface Props {
   minWidth: number;
   resizable?: boolean;
   title: string;
-  titleBackground: string;
+  titleBackground?: string;
   titleColor: string;
   visible: boolean;
   zIndex: number;

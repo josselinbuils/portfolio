@@ -22,6 +22,9 @@
     "react-scripts": "^3.0.0",
     "typescript": "^3.4.5"
   },
+  "devDependencies": {
+    "source-map-explorer": "^1.8.0"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -32,8 +35,5 @@
     "moduleNameMapper": {
       "~/(.*)": "<rootDir>/src/app/$1"
     }
-  },
-  "devDependencies": {
-    "source-map-explorer": "^1.8.0"
   }
 }
