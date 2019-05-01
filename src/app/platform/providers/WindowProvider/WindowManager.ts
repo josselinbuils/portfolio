@@ -1,9 +1,9 @@
 import { ElementType } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from '~/platform/utils';
 import { WindowInstance } from './WindowInstance';
 
-export class WindowManager {
-  windowInstancesSubject = new BehaviorSubject<WindowInstance[]>([]);
+export class WindowManager extends Subject<WindowInstance[]> {
+  windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
   private readonly windowInstances: WindowInstance[] = [];
   private id = -1;
@@ -44,7 +44,6 @@ export class WindowManager {
 
     this.windowInstances.push(windowInstance);
     this.selectWindow(windowInstance.id);
-    this.publishWindowInstances();
   }
 
   showWindow(id: number): void {

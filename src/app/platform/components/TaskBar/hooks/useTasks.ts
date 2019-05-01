@@ -10,7 +10,7 @@ export function useTasks(defaultComponents: ElementType[]): Task[] {
   const windowManager = useWindowManager();
 
   useEffect(() => {
-    windowManager.windowInstancesSubject.subscribe(windowInstances => {
+    return windowManager.windowInstancesSubject.subscribe(windowInstances => {
       setTasks(tasks => {
         const cleanedTasks = removeOutdatedTasks(windowInstances, [...tasks]);
         return addNewTasks(windowInstances, cleanedTasks);

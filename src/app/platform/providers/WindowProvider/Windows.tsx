@@ -7,7 +7,9 @@ export const Windows: FC = () => {
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
   useEffect(() => {
-    windowManager.windowInstancesSubject.subscribe(setWindowInstances);
+    return windowManager.windowInstancesSubject.subscribe(windowInstances => {
+      setWindowInstances(windowInstances);
+    });
   }, [windowManager]);
 
   return (
