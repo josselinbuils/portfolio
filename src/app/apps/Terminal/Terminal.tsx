@@ -77,10 +77,9 @@ export const Terminal: WindowComponent = ({
         case 'Down':
           event.preventDefault();
           if (commandIndex < commands.length) {
-            setCommandIndex(commandIndex + 1);
-            setUserInput(
-              commandIndex < commands.length ? commands[commandIndex] : ''
-            );
+            const newIndex = commandIndex + 1;
+            setCommandIndex(newIndex);
+            setUserInput(newIndex < commands.length ? commands[newIndex] : '');
           }
           break;
 
@@ -104,8 +103,9 @@ export const Terminal: WindowComponent = ({
         case 'Up':
           event.preventDefault();
           if (commandIndex > 0) {
-            setCommandIndex(commandIndex - 1);
-            setUserInput(commands[commandIndex]);
+            const newIndex = commandIndex - 1;
+            setCommandIndex(newIndex);
+            setUserInput(commands[newIndex]);
           }
           break;
 
