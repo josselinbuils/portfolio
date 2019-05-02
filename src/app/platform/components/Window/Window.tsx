@@ -36,7 +36,6 @@ export const Window: FC<Props> = ({
   const [minimized, setMinimized] = useState(false);
   const [animationDurationMs, animate] = useAnimation();
   const dragAndDropHandler = useDragAndDrop();
-  const listenEvent = useEventListener();
   const [size, setSize, setMaxSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
@@ -155,13 +154,11 @@ export const Window: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  useEffect(() => {
-    return listenEvent('resize', () => {
-      if (maximized) {
-        setMaxSize();
-      }
-    });
-  }, [listenEvent, maximized, setMaxSize]);
+  useEventListener('resize', () => {
+    if (maximized) {
+      setMaxSize();
+    }
+  });
 
   const closeHandler = useCallback(() => onClose(id), [id, onClose]);
   const minimizeHandler = useCallback(() => onMinimise(id), [id, onMinimise]);

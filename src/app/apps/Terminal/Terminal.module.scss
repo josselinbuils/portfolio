@@ -1,0 +1,37 @@
+@import './constants';
+
+.caret {
+  background: #4d4d4d;
+  position: absolute;
+  top: 0;
+  width: 1.1ch;
+  height: 100%;
+}
+
+.terminal {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8em;
+  white-space: nowrap;
+  padding: 5px 8px;
+  color: $text-color;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+
+  p {
+    white-space: normal;
+    margin: 0;
+  }
+}
+
+.userInput {
+  position: relative;
+  height: 1.2em;
+
+  div + & {
+    margin-top: 2px;
+  }
+}

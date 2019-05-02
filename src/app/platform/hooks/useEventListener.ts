@@ -1,47 +1,23 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { EventHandler } from '~/platform/interfaces';
+import { noop } from '~/platform/utils';
 
-export function useEventListener(): <EventType extends keyof WindowEventMap>(
+export function useEventListener<EventType extends keyof WindowEventMap>(
   event: EventType,
-  handler: EventHandler<EventType>,
-  target?: ListenerTarget
-) => () => void {
-  const listeners: EventListener<any>[] = useMemo(() => [], []);
+  handler: EventHandler<EventType>
+): void {
+  const handlerRef = useRef<EventHandler<EventType>>(noop);
 
-  useEffect(
-    () => () => {
-      listeners.forEach(({ event, handler, target }) => {
-        target.removeEventListener(event, handler);
-      });
-    },
-    [listeners]
-  );
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
 
-  return useCallback(
-    (event, handler, target = window) => {
-      const listener = { event, handler, target };
+  useEffect(() => {
+    const listener: EventHandler<EventType> = event => {
+      handlerRef.current(event);
+    };
+    window.addEventListener(event, listener);
 
-      listeners.push(listener);
-      target.addEventListener(event, handler);
-
-      return () => {
-        target.removeEventListener(event, handler);
-
-        const index = listeners.indexOf(listener);
-
-        if (index > -1) {
-          listeners.splice(index, 1);
-        }
-      };
-    },
-    [listeners]
-  );
-}
-
-type ListenerTarget = Window | HTMLElement;
-
-interface EventListener<EventType extends keyof WindowEventMap> {
-  event: EventType;
-  handler: EventHandler<EventType>;
-  target: ListenerTarget;
+    return () => window.removeEventListener(event, listener);
+  }, [event]);
 }

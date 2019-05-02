@@ -1,10 +1,23 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { EventHandler } from '~/platform/interfaces';
+import { noop } from '~/platform/utils';
 import { useEventListener } from './useEventListener';
 
-export function useDragAndDrop() {
-  const listenEvent = useEventListener();
+export function useDragAndDrop(): (
+  downHandler: (downEvent: MouseEvent) => EventHandler<'mousemove'> | void,
+  upHandler: EventHandler<'mouseup'>
+) => (downEvent: React.MouseEvent) => void {
+  const moveHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
+  const upHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
+
+  useEventListener('mousemove', (moveEvent: MouseEvent) => {
+    moveHandlerRef.current(moveEvent);
+  });
+
+  useEventListener('mouseup', (upEvent: MouseEvent) => {
+    upHandlerRef.current(upEvent);
+  });
 
   return useCallback(
     (
@@ -23,18 +36,16 @@ export function useDragAndDrop() {
 
         // Handler could be canceled inside down handler
         if (moveHandler !== undefined) {
-          const removeMoveListener = listenEvent('mousemove', moveHandler);
-          const removeUpListener = listenEvent(
-            'mouseup',
-            (upEvent: MouseEvent) => {
-              upHandler(upEvent);
-              removeMoveListener();
-              removeUpListener();
-            }
-          );
+          moveHandlerRef.current = moveHandler;
+
+          upHandlerRef.current = (upEvent: MouseEvent) => {
+            upHandler(upEvent);
+            moveHandlerRef.current = noop;
+            upHandlerRef.current = noop;
+          };
         }
       };
     },
-    [listenEvent]
+    []
   );
 }

@@ -1,0 +1,38 @@
+.about {
+  margin: 2px 0;
+  display: flex;
+}
+
+.photo {
+  width: 202px;
+  height: 269px;
+}
+
+.help {
+  color: #c5c5c5;
+}
+
+.info {
+  margin: 0 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  p {
+    white-space: normal;
+    margin: 0;
+  }
+}
+
+.resume {
+  font-size: 3em;
+  max-width: 22ch;
+}
+
+.social {
+  font-size: 1.7em;
+
+  a + a {
+    margin-left: .4em;
+  }
+}
