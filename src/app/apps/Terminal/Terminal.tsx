@@ -52,8 +52,12 @@ export const Terminal: WindowComponent = ({
       loadExecutor(Command, [USER, str]);
 
       if (command.length > 0) {
-        commandManager.push(command);
-        setCommandIndex(commands.length + 1);
+        if (commands[commands.length - 1] !== command) {
+          commandManager.push(command);
+          setCommandIndex(commands.length + 1);
+        } else {
+          setCommandIndex(commands.length);
+        }
 
         if (command === 'clear') {
           executionManager.clear();
