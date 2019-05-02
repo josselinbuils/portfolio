@@ -28,7 +28,7 @@ export const Terminal: WindowComponent = ({
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);
   const [executions, executionManager] = useList<Execution>();
-  const [waiting, setWaiting] = useState(false);
+  const [waiting] = useState(false);
   const [userInput, setUserInput] = useState('');
   const executorIdRef = useRef(-1);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,7 @@ export const Terminal: WindowComponent = ({
         }
       }
     },
-    [commandManager, commands.length, executionManager, loadExecutor]
+    [commandManager, commands, executionManager, loadExecutor]
   );
 
   const navigate = useCallback(
@@ -212,6 +212,7 @@ export const Terminal: WindowComponent = ({
 
   useEffect(() => {
     exec('about');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
