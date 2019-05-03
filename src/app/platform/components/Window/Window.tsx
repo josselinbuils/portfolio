@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDragAndDrop, useEventListener } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
@@ -35,7 +35,6 @@ export const Window: FC<Props> = ({
   const [frozen, setFrozen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [animationDurationMs, animate] = useAnimation();
-  const dragAndDropHandler = useDragAndDrop();
   const [size, setSize, setMaxSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
@@ -46,47 +45,35 @@ export const Window: FC<Props> = ({
   const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
   const maximized = unmaximizeProps !== undefined;
 
-  const toggleMaximize = useCallback(
-    (
-      keepPosition: boolean = false,
-      animationDuration: number = ANIMATION_DURATION
-    ) => {
-      if (!resizable) {
-        return size;
+  function toggleMaximize(
+    keepPosition: boolean = false,
+    animationDuration: number = ANIMATION_DURATION
+  ) {
+    if (!resizable) {
+      return size;
+    }
+
+    animate(animationDuration);
+
+    if (unmaximizeProps !== undefined) {
+      const { height, width, x, y } = unmaximizeProps;
+
+      if (!keepPosition) {
+        setPosition(x, y, width);
       }
+      setUnmaximizeProps(undefined);
+      return setSize(width, height);
+    } else {
+      setUnmaximizeProps({ ...position, ...size });
 
-      animate(animationDuration);
-
-      if (unmaximizeProps !== undefined) {
-        const { height, width, x, y } = unmaximizeProps;
-
-        if (!keepPosition) {
-          setPosition(x, y, width);
-        }
-        setUnmaximizeProps(undefined);
-        return setSize(width, height);
-      } else {
-        setUnmaximizeProps({ ...position, ...size });
-
-        if (!keepPosition) {
-          setPosition(TASKBAR_WIDTH, 0, size.width);
-        }
-        return setMaxSize();
+      if (!keepPosition) {
+        setPosition(TASKBAR_WIDTH, 0, size.width);
       }
-    },
-    [
-      animate,
-      position,
-      resizable,
-      setMaxSize,
-      setPosition,
-      setSize,
-      size,
-      unmaximizeProps
-    ]
-  );
+      return setMaxSize();
+    }
+  }
 
-  const moveStartHandler = dragAndDropHandler(
+  const moveStartHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
       const dy = position.y - downEvent.clientY;
       let dx = position.x - downEvent.clientX;
@@ -120,7 +107,7 @@ export const Window: FC<Props> = ({
     () => setFrozen(false)
   );
 
-  const resizeStartHandler = dragAndDropHandler(
+  const resizeStartHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
       if (maximized) {
         return;
@@ -160,10 +147,6 @@ export const Window: FC<Props> = ({
     }
   });
 
-  const closeHandler = useCallback(() => onClose(id), [id, onClose]);
-  const minimizeHandler = useCallback(() => onMinimise(id), [id, onMinimise]);
-  const selectHandler = useCallback(() => onSelect(id), [id, onSelect]);
-
   const animated = animationDurationMs !== undefined;
   const className = cn(styles.window, {
     [styles.active]: active,
@@ -184,7 +167,7 @@ export const Window: FC<Props> = ({
   };
 
   return (
-    <div className={className} onMouseDown={selectHandler} style={style}>
+    <div className={className} onMouseDown={() => onSelect(id)} style={style}>
       <TitleBar
         background={titleBackground}
         color={titleColor}
@@ -192,9 +175,9 @@ export const Window: FC<Props> = ({
         showMaximizeButton={resizable}
         title={title}
         maximized={maximized}
-        onClose={closeHandler}
+        onClose={() => onClose(id)}
         onMaximize={toggleMaximize}
-        onMinimise={minimizeHandler}
+        onMinimise={() => onMinimise(id)}
         onMoveStart={moveStartHandler}
       />
       <main className={cn(styles.content, { [styles.frozen]: frozen })}>

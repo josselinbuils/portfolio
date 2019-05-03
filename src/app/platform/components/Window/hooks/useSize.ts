@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
 import { TITLEBAR_HEIGHT } from '../constants';
 import { bound, getDesktopSize } from '../utils';
@@ -16,32 +16,28 @@ export function useSize(
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
   const contentRatioRef = useRef<number | undefined>();
 
-  const updateSize = useCallback(
-    (width, height, force = false) => {
-      if (!force) {
-        width = bound(width, minWidth, maxWidth);
-        height = bound(height, minHeight, maxHeight);
+  function updateSize(width: number, height: number, force = false) {
+    if (!force) {
+      width = bound(width, minWidth, maxWidth);
+      height = bound(height, minHeight, maxHeight);
 
-        if (contentRatioRef.current !== undefined) {
-          height =
-            Math.round(width / contentRatioRef.current) + TITLEBAR_HEIGHT;
-        }
+      if (contentRatioRef.current !== undefined) {
+        height = Math.round(width / contentRatioRef.current) + TITLEBAR_HEIGHT;
       }
+    }
 
-      const newSize = Object.freeze({ width, height });
+    const newSize = Object.freeze({ width, height });
 
-      setSize(newSize);
-      callback(newSize);
+    setSize(newSize);
+    callback(newSize);
 
-      return newSize;
-    },
-    [callback, maxHeight, maxWidth, minHeight, minWidth]
-  );
+    return newSize;
+  }
 
-  const setMaxSize = useCallback(() => {
+  function setMaxSize() {
     const { width, height } = getDesktopSize();
     return updateSize(width, height, true);
-  }, [updateSize]);
+  }
 
   useEffect(() => {
     if (keepContentRatio) {

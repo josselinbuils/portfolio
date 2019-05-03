@@ -9,9 +9,8 @@ export const App = () => {
   const [selectionStyle, setSelectionStyle] = useState<CSSProperties>();
   const appRef = useRef(null);
   const windowManager = useWindowManager();
-  const dragAndDropHandler = useDragAndDrop();
 
-  const mouseDownHandler = dragAndDropHandler(
+  const mouseDownHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
       if (downEvent.target !== appRef.current) {
         return;

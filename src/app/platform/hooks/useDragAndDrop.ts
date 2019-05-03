@@ -1,13 +1,14 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { EventHandler } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 import { useEventListener } from './useEventListener';
 
-export function useDragAndDrop(): (
+// TODO remove global event listeners
+export function useDragAndDrop(
   downHandler: (downEvent: MouseEvent) => EventHandler<'mousemove'> | void,
   upHandler: EventHandler<'mouseup'>
-) => (downEvent: React.MouseEvent) => void {
+): (downEvent: React.MouseEvent) => void {
   const moveHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
   const upHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
 
@@ -19,33 +20,25 @@ export function useDragAndDrop(): (
     upHandlerRef.current(upEvent);
   });
 
-  return useCallback(
-    (
-      downHandler: (downEvent: MouseEvent) => EventHandler<'mousemove'> | void,
-      upHandler: EventHandler<'mouseup'>
-    ) => {
-      return (downEvent: React.MouseEvent) => {
-        if (downEvent.button !== MouseButton.Left) {
-          return;
-        }
+  return function dragAndDropHandler(downEvent: React.MouseEvent) {
+    if (downEvent.button !== MouseButton.Left) {
+      return;
+    }
 
-        downEvent.preventDefault();
-        downEvent.persist();
+    downEvent.preventDefault();
+    downEvent.persist();
 
-        const moveHandler = downHandler(downEvent.nativeEvent);
+    const moveHandler = downHandler(downEvent.nativeEvent);
 
-        // Handler could be canceled inside down handler
-        if (moveHandler !== undefined) {
-          moveHandlerRef.current = moveHandler;
+    // Handler could be canceled inside down handler
+    if (moveHandler !== undefined) {
+      moveHandlerRef.current = moveHandler;
 
-          upHandlerRef.current = (upEvent: MouseEvent) => {
-            upHandler(upEvent);
-            moveHandlerRef.current = noop;
-            upHandlerRef.current = noop;
-          };
-        }
+      upHandlerRef.current = (upEvent: MouseEvent) => {
+        upHandler(upEvent);
+        moveHandlerRef.current = noop;
+        upHandlerRef.current = noop;
       };
-    },
-    []
-  );
+    }
+  };
 }
