@@ -18,7 +18,7 @@ const smileys: { [smiley: string]: string } = {
 export const Notes: WindowComponent = (props: InjectedWindowProps) => {
   const [notes, setNotes] = useState(getDefaultNotes);
 
-  const saveNotes = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  function saveNotes(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newNotes = Object.keys(smileys).reduce((notes, smiley) => {
       const escapedSmiley = smiley.replace(/([()[{*+.$^\\|?])/g, '\\$1');
       return notes.replace(new RegExp(escapedSmiley, 'gim'), smileys[smiley]);
@@ -26,7 +26,7 @@ export const Notes: WindowComponent = (props: InjectedWindowProps) => {
 
     setNotes(newNotes);
     localStorage.setItem('notes', newNotes);
-  };
+  }
 
   return (
     <Window

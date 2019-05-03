@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
 import {
@@ -33,125 +27,116 @@ export const Terminal: WindowComponent = ({
   const executorIdRef = useRef(-1);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  const loadExecutor = useCallback(
-    (executor: Executor, args: string[]): void => {
-      executionManager.push({
-        args,
-        id: ++executorIdRef.current,
-        inProgress: false,
-        executor
-      });
-    },
-    [executionManager]
-  );
+  function exec(str: string): void {
+    const command = str.trim().split(' ')[0];
 
-  const exec = useCallback(
-    async (str: string): Promise<void> => {
-      const command = str.trim().split(' ')[0];
+    loadExecutor(Command, [USER, str]);
 
-      loadExecutor(Command, [USER, str]);
+    if (command.length > 0) {
+      if (commands[commands.length - 1] !== command) {
+        commandManager.push(command);
+        setCommandIndex(commands.length + 1);
+      } else {
+        setCommandIndex(commands.length);
+      }
 
-      if (command.length > 0) {
-        if (commands[commands.length - 1] !== command) {
-          commandManager.push(command);
-          setCommandIndex(commands.length + 1);
+      if (command === 'clear') {
+        executionManager.clear();
+      } else {
+        if (executors[command]) {
+          // TODO handle errors
+          loadExecutor(executors[command], str.split(' ').slice(1));
         } else {
-          setCommandIndex(commands.length);
-        }
-
-        if (command === 'clear') {
-          executionManager.clear();
-        } else {
-          if (executors[command]) {
-            // TODO handle errors
-            loadExecutor(executors[command], str.split(' ').slice(1));
-          } else {
-            loadExecutor(BashError, [command]);
-          }
+          loadExecutor(BashError, [command]);
         }
       }
-    },
-    [commandManager, commands, executionManager, loadExecutor]
-  );
+    }
+  }
 
-  const navigate = useCallback(
-    async (event: KeyboardEvent): Promise<void> => {
-      switch (event.key) {
-        case 'ArrowDown':
-        case 'Down':
-          event.preventDefault();
-          if (commandIndex < commands.length) {
-            const newIndex = commandIndex + 1;
-            setCommandIndex(newIndex);
-            setUserInput(newIndex < commands.length ? commands[newIndex] : '');
-          }
-          break;
+  function loadExecutor(executor: Executor, args: string[]): void {
+    executionManager.push({
+      args,
+      id: ++executorIdRef.current,
+      inProgress: false,
+      executor
+    });
+  }
 
-        case 'ArrowLeft':
-        case 'Left':
-          event.preventDefault();
-          if (caretIndex > 0) {
-            setCaretIndex(caretIndex - 1);
-          }
-          break;
+  function navigate(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'Down':
+        event.preventDefault();
+        if (commandIndex < commands.length) {
+          const newIndex = commandIndex + 1;
+          setCommandIndex(newIndex);
+          setUserInput(newIndex < commands.length ? commands[newIndex] : '');
+        }
+        break;
 
-        case 'ArrowRight':
-        case 'Right':
-          event.preventDefault();
-          if (caretIndex < userInput.length) {
-            setCaretIndex(caretIndex - 1);
-          }
-          break;
+      case 'ArrowLeft':
+      case 'Left':
+        event.preventDefault();
+        if (caretIndex > 0) {
+          setCaretIndex(caretIndex - 1);
+        }
+        break;
 
-        case 'ArrowUp':
-        case 'Up':
-          event.preventDefault();
-          if (commandIndex > 0) {
-            const newIndex = commandIndex - 1;
-            setCommandIndex(newIndex);
-            setUserInput(commands[newIndex]);
-          }
-          break;
+      case 'ArrowRight':
+      case 'Right':
+        event.preventDefault();
+        if (caretIndex < userInput.length) {
+          setCaretIndex(caretIndex - 1);
+        }
+        break;
 
-        case 'Backspace':
-          event.preventDefault();
-          if (caretIndex > 0) {
-            setUserInput(
-              userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex)
-            );
-            setCaretIndex(caretIndex - 1);
-          }
-          break;
+      case 'ArrowUp':
+      case 'Up':
+        event.preventDefault();
+        if (commandIndex > 0) {
+          const newIndex = commandIndex - 1;
+          setCommandIndex(newIndex);
+          setUserInput(commands[newIndex]);
+        }
+        break;
 
-        case 'Enter':
-          event.preventDefault();
-          setUserInput('');
-          await exec(userInput);
-          break;
-
-        case 'Tab':
-          event.preventDefault();
-
-          if (userInput.length === 0) {
-            return;
-          }
-          const command = Object.keys(executors).find(
-            c => c.indexOf(userInput) === 0
+      case 'Backspace':
+        event.preventDefault();
+        if (caretIndex > 0) {
+          setUserInput(
+            userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex)
           );
+          setCaretIndex(caretIndex - 1);
+        }
+        break;
 
-          if (command !== undefined) {
-            setUserInput(command);
-          }
-          break;
+      case 'Enter':
+        event.preventDefault();
+        setUserInput('');
+        exec(userInput);
+        break;
 
-        default:
-        // Does nothing
-      }
-    },
-    [caretIndex, commandIndex, commands, exec, userInput]
-  );
+      case 'Tab':
+        event.preventDefault();
 
-  useEventListener('keydown', async (event: KeyboardEvent) => {
+        if (userInput.length === 0) {
+          return;
+        }
+        const command = Object.keys(executors).find(
+          c => c.indexOf(userInput) === 0
+        );
+
+        if (command !== undefined) {
+          setUserInput(command);
+        }
+        break;
+
+      default:
+      // Does nothing
+    }
+  }
+
+  useEventListener('keydown', (event: KeyboardEvent) => {
     if (!active) {
       return;
     }
@@ -196,7 +181,7 @@ export const Terminal: WindowComponent = ({
       );
       setCaretIndex(caretIndex + 1);
     } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
-      await navigate(event);
+      navigate(event);
     }
   });
 
@@ -208,7 +193,7 @@ export const Terminal: WindowComponent = ({
     if (terminalElement !== null) {
       terminalElement.scrollTop = terminalElement.scrollHeight;
     }
-  }, [executions, terminalRef]);
+  }, [executions]);
 
   useEffect(() => {
     exec('about');

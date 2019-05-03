@@ -7,13 +7,11 @@ export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   onClick,
   iconClass,
   title
-}) => {
-  return (
-    <li className={styles.item} key={title} onClick={onClick}>
-      <div className={styles.icon}>
-        {iconClass && <i className={classNames('fas', iconClass)} />}
-      </div>
-      <div className={styles.title}>{title}</div>
-    </li>
-  );
-};
+}) => (
+  <li className={styles.item} key={title} onClick={onClick}>
+    <div className={styles.icon}>
+      {iconClass && <i className={classNames('fas', iconClass)} />}
+    </div>
+    <div className={styles.title}>{title}</div>
+  </li>
+);
