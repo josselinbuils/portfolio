@@ -1,13 +1,14 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
-import { About, BashError, Command, Executor } from './executors';
+import { About, BashError, Command, Executor, Open } from './executors';
 import styles from './Terminal.module.scss';
 
 const USER = 'guest';
 
 const executors: { [name: string]: Executor } = {
-  about: About
+  about: About,
+  open: Open
 };
 
 export const Terminal: WindowComponent = ({ active, ...rest }) => {
@@ -27,7 +28,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
 
     if (command.length > 0) {
       if (commands[commands.length - 1] !== command) {
-        commandManager.push(command);
+        commandManager.push(str);
         setCommandIndex(commands.length + 1);
       } else {
         setCommandIndex(commands.length);
