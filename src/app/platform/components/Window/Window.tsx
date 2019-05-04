@@ -20,6 +20,7 @@ export const Window: FC<Props> = ({
   maxHeight = Infinity,
   maxWidth = Infinity,
   minHeight,
+  minimizedPosition,
   minWidth,
   onClose,
   onMinimise,
@@ -137,6 +138,11 @@ export const Window: FC<Props> = ({
       setUnminimizeProps({ ...position, ...size });
       setMinimized(true);
       setSize(0, 0, true);
+
+      if (minimizedPosition !== undefined) {
+        const { x, y } = minimizedPosition;
+        setPosition(x, y, width);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
@@ -198,6 +204,7 @@ interface Props {
   maxHeight?: number;
   maxWidth?: number;
   minHeight: number;
+  minimizedPosition?: Position;
   minWidth: number;
   resizable?: boolean;
   title: string;

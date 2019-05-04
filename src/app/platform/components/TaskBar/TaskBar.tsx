@@ -14,10 +14,10 @@ export const TaskBar: FC = () => {
 
   return (
     <div className={styles.taskBar} ref={taskBarRef}>
-      {taskDescriptors.map(({ windowComponent, windowInstance }) => (
+      {taskDescriptors.map(({ windowComponent, windowInstance }, index) => (
         <Task
           taskBarRef={taskBarRef}
-          key={getTaskKey(windowComponent, windowInstance)}
+          key={getTaskKey(windowComponent, windowInstance, index)}
           windowComponent={windowComponent}
           windowInstance={windowInstance}
         />

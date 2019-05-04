@@ -1,8 +1,12 @@
 import cn from 'classnames';
-import React, { FC, RefObject, useRef } from 'react';
+import React, { FC, RefObject, useEffect, useRef } from 'react';
 import { WindowComponent } from '~/platform/components/Window';
+import { useInjector } from '~/platform/hooks';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
-import { WindowInstance } from '~/platform/services/WindowManager';
+import {
+  WindowInstance,
+  WindowManager
+} from '~/platform/services/WindowManager';
 import { useTaskContextMenu, useTaskRunner } from './hooks';
 import styles from './Task.module.scss';
 
@@ -11,7 +15,7 @@ export const Task: FC<Props> = ({
   windowInstance,
   windowComponent
 }) => {
-  const taskRef = useRef(null);
+  const taskRef = useRef<HTMLDivElement>(null);
   const getTaskContextMenuDescriptor = useTaskContextMenu(
     taskBarRef,
     taskRef,
@@ -19,7 +23,21 @@ export const Task: FC<Props> = ({
     windowInstance
   );
   const run = useTaskRunner(windowComponent, windowInstance);
+  const windowManager = useInjector(WindowManager);
   const active = windowInstance && windowInstance.active;
+
+  useEffect(() => {
+    if (
+      taskBarRef.current !== null &&
+      taskRef.current !== null &&
+      windowInstance !== undefined
+    ) {
+      const x = taskBarRef.current.clientWidth;
+      const taskClientRect = taskRef.current.getBoundingClientRect();
+      const y = Math.round(taskClientRect.top + taskClientRect.height / 3);
+      windowManager.setMinimizedPosition(windowInstance.id, { x, y });
+    }
+  }, [taskBarRef, windowInstance, windowManager]);
 
   return (
     <WithContextMenu descriptor={getTaskContextMenuDescriptor}>

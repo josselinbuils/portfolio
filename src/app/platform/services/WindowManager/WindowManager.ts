@@ -1,6 +1,7 @@
 import { Subject } from '~/platform/utils';
 import { WindowInstance } from './WindowInstance';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { Position } from '~/platform/interfaces';
 
 export class WindowManager {
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
@@ -44,6 +45,11 @@ export class WindowManager {
 
     this.windowInstances.push(windowInstance);
     this.selectWindow(windowInstance.id);
+  }
+
+  setMinimizedPosition(id: number, position: Position) {
+    this.getWindowInstance(id).minimizedPosition = position;
+    this.publishWindowInstances();
   }
 
   showWindow(id: number): void {

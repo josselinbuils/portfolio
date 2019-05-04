@@ -18,11 +18,19 @@ export const Windows: FC = () => {
   return (
     <>
       {windowInstances.map(
-        ({ active, id, visible, windowComponent: WindowComponent, zIndex }) => (
+        ({
+          active,
+          id,
+          minimizedPosition,
+          visible,
+          windowComponent: WindowComponent,
+          zIndex
+        }) => (
           <WindowComponent
             active={active}
             key={id}
             id={id}
+            minimizedPosition={minimizedPosition}
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
