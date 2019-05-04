@@ -25,6 +25,8 @@ export const Task: FC<Props> = ({
   const run = useTaskRunner(windowComponent, windowInstance);
   const windowManager = useInjector(WindowManager);
   const active = windowInstance && windowInstance.active;
+  const { iconClass } = windowComponent;
+  const iconClassName = cn(iconClass, styles[iconClass.split(' ')[1]]);
 
   useEffect(() => {
     if (
@@ -46,7 +48,7 @@ export const Task: FC<Props> = ({
         onClick={run}
         ref={taskRef}
       >
-        <i className={windowComponent.iconClass} />
+        <i className={iconClassName} />
         {windowInstance && <div className={styles.runIndicator} />}
       </div>
     </WithContextMenu>
