@@ -1,8 +1,8 @@
 import { Subject } from '~/platform/utils';
 import { WindowInstance } from './WindowInstance';
-import { WindowComponent } from '~/platform/providers/WindowProvider/WindowComponent';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 
-export class WindowManager extends Subject<WindowInstance[]> {
+export class WindowManager {
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
   private readonly windowInstances: WindowInstance[] = [];

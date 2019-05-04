@@ -1,9 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useWindowManager } from './hooks';
-import { WindowInstance } from './WindowInstance';
+import { useInjector } from '~/platform/hooks';
+import {
+  WindowInstance,
+  WindowManager
+} from '~/platform/services/WindowManager';
 
 export const Windows: FC = () => {
-  const windowManager = useWindowManager();
+  const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
   useEffect(() => {

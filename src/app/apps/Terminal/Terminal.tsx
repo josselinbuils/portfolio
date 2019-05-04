@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Window } from '~/platform/components/Window';
+import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
-import { WindowComponent } from '~/platform/providers/WindowProvider';
 import { About, BashError, Command, Executor } from './executors';
 import styles from './Terminal.module.scss';
 

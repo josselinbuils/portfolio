@@ -1,14 +1,15 @@
+import { WindowComponent } from '~/platform/components/Window';
+import { useInjector } from '~/platform/hooks';
 import {
-  useWindowManager,
-  WindowComponent,
-  WindowInstance
-} from '~/platform/providers/WindowProvider';
+  WindowInstance,
+  WindowManager
+} from '~/platform/services/WindowManager';
 
 export function useTaskRunner(
   windowComponent: WindowComponent,
   windowInstance?: WindowInstance
 ) {
-  const windowManager = useWindowManager();
+  const windowManager = useInjector(WindowManager);
 
   return function run() {
     if (windowInstance !== undefined) {

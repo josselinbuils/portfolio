@@ -1,12 +1,12 @@
 import React, { CSSProperties, useRef, useState } from 'react';
-import { useDragAndDrop } from '~/platform/hooks';
-import { useWindowManager } from '~/platform/providers/WindowProvider';
+import { useDragAndDrop, useInjector } from '~/platform/hooks';
+import { WindowManager } from '~/platform/services';
 import styles from './Desktop.module.scss';
 
 export const Desktop = () => {
   const [selectionStyle, setSelectionStyle] = useState<CSSProperties>();
   const desktopRef = useRef(null);
-  const windowManager = useWindowManager();
+  const windowManager = useInjector(WindowManager);
 
   const mouseDownHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import { WindowComponent } from '~/platform/components/Window';
+import { useInjector } from '~/platform/hooks';
 import {
-  useWindowManager,
-  WindowComponent,
-  WindowInstance
-} from '~/platform/providers/WindowProvider';
+  WindowInstance,
+  WindowManager
+} from '~/platform/services/WindowManager';
 import { TaskDescriptor } from '../TaskDescriptor';
 
 export function useTaskDescriptors(
@@ -12,7 +13,7 @@ export function useTaskDescriptors(
   const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
     getTaskDescriptors(pinnedWindowComponents)
   );
-  const windowManager = useWindowManager();
+  const windowManager = useInjector(WindowManager);
 
   useEffect(() => {
     return windowManager.windowInstancesSubject.subscribe(windowInstances => {

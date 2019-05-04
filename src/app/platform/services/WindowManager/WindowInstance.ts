@@ -1,4 +1,4 @@
-import { WindowComponent } from '~/platform/providers/WindowProvider';
+import { WindowComponent } from '~/platform/components/Window';
 
 export interface WindowInstance {
   active: boolean;

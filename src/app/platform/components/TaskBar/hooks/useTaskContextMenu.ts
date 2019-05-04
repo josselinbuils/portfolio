@@ -3,11 +3,12 @@ import {
   ContextMenuDescriptor,
   ContextMenuItemDescriptor
 } from '~/platform/components/ContextMenu';
+import { WindowComponent } from '~/platform/components/Window';
+import { useInjector } from '~/platform/hooks';
 import {
-  useWindowManager,
-  WindowComponent,
-  WindowInstance
-} from '~/platform/providers/WindowProvider';
+  WindowInstance,
+  WindowManager
+} from '~/platform/services/WindowManager';
 
 export function useTaskContextMenu(
   taskBarRef: RefObject<HTMLDivElement>,
@@ -15,7 +16,7 @@ export function useTaskContextMenu(
   windowComponent: WindowComponent,
   windowInstance?: WindowInstance
 ): () => ContextMenuDescriptor {
-  const windowManager = useWindowManager();
+  const windowManager = useInjector(WindowManager);
 
   return function getTaskContextMenuDescriptor() {
     if (taskBarRef.current === null) {

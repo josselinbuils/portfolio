@@ -1,10 +1,8 @@
 import cn from 'classnames';
 import React, { FC, RefObject, useRef } from 'react';
+import { WindowComponent } from '~/platform/components/Window';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
-import {
-  WindowComponent,
-  WindowInstance
-} from '~/platform/providers/WindowProvider';
+import { WindowInstance } from '~/platform/services/WindowManager';
 import { useTaskContextMenu, useTaskRunner } from './hooks';
 import styles from './Task.module.scss';
 
