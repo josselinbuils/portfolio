@@ -5,10 +5,10 @@ export function useList<T>(): [T[], ListManager<T>] {
   const manager = useMemo(
     () => ({
       clear: () => setList([]),
-      push: (item: T) => setList([...list, item]),
-      update: () => setList([...list])
+      push: (item: T) => setList(l => [...l, item]),
+      update: () => setList(l => [...l])
     }),
-    [list]
+    []
   );
   return [list, manager];
 }
