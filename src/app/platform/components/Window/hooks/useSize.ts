@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
-import { TITLEBAR_HEIGHT } from '../constants';
-import { bound, getDesktopSize } from '../utils';
+import { bound, getSize } from '../utils';
 
 export function useSize(
   sizeLimits: SizeLimits,
   keepContentRatio: boolean,
+  desktopRef: RefObject<HTMLElement>,
+  contentRef: RefObject<HTMLElement>,
   callback: (size: Size) => void
 ): [
   Size,
@@ -13,6 +14,7 @@ export function useSize(
   () => Size
 ] {
   const { maxHeight, maxWidth, minHeight, minWidth } = sizeLimits;
+  const [deltaY, setDeltaY] = useState(0);
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
   const contentRatioRef = useRef<number | undefined>();
 
@@ -22,7 +24,7 @@ export function useSize(
       height = bound(height, minHeight, maxHeight);
 
       if (contentRatioRef.current !== undefined) {
-        height = Math.round(width / contentRatioRef.current) + TITLEBAR_HEIGHT;
+        height = Math.round(width / contentRatioRef.current) + deltaY;
       }
     }
 
@@ -35,17 +37,20 @@ export function useSize(
   }
 
   function setMaxSize() {
-    const { width, height } = getDesktopSize();
+    const { width, height } = getSize(desktopRef);
     return updateSize(width, height, true);
   }
 
   useEffect(() => {
     if (keepContentRatio) {
-      contentRatioRef.current = size.width / (size.height - TITLEBAR_HEIGHT);
+      const contentSize = getSize(contentRef);
+      contentRatioRef.current = contentSize.width / contentSize.height;
+      setDeltaY(size.height - contentSize.height);
     } else {
       contentRatioRef.current = undefined;
     }
-  }, [keepContentRatio, size]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentRef, keepContentRatio]);
 
   return [size, updateSize, setMaxSize];
 }

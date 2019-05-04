@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, RefObject, useEffect, useState } from 'react';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
   WindowManager
 } from '~/platform/services/WindowManager';
 
-export const Windows: FC = () => {
+export const Windows: FC<Props> = ({ desktopRef }) => {
   const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
@@ -21,16 +21,17 @@ export const Windows: FC = () => {
         ({
           active,
           id,
-          minimizedPosition,
+          minimizedTopPosition,
           visible,
           windowComponent: WindowComponent,
           zIndex
         }) => (
           <WindowComponent
             active={active}
+            desktopRef={desktopRef}
             key={id}
             id={id}
-            minimizedPosition={minimizedPosition}
+            minimizedTopPosition={minimizedTopPosition}
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
@@ -42,3 +43,7 @@ export const Windows: FC = () => {
     </>
   );
 };
+
+interface Props {
+  desktopRef: RefObject<HTMLElement>;
+}

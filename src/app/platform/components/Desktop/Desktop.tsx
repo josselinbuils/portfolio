@@ -1,11 +1,12 @@
-import React, { CSSProperties, useRef, useState } from 'react';
+import React, { CSSProperties, FC, useRef, useState } from 'react';
 import { useDragAndDrop, useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
+import { Windows } from './Windows';
 import styles from './Desktop.module.scss';
 
-export const Desktop = () => {
+export const Desktop: FC = () => {
   const [selectionStyle, setSelectionStyle] = useState<CSSProperties>();
-  const desktopRef = useRef(null);
+  const desktopRef = useRef<HTMLDivElement>(null);
   const windowManager = useInjector(WindowManager);
 
   const mouseDownHandler = useDragAndDrop(
@@ -38,6 +39,7 @@ export const Desktop = () => {
       onMouseDown={mouseDownHandler}
       ref={desktopRef}
     >
+      <Windows desktopRef={desktopRef} />
       {selectionStyle && (
         <div className={styles.selection} style={selectionStyle} />
       )}

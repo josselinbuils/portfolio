@@ -34,10 +34,9 @@ export const Task: FC<Props> = ({
       taskRef.current !== null &&
       windowInstance !== undefined
     ) {
-      const x = taskBarRef.current.clientWidth;
       const taskClientRect = taskRef.current.getBoundingClientRect();
       const y = Math.round(taskClientRect.top + taskClientRect.height / 3);
-      windowManager.setMinimizedPosition(windowInstance.id, { x, y });
+      windowManager.setMinimizedTopPosition(windowInstance.id, y);
     }
   }, [taskBarRef, windowInstance, windowManager]);
 

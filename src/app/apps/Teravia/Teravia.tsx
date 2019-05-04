@@ -9,12 +9,13 @@ export const Teravia: WindowComponent = ({ active, ...rest }) => {
       {...rest}
       active={active}
       background="#1a1d1e"
-      titleColor="#2b5158"
+      keepContentRatio={true}
       maxHeight={791}
       maxWidth={1367}
       minHeight={472}
       minWidth={800}
       title={Teravia.appName}
+      titleColor="#2b5158"
     >
       <iframe
         allow="fullscreen"

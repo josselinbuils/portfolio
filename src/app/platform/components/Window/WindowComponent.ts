@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { Position } from '~/platform/interfaces';
+import { FC, RefObject } from 'react';
 
 export interface WindowComponent extends FC<InjectedWindowProps> {
   appName: string;
@@ -9,7 +8,8 @@ export interface WindowComponent extends FC<InjectedWindowProps> {
 interface InjectedWindowProps {
   active: boolean;
   id: number;
-  minimizedPosition?: Position;
+  desktopRef: RefObject<HTMLElement>;
+  minimizedTopPosition?: number;
   visible: boolean;
   zIndex: number;
   onClose(id: number): void;

@@ -1,9 +1,9 @@
 import cn from 'classnames';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
 import { useDragAndDrop, useEventListener } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
-import { ANIMATION_DURATION, TASKBAR_WIDTH } from './constants';
+import { ANIMATION_DURATION } from './constants';
 import { useAnimation, usePosition, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
 import { getRelativeOffset } from './utils';
@@ -14,13 +14,14 @@ const VERTICAL_OFFSET_TO_UNMAXIMIZE = 20;
 export const Window: FC<Props> = ({
   active,
   background,
+  desktopRef,
   children,
   keepContentRatio = false,
   id,
   maxHeight = Infinity,
   maxWidth = Infinity,
   minHeight,
-  minimizedPosition,
+  minimizedTopPosition,
   minWidth,
   onClose,
   onMinimise,
@@ -35,15 +36,18 @@ export const Window: FC<Props> = ({
 }) => {
   const [frozen, setFrozen] = useState(false);
   const [minimized, setMinimized] = useState(false);
+  const [unmaximizeProps, setUnmaximizeProps] = useState<Position & Size>();
+  const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
+  const contentRef = useRef<HTMLMainElement>(null);
   const [animationDurationMs, animate] = useAnimation();
   const [size, setSize, setMaxSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
+    desktopRef,
+    contentRef,
     onResize
   );
-  const [position, setPosition] = usePosition(size);
-  const [unmaximizeProps, setUnmaximizeProps] = useState<Position & Size>();
-  const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
+  const [position, setPosition] = usePosition(size, desktopRef);
   const maximized = unmaximizeProps !== undefined;
 
   function toggleMaximize(
@@ -68,7 +72,7 @@ export const Window: FC<Props> = ({
       setUnmaximizeProps({ ...position, ...size });
 
       if (!keepPosition) {
-        setPosition(TASKBAR_WIDTH, 0, size.width);
+        setPosition(0, 0, size.width);
       }
       return setMaxSize();
     }
@@ -139,9 +143,8 @@ export const Window: FC<Props> = ({
       setMinimized(true);
       setSize(0, 0, true);
 
-      if (minimizedPosition !== undefined) {
-        const { x, y } = minimizedPosition;
-        setPosition(x, y, width);
+      if (minimizedTopPosition !== undefined) {
+        setPosition(0, minimizedTopPosition, width);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +189,10 @@ export const Window: FC<Props> = ({
         onMinimise={() => onMinimise(id)}
         onMoveStart={moveStartHandler}
       />
-      <main className={cn(styles.content, { [styles.frozen]: frozen })}>
+      <main
+        className={cn(styles.content, { [styles.frozen]: frozen })}
+        ref={contentRef}
+      >
         {children}
       </main>
       {resizable && (
@@ -199,12 +205,13 @@ export const Window: FC<Props> = ({
 interface Props {
   active: boolean;
   background: string;
+  desktopRef: RefObject<HTMLElement>;
   keepContentRatio?: boolean;
   id: number;
   maxHeight?: number;
   maxWidth?: number;
   minHeight: number;
-  minimizedPosition?: Position;
+  minimizedTopPosition?: number;
   minWidth: number;
   resizable?: boolean;
   title: string;
