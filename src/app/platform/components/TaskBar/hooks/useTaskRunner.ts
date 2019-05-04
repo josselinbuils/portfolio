@@ -1,12 +1,18 @@
-import { useWindowManager } from '~/platform/providers/WindowProvider';
-import { Task } from '~/platform/components/TaskBar/Task';
+import {
+  useWindowManager,
+  WindowComponent,
+  WindowInstance
+} from '~/platform/providers/WindowProvider';
 
-export function useTaskRunner() {
+export function useTaskRunner(
+  windowComponent: WindowComponent,
+  windowInstance?: WindowInstance
+) {
   const windowManager = useWindowManager();
 
-  return function run(task: Task) {
-    if (task.instance !== undefined) {
-      const id = task.instance.id;
+  return function run() {
+    if (windowInstance !== undefined) {
+      const id = windowInstance.id;
 
       if (windowManager.isWindowVisible(id)) {
         if (windowManager.isWindowSelected(id)) {
@@ -18,7 +24,7 @@ export function useTaskRunner() {
         windowManager.showWindow(id);
       }
     } else {
-      windowManager.openWindow(task.component);
+      windowManager.openWindow(windowComponent);
     }
   };
 }

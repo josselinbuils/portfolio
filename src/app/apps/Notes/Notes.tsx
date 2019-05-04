@@ -1,9 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Window } from '~/platform/components/Window';
-import {
-  InjectedWindowProps,
-  WindowComponent
-} from '~/platform/providers/WindowProvider';
+import { WindowComponent } from '~/platform/providers/WindowProvider';
 import styles from './Notes.module.scss';
 
 const smileys: { [smiley: string]: string } = {
@@ -15,7 +12,7 @@ const smileys: { [smiley: string]: string } = {
   ';p': '\uD83D\uDE1C'
 };
 
-export const Notes: WindowComponent = (props: InjectedWindowProps) => {
+export const Notes: WindowComponent = props => {
   const [notes, setNotes] = useState(getDefaultNotes);
 
   function saveNotes(event: ChangeEvent<HTMLTextAreaElement>): void {

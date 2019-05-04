@@ -1,10 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
-import {
-  InjectedWindowProps,
-  WindowComponent
-} from '~/platform/providers/WindowProvider';
+import { WindowComponent } from '~/platform/providers/WindowProvider';
 import { About, BashError, Command, Executor } from './executors';
 import styles from './Terminal.module.scss';
 
@@ -14,10 +11,7 @@ const executors: { [name: string]: Executor } = {
   about: About
 };
 
-export const Terminal: WindowComponent = ({
-  active,
-  ...rest
-}: InjectedWindowProps) => {
+export const Terminal: WindowComponent = ({ active, ...rest }) => {
   const [caretIndex, setCaretIndex] = useState(0);
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);

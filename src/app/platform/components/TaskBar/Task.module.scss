@@ -1,0 +1,33 @@
+@import '../../constants';
+
+.runIndicator {
+  background: $primary-color;
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+}
+
+.task {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 32px;
+  text-align: center;
+  position: relative;
+  cursor: default;
+
+  &.active {
+    background: lighten($background-color, 20%);
+  }
+
+  &.active:hover {
+    background: lighten($background-color, 25%);
+  }
+
+  &:hover {
+    background: lighten($background-color, 15%);
+  }
+}

@@ -1,28 +1,23 @@
-import React, {
-  Children,
-  cloneElement,
-  FC,
-  ReactElement,
-  useState
-} from 'react';
+import React, { FC, useState } from 'react';
 import {
   ContextMenu,
   ContextMenuDescriptor
 } from '~/platform/components/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
-import { decorateHandler } from '~/platform/utils';
+import styles from './ContextMenuProvider.module.scss';
 
 export const ContextMenuProvider: FC = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
-
-  const child = Children.only(children) as ReactElement;
   const hide = () => setDescriptor(undefined);
 
   return (
     <ContextMenuContext.Provider value={setDescriptor}>
-      {cloneElement(child, {
-        onMouseDown: decorateHandler(hide, child.props.onMouseDown)
-      })}
+      <div
+        className={descriptor && styles.overlay}
+        onMouseDown={descriptor && hide}
+      >
+        <div className={descriptor && styles.eventLess}>{children}</div>
+      </div>
       {descriptor && <ContextMenu {...descriptor} onHide={hide} />}
     </ContextMenuContext.Provider>
   );

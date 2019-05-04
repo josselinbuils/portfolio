@@ -1,6 +1,6 @@
-import { ElementType } from 'react';
 import { Subject } from '~/platform/utils';
 import { WindowInstance } from './WindowInstance';
+import { WindowComponent } from '~/platform/providers/WindowProvider/WindowComponent';
 
 export class WindowManager extends Subject<WindowInstance[]> {
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
@@ -10,7 +10,7 @@ export class WindowManager extends Subject<WindowInstance[]> {
 
   closeWindow = (id: number): void => {
     const index = this.windowInstances.findIndex(
-      instance => instance.id === id
+      windowInstance => windowInstance.id === id
     );
 
     if (index === -1) {
@@ -33,12 +33,12 @@ export class WindowManager extends Subject<WindowInstance[]> {
     return this.getWindowInstance(id).visible;
   }
 
-  openWindow(component: ElementType): void {
+  openWindow(windowComponent: WindowComponent): void {
     const windowInstance: WindowInstance = {
       active: false,
       id: ++this.id,
-      component,
       visible: true,
+      windowComponent,
       zIndex: 0
     };
 
@@ -52,31 +52,46 @@ export class WindowManager extends Subject<WindowInstance[]> {
   }
 
   selectWindow = (id: number): void => {
-    let i = 0;
+    const windowInstance = this.getWindowInstance(id);
 
-    this.windowInstances
-      .filter(instance => instance.id !== id)
-      .sort((a, b) => (a.zIndex < b.zIndex ? -1 : 1))
-      .forEach(instance => {
-        instance.active = false;
-        instance.zIndex = ++i;
-      });
+    if (!windowInstance.active) {
+      let i = 0;
 
-    const instance = this.getWindowInstance(id);
-    instance.active = true;
-    instance.zIndex = ++i;
+      this.windowInstances
+        .filter(windowInstance => windowInstance.id !== id)
+        .sort((a, b) => (a.zIndex < b.zIndex ? -1 : 1))
+        .forEach(windowInstance => {
+          windowInstance.active = false;
+          windowInstance.zIndex = ++i;
+        });
 
-    this.publishWindowInstances();
+      windowInstance.active = true;
+      windowInstance.zIndex = ++i;
+
+      this.publishWindowInstances();
+    }
   };
 
   unselectAllWindows(): void {
-    this.windowInstances.forEach(instance => (instance.active = false));
-    this.publishWindowInstances();
+    const isThereWindowSelected = this.windowInstances.some(
+      ({ active }) => active
+    );
+
+    if (isThereWindowSelected) {
+      this.windowInstances.forEach(windowInstance => {
+        windowInstance.active = false;
+      });
+      this.publishWindowInstances();
+    }
   }
 
   unselectWindow(id: number): void {
-    this.getWindowInstance(id).active = false;
-    this.publishWindowInstances();
+    const windowInstance = this.getWindowInstance(id);
+
+    if (windowInstance.active) {
+      windowInstance.active = false;
+      this.publishWindowInstances();
+    }
   }
 
   private getWindowInstance(id: number): WindowInstance {

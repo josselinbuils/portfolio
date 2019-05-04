@@ -1,3 +1,3 @@
-export * from './useDescriptorFactory';
+export * from './useTaskContextMenu';
+export * from './useTaskDescriptors';
 export * from './useTaskRunner';
-export * from './useTasks';

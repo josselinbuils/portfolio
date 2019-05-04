@@ -1,46 +1,19 @@
-import React, { CSSProperties, useRef, useState } from 'react';
-import { TaskBar } from '~/platform/components/TaskBar';
+import React, { useEffect } from 'react';
+import { Terminal } from '~/apps';
+import { Desktop, TaskBar } from '~/platform/components';
 import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider';
 import { useWindowManager, Windows } from '~/platform/providers/WindowProvider';
-import styles from './App.module.scss';
-import { useDragAndDrop } from '~/platform/hooks';
 
 export const App = () => {
-  const [selectionStyle, setSelectionStyle] = useState<CSSProperties>();
-  const appRef = useRef(null);
   const windowManager = useWindowManager();
 
-  const mouseDownHandler = useDragAndDrop(
-    (downEvent: MouseEvent) => {
-      if (downEvent.target !== appRef.current) {
-        return;
-      }
-
-      windowManager.unselectAllWindows();
-
-      const startX = downEvent.clientX;
-      const startY = downEvent.clientY;
-
-      return (moveEvent: MouseEvent) => {
-        setSelectionStyle({
-          display: 'block',
-          left: Math.min(startX, moveEvent.clientX),
-          top: Math.min(startY, moveEvent.clientY),
-          width: Math.abs(moveEvent.clientX - startX),
-          height: Math.abs(moveEvent.clientY - startY)
-        });
-      };
-    },
-    () => setSelectionStyle(undefined)
-  );
+  useEffect(() => windowManager.openWindow(Terminal), [windowManager]);
 
   return (
     <ContextMenuProvider>
-      <main className={styles.app} onMouseDown={mouseDownHandler} ref={appRef}>
-        <TaskBar />
-        <Windows />
-        <div className={styles.selection} style={selectionStyle} />
-      </main>
+      <Desktop />
+      <TaskBar />
+      <Windows />
     </ContextMenuProvider>
   );
 };

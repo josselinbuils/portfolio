@@ -1,16 +1,10 @@
 import cn from 'classnames';
 import React from 'react';
 import { Window } from '~/platform/components/Window';
-import {
-  InjectedWindowProps,
-  WindowComponent
-} from '~/platform/providers/WindowProvider';
+import { WindowComponent } from '~/platform/providers/WindowProvider';
 import styles from './Teravia.module.scss';
 
-export const Teravia: WindowComponent = ({
-  active,
-  ...rest
-}: InjectedWindowProps) => {
+export const Teravia: WindowComponent = ({ active, ...rest }) => {
   return (
     <Window
       {...rest}

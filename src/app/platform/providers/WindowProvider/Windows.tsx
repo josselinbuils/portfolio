@@ -15,8 +15,8 @@ export const Windows: FC = () => {
   return (
     <>
       {windowInstances.map(
-        ({ active, component: Component, id, visible, zIndex }) => (
-          <Component
+        ({ active, id, visible, windowComponent: WindowComponent, zIndex }) => (
+          <WindowComponent
             active={active}
             key={id}
             id={id}
