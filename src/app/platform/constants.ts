@@ -1,9 +1,9 @@
-export const HTTP_PREFIX =
+export const PROD_HOSTNAME = 'josselinbuils.me';
+
+export const BASE_URL =
   window.location.host.indexOf('localhost') === 0
     ? 'http://localhost:9000'
-    : '';
-
-export const PROD_HOSTNAME = 'josselinbuils.me';
+    : `https://${PROD_HOSTNAME}/portfolio-react`;
 
 export enum MouseButton {
   Left = 0,
