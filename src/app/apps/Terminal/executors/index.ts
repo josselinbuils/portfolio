@@ -1,6 +1,7 @@
 export * from './About';
 export * from './AsyncExecutor';
 export * from './BashError';
+export * from './BuildManager';
 export * from './Command';
 export * from './Executor';
 export * from './Help';

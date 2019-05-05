@@ -1,5 +1,5 @@
 export class Subject<T> {
-  private subscriptions: ((value: T) => any)[] = [];
+  private subscriptions: ((value: T) => void)[] = [];
   private value: T | undefined;
 
   constructor(private defaultValue?: T) {
@@ -25,4 +25,4 @@ export class Subject<T> {
   }
 }
 
-type Subscription<T> = (value: T) => any;
+type Subscription<T> = (value: T) => void;

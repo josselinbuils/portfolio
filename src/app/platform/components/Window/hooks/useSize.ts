@@ -1,6 +1,7 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
 import { bound, getSize } from '../utils';
+import { useChangeDetector } from '~/platform/hooks';
 
 export function useSize(
   sizeLimits: SizeLimits,
@@ -16,7 +17,7 @@ export function useSize(
   const { maxHeight, maxWidth, minHeight, minWidth } = sizeLimits;
   const [deltaY, setDeltaY] = useState(0);
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
-  const contentRatioRef = useRef<number | undefined>();
+  const contentRatioRef = useRef<number>();
 
   function updateSize(width: number, height: number, force = false) {
     if (!force) {
@@ -41,7 +42,7 @@ export function useSize(
     return updateSize(width, height, true);
   }
 
-  useEffect(() => {
+  useChangeDetector(keepContentRatio, () => {
     if (keepContentRatio) {
       const contentSize = getSize(contentRef);
       contentRatioRef.current = contentSize.width / contentSize.height;
@@ -49,8 +50,7 @@ export function useSize(
     } else {
       contentRatioRef.current = undefined;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentRef, keepContentRatio]);
+  });
 
   return [size, updateSize, setMaxSize];
 }

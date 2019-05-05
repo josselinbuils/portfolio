@@ -1,10 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useEventListener, useList } from '~/platform/hooks';
+import { useEventListener, useList, useMount } from '~/platform/hooks';
 import {
   About,
   AsyncExecutor,
   BashError,
+  BuildManager,
   Command,
   Executor,
   Help,
@@ -16,10 +17,12 @@ import {
 import styles from './Terminal.module.scss';
 import { Deferred } from '~/platform/utils';
 
+const DEFAULT_ERROR_MESSAGE = 'an error occurred';
 const USER = 'guest';
 
 const executors: { [name: string]: Executor | AsyncExecutor } = {
   about: About,
+  bm: BuildManager,
   help: Help,
   open: Open,
   skills: Skills,
@@ -31,10 +34,12 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);
   const [executions, executionManager] = useList<Execution>();
-  const [waiting, setWaiting] = useState(false);
   const [userInput, setUserInput] = useState('');
   const executorIdRef = useRef(-1);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const lastExecution = executionManager.getLast();
+  const waiting =
+    lastExecution !== undefined && lastExecution.inProgress === true;
 
   async function exec(str: string): Promise<void> {
     const command = str.trim().split(' ')[0];
@@ -42,7 +47,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     await loadExecutor(Command, [USER, str]);
 
     if (command.length > 0) {
-      if (commands[commands.length - 1] !== command) {
+      if (commandManager.getLast() !== command) {
         commandManager.push(str);
         setCommandIndex(commands.length + 1);
       } else {
@@ -55,7 +60,8 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
         try {
           await loadExecutor(executors[command], str.split(' ').slice(1));
         } catch (error) {
-          await loadExecutor(BashError, [command, error.message]);
+          const errorMessage = error.message || DEFAULT_ERROR_MESSAGE;
+          await loadExecutor(BashError, [command, errorMessage]);
         }
       } else {
         await loadExecutor(BashError, [command]);
@@ -70,19 +76,19 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     const execution: Execution = {
       args,
       executor,
-      id: ++executorIdRef.current,
-      inProgress: false
+      id: ++executorIdRef.current
     };
 
     if (isAsyncExecutor(executor)) {
       const deferred = new Deferred();
 
+      execution.inProgress = true;
       execution.releaseHandler = deferred.resolve;
       executionManager.push(execution);
 
-      setWaiting(true);
       const error = await deferred.promise;
-      setWaiting(false);
+      execution.inProgress = false;
+      executionManager.update();
 
       if (error) {
         throw error;
@@ -179,7 +185,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
       event.preventDefault();
 
       if (waiting) {
-        executions[executions.length - 1].inProgress = false;
+        (executionManager.getLast() as Execution).inProgress = false;
         executionManager.update();
       } else {
         loadExecutor(Command, [USER, userInput]);
@@ -217,18 +223,18 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
 
   useEffect(() => setCaretIndex(userInput.length), [userInput]);
 
-  useLayoutEffect(() => {
-    const terminalElement = terminalRef.current;
+  useMount(() => {
+    const terminal = terminalRef.current as HTMLElement;
 
-    if (terminalElement !== null) {
-      terminalElement.scrollTop = terminalElement.scrollHeight;
-    }
-  }, [executions, waiting]);
+    new MutationObserver(
+      () => (terminal.scrollTop = terminal.scrollHeight)
+    ).observe(terminal, {
+      childList: true,
+      subtree: true
+    });
 
-  useEffect(() => {
     exec('about');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   return (
     <Window
@@ -246,17 +252,17 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
           ({ args, executor: Executor, id, inProgress, releaseHandler }) =>
             isAsyncExecutor(Executor) ? (
               <Executor
-                alive={inProgress}
+                alive={inProgress as boolean}
                 args={args}
                 key={id}
                 onRelease={releaseHandler as () => void}
               />
             ) : (
-              <Executor alive={inProgress} args={args} key={id} />
+              <Executor args={args} key={id} />
             )
         )}
         <div className={styles.userInput}>
-          {!waiting && <Command alive={false} args={[USER, userInput]} />}
+          {!waiting && <Command args={[USER, userInput]} />}
           <span
             className={styles.caret}
             style={{ left: !waiting ? `${USER.length + caretIndex + 2}ch` : 0 }}
@@ -276,6 +282,6 @@ interface Execution {
   args: string[];
   executor: Executor | AsyncExecutor;
   id: number;
-  inProgress: boolean;
+  inProgress?: boolean;
   releaseHandler?: (error?: Error) => void;
 }

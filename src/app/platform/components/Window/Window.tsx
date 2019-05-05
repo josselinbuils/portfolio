@@ -1,15 +1,17 @@
 import cn from 'classnames';
-import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
-import { useDragAndDrop, useEventListener } from '~/platform/hooks';
+import React, { FC, RefObject, useRef, useState } from 'react';
+import {
+  useChangeDetector,
+  useDragAndDrop,
+  useEventListener
+} from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
-import { ANIMATION_DURATION } from './constants';
+import { ANIMATION_DURATION, VERTICAL_OFFSET_TO_UNMAXIMIZE } from './constants';
 import { useAnimation, usePosition, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
 import { getRelativeOffset } from './utils';
 import styles from './Window.module.scss';
-
-const VERTICAL_OFFSET_TO_UNMAXIMIZE = 20;
 
 export const Window: FC<Props> = ({
   active,
@@ -128,7 +130,7 @@ export const Window: FC<Props> = ({
     () => setFrozen(false)
   );
 
-  useEffect(() => {
+  useChangeDetector(visible, () => {
     if (visible) {
       if (unminimizeProps !== undefined) {
         const { height, width, x, y } = unminimizeProps;
@@ -147,8 +149,7 @@ export const Window: FC<Props> = ({
         setPosition(0, minimizedTopPosition, width);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+  });
 
   useEventListener('resize', () => {
     if (maximized) {
