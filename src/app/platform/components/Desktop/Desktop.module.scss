@@ -1,7 +1,7 @@
 .desktop {
   position: relative;
-  margin-left: 60px;
-  width: calc(100vw - 60px);
+  flex-grow: 1;
+  flex-shrink: 1;
   height: 100vh;
   overflow: hidden;
 }

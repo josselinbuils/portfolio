@@ -1,12 +1,10 @@
 @import '../../constants';
 
 .taskBar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 60px;
+  flex-basis: 60px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  height: 100vh;
   background: $background-color;
-  z-index: 999;
   color: $text-color;
 }
