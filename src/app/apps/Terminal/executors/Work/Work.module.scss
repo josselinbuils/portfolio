@@ -1,0 +1,28 @@
+@import '../../constants';
+
+.description,
+.header {
+  margin: 0;
+}
+
+.description {
+  color: $secondary-color;
+  margin-top: 1ch;
+  text-align: justify;
+}
+
+.entry {
+  margin: 1ch;
+
+  & + & {
+    margin-top: 2ch;
+  }
+}
+
+.location {
+  margin-left: 1ch;
+}
+
+.period {
+  float: right;
+}

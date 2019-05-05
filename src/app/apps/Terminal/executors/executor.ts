@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 export interface Executor extends FC<ExecutorProps> {
-  type: ExecutorType;
+  type?: ExecutorType;
 }
 
 export interface ExecutorProps {

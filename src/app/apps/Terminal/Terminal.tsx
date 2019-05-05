@@ -8,7 +8,8 @@ import {
   Executor,
   Help,
   Open,
-  Skills
+  Skills,
+  Work
 } from './executors';
 import styles from './Terminal.module.scss';
 
@@ -18,7 +19,8 @@ const executors: { [name: string]: Executor } = {
   about: About,
   help: Help,
   open: Open,
-  skills: Skills
+  skills: Skills,
+  work: Work
 };
 
 export const Terminal: WindowComponent = ({ active, ...rest }) => {
