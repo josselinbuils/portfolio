@@ -5,7 +5,6 @@ import styles from './Help.module.scss';
 const commands = [
   ['bm', 'build manager'],
   ['open', 'open an application'],
-  ['projects', 'show my GitHub projects'],
   ['skills', 'show my main skills'],
   ['work', 'show my work experience']
 ];
