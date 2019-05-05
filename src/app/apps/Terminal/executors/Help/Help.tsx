@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './Help.module.scss';
 
 const commands = [
@@ -21,5 +21,3 @@ export const Help: Executor = () => (
     ))}
   </div>
 );
-
-Help.type = ExecutorType.Sync;

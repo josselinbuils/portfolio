@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './Skills.module.scss';
 
 export const Skills: Executor = () => (
@@ -21,5 +21,3 @@ export const Skills: Executor = () => (
     <span className={styles.orange}>;</span>
   </p>
 );
-
-Skills.type = ExecutorType.Sync;

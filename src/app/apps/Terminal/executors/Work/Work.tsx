@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './Work.module.scss';
 
 export const Work: Executor = () => (
@@ -38,5 +38,3 @@ export const Work: Executor = () => (
     </div>
   </>
 );
-
-Work.type = ExecutorType.Sync;

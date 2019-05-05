@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './About.module.scss';
 import photo from './josselinbuils.png';
 
@@ -33,5 +33,3 @@ export const About: Executor = () => (
     </div>
   </div>
 );
-
-About.type = ExecutorType.Sync;

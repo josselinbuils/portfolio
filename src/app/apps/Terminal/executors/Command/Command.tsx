@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './Command.module.scss';
 
 export const Command: Executor = ({ args }) => (
@@ -9,5 +9,3 @@ export const Command: Executor = ({ args }) => (
     <span>{args[1]}</span>
   </p>
 );
-
-Command.type = ExecutorType.Sync;

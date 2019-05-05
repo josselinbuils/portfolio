@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor, ExecutorType } from '../executor';
+import { Executor } from '../executor';
 import styles from './BashError.module.scss';
 
 const COMMANDS = [
@@ -43,5 +43,3 @@ export const BashError: Executor = ({ args }) => {
     </p>
   );
 };
-
-BashError.type = ExecutorType.Sync;
