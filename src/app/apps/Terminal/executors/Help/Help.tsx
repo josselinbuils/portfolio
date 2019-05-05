@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor } from '../executor';
+import { Executor } from '../Executor';
 import styles from './Help.module.scss';
 
 const commands = [
