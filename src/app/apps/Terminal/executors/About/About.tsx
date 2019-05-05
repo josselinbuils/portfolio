@@ -3,6 +3,12 @@ import { Executor } from '../Executor';
 import styles from './About.module.scss';
 import photo from './josselinbuils.png';
 
+const socialLinks = [
+  ['linkedin', 'https://linkedin.com/in/josselinbuils'],
+  ['github', 'https://github.com/josselinbuils'],
+  ['twitter', 'https://twitter.com/josselinbuils']
+];
+
 export const About: Executor = () => (
   <div className={styles.about}>
     <img src={photo} alt="me" />
@@ -11,23 +17,11 @@ export const About: Executor = () => (
         Hey, I'm Josselin, a full-stack JavaScript developer :)
       </p>
       <p className={styles.social}>
-        <a
-          href="https://linkedin.com/in/josselinbuils"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <i className="fab fa-linkedin" />
-        </a>
-        <a
-          href="https://github.com/josselinbuils"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <i className="fab fa-github" />
-        </a>
-        <a href="mailto://contact@josselinbuils.me">
-          <i className="fas fa-envelope" />
-        </a>
+        {socialLinks.map(([icon, link]) => (
+          <a href={link} key={icon} rel="noopener noreferrer" target="_blank">
+            <i className={`fab fa-${icon}`} />
+          </a>
+        ))}
       </p>
       <p className={styles.help}>Type help for more information</p>
     </div>
