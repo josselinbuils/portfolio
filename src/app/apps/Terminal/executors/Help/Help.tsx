@@ -14,7 +14,7 @@ export const Help: Executor = () => (
   <div className={styles.help}>
     <p>Available commands:</p>
     {commands.map(([command, description]) => (
-      <p>
+      <p key={command}>
         <span className={styles.command}>- {command}</span>
         <span className={styles.description}>{description}</span>
       </p>
