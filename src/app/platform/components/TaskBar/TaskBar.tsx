@@ -1,12 +1,12 @@
 import React, { FC, useRef } from 'react';
-import { Notes, Teravia, Terminal } from '~/apps';
+import { Notes, Reddit, Teravia, Terminal } from '~/apps';
 import { useTaskDescriptors } from './hooks';
 import { Task } from './Task';
 import { getTaskKey } from './utils';
 import styles from './TaskBar.module.scss';
 
 // Has to be in a constant to avoid useless recurrent computations
-const PINNED_WINDOW_COMPONENTS = [Terminal, Teravia, Notes];
+const PINNED_WINDOW_COMPONENTS = [Terminal, Teravia, Reddit, Notes];
 
 export const TaskBar: FC = () => {
   const taskBarRef = useRef(null);

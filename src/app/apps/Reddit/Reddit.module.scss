@@ -1,0 +1,177 @@
+.buttonLink {
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.reddit {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  display: flex;
+  height: 100%;
+
+  a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  a,
+  a:hover,
+  a:focus,
+  a:active {
+    color: inherit !important;
+  }
+
+  .body {
+    overflow-y: scroll;
+    flex-grow: 1;
+
+    .posts {
+      color: black;
+
+      .post {
+        display: flex;
+
+        &.hasPreview {
+          min-height: 120px;
+
+          .postThumbnail {
+            flex: 0 0 150px;
+            margin: 10px 15px 10px 0;
+            background: no-repeat center;
+            background-size: cover;
+            display: block;
+
+            img {
+              display: block;
+              max-width: 80px;
+            }
+          }
+        }
+
+        &.stickied {
+          background: #cee3f8;
+          border-radius: 4px;
+        }
+
+        .postInfo {
+          padding: 10px 10px 10px 0;
+          flex-grow: 1;
+
+          .postDetails {
+            color: #7b7b7b;
+            font-size: 0.7em;
+
+            .domain {
+              float: right;
+            }
+
+            .comments {
+              margin-left: 3px;
+            }
+          }
+        }
+
+        .postScore {
+          flex: 0 0 80px;
+          text-align: center;
+          color: #7b7b7b;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+        }
+
+        .postThumbnail {
+          display: none;
+        }
+      }
+    }
+
+    .path {
+      color: #ff4501;
+      margin: 0;
+      padding: 5px 15px;
+      font-size: 1.5em;
+
+      span {
+        float: right;
+        line-height: 3em;
+        font-size: 0.5em;
+      }
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      @keyframes skBounce {
+        0%,
+        100% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1);
+        }
+      }
+
+      .doubleBounce1,
+      .doubleBounce2 {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #ff4501;
+        opacity: 0.6;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: skBounce 2s infinite ease-in-out;
+      }
+
+      .doubleBounce2 {
+        animation-delay: -1s;
+      }
+    }
+  }
+
+  .sidebar {
+    flex: 0 0 180px;
+    overflow-y: auto;
+
+    ul {
+      padding-left: 15px;
+    }
+
+    .logo {
+      text-align: center;
+      color: #ff4501;
+      font-size: 100px;
+    }
+
+    .menu {
+      color: black;
+      font-size: 0.9em;
+
+      ul {
+        font-size: 0.9em;
+      }
+
+      li {
+        list-style-type: none;
+      }
+    }
+  }
+}
