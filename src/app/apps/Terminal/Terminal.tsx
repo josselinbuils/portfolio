@@ -3,19 +3,22 @@ import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
 import {
   About,
+  AsyncExecutor,
   BashError,
   Command,
   Executor,
   Help,
+  isAsyncExecutor,
   Open,
   Skills,
   Work
 } from './executors';
 import styles from './Terminal.module.scss';
+import { Deferred } from '~/platform/utils';
 
 const USER = 'guest';
 
-const executors: { [name: string]: Executor } = {
+const executors: { [name: string]: Executor | AsyncExecutor } = {
   about: About,
   help: Help,
   open: Open,
@@ -28,15 +31,15 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);
   const [executions, executionManager] = useList<Execution>();
-  const [waiting] = useState(false);
+  const [waiting, setWaiting] = useState(false);
   const [userInput, setUserInput] = useState('');
   const executorIdRef = useRef(-1);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  function exec(str: string): void {
+  async function exec(str: string): Promise<void> {
     const command = str.trim().split(' ')[0];
 
-    loadExecutor(Command, [USER, str]);
+    await loadExecutor(Command, [USER, str]);
 
     if (command.length > 0) {
       if (commands[commands.length - 1] !== command) {
@@ -48,24 +51,45 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
 
       if (command === 'clear') {
         executionManager.clear();
-      } else {
-        if (executors[command]) {
-          // TODO handle errors
-          loadExecutor(executors[command], str.split(' ').slice(1));
-        } else {
-          loadExecutor(BashError, [command]);
+      } else if (executors[command] !== undefined) {
+        try {
+          await loadExecutor(executors[command], str.split(' ').slice(1));
+        } catch (error) {
+          await loadExecutor(BashError, [command, error.message]);
         }
+      } else {
+        await loadExecutor(BashError, [command]);
       }
     }
   }
 
-  function loadExecutor(executor: Executor, args: string[]): void {
-    executionManager.push({
+  async function loadExecutor(
+    executor: Executor | AsyncExecutor,
+    args: string[]
+  ): Promise<void> {
+    const execution: Execution = {
       args,
+      executor,
       id: ++executorIdRef.current,
-      inProgress: false,
-      executor
-    });
+      inProgress: false
+    };
+
+    if (isAsyncExecutor(executor)) {
+      const deferred = new Deferred();
+
+      execution.releaseHandler = deferred.resolve;
+      executionManager.push(execution);
+
+      setWaiting(true);
+      const error = await deferred.promise;
+      setWaiting(false);
+
+      if (error) {
+        throw error;
+      }
+    } else {
+      executionManager.push(execution);
+    }
   }
 
   function navigate(event: KeyboardEvent) {
@@ -199,7 +223,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     if (terminalElement !== null) {
       terminalElement.scrollTop = terminalElement.scrollHeight;
     }
-  }, [executions]);
+  }, [executions, waiting]);
 
   useEffect(() => {
     exec('about');
@@ -218,9 +242,19 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
       titleColor="#2f2f2f"
     >
       <div className={styles.terminal} ref={terminalRef}>
-        {executions.map(({ args, id, inProgress, executor: Executor }) => (
-          <Executor alive={inProgress} args={args} key={id} />
-        ))}
+        {executions.map(
+          ({ args, executor: Executor, id, inProgress, releaseHandler }) =>
+            isAsyncExecutor(Executor) ? (
+              <Executor
+                alive={inProgress}
+                args={args}
+                key={id}
+                onRelease={releaseHandler as () => void}
+              />
+            ) : (
+              <Executor alive={inProgress} args={args} key={id} />
+            )
+        )}
         <div className={styles.userInput}>
           {!waiting && <Command alive={false} args={[USER, userInput]} />}
           <span
@@ -240,7 +274,8 @@ Terminal.iconClass = 'fas fa-terminal';
 
 interface Execution {
   args: string[];
+  executor: Executor | AsyncExecutor;
   id: number;
   inProgress: boolean;
-  executor: Executor;
+  releaseHandler?: (error?: Error) => void;
 }

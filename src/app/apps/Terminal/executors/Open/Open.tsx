@@ -3,7 +3,7 @@ import { Notes, Teravia } from '~/apps';
 import { WindowComponent } from '~/platform/components/Window';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
-import { Executor } from '../executor';
+import { Executor } from '../Executor';
 import styles from './Open.module.scss';
 
 // TODO find a way to retrieve registered apps automatically

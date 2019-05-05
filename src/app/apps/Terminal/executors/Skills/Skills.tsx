@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor } from '../executor';
+import { Executor } from '../Executor';
 import styles from './Skills.module.scss';
 
 export const Skills: Executor = () => (
