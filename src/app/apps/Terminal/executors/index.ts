@@ -4,3 +4,4 @@ export * from './Command';
 export * from './executor';
 export * from './Help';
 export * from './Open';
+export * from './Skills';

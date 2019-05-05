@@ -1,7 +1,15 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
-import { About, BashError, Command, Executor, Help, Open } from './executors';
+import {
+  About,
+  BashError,
+  Command,
+  Executor,
+  Help,
+  Open,
+  Skills
+} from './executors';
 import styles from './Terminal.module.scss';
 
 const USER = 'guest';
@@ -9,7 +17,8 @@ const USER = 'guest';
 const executors: { [name: string]: Executor } = {
   about: About,
   help: Help,
-  open: Open
+  open: Open,
+  skills: Skills
 };
 
 export const Terminal: WindowComponent = ({ active, ...rest }) => {
