@@ -25,13 +25,13 @@ export function useDragAndDrop(
       return;
     }
 
-    downEvent.preventDefault();
-    downEvent.persist();
-
     const moveHandler = downHandler(downEvent.nativeEvent);
 
     // Handler could be canceled inside down handler
     if (moveHandler !== undefined) {
+      downEvent.preventDefault();
+      downEvent.persist();
+
       moveHandlerRef.current = moveHandler;
 
       upHandlerRef.current = (upEvent: MouseEvent) => {
