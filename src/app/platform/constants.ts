@@ -1,4 +1,4 @@
-export const DEV_SERVER_URL = 'http://localhost:9000';
+export const PROD_HOSTNAME = 'josselinbuils.me';
 
 export enum MouseButton {
   Left = 0,

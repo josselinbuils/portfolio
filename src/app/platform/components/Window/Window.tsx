@@ -1,10 +1,6 @@
 import cn from 'classnames';
-import React, { FC, RefObject, useRef, useState } from 'react';
-import {
-  useChangeDetector,
-  useDragAndDrop,
-  useEventListener
-} from '~/platform/hooks';
+import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
+import { useDragAndDrop, useEventListener } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 import { ANIMATION_DURATION, VERTICAL_OFFSET_TO_UNMAXIMIZE } from './constants';
@@ -37,20 +33,22 @@ export const Window: FC<Props> = ({
   zIndex
 }) => {
   const [frozen, setFrozen] = useState(false);
-  const [minimized, setMinimized] = useState(false);
   const [unmaximizeProps, setUnmaximizeProps] = useState<Position & Size>();
   const [unminimizeProps, setUnminimizeProps] = useState<Position & Size>();
+  const windowRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLMainElement>(null);
   const [animationDurationMs, animate] = useAnimation();
   const [size, setSize, setMaxSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
     desktopRef,
+    windowRef,
     contentRef,
     onResize
   );
   const [position, setPosition] = usePosition(size, desktopRef);
   const maximized = unmaximizeProps !== undefined;
+  const minimized = size.width === 0 && size.height === 0;
 
   function toggleMaximize(
     keepPosition: boolean = false,
@@ -130,26 +128,31 @@ export const Window: FC<Props> = ({
     () => setFrozen(false)
   );
 
-  useChangeDetector(visible, () => {
-    if (visible) {
-      if (unminimizeProps !== undefined) {
-        const { height, width, x, y } = unminimizeProps;
+  useEffect(() => {
+    if (!visible) {
+      if (unminimizeProps === undefined) {
         animate(ANIMATION_DURATION);
-        setMinimized(false);
-        setSize(width, height);
-        setPosition(x, y, width, true);
+        setUnminimizeProps({ ...position, ...size });
+        setSize(0, 0, true);
+        setPosition(0, minimizedTopPosition || 0);
       }
-    } else {
+    } else if (unminimizeProps !== undefined) {
+      const { height, width, x, y } = unminimizeProps;
       animate(ANIMATION_DURATION);
-      setUnminimizeProps({ ...position, ...size });
-      setMinimized(true);
-      setSize(0, 0, true);
-
-      if (minimizedTopPosition !== undefined) {
-        setPosition(0, minimizedTopPosition, width);
-      }
+      setUnminimizeProps(undefined);
+      setSize(width, height);
+      setPosition(x, y);
     }
-  });
+  }, [
+    animate,
+    minimizedTopPosition,
+    position,
+    setPosition,
+    setSize,
+    size,
+    unminimizeProps,
+    visible
+  ]);
 
   useEventListener('resize', () => {
     if (maximized) {
@@ -177,7 +180,12 @@ export const Window: FC<Props> = ({
   };
 
   return (
-    <div className={className} onMouseDown={() => onSelect(id)} style={style}>
+    <div
+      className={className}
+      onMouseDown={() => onSelect(id)}
+      ref={windowRef}
+      style={style}
+    >
       <TitleBar
         background={titleBackground}
         color={titleColor}

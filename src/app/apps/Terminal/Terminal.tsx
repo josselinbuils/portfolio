@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useEventListener, useList, useMount } from '~/platform/hooks';
+import { useEventListener, useList } from '~/platform/hooks';
 import {
   About,
   AsyncExecutor,
@@ -37,9 +37,8 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
   const [userInput, setUserInput] = useState('');
   const executorIdRef = useRef(-1);
   const terminalRef = useRef<HTMLDivElement>(null);
-  const lastExecution = executionManager.getLast();
-  const waiting =
-    lastExecution !== undefined && lastExecution.inProgress === true;
+  const lastExec = executions[executions.length - 1];
+  const waiting = lastExec !== undefined && lastExec.inProgress === true;
 
   async function exec(str: string): Promise<void> {
     const command = str.trim().split(' ')[0];
@@ -47,7 +46,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     await loadExecutor(Command, [USER, str]);
 
     if (command.length > 0) {
-      if (commandManager.getLast() !== command) {
+      if (commands[commands.length - 1] !== command) {
         commandManager.push(str);
         setCommandIndex(commands.length + 1);
       } else {
@@ -185,7 +184,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
       event.preventDefault();
 
       if (waiting) {
-        (executionManager.getLast() as Execution).inProgress = false;
+        executions[executions.length - 1].inProgress = false;
         executionManager.update();
       } else {
         loadExecutor(Command, [USER, userInput]);
@@ -223,7 +222,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
 
   useEffect(() => setCaretIndex(userInput.length), [userInput]);
 
-  useMount(() => {
+  useEffect(() => {
     const terminal = terminalRef.current as HTMLElement;
 
     new MutationObserver(
@@ -234,7 +233,8 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     });
 
     exec('about');
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Window

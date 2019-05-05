@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useList, useMount } from '~/platform/hooks';
+import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { Log } from './Log';
 import { hasOption, startWsClient, stopWsClient } from './utils';
@@ -11,31 +11,31 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
   const [ws, setWs] = useState<WebSocket>();
   const [logs, logManager] = useList<Log>();
 
-  function errorHandler(): void {
-    onRelease(new Error());
-  }
-
-  function logHandler(lastLogs: Log[]): void {
-    const follow = hasOption(args, 'f');
-    const stepClass = styles.stepNumber;
-
-    logManager.push(...formatLogs(lastLogs, stepClass));
-
-    if (!follow) {
-      onRelease();
-    }
-  }
-
-  useMount(() => {
+  useEffect(() => {
     const command = args[0];
 
     if (command === 'logs') {
-      setWs(startWsClient(logHandler, errorHandler));
-    } else {
+      if (ws === undefined) {
+        const errorHandler = () => onRelease(new Error());
+
+        const logHandler = (lastLogs: Log[]) => {
+          const follow = hasOption(args, 'f');
+          const stepClass = styles.stepNumber;
+
+          logManager.push(...formatLogs(lastLogs, stepClass));
+
+          if (!follow) {
+            onRelease();
+          }
+        };
+
+        setWs(startWsClient(logHandler, errorHandler));
+      }
+    } else if (!showHelp) {
       setShowHelp(true);
       onRelease();
     }
-  });
+  }, [args, logManager, onRelease, showHelp, ws]);
 
   useEffect(() => {
     if (!alive) {

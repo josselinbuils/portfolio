@@ -1,12 +1,12 @@
-import { RefObject, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
 import { bound, getSize } from '../utils';
-import { useChangeDetector } from '~/platform/hooks';
 
 export function useSize(
   sizeLimits: SizeLimits,
   keepContentRatio: boolean,
   desktopRef: RefObject<HTMLElement>,
+  windowRef: RefObject<HTMLElement>,
   contentRef: RefObject<HTMLElement>,
   callback: (size: Size) => void
 ): [
@@ -17,40 +17,51 @@ export function useSize(
   const { maxHeight, maxWidth, minHeight, minWidth } = sizeLimits;
   const [deltaY, setDeltaY] = useState(0);
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
+  const callbackRef = useRef(callback);
   const contentRatioRef = useRef<number>();
 
-  function updateSize(width: number, height: number, force = false) {
-    if (!force) {
-      width = bound(width, minWidth, maxWidth);
-      height = bound(height, minHeight, maxHeight);
+  const updateSize = useCallback(
+    (width: number, height: number, force = false) => {
+      if (!force) {
+        width = bound(width, minWidth, maxWidth);
+        height = bound(height, minHeight, maxHeight);
 
-      if (contentRatioRef.current !== undefined) {
-        height = Math.round(width / contentRatioRef.current) + deltaY;
+        if (contentRatioRef.current !== undefined) {
+          height = Math.round(width / contentRatioRef.current) + deltaY;
+        }
       }
-    }
 
-    const newSize = Object.freeze({ width, height });
+      const newSize = Object.freeze({ width, height });
 
-    setSize(newSize);
-    callback(newSize);
+      setSize(newSize);
+      callbackRef.current(newSize);
 
-    return newSize;
-  }
+      return newSize;
+    },
+    [deltaY, maxHeight, maxWidth, minHeight, minWidth]
+  );
 
-  function setMaxSize() {
+  const setMaxSize = useCallback(() => {
     const { width, height } = getSize(desktopRef);
     return updateSize(width, height, true);
-  }
+  }, [desktopRef, updateSize]);
 
-  useChangeDetector(keepContentRatio, () => {
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
     if (keepContentRatio) {
-      const contentSize = getSize(contentRef);
-      contentRatioRef.current = contentSize.width / contentSize.height;
-      setDeltaY(size.height - contentSize.height);
+      const { height, width } = getSize(contentRef);
+      contentRatioRef.current = width / height;
     } else {
       contentRatioRef.current = undefined;
     }
-  });
+  }, [contentRef, keepContentRatio]);
+
+  useEffect(() => {
+    setDeltaY(getSize(windowRef).height - getSize(contentRef).height);
+  }, [contentRef, windowRef]);
 
   return [size, updateSize, setMaxSize];
 }

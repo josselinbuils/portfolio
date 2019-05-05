@@ -1,9 +1,10 @@
+import { PROD_HOSTNAME } from '~/platform/constants';
+
 export function startWsClient<T>(
   messageHandler: (message: T) => void,
   errorHandler: () => void
 ): WebSocket {
-  const hostname = window.location.hostname;
-  const wsInstance = new WebSocket(`wss://${hostname}/build-manager`);
+  const wsInstance = new WebSocket(`wss://${PROD_HOSTNAME}/build-manager`);
 
   wsInstance.onmessage = event => {
     try {
