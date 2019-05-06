@@ -56,7 +56,7 @@
     .spinner {
       width: 40px;
       height: 40px;
-      position: absolute;
+      position: sticky;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);

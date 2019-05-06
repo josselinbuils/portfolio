@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { Post } from './components';
 import { getPosts } from './utils';
@@ -19,6 +19,7 @@ export const Reddit: WindowComponent = props => {
   const [path, setPath] = useState('r/popular/hot');
   const [currentPath, setCurrentPath] = useState('');
   const [posts, setPosts] = useState<any[]>([]);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const loading = currentPath !== path;
   const subreddit = (path.match(/(.*)\/[^/]+$/) || [])[1];
   const showSubreddit =
@@ -32,6 +33,10 @@ export const Reddit: WindowComponent = props => {
     getPosts(path).then(posts => {
       setCurrentPath(path);
       setPosts(posts);
+
+      if (bodyRef.current !== null) {
+        bodyRef.current.scrollTop = 0;
+      }
     });
   }, [path]);
 
@@ -75,7 +80,7 @@ export const Reddit: WindowComponent = props => {
             </li>
           </ul>
         </div>
-        <div className={styles.body}>
+        <div className={styles.body} ref={bodyRef}>
           <h1 className={styles.path}>
             {currentPath}
             {subreddit && (
