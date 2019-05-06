@@ -1,31 +1,38 @@
-import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
+import { Post } from './components';
+import { getPosts } from './utils';
 import styles from './Reddit.module.scss';
-import { getPosts } from '~/apps/Reddit/utils';
 
 const subreddits = [
-  'angularjs',
-  'CrappyDesign',
-  'docker',
-  'javascript',
-  'node',
-  'ProgrammerHumor',
-  'todayilearned'
+  'r/Angular2',
+  'r/CrappyDesign',
+  'r/docker',
+  'r/javascript',
+  'r/node',
+  'r/ProgrammerHumor',
+  'r/reactjs',
+  'r/todayilearned'
 ];
 
-// TODO create interface for posts
-
 export const Reddit: WindowComponent = props => {
-  const [path, setPath] = useState('/r/popular/hot');
+  const [path, setPath] = useState('r/popular/hot');
+  const [currentPath, setCurrentPath] = useState('');
   const [posts, setPosts] = useState<any[]>([]);
-  const subreddit = path.indexOf('/r/') === 0 ? path.split('/')[2] : '';
+  const loading = currentPath !== path;
+  const subreddit = (path.match(/(.*)\/[^/]+$/) || [])[1];
   const showSubreddit =
     path.indexOf('/r/') !== 0 || path.split('/')[2] === 'popular';
 
+  const goTo = async (subreddit: string, type: 'hot' | 'top' = 'hot') => {
+    setPath(`${subreddit}/${type}`);
+  };
+
   useEffect(() => {
-    setPosts([]);
-    getPosts(path).then(setPosts);
+    getPosts(path).then(posts => {
+      setCurrentPath(path);
+      setPosts(posts);
+    });
   }, [path]);
 
   return (
@@ -46,7 +53,7 @@ export const Reddit: WindowComponent = props => {
             <li>
               <button
                 className={styles.buttonLink}
-                onClick={() => setPath('/r/popular/hot')}
+                onClick={() => goTo('r/popular')}
               >
                 Popular
               </button>
@@ -58,9 +65,9 @@ export const Reddit: WindowComponent = props => {
                   <li key={subreddit}>
                     <button
                       className={styles.buttonLink}
-                      onClick={() => setPath(`/r/${subreddit}/hot`)}
+                      onClick={() => goTo(subreddit)}
                     >
-                      r/{subreddit}
+                      {subreddit}
                     </button>
                   </li>
                 ))}
@@ -70,21 +77,21 @@ export const Reddit: WindowComponent = props => {
         </div>
         <div className={styles.body}>
           <h1 className={styles.path}>
-            {path}
+            {currentPath}
             {subreddit && (
               <span>
-                {path.slice(-4) !== '/hot' && (
+                {currentPath.slice(-4) !== '/hot' && (
                   <button
                     className={styles.buttonLink}
-                    onClick={() => setPath(`/r/${subreddit}/hot`)}
+                    onClick={() => goTo(subreddit)}
                   >
                     Hot
                   </button>
                 )}
-                {path.slice(-4) !== '/top' && (
+                {currentPath.slice(-4) !== '/top' && (
                   <button
                     className={styles.buttonLink}
-                    onClick={() => setPath(`/r/${subreddit}/top`)}
+                    onClick={() => goTo(subreddit, 'top')}
                   >
                     Top
                   </button>
@@ -92,87 +99,21 @@ export const Reddit: WindowComponent = props => {
               </span>
             )}
           </h1>
-          {posts.length === 0 && (
+          {loading && (
             <div className={styles.spinner}>
               <div className={styles.doubleBounce1} />
               <div className={styles.doubleBounce2} />
             </div>
           )}
-          <div className={styles.posts}>
-            {posts.map(
-              ({
-                author,
-                domain,
-                numComments,
-                permalink,
-                previewUrl,
-                score,
-                since,
-                stickied,
-                title,
-                url
-              }) => (
-                <div
-                  className={cn(styles.post, {
-                    [styles.hasPreview]: previewUrl,
-                    [styles.stickied]: stickied
-                  })}
-                  key={permalink}
-                >
-                  <div className={styles.postScore}>
-                    <span>{score}</span>
-                  </div>
-                  {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-                  <a
-                    className={styles.postThumbnail}
-                    href={url}
-                    rel="noopener noreferrer"
-                    style={{ backgroundImage: `url(${previewUrl})` }}
-                    target="_blank"
-                  />
-                  <div className={styles.postInfo}>
-                    <a
-                      className={styles.postTitle}
-                      href={url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {title}
-                    </a>
-                    <div className={styles.postDetails}>
-                      <div>
-                        <span>
-                          submitted {since} by u/{author}
-                        </span>
-                        {showSubreddit && (
-                          <span>
-                            on{' '}
-                            <button
-                              className={styles.buttonLink}
-                              onClick={() => setPath(`/r/${subreddit}/hot`)}
-                            >
-                              r/{subreddit}
-                            </button>
-                          </span>
-                        )}
-                        <span className={styles.domain}>{domain}</span>
-                      </div>
-                      <div>
-                        <a
-                          href={`https://www.reddit.com${permalink}`}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          <i className="far fa-comments" />
-                          <span className={styles.comments}>{numComments}</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
+          {posts.map(post => (
+            <Post
+              {...post}
+              key={post.permalink}
+              onSubredditClick={goTo}
+              outdated={loading}
+              showSubreddit={showSubreddit}
+            />
+          ))}
         </div>
       </div>
     </Window>

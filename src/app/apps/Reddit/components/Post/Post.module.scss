@@ -1,0 +1,55 @@
+@import '../../constants';
+
+$borderColor: lightgrey;
+
+.aside {
+  flex: 0 0 80px;
+  text-align: center;
+  color: #7b7b7b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.buttonLink {
+  composes: buttonLink from '../../Reddit.module.scss';
+}
+
+.comments {
+  margin-left: 3px;
+}
+
+.footer {
+  color: $textSecondaryColor;
+  margin: 7px 0 10px 0;
+  font-size: 0.9em;
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.post {
+  display: flex;
+  color: black;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+  margin: 20px auto 0 auto;
+  width: 550px;
+  background: white;
+  cursor: pointer;
+
+  &:hover {
+    border-color: darken($borderColor, 20%);
+  }
+
+  &.outdated {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+}
+
+.title {
+  margin: 10px 10px 10px 0;
+  font-weight: normal;
+}

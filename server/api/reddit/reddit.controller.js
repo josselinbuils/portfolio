@@ -39,16 +39,17 @@ function handle(res, promise) {
     posts => {
       res.json(
         posts.map(post => ({
-          author: post.author.name,
-          domain: post.domain,
+          author: `u/${post.author.name}`,
           numComments: post.num_comments,
           permalink: post.permalink,
-          previewUrl: getIn(post.preview, 'images[0].resolutions[1].url'),
+          previewHeight: getIn(post.preview, 'images[0].source.height'),
+          previewUrl: getIn(post.preview, 'images[0].source.url'),
+          previewWidth: getIn(post.preview, 'images[0].source.width'),
           score: post.score,
           since: dayjs(post.created_utc * 1000).fromNow(),
           stickied: post.stickied,
-          title: post.title,
-          url: post.url
+          subreddit: post.subreddit_name_prefixed,
+          title: post.title
         }))
       );
     },
