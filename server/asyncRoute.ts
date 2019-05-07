@@ -5,7 +5,7 @@ import { HTTP_INTERNAL_ERROR } from './constants';
 export function asyncRoute(handler: AsyncRequestHandler): RequestHandler {
   return (req: Request, res: Response) => {
     handler(req)
-      .then(res.json)
+      .then(res.json.bind(res))
       .catch(error => {
         Logger.error(error.stack);
         res.status(HTTP_INTERNAL_ERROR).end();
