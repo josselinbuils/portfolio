@@ -41,7 +41,7 @@ export const Post: FC<Props> = ({
           <img alt="thumbnail" src={previewUrl} style={{ height, width }} />
         )}
         <div className={styles.footer}>
-          <i className="far fa-comments" />
+          <i className="far fa-comment" />
           <span className={styles.comments}>{formatNumber(numComments)}</span>
         </div>
       </main>

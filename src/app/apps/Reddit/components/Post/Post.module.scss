@@ -5,7 +5,7 @@ $borderColor: lightgrey;
 .aside {
   flex: 0 0 80px;
   text-align: center;
-  color: #7b7b7b;
+  color: $textSecondaryColor;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
