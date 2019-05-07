@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "../tmp",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "target": "es6"
+  },
+  "include": ["**/*"]
+}

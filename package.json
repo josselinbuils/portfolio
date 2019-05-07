@@ -4,18 +4,23 @@
   "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
-    "analyze": "yarn build && source-map-explorer 'build/static/js/*.js'",
-    "build": "react-app-rewired build && rimraf dist && cpx \"build/**/*\" dist && rimraf build",
-    "start": "node server/server.js",
-    "start-dev": "react-app-rewired start",
-    "test": "react-app-rewired test"
+    "analyze": "yarn build && source-map-explorer 'dist/client/static/js/*.js'",
+    "build": "yarn build-server && yarn build-client",
+    "build-client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
+    "build-server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
+    "start": "node dist/server/server.js",
+    "start-dev": "react-app-rewired start"
   },
   "dependencies": {
     "@types/classnames": "^2.2.7",
+    "@types/express": "^4.16.1",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.8",
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
+    "@types/request-promise-native": "^1.0.16",
+    "@types/snoowrap": "^1.15.3",
+    "@types/source-map-support": "^0.5.0",
     "ansi_up": "^4.0.3",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
@@ -31,6 +36,7 @@
     "request-promise-native": "^1.0.7",
     "serve-static": "^1.13.2",
     "snoowrap": "^1.15.2",
+    "source-map-support": "^0.5.12",
     "typescript": "^3.4.5"
   },
   "devDependencies": {
