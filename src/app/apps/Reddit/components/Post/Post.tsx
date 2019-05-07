@@ -18,7 +18,10 @@ export const Post: FC<Props> = ({
   title,
   ...rest
 }) => {
-  const { height, width } = getPreviewDisplaySize(previewWidth, previewHeight);
+  const previewStyle =
+    previewUrl !== undefined
+      ? getPreviewDisplaySize(previewWidth as number, previewHeight as number)
+      : undefined;
 
   const clickHandler = (event: MouseEvent) => {
     if ((event.target as HTMLElement).nodeName !== 'BUTTON') {
@@ -38,7 +41,7 @@ export const Post: FC<Props> = ({
         <PostDetails {...rest} />
         <h3 className={styles.title}>{title}</h3>
         {previewUrl && (
-          <img alt="thumbnail" src={previewUrl} style={{ height, width }} />
+          <img alt="thumbnail" src={previewUrl} style={previewStyle} />
         )}
         <div className={styles.footer}>
           <i className="far fa-comment" />
