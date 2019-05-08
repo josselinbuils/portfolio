@@ -1,12 +1,12 @@
 @import '../../constants';
 
 .aside {
-  flex: 0 0 80px;
-  text-align: center;
   color: $textSecondaryColor;
   display: flex;
+  flex: 0 0 80px;
   flex-direction: column;
   justify-content: space-around;
+  text-align: center;
 }
 
 .comments {
@@ -15,8 +15,8 @@
 
 .footer {
   color: $textSecondaryColor;
-  margin: 7px 0 10px 0;
   font-size: 0.9em;
+  margin: 7px 0 10px 0;
 }
 
 .main {
@@ -24,14 +24,14 @@
 }
 
 .post {
-  display: flex;
+  background: $backgroundSecondaryColor;
   color: black;
+  cursor: pointer;
+  display: flex;
   border: 1px solid $borderColor;
   border-radius: 4px;
   margin: 20px auto 0 auto;
   width: 550px;
-  background: $backgroundSecondaryColor;
-  cursor: pointer;
 
   &:hover {
     border-color: darken($borderColor, 20%);
@@ -44,8 +44,8 @@
 }
 
 .title {
-  margin: 10px 10px 10px 0;
   font-weight: normal;
+  margin: 10px 10px 10px 0;
 }
 
 .thumbnail {

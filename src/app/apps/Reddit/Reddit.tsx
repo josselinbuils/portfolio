@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { Header, Logo, Menu, Post, Spinner } from './components';
-import { RedditFilter } from './interfaces';
+import { Header, Logo, Menu, Posts, Spinner } from './components';
+import { RedditFilter, RedditPostMap } from './interfaces';
 import { getPosts } from './utils';
 import styles from './Reddit.module.scss';
 
 export const Reddit: WindowComponent = props => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
   const [loading, setLoading] = useState(false);
-  const [posts, setPosts] = useState<any[]>([]);
+  const [postMap, setPostMap] = useState<RedditPostMap>();
   const [subreddit, setSubreddit] = useState('r/popular');
 
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -23,9 +23,9 @@ export const Reddit: WindowComponent = props => {
     setLoading(true);
 
     const promise = getPosts(subreddit, filter)
-      .then(posts => {
+      .then(postMap => {
         if (loadingPromiseRef.current === promise) {
-          setPosts(posts);
+          setPostMap(postMap);
 
           if (bodyRef.current !== null) {
             bodyRef.current.scrollTop = 0;
@@ -62,14 +62,14 @@ export const Reddit: WindowComponent = props => {
             subreddit={subreddit}
           />
           {loading && <Spinner />}
-          {posts.map(post => (
-            <Post
-              {...post}
-              key={post.permalink}
+          {postMap && (
+            <Posts
+              currentSubreddit={postMap.subreddit}
               onClickSubreddit={goTo}
               outdated={loading}
+              posts={postMap.posts}
             />
-          ))}
+          )}
         </main>
       </div>
     </Window>

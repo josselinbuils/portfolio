@@ -1,13 +1,17 @@
 @import '../../constants';
 
-$borderColor: lightgrey;
-
 .anchor {
   float: right;
 }
 
 .details {
   color: $textSecondaryColor;
-  margin: 7px 7px 0 0;
   font-size: 0.7em;
+  margin: 7px 7px 0 0;
+}
+
+.subreddit {
+  color: black;
+  font-weight: bold;
+  margin-right: 8px;
 }
