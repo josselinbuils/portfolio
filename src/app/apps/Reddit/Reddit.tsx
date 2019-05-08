@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { FilterButton, Menu, Post, Spinner } from './components';
+import { FilterButton, Logo, Menu, Post, Spinner } from './components';
 import { RedditFilter } from './interfaces';
 import { getPosts } from './utils';
 import styles from './Reddit.module.scss';
@@ -43,9 +43,7 @@ export const Reddit: WindowComponent = props => {
     >
       <div className={styles.reddit}>
         <div className={styles.sidebar}>
-          <div className={styles.logo}>
-            <i className="fab fa-reddit-alien" />
-          </div>
+          <Logo />
           <Menu onSubredditClick={goTo} />
         </div>
         <div className={styles.body} ref={bodyRef}>
