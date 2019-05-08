@@ -15,13 +15,13 @@ const subreddits = [
   'r/todayilearned'
 ];
 
-export const Menu: FC<Props> = ({ onSubredditClick }) => (
+export const Menu: FC<Props> = ({ onClickSubreddit }) => (
   <nav className={styles.menu}>
     {subreddits.map(subreddit => (
       <button
         className={cn(commonStyles.buttonLink, styles.item)}
         key={subreddit}
-        onClick={() => onSubredditClick(subreddit)}
+        onClick={() => onClickSubreddit(subreddit)}
       >
         {subreddit}
       </button>
@@ -30,5 +30,5 @@ export const Menu: FC<Props> = ({ onSubredditClick }) => (
 );
 
 interface Props {
-  onSubredditClick: (subreddit: string) => void;
+  onClickSubreddit: (subreddit: string) => void;
 }

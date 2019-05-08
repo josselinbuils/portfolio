@@ -5,7 +5,7 @@ import styles from './PostDetails.module.scss';
 
 export const PostDetails: FC<Props> = ({
   author,
-  onSubredditClick,
+  onClickSubreddit,
   showSubreddit,
   since,
   stickied,
@@ -20,7 +20,7 @@ export const PostDetails: FC<Props> = ({
         <span> on </span>
         <button
           className={commonStyles.buttonLink}
-          onClick={() => onSubredditClick(subreddit)}
+          onClick={() => onClickSubreddit(subreddit)}
         >
           {subreddit}
         </button>
@@ -32,7 +32,7 @@ export const PostDetails: FC<Props> = ({
 
 interface Props {
   author: string;
-  onSubredditClick: (subreddit: string) => void;
+  onClickSubreddit: (subreddit: string) => void;
   showSubreddit: boolean;
   since: string;
   stickied: boolean;

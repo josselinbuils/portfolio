@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { FilterButton, Logo, Menu, Post, Spinner } from './components';
+import { Header, Logo, Menu, Post, Spinner } from './components';
 import { RedditFilter } from './interfaces';
 import { getPosts } from './utils';
 import styles from './Reddit.module.scss';
@@ -42,30 +42,27 @@ export const Reddit: WindowComponent = props => {
       title={Reddit.appName}
     >
       <div className={styles.reddit}>
-        <div className={styles.sidebar}>
+        <aside className={styles.sidebar}>
           <Logo />
-          <Menu onSubredditClick={goTo} />
-        </div>
-        <div className={styles.body} ref={bodyRef}>
-          {currentSubreddit && (
-            <header className={styles.header}>
-              <h1 className={styles.path}>
-                {currentSubreddit}/{currentFilter}
-              </h1>
-              <FilterButton filter={filter} onClick={setFilter} />
-            </header>
-          )}
+          <Menu onClickSubreddit={goTo} />
+        </aside>
+        <main className={styles.body} ref={bodyRef}>
+          <Header
+            filter={filter}
+            onClickFilter={setFilter}
+            subreddit={subreddit}
+          />
           {loading && <Spinner />}
           {posts.map(post => (
             <Post
               {...post}
               key={post.permalink}
-              onSubredditClick={goTo}
+              onClickSubreddit={goTo}
               outdated={loading}
               showSubreddit={showSubreddit}
             />
           ))}
-        </div>
+        </main>
       </div>
     </Window>
   );
