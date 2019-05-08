@@ -6,7 +6,7 @@ import styles from './Header.module.scss';
 export const Header: FC<Props> = ({ filter, onClickFilter, subreddit }) => (
   <header className={styles.header}>
     <h1 className={styles.path}>
-      {filter}/{subreddit}
+      {subreddit}/{filter}
     </h1>
     <FilterButton filter={filter} onClick={onClickFilter} />
   </header>
