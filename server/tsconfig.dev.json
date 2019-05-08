@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
+    "noEmitOnError": true,
     "outDir": "../dist/server"
   }
 }
