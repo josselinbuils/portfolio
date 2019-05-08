@@ -28,11 +28,7 @@ export const MenuItem: FC<Props> = ({
       onMouseEnter={() => setOverflew(true)}
       onMouseLeave={() => setOverflew(false)}
     >
-      <Icon
-        active={isActiveSubreddit || overflew}
-        size={20}
-        subreddit={subreddit}
-      />
+      <Icon active={isActiveSubreddit || overflew} subreddit={subreddit} />
       <span className={cn({ [styles.active]: isActiveSubreddit })}>
         {uppercaseFirstLetter(subreddit.slice(2))}
       </span>

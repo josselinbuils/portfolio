@@ -12,9 +12,11 @@
 
 .defaultIcon {
   color: $reddit;
+  font-size: 1.2em;
   font-weight: normal;
 }
 
 .icon {
-  margin-top: -1px;
+  border-radius: 0.6em;
+  height: 1.2em;
 }

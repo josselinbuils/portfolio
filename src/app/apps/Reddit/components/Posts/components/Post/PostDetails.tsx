@@ -2,6 +2,7 @@ import cn from 'classnames';
 import React, { FC } from 'react';
 import commonStyles from '../../../common.module.scss';
 import styles from './PostDetails.module.scss';
+import { Icon } from '~/apps/Reddit/components/Icon';
 
 export const PostDetails: FC<Props> = ({
   author,
@@ -17,7 +18,8 @@ export const PostDetails: FC<Props> = ({
         className={cn(commonStyles.buttonLink, styles.subreddit)}
         onClick={() => onClickSubreddit(subreddit)}
       >
-        {subreddit}
+        <Icon subreddit={subreddit} />
+        <span>{subreddit}</span>
       </button>
     )}
     <span>
