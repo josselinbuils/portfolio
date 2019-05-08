@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { RedditFilter } from '../../interfaces';
-import commonStyles from '../../common.module.scss';
+import commonStyles from '../common.module.scss';
 
 const filters: RedditFilter[] = ['hot', 'top'];
 

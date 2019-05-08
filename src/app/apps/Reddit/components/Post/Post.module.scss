@@ -1,7 +1,5 @@
 @import '../../constants';
 
-$borderColor: $secondaryColor;
-
 .aside {
   flex: 0 0 80px;
   text-align: center;
@@ -32,7 +30,7 @@ $borderColor: $secondaryColor;
   border-radius: 4px;
   margin: 20px auto 0 auto;
   width: 550px;
-  background: white;
+  background: $backgroundSecondaryColor;
   cursor: pointer;
 
   &:hover {

@@ -1,21 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { FilterButton, Post, Spinner } from './components';
+import { FilterButton, Menu, Post, Spinner } from './components';
 import { RedditFilter } from './interfaces';
 import { getPosts } from './utils';
-import commonStyles from './common.module.scss';
 import styles from './Reddit.module.scss';
-
-const subreddits = [
-  'r/Angular2',
-  'r/CrappyDesign',
-  'r/docker',
-  'r/javascript',
-  'r/node',
-  'r/ProgrammerHumor',
-  'r/reactjs',
-  'r/todayilearned'
-];
 
 export const Reddit: WindowComponent = props => {
   const [currentFilter, setCurrentFilter] = useState<RedditFilter>();
@@ -58,40 +46,16 @@ export const Reddit: WindowComponent = props => {
           <div className={styles.logo}>
             <i className="fab fa-reddit-alien" />
           </div>
-          <ul className={styles.menu}>
-            <li>
-              <button
-                className={commonStyles.buttonLink}
-                onClick={() => goTo('r/popular')}
-              >
-                Popular
-              </button>
-            </li>
-            <li>
-              Subreddits
-              <ul>
-                {subreddits.map(subreddit => (
-                  <li key={subreddit}>
-                    <button
-                      className={commonStyles.buttonLink}
-                      onClick={() => goTo(subreddit)}
-                    >
-                      {subreddit}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          </ul>
+          <Menu onSubredditClick={goTo} />
         </div>
         <div className={styles.body} ref={bodyRef}>
           {currentSubreddit && (
-            <div className={styles.header}>
+            <header className={styles.header}>
               <h1 className={styles.path}>
                 {currentSubreddit}/{currentFilter}
               </h1>
               <FilterButton filter={filter} onClick={setFilter} />
-            </div>
+            </header>
           )}
           {loading && <Spinner />}
           {posts.map(post => (

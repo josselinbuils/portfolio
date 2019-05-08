@@ -29,31 +29,9 @@
   flex: 0 0 auto;
   overflow-y: auto;
 
-  ul {
-    padding-left: 15px;
-  }
-
   .logo {
     color: $reddit;
     font-size: 100px;
     text-align: center;
-  }
-
-  .menu {
-    background: white;
-    border: 1px solid lightgrey;
-    border-radius: 4px;
-    color: black;
-    margin-left: 20px;
-    padding: 20px;
-
-    button {
-      font-size: 1em;
-    }
-
-    li {
-      line-height: 1.5em;
-      list-style-type: none;
-    }
   }
 }

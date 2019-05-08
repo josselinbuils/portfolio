@@ -30,7 +30,7 @@ export const Post: FC<Props> = ({
   };
 
   return (
-    <div
+    <article
       className={cn(styles.post, { [styles.outdated]: outdated })}
       onClick={clickHandler}
     >
@@ -53,7 +53,7 @@ export const Post: FC<Props> = ({
           <span className={styles.comments}>{formatNumber(numComments)}</span>
         </div>
       </main>
-    </div>
+    </article>
   );
 };
 
