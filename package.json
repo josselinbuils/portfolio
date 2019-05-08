@@ -4,7 +4,7 @@
   "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
-    "analyze": "yarn build && source-map-explorer 'dist/client/static/js/*.js'",
+    "analyze": "yarn build-client && source-map-explorer 'dist/client/static/js/*.js'",
     "build": "yarn build-server && yarn build-client",
     "build-client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build-server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
@@ -37,6 +37,7 @@
     "react-scripts": "^3.0.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
+    "rimraf": "^2.6.3",
     "serve-static": "^1.13.2",
     "snoowrap": "^1.15.2",
     "source-map-support": "^0.5.12",
