@@ -1,3 +1,4 @@
+import { Deferred } from '@josselinbuils/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
@@ -15,7 +16,6 @@ import {
   Work
 } from './executors';
 import styles from './Terminal.module.scss';
-import { Deferred } from '~/platform/utils';
 
 const DEFAULT_ERROR_MESSAGE = 'an error occurred';
 const USER = 'guest';

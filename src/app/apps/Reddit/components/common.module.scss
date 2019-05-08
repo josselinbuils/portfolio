@@ -8,10 +8,6 @@
   outline: none;
   padding: 0;
 
-  &.active {
-    color: $reddit;
-  }
-
   &:not([disabled]) {
     cursor: pointer;
   }

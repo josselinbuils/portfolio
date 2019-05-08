@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import commonStyles from '../common.module.scss';
+import commonStyles from '../../../common.module.scss';
 import styles from './PostDetails.module.scss';
 
 export const PostDetails: FC<Props> = ({

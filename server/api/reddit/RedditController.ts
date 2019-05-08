@@ -1,7 +1,7 @@
 import { Request } from 'express';
-import Snoowrap from 'snoowrap';
+import Snoowrap, { Subreddit as SnoowrapSubreddit } from 'snoowrap';
 import { reddit } from '../../config.json';
-import { RedditPost } from './RedditPost';
+import { RedditPost, Subreddit } from './interfaces';
 import { isRedditConfig } from './RedditConfig';
 import { formatPosts } from './utils';
 
@@ -25,11 +25,6 @@ export class RedditController {
       username,
       password
     });
-
-    // this.snoowrap
-    //   .getSubreddit('r/javascript')
-    //   .fetch()
-    //   .then(console.log.bind(console));
   }
 
   getHot = async (req: Request): Promise<RedditPost[]> => {
@@ -38,6 +33,16 @@ export class RedditController {
       .getHot();
 
     return formatPosts(posts);
+  };
+
+  getSubreddit = async (req: Request): Promise<Subreddit> => {
+    const subreddit = (await (this.snoowrap
+      .getSubreddit(req.params.subreddit)
+      .fetch() as unknown)) as SnoowrapSubreddit;
+
+    return {
+      iconSrc: subreddit.icon_img
+    };
   };
 
   getTop = async (req: Request): Promise<RedditPost[]> => {

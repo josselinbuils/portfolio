@@ -1,4 +1,4 @@
-@import '../../constants';
+@import '../../../../constants';
 
 .aside {
   color: $textSecondaryColor;
@@ -25,7 +25,7 @@
 
 .post {
   background: $backgroundSecondaryColor;
-  color: black;
+  color: $textColor;
   cursor: pointer;
   display: flex;
   border: 1px solid $borderColor;

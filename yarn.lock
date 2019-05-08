@@ -1323,6 +1323,11 @@
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/yargs" "^12.0.9"
 
+"@josselinbuils/utils@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/utils/-/utils-0.1.1.tgz#f5b152ace1d48a15a986b1511cd145f62129cfe0"
+  integrity sha512-a+XbcW+TW/Wk0THt2GiiWAjCSmgOROEsxZ8fbsg56naoF6C7NqYML+/d9gDl0GJL5wWZ0akKSCK+p5LxhncdYw==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

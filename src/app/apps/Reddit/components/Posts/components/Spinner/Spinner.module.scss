@@ -1,4 +1,4 @@
-@import '../../constants';
+@import '../../../../constants';
 
 @keyframes skBounce {
   0%,
@@ -30,8 +30,7 @@
 .spinner {
   height: 40px;
   left: 50%;
-  margin-top: -40px;
-  position: sticky;
+  position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 40px;

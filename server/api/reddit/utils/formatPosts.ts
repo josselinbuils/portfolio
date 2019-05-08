@@ -1,7 +1,7 @@
+import { getIn } from '@josselinbuils/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { RedditPost } from '../RedditPost';
-import { getIn } from './getIn';
+import { RedditPost } from '../interfaces';
 
 dayjs.extend(relativeTime);
 

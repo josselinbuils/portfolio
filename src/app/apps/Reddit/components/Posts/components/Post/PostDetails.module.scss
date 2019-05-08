@@ -1,4 +1,4 @@
-@import '../../constants';
+@import '../../../../constants';
 
 .anchor {
   float: right;
@@ -11,7 +11,7 @@
 }
 
 .subreddit {
-  color: black;
+  color: $textColor;
   font-weight: bold;
   margin-right: 8px;
 }

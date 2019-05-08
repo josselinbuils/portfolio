@@ -1,4 +1,4 @@
-import { Subject } from '~/platform/utils';
+import { Subject } from '@josselinbuils/utils';
 import { WindowInstance } from './WindowInstance';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 

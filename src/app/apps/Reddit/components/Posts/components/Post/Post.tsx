@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import { RedditPost } from '../../interfaces';
+import { RedditPost } from '../../RedditPost';
+import { formatNumber, getPreviewDisplaySize } from '../../utils';
 import { PostDetails } from './PostDetails';
-import { formatNumber, getPreviewDisplaySize } from './utils';
 import styles from './Post.module.scss';
 
 const REDDIT_URL = 'https://www.reddit.com';

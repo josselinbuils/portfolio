@@ -1,2 +1,2 @@
-export * from './getPosts';
+export * from './getSubreddit';
 export * from './uppercaseFirstLetter';

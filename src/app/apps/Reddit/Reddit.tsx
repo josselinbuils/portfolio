@@ -1,44 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { Header, Logo, Menu, Posts, Spinner } from './components';
-import { RedditFilter, RedditPostMap } from './interfaces';
-import { getPosts } from './utils';
+import { Header, Logo, Menu, Posts } from './components';
+import { RedditFilter } from './interfaces';
 import styles from './Reddit.module.scss';
 
 export const Reddit: WindowComponent = props => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
-  const [loading, setLoading] = useState(false);
-  const [postMap, setPostMap] = useState<RedditPostMap>();
   const [subreddit, setSubreddit] = useState('r/popular');
-
   const bodyRef = useRef<HTMLDivElement>(null);
-  const loadingPromiseRef = useRef<Promise<any>>(Promise.resolve());
 
   const goTo = async (subreddit: string, filter: RedditFilter = 'hot') => {
     setSubreddit(subreddit);
     setFilter(filter);
   };
 
-  useEffect(() => {
-    setLoading(true);
-
-    const promise = getPosts(subreddit, filter)
-      .then(postMap => {
-        if (loadingPromiseRef.current === promise) {
-          setPostMap(postMap);
-
-          if (bodyRef.current !== null) {
-            bodyRef.current.scrollTop = 0;
-          }
-        }
-      })
-      .finally(() => {
-        if (loadingPromiseRef.current === promise) {
-          setLoading(false);
-        }
-      });
-
-    loadingPromiseRef.current = promise;
+  useLayoutEffect(() => {
+    if (bodyRef.current !== null) {
+      bodyRef.current.scrollTop = 0;
+    }
   }, [filter, subreddit]);
 
   return (
@@ -61,15 +40,11 @@ export const Reddit: WindowComponent = props => {
             onClickFilter={setFilter}
             subreddit={subreddit}
           />
-          {loading && <Spinner />}
-          {postMap && (
-            <Posts
-              currentSubreddit={postMap.subreddit}
-              onClickSubreddit={goTo}
-              outdated={loading}
-              posts={postMap.posts}
-            />
-          )}
+          <Posts
+            onClickSubreddit={goTo}
+            filter={filter}
+            subreddit={subreddit}
+          />
         </main>
       </div>
     </Window>
