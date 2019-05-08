@@ -1,0 +1,39 @@
+@import '../../constants';
+
+@keyframes skBounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+.doubleBounce1,
+.doubleBounce2 {
+  animation: skBounce 2s infinite ease-in-out;
+  background-color: $reddit;
+  border-radius: 50%;
+  height: 100%;
+  left: 0;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.doubleBounce2 {
+  animation-delay: -1s;
+}
+
+.spinner {
+  height: 40px;
+  left: 50%;
+  margin-top: -40px;
+  position: sticky;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  z-index: 1;
+}

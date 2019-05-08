@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { FilterButton, Post } from './components';
+import { FilterButton, Post, Spinner } from './components';
 import { RedditFilter } from './interfaces';
 import { getPosts } from './utils';
 import commonStyles from './common.module.scss';
@@ -93,12 +93,7 @@ export const Reddit: WindowComponent = props => {
               <FilterButton filter={filter} onClick={setFilter} />
             </div>
           )}
-          {loading && (
-            <div className={styles.spinner}>
-              <div className={styles.doubleBounce1} />
-              <div className={styles.doubleBounce2} />
-            </div>
-          )}
+          {loading && <Spinner />}
           {posts.map(post => (
             <Post
               {...post}
