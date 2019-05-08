@@ -1,6 +1,6 @@
 @import '../../constants';
 
-$borderColor: lightgrey;
+$borderColor: $secondaryColor;
 
 .aside {
   flex: 0 0 80px;
@@ -9,10 +9,6 @@ $borderColor: lightgrey;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-}
-
-.buttonLink {
-  composes: buttonLink from '../../Reddit.module.scss';
 }
 
 .comments {
@@ -52,4 +48,8 @@ $borderColor: lightgrey;
 .title {
   margin: 10px 10px 10px 0;
   font-weight: normal;
+}
+
+.thumbnail {
+  background: $secondaryColor;
 }

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { Post } from './components';
+import { FilterButton, Post } from './components';
+import { RedditFilter } from './interfaces';
 import { getPosts } from './utils';
+import commonStyles from './common.module.scss';
 import styles from './Reddit.module.scss';
 
 const subreddits = [
@@ -16,29 +18,31 @@ const subreddits = [
 ];
 
 export const Reddit: WindowComponent = props => {
-  const [path, setPath] = useState('r/popular/hot');
-  const [currentPath, setCurrentPath] = useState('');
+  const [currentFilter, setCurrentFilter] = useState<RedditFilter>();
+  const [currentSubreddit, setCurrentSubreddit] = useState<string>();
+  const [filter, setFilter] = useState<RedditFilter>('hot');
   const [posts, setPosts] = useState<any[]>([]);
+  const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
-  const loading = currentPath !== path;
-  const subreddit = (path.match(/(.*)\/[^/]+$/) || [])[1];
-  const showSubreddit =
-    path.indexOf('/r/') !== 0 || path.split('/')[2] === 'popular';
+  const loading = currentFilter !== filter || currentSubreddit !== subreddit;
+  const showSubreddit = currentSubreddit !== 'popular';
 
-  const goTo = async (subreddit: string, type: 'hot' | 'top' = 'hot') => {
-    setPath(`${subreddit}/${type}`);
+  const goTo = async (subreddit: string, filter: RedditFilter = 'hot') => {
+    setSubreddit(subreddit);
+    setFilter(filter);
   };
 
   useEffect(() => {
-    getPosts(path).then(posts => {
-      setCurrentPath(path);
+    getPosts(subreddit, filter).then(posts => {
+      setCurrentSubreddit(subreddit);
+      setCurrentFilter(filter);
       setPosts(posts);
 
       if (bodyRef.current !== null) {
         bodyRef.current.scrollTop = 0;
       }
     });
-  }, [path]);
+  }, [filter, subreddit]);
 
   return (
     <Window
@@ -57,7 +61,7 @@ export const Reddit: WindowComponent = props => {
           <ul className={styles.menu}>
             <li>
               <button
-                className={styles.buttonLink}
+                className={commonStyles.buttonLink}
                 onClick={() => goTo('r/popular')}
               >
                 Popular
@@ -69,7 +73,7 @@ export const Reddit: WindowComponent = props => {
                 {subreddits.map(subreddit => (
                   <li key={subreddit}>
                     <button
-                      className={styles.buttonLink}
+                      className={commonStyles.buttonLink}
                       onClick={() => goTo(subreddit)}
                     >
                       {subreddit}
@@ -81,29 +85,14 @@ export const Reddit: WindowComponent = props => {
           </ul>
         </div>
         <div className={styles.body} ref={bodyRef}>
-          <h1 className={styles.path}>
-            {currentPath}
-            {subreddit && (
-              <span>
-                {currentPath.slice(-4) !== '/hot' && (
-                  <button
-                    className={styles.buttonLink}
-                    onClick={() => goTo(subreddit)}
-                  >
-                    Hot
-                  </button>
-                )}
-                {currentPath.slice(-4) !== '/top' && (
-                  <button
-                    className={styles.buttonLink}
-                    onClick={() => goTo(subreddit, 'top')}
-                  >
-                    Top
-                  </button>
-                )}
-              </span>
-            )}
-          </h1>
+          {currentSubreddit && (
+            <div className={styles.header}>
+              <h1 className={styles.path}>
+                {currentSubreddit}/{currentFilter}
+              </h1>
+              <FilterButton filter={filter} onClick={setFilter} />
+            </div>
+          )}
           {loading && (
             <div className={styles.spinner}>
               <div className={styles.doubleBounce1} />

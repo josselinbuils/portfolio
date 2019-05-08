@@ -6,10 +6,6 @@ $borderColor: lightgrey;
   float: right;
 }
 
-.buttonLink {
-  composes: buttonLink from '../../Reddit.module.scss';
-}
-
 .details {
   color: $textSecondaryColor;
   margin: 7px 7px 0 0;

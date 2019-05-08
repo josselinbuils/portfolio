@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import { RedditPost } from '../../RedditPost';
+import { RedditPost } from '../../interfaces';
 import { PostDetails } from '../PostDetails';
 import { formatNumber, getPreviewDisplaySize } from './utils';
 import styles from './Post.module.scss';
@@ -41,7 +41,12 @@ export const Post: FC<Props> = ({
         <PostDetails {...rest} />
         <h3 className={styles.title}>{title}</h3>
         {previewUrl && (
-          <img alt="thumbnail" src={previewUrl} style={previewStyle} />
+          <img
+            alt="thumbnail"
+            className={styles.thumbnail}
+            src={previewUrl}
+            style={previewStyle}
+          />
         )}
         <div className={styles.footer}>
           <i className="far fa-comment" />

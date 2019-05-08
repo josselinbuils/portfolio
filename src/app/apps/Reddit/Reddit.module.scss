@@ -1,127 +1,97 @@
 @import 'constants';
 
-.buttonLink {
-  border: none;
-  background: none;
-  padding: 0;
-  outline: none;
-  cursor: pointer;
-  color: inherit;
+.body {
+  flex-grow: 1;
+  overflow-y: scroll;
+  padding: 5px 15px 20px 15px;
+  position: relative;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
+.header {
+  color: $reddit;
+  display: flex;
+  justify-content: space-between;
+}
+
+.path {
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0;
 }
 
 .reddit {
-  font-family: Helvetica, sans-serif;
   display: flex;
+  font-family: Helvetica, sans-serif;
   height: 100%;
+}
 
-  a {
-    text-decoration: none;
-    cursor: pointer;
+.sidebar {
+  flex: 0 0 auto;
+  overflow-y: auto;
+
+  ul {
+    padding-left: 15px;
   }
 
-  a:hover {
-    text-decoration: underline;
+  .logo {
+    color: $reddit;
+    font-size: 100px;
+    text-align: center;
   }
 
-  a,
-  a:hover,
-  a:focus,
-  a:active {
-    color: inherit !important;
-  }
+  .menu {
+    background: white;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    color: black;
+    margin-left: 20px;
+    padding: 20px;
 
-  .body {
-    overflow-y: scroll;
-    flex-grow: 1;
-    position: relative;
-    padding-bottom: 20px;
-
-    .path {
-      color: $reddit;
-      margin: 0;
-      padding: 5px 15px;
-      font-size: 1.5em;
-
-      span {
-        float: right;
-        line-height: 3em;
-        font-size: 0.5em;
-      }
+    button {
+      font-size: 1em;
     }
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      position: sticky;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      margin-top: -40px;
+    li {
+      line-height: 1.5em;
+      list-style-type: none;
+    }
+  }
+}
 
-      @keyframes skBounce {
-        0%,
-        100% {
-          transform: scale(0);
-        }
-        50% {
-          transform: scale(1);
-        }
-      }
+.spinner {
+  height: 40px;
+  left: 50%;
+  margin-top: -40px;
+  position: sticky;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  z-index: 1;
 
-      .doubleBounce1,
-      .doubleBounce2 {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background-color: $reddit;
-        opacity: 0.6;
-        position: absolute;
-        top: 0;
-        left: 0;
-        animation: skBounce 2s infinite ease-in-out;
-      }
-
-      .doubleBounce2 {
-        animation-delay: -1s;
-      }
+  @keyframes skBounce {
+    0%,
+    100% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1);
     }
   }
 
-  .sidebar {
-    flex: 0 0 auto;
-    overflow-y: auto;
+  .doubleBounce1,
+  .doubleBounce2 {
+    animation: skBounce 2s infinite ease-in-out;
+    background-color: $reddit;
+    border-radius: 50%;
+    height: 100%;
+    left: 0;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 
-    ul {
-      padding-left: 15px;
-    }
-
-    .logo {
-      text-align: center;
-      color: $reddit;
-      font-size: 100px;
-    }
-
-    .menu {
-      background: white;
-      color: black;
-      border: 1px solid lightgrey;
-      border-radius: 4px;
-      padding: 20px;
-      margin-left: 20px;
-
-      button {
-        font-size: 1em;
-      }
-
-      li {
-        list-style-type: none;
-        line-height: 1.5em;
-      }
-    }
+  .doubleBounce2 {
+    animation-delay: -1s;
   }
 }
