@@ -6,7 +6,6 @@ import styles from './PostDetails.module.scss';
 export const PostDetails: FC<Props> = ({
   author,
   onClickSubreddit,
-  showSubreddit,
   since,
   stickied,
   subreddit
@@ -15,7 +14,7 @@ export const PostDetails: FC<Props> = ({
     <span>
       Posted <time>{since}</time> by {author}
     </span>
-    {showSubreddit && (
+    {subreddit !== 'popular' && (
       <>
         <span> on </span>
         <button
@@ -33,7 +32,6 @@ export const PostDetails: FC<Props> = ({
 interface Props {
   author: string;
   onClickSubreddit: (subreddit: string) => void;
-  showSubreddit: boolean;
   since: string;
   stickied: boolean;
   subreddit: string;

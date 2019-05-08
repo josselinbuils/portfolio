@@ -6,14 +6,13 @@ import { getPosts } from './utils';
 import styles from './Reddit.module.scss';
 
 export const Reddit: WindowComponent = props => {
-  const [currentFilter, setCurrentFilter] = useState<RedditFilter>();
-  const [currentSubreddit, setCurrentSubreddit] = useState<string>();
   const [filter, setFilter] = useState<RedditFilter>('hot');
+  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [subreddit, setSubreddit] = useState('r/popular');
+
   const bodyRef = useRef<HTMLDivElement>(null);
-  const loading = currentFilter !== filter || currentSubreddit !== subreddit;
-  const showSubreddit = currentSubreddit !== 'popular';
+  const loadingPromiseRef = useRef<Promise<any>>(Promise.resolve());
 
   const goTo = async (subreddit: string, filter: RedditFilter = 'hot') => {
     setSubreddit(subreddit);
@@ -21,15 +20,25 @@ export const Reddit: WindowComponent = props => {
   };
 
   useEffect(() => {
-    getPosts(subreddit, filter).then(posts => {
-      setCurrentSubreddit(subreddit);
-      setCurrentFilter(filter);
-      setPosts(posts);
+    setLoading(true);
 
-      if (bodyRef.current !== null) {
-        bodyRef.current.scrollTop = 0;
-      }
-    });
+    const promise = getPosts(subreddit, filter)
+      .then(posts => {
+        if (loadingPromiseRef.current === promise) {
+          setPosts(posts);
+
+          if (bodyRef.current !== null) {
+            bodyRef.current.scrollTop = 0;
+          }
+        }
+      })
+      .finally(() => {
+        if (loadingPromiseRef.current === promise) {
+          setLoading(false);
+        }
+      });
+
+    loadingPromiseRef.current = promise;
   }, [filter, subreddit]);
 
   return (
@@ -59,7 +68,6 @@ export const Reddit: WindowComponent = props => {
               key={post.permalink}
               onClickSubreddit={goTo}
               outdated={loading}
-              showSubreddit={showSubreddit}
             />
           ))}
         </main>

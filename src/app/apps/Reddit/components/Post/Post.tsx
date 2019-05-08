@@ -60,5 +60,4 @@ export const Post: FC<Props> = ({
 interface Props extends RedditPost {
   onClickSubreddit: (subreddit: string) => void;
   outdated: boolean;
-  showSubreddit: boolean;
 }
