@@ -8,8 +8,10 @@
     "build": "yarn build-server && yarn build-client",
     "build-client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build-server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
+    "build-server-dev": "tsc -p server/tsconfig.dev.json",
     "start": "node dist/server/server.js",
-    "start-dev": "react-app-rewired start"
+    "dev-client": "react-app-rewired start",
+    "dev-server": "yarn build-server-dev && concurrently --kill-others 'yarn build-server-dev -w' 'nodemon dist/server/server.js'"
   },
   "dependencies": {
     "@types/classnames": "^2.2.7",
@@ -40,6 +42,8 @@
     "typescript": "^3.4.5"
   },
   "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.19.0",
     "source-map-explorer": "^1.8.0"
   },
   "browserslist": [
