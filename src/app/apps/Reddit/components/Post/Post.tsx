@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../interfaces';
-import { PostDetails } from '../PostDetails';
+import { PostDetails } from './PostDetails';
 import { formatNumber, getPreviewDisplaySize } from './utils';
 import styles from './Post.module.scss';
 
