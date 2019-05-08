@@ -1,8 +1,8 @@
 export const subreddits = [
-  'popular',
-  'aww',
-  'CrappyDesign',
-  'evilbuildings',
-  'ProgrammerHumor',
-  'todayilearned'
+  'r/popular',
+  'r/aww',
+  'r/CrappyDesign',
+  'r/evilbuildings',
+  'r/ProgrammerHumor',
+  'r/todayilearned'
 ];

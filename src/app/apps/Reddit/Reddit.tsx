@@ -53,7 +53,7 @@ export const Reddit: WindowComponent = props => {
       <div className={styles.reddit}>
         <aside className={styles.sidebar}>
           <Logo />
-          <Menu onClickSubreddit={goTo} />
+          <Menu activeSubreddit={subreddit} onClickSubreddit={goTo} />
         </aside>
         <main className={styles.body} ref={bodyRef}>
           <Header
