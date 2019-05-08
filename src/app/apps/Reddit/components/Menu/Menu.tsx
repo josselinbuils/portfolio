@@ -2,17 +2,14 @@ import cn from 'classnames';
 import React, { FC } from 'react';
 import commonStyles from '../common.module.scss';
 import styles from './Menu.module.scss';
+import { uppercaseFirstLetter } from '~/apps/Reddit/utils';
 
 const subreddits = [
-  'r/popular',
-  'r/Angular2',
-  'r/CrappyDesign',
-  'r/docker',
-  'r/javascript',
-  'r/node',
-  'r/ProgrammerHumor',
-  'r/reactjs',
-  'r/todayilearned'
+  'popular',
+  'CrappyDesign',
+  'evilbuildings',
+  'ProgrammerHumor',
+  'todayilearned'
 ];
 
 export const Menu: FC<Props> = ({ onClickSubreddit }) => (
@@ -21,9 +18,9 @@ export const Menu: FC<Props> = ({ onClickSubreddit }) => (
       <button
         className={cn(commonStyles.buttonLink, styles.item)}
         key={subreddit}
-        onClick={() => onClickSubreddit(subreddit)}
+        onClick={() => onClickSubreddit(`r/${subreddit}`)}
       >
-        {subreddit}
+        {uppercaseFirstLetter(subreddit)}
       </button>
     ))}
   </nav>

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { RedditFilter } from '../../interfaces';
+import { uppercaseFirstLetter } from '../../utils';
 import commonStyles from '../common.module.scss';
 
 const filters: RedditFilter[] = ['hot', 'top'];
@@ -20,8 +21,4 @@ export const FilterButton: FC<Props> = ({ filter, onClick }) => {
 interface Props {
   filter: RedditFilter;
   onClick: (filter: RedditFilter) => void;
-}
-
-function uppercaseFirstLetter(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
