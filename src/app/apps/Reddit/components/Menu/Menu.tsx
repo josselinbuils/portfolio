@@ -1,16 +1,9 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
+import { subreddits } from '../../subreddits';
+import { uppercaseFirstLetter } from '../../utils';
 import commonStyles from '../common.module.scss';
 import styles from './Menu.module.scss';
-import { uppercaseFirstLetter } from '~/apps/Reddit/utils';
-
-const subreddits = [
-  'popular',
-  'CrappyDesign',
-  'evilbuildings',
-  'ProgrammerHumor',
-  'todayilearned'
-];
 
 export const Menu: FC<Props> = ({ onClickSubreddit }) => (
   <nav className={styles.menu}>
