@@ -4,14 +4,14 @@
   "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
-    "analyze": "yarn build-client && source-map-explorer 'dist/client/static/js/*.js'",
-    "build": "yarn build-server && yarn build-client",
-    "build-client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
-    "build-server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
-    "build-server-dev": "tsc -p server/tsconfig.dev.json",
+    "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
+    "build": "yarn build:server && yarn build:client",
+    "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
+    "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
+    "build:server:dev": "tsc -p server/tsconfig.dev.json",
     "start": "node dist/server/server.js",
-    "dev-client": "react-app-rewired start",
-    "dev-server": "yarn build-server-dev && concurrently --kill-others 'yarn build-server-dev -w' 'nodemon dist/server/server.js'"
+    "dev:client": "react-app-rewired start",
+    "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'"
   },
   "dependencies": {
     "@josselinbuils/utils": "^0.1.2",
@@ -54,9 +54,21 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "jest": {
     "moduleNameMapper": {
       "~/(.*)": "<rootDir>/src/app/$1"
     }
+  },
+  "nodemonConfig": {
+    "ext": "js",
+    "watch": [
+      "dist/server"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }
