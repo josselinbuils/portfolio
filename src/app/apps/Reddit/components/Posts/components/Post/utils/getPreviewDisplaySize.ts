@@ -1,9 +1,11 @@
 import { Size } from '~/platform/interfaces';
+import { ImageResolution } from '../../../RedditPost';
+import { PREVIEW_MAX_HEIGHT, PREVIEW_MAX_WIDTH } from '../constants';
 
-const PREVIEW_MAX_HEIGHT = 270;
-const PREVIEW_MAX_WIDTH = 470;
-
-export function getPreviewDisplaySize(width: number, height: number): Size {
+export function getPreviewDisplaySize(
+  previewResolution: ImageResolution
+): Size {
+  const { height, width } = previewResolution;
   let displayWidth = PREVIEW_MAX_WIDTH;
   let displayHeight = Math.round((height / width) * displayWidth);
 

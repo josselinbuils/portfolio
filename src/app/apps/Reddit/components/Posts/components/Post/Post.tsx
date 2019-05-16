@@ -1,8 +1,12 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../RedditPost';
-import { formatNumber, getPreviewDisplaySize } from '../../utils';
 import { PostDetails } from './PostDetails';
+import {
+  formatNumber,
+  getPreviewDisplaySize,
+  getPreviewResolution
+} from './utils';
 import styles from './Post.module.scss';
 
 const REDDIT_URL = 'https://www.reddit.com';
@@ -11,17 +15,15 @@ export const Post: FC<Props> = ({
   numComments,
   outdated,
   permalink,
-  previewHeight,
-  previewUrl,
-  previewWidth,
+  preview,
   score,
   title,
   ...rest
 }) => {
+  const previewResolution = preview && getPreviewResolution(preview);
+
   const previewStyle =
-    previewUrl !== undefined
-      ? getPreviewDisplaySize(previewWidth as number, previewHeight as number)
-      : undefined;
+    previewResolution && getPreviewDisplaySize(previewResolution);
 
   const clickHandler = (event: MouseEvent) => {
     if ((event.target as HTMLElement).nodeName !== 'BUTTON') {
@@ -40,11 +42,11 @@ export const Post: FC<Props> = ({
       <main className={styles.main}>
         <PostDetails {...rest} />
         <h3 className={styles.title}>{title}</h3>
-        {previewUrl && (
+        {previewResolution && (
           <img
             alt="thumbnail"
             className={styles.thumbnail}
-            src={previewUrl}
+            src={previewResolution.url}
             style={previewStyle}
           />
         )}

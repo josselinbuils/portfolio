@@ -2,7 +2,7 @@ export interface RedditPost {
   author: string;
   numComments: number;
   permalink: string;
-  previewHeight?: number;
+  preview: Image | undefined;
   previewUrl?: string;
   previewWidth?: number;
   score: number;
@@ -10,4 +10,15 @@ export interface RedditPost {
   stickied: boolean;
   subreddit: string;
   title: string;
+}
+
+export interface Image {
+  resolutions?: ImageResolution[];
+  source: ImageResolution;
+}
+
+export interface ImageResolution {
+  height: number;
+  url: string;
+  width: number;
 }

@@ -26,7 +26,7 @@ export const Reddit: WindowComponent = props => {
       background="#fbfbfb"
       titleColor="#ff4501"
       minWidth={850}
-      minHeight={500}
+      minHeight={600}
       title={Reddit.appName}
     >
       <div className={styles.reddit}>
