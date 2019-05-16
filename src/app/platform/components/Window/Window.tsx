@@ -4,9 +4,9 @@ import { useDragAndDrop, useEventListener } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 import { ANIMATION_DURATION, VERTICAL_OFFSET_TO_UNMAXIMIZE } from './constants';
-import { useAnimation, usePosition, useSize } from './hooks';
+import { useAnimation, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
-import { getRelativeOffset } from './utils';
+import { boundPosition, getRelativeOffset, getSize } from './utils';
 import styles from './Window.module.scss';
 
 export const Window: FC<Props> = ({
@@ -46,7 +46,13 @@ export const Window: FC<Props> = ({
     contentRef,
     onResize
   );
-  const [position, setPosition] = usePosition(size, desktopRef);
+  const [position, setPosition] = useState<Position>(() => {
+    const desktopSize = getSize(desktopRef);
+    return {
+      x: Math.round((desktopSize.width - size.width) * 0.5),
+      y: Math.round((desktopSize.height - size.height) * 0.2)
+    };
+  });
   const maximized = unmaximizeProps !== undefined;
   const minimized = size.width === 0 && size.height === 0;
 
@@ -64,7 +70,9 @@ export const Window: FC<Props> = ({
       const { height, width, x, y } = unmaximizeProps;
 
       if (!keepPosition) {
-        setPosition(x, y, width);
+        const desktopSize = getSize(desktopRef);
+        const position = boundPosition(x, y, desktopSize, width);
+        setPosition(position);
       }
       setUnmaximizeProps(undefined);
       return setSize(width, height);
@@ -72,7 +80,9 @@ export const Window: FC<Props> = ({
       setUnmaximizeProps({ ...position, ...size });
 
       if (!keepPosition) {
-        setPosition(0, 0, size.width);
+        const desktopSize = getSize(desktopRef);
+        const position = boundPosition(0, 0, desktopSize, size.width);
+        setPosition(position);
       }
       return setMaxSize();
     }
@@ -80,20 +90,21 @@ export const Window: FC<Props> = ({
 
   const moveStartHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
+      const desktopSize = getSize(desktopRef);
+      const windowStyle = (windowRef.current as HTMLDivElement).style;
       const dy = position.y - downEvent.clientY;
+
       let dx = position.x - downEvent.clientX;
+      let shouldToggleMaximize = false;
+      let width = size.width;
 
       setFrozen(true);
 
-      let shouldToggleMaximize = false;
-
       if (unmaximizeProps !== undefined) {
         const nextWidth = unmaximizeProps.width;
-        dx += getRelativeOffset(downEvent, size.width, nextWidth);
+        dx += getRelativeOffset(downEvent, width, nextWidth);
         shouldToggleMaximize = true;
       }
-
-      let width = size.width;
 
       return (moveEvent: MouseEvent) => {
         if (
@@ -106,10 +117,27 @@ export const Window: FC<Props> = ({
           width = toggleMaximize(true, 50).width;
           shouldToggleMaximize = false;
         }
-        setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy, width);
+
+        const { x, y } = boundPosition(
+          moveEvent.clientX + dx,
+          moveEvent.clientY + dy,
+          desktopSize,
+          width
+        );
+
+        windowStyle.left = `${x}px`;
+        windowStyle.top = `${y}px`;
       };
     },
-    () => setFrozen(false)
+    () => {
+      const { left, top } = (windowRef.current as HTMLDivElement).style;
+
+      setFrozen(false);
+      setPosition({
+        x: parseInt(left as string, 10),
+        y: parseInt(top as string, 10)
+      });
+    }
   );
 
   const resizeStartHandler = useDragAndDrop(
@@ -134,14 +162,15 @@ export const Window: FC<Props> = ({
         animate(ANIMATION_DURATION);
         setUnminimizeProps({ ...position, ...size });
         setSize(0, 0, true);
-        setPosition(0, minimizedTopPosition || 0);
+        setPosition(position);
+        setPosition({ x: 0, y: minimizedTopPosition || 0 });
       }
     } else if (unminimizeProps !== undefined) {
       const { height, width, x, y } = unminimizeProps;
       animate(ANIMATION_DURATION);
       setUnminimizeProps(undefined);
       setSize(width, height);
-      setPosition(x, y);
+      setPosition({ x, y });
     }
   }, [
     animate,

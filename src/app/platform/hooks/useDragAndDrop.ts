@@ -13,7 +13,7 @@ export function useDragAndDrop(
   const upHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
 
   useEventListener('mousemove', (moveEvent: MouseEvent) => {
-    moveHandlerRef.current(moveEvent);
+    requestAnimationFrame(() => moveHandlerRef.current(moveEvent));
   });
 
   useEventListener('mouseup', (upEvent: MouseEvent) => {
