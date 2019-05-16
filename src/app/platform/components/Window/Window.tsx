@@ -46,13 +46,11 @@ export const Window: FC<Props> = ({
     contentRef,
     onResize
   );
-  const [position, setPosition] = useState<Position>(() => {
-    const desktopSize = getSize(desktopRef);
-    return {
-      x: Math.round((desktopSize.width - size.width) * 0.5),
-      y: Math.round((desktopSize.height - size.height) * 0.2)
-    };
-  });
+  const desktopSize = getSize(desktopRef);
+  const [position, setPosition] = useState<Position>(() => ({
+    x: Math.round((desktopSize.width - size.width) * 0.5),
+    y: Math.round((desktopSize.height - size.height) * 0.2)
+  }));
   const maximized = unmaximizeProps !== undefined;
   const minimized = size.width === 0 && size.height === 0;
 
@@ -70,7 +68,6 @@ export const Window: FC<Props> = ({
       const { height, width, x, y } = unmaximizeProps;
 
       if (!keepPosition) {
-        const desktopSize = getSize(desktopRef);
         const position = boundPosition(x, y, desktopSize, width);
         setPosition(position);
       }
@@ -80,7 +77,6 @@ export const Window: FC<Props> = ({
       setUnmaximizeProps({ ...position, ...size });
 
       if (!keepPosition) {
-        const desktopSize = getSize(desktopRef);
         const position = boundPosition(0, 0, desktopSize, size.width);
         setPosition(position);
       }
@@ -90,7 +86,6 @@ export const Window: FC<Props> = ({
 
   const moveStartHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
-      const desktopSize = getSize(desktopRef);
       const windowStyle = (windowRef.current as HTMLDivElement).style;
       const dy = position.y - downEvent.clientY;
 

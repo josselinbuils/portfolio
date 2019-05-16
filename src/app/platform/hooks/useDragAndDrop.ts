@@ -6,11 +6,11 @@ import { useEventListener } from './useEventListener';
 
 // TODO remove global event listeners
 export function useDragAndDrop(
-  downHandler: (downEvent: MouseEvent) => EventHandler<'mousemove'> | void,
-  upHandler: EventHandler<'mouseup'>
+  downHandler: (downEvent: MouseEvent) => MouseMoveHandler | void,
+  upHandler: MouseUpHandler
 ): (downEvent: React.MouseEvent) => void {
-  const moveHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
-  const upHandlerRef = useRef<EventHandler<'mousemove'>>(noop);
+  const moveHandlerRef = useRef<MouseMoveHandler>(noop);
+  const upHandlerRef = useRef<MouseUpHandler>(noop);
 
   useEventListener('mousemove', (moveEvent: MouseEvent) => {
     requestAnimationFrame(() => moveHandlerRef.current(moveEvent));
@@ -42,3 +42,6 @@ export function useDragAndDrop(
     }
   };
 }
+
+type MouseMoveHandler = EventHandler<'mousemove'>;
+type MouseUpHandler = EventHandler<'mouseup'>;

@@ -1,12 +1,12 @@
-import React, { CSSProperties, FC, useRef, useState } from 'react';
+import React, { FC, useRef } from 'react';
 import { useDragAndDrop, useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
 import { Windows } from './Windows';
 import styles from './Desktop.module.scss';
 
 export const Desktop: FC = () => {
-  const [selectionStyle, setSelectionStyle] = useState<CSSProperties>();
   const desktopRef = useRef<HTMLDivElement>(null);
+  const selectionRef = useRef<HTMLDivElement>(null);
   const windowManager = useInjector(WindowManager);
 
   const mouseDownHandler = useDragAndDrop(
@@ -15,22 +15,28 @@ export const Desktop: FC = () => {
         return;
       }
 
-      windowManager.unselectAllWindows();
-
-      const startX = downEvent.clientX;
+      const desktopElement = desktopRef.current as HTMLDivElement;
+      const offsetX = -desktopElement.getBoundingClientRect().left;
+      const startX = downEvent.clientX + offsetX;
       const startY = downEvent.clientY;
+      const selectionStyle = (selectionRef.current as HTMLDivElement).style;
+
+      windowManager.unselectAllWindows();
+      selectionStyle.display = 'block';
 
       return (moveEvent: MouseEvent) => {
-        setSelectionStyle({
-          display: 'block',
-          left: Math.min(startX, moveEvent.clientX),
-          top: Math.min(startY, moveEvent.clientY),
-          width: Math.abs(moveEvent.clientX - startX),
-          height: Math.abs(moveEvent.clientY - startY)
-        });
+        const x = moveEvent.clientX + offsetX;
+        const y = moveEvent.clientY;
+
+        selectionStyle.left = `${Math.min(startX, x)}px`;
+        selectionStyle.top = `${Math.min(startY, y)}px`;
+        selectionStyle.width = `${Math.abs(x - startX)}px`;
+        selectionStyle.height = `${Math.abs(y - startY)}px`;
       };
     },
-    () => setSelectionStyle(undefined)
+    () => {
+      (selectionRef.current as HTMLDivElement).style.display = 'none';
+    }
   );
 
   return (
@@ -40,9 +46,7 @@ export const Desktop: FC = () => {
       ref={desktopRef}
     >
       <Windows desktopRef={desktopRef} />
-      {selectionStyle && (
-        <div className={styles.selection} style={selectionStyle} />
-      )}
+      <div className={styles.selection} ref={selectionRef} />
     </div>
   );
 };
