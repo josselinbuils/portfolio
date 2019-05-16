@@ -41,7 +41,7 @@ export class RedditController {
       .fetch() as unknown)) as SnoowrapSubreddit;
 
     return {
-      iconSrc: subreddit.icon_img
+      iconSrc: subreddit.icon_img || undefined
     };
   };
 

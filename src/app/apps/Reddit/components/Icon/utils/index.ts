@@ -1,1 +1,1 @@
-export * from './getIconSrc';
+export * from './getPreloadedIconSrc';

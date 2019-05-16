@@ -2,7 +2,6 @@
 
 .defaultIcon,
 .icon {
-  margin-right: 0.3em;
   vertical-align: top;
 
   &:not(.active) {
@@ -19,4 +18,10 @@
 .icon {
   border-radius: 0.6em;
   height: 1.2em;
+}
+
+.iconContainer {
+  display: inline-block;
+  margin: 0 0.3em 0;
+  width: 20px;
 }
