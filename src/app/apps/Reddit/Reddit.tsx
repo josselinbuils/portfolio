@@ -9,7 +9,7 @@ export const Reddit: WindowComponent = props => {
   const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
 
-  const goTo = async (subreddit: string, filter: RedditFilter = 'hot') => {
+  const goTo = (subreddit: string, filter: RedditFilter = 'hot') => {
     setSubreddit(subreddit);
     setFilter(filter);
   };
