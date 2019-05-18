@@ -1,13 +1,28 @@
-import React, { FC, useRef } from 'react';
-import { useDragAndDrop, useInjector } from '~/platform/hooks';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import {
+  useDragAndDrop,
+  useEventListener,
+  useInjector
+} from '~/platform/hooks';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { Windows } from './Windows';
 import styles from './VisibleArea.module.scss';
+import { Size } from '~/platform/interfaces';
+import { getRefElementSize } from '~/platform/utils';
 
 export const VisibleArea: FC = () => {
+  const [visibleAreaSize, setVisibleAreaSize] = useState<Size>();
   const selectionRef = useRef<HTMLDivElement>(null);
   const visibleAreaRef = useRef<HTMLDivElement>(null);
   const windowManager = useInjector(WindowManager);
+
+  useEffect(() => {
+    setVisibleAreaSize(getRefElementSize(visibleAreaRef));
+  }, []);
+
+  useEventListener('resize', () => {
+    setVisibleAreaSize(getRefElementSize(visibleAreaRef));
+  });
 
   const mouseDownHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {
@@ -48,7 +63,7 @@ export const VisibleArea: FC = () => {
       onMouseDown={mouseDownHandler}
       ref={visibleAreaRef}
     >
-      <Windows visibleAreaRef={visibleAreaRef} />
+      {visibleAreaSize && <Windows visibleAreaSize={visibleAreaSize} />}
       <div className={styles.selection} ref={selectionRef} />
     </div>
   );

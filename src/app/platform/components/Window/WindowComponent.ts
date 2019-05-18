@@ -1,4 +1,5 @@
-import { FC, RefObject } from 'react';
+import { FC } from 'react';
+import { Size } from '~/platform/interfaces';
 
 export interface WindowComponent extends FC<InjectedWindowProps> {
   appName: string;
@@ -10,7 +11,7 @@ interface InjectedWindowProps {
   id: number;
   minimizedTopPosition?: number;
   visible: boolean;
-  visibleAreaRef: RefObject<HTMLElement>;
+  visibleAreaSize: Size;
   zIndex: number;
   onClose(id: number): void;
   onMinimise(id: number): void;

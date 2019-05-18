@@ -1,11 +1,11 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces';
-import { bound, getSize } from '../utils';
+import { getRefElementSize } from '~/platform/utils';
+import { bound } from '../utils';
 
 export function useSize(
   sizeLimits: SizeLimits,
   keepContentRatio: boolean,
-  desktopRef: RefObject<HTMLElement>,
   windowRef: RefObject<HTMLElement>,
   contentRef: RefObject<HTMLElement>,
   callback: (size: Size) => void
@@ -43,7 +43,7 @@ export function useSize(
 
   useEffect(() => {
     if (keepContentRatio) {
-      const { height, width } = getSize(contentRef);
+      const { height, width } = getRefElementSize(contentRef);
       contentRatioRef.current = width / height;
     } else {
       contentRatioRef.current = undefined;
@@ -51,7 +51,9 @@ export function useSize(
   }, [contentRef, keepContentRatio]);
 
   useEffect(() => {
-    setDeltaY(getSize(windowRef).height - getSize(contentRef).height);
+    setDeltaY(
+      getRefElementSize(windowRef).height - getRefElementSize(contentRef).height
+    );
   }, [contentRef, windowRef]);
 
   return [size, updateSize];

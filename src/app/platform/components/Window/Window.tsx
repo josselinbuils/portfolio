@@ -1,12 +1,5 @@
 import cn from 'classnames';
-import React, {
-  CSSProperties,
-  FC,
-  RefObject,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { CSSProperties, FC, useEffect, useRef, useState } from 'react';
 import { useDragAndDrop } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
@@ -17,7 +10,7 @@ import {
 } from './constants';
 import { useAnimation, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
-import { boundPosition, getRelativeOffset, getSize } from './utils';
+import { boundPosition, getRelativeOffset } from './utils';
 import styles from './Window.module.scss';
 
 export const Window: FC<Props> = ({
@@ -40,7 +33,7 @@ export const Window: FC<Props> = ({
   titleBackground,
   titleColor,
   visible,
-  visibleAreaRef,
+  visibleAreaSize,
   zIndex
 }) => {
   const [frozen, setFrozen] = useState(false);
@@ -52,12 +45,10 @@ export const Window: FC<Props> = ({
   const [size, setSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
-    visibleAreaRef,
     windowRef,
     contentRef,
     onResize
   );
-  const visibleAreaSize = getSize(visibleAreaRef);
   const [position, setPosition] = useState<Position>(() => ({
     x: Math.round((visibleAreaSize.width - size.width) * 0.5),
     y: Math.round((visibleAreaSize.height - size.height) * 0.2)
@@ -265,7 +256,7 @@ interface Props {
   titleBackground?: string;
   titleColor: string;
   visible: boolean;
-  visibleAreaRef: RefObject<HTMLElement>;
+  visibleAreaSize: Size;
   zIndex: number;
   onClose(id: number): void;
   onMinimise(id: number): void;

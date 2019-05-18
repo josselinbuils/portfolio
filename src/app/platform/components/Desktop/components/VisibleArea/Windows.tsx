@@ -1,11 +1,12 @@
-import React, { FC, RefObject, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useInjector } from '~/platform/hooks';
+import { Size } from '~/platform/interfaces';
 import {
   WindowInstance,
   WindowManager
 } from '~/platform/services/WindowManager';
 
-export const Windows: FC<Props> = ({ visibleAreaRef }) => {
+export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
@@ -35,7 +36,7 @@ export const Windows: FC<Props> = ({ visibleAreaRef }) => {
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
             visible={visible}
-            visibleAreaRef={visibleAreaRef}
+            visibleAreaSize={visibleAreaSize}
             zIndex={zIndex}
           />
         )
@@ -45,5 +46,5 @@ export const Windows: FC<Props> = ({ visibleAreaRef }) => {
 };
 
 interface Props {
-  visibleAreaRef: RefObject<HTMLElement>;
+  visibleAreaSize: Size;
 }
