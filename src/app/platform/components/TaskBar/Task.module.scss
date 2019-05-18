@@ -21,23 +21,23 @@
 }
 
 .runIndicator {
-  background: $primary-color;
   position: absolute;
   right: 0;
-  left: 0;
   bottom: 0;
+  left: 0;
   height: 3px;
+  background: $primary-color;
 }
 
 .task {
+  font-size: 36px;
+  line-height: 60px;
+  position: relative;
   display: inline-block;
   width: 60px;
   height: 60px;
-  line-height: 60px;
-  font-size: 36px;
-  text-align: center;
-  position: relative;
   cursor: default;
+  text-align: center;
 
   &:hover {
     background: lighten($background-color, 15%);

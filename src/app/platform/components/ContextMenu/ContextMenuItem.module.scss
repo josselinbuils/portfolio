@@ -1,11 +1,11 @@
 @import '../../constants';
 
 .item {
+  line-height: 20px;
+  height: 20px;
   padding: 3px 10px 3px 0;
   list-style: none;
   cursor: pointer;
-  height: 20px;
-  line-height: 20px;
 
   &:first-child {
     margin-top: 4px;
@@ -22,8 +22,8 @@
   .icon {
     display: inline-block;
     width: 25px;
-    text-align: center;
     padding-left: 3px;
+    text-align: center;
   }
 
   .title {

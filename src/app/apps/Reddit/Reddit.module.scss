@@ -1,16 +1,17 @@
 @import 'constants';
 
 .body {
-  flex-grow: 1;
-  overflow-y: scroll;
-  padding: 5px 15px 20px 15px;
   position: relative;
+  overflow-y: scroll;
+  flex-grow: 1;
+  padding: 5px 15px 20px 15px;
+
   scroll-behavior: smooth;
 }
 
 .reddit {
-  display: flex;
   font-family: $fontFamily;
+  display: flex;
   height: 100%;
 }
 

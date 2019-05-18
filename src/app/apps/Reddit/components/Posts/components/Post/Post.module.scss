@@ -1,14 +1,14 @@
 @import '../../../../constants';
 
 .aside {
-  color: $textColor;
+  font-size: 0.75em;
+  font-weight: bold;
   display: flex;
   flex: 0 0 50px;
   flex-direction: column;
-  font-size: 0.75em;
-  font-weight: bold;
   justify-content: space-around;
   text-align: center;
+  color: $textColor;
 }
 
 .comments {
@@ -16,9 +16,9 @@
 }
 
 .footer {
-  color: $textSecondaryColor;
   font-size: 0.9em;
   margin: 7px 0 10px 0;
+  color: $textSecondaryColor;
 }
 
 .main {
@@ -26,22 +26,23 @@
 }
 
 .post {
-  background: $backgroundSecondaryColor;
-  color: $textColor;
-  cursor: pointer;
   display: flex;
+  width: 550px;
+  margin: 20px auto 0 auto;
+  cursor: pointer;
+  color: $textColor;
   border: 1px solid $borderColor;
   border-radius: 4px;
-  margin: 20px auto 0 auto;
-  width: 550px;
+  background: $backgroundSecondaryColor;
 
   &:hover {
     border-color: darken($borderColor, 20%);
   }
 
   &.outdated {
-    filter: grayscale(100%);
     opacity: 0.5;
+
+    filter: grayscale(100%);
   }
 }
 

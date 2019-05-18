@@ -1,14 +1,14 @@
 .desktop {
   position: relative;
+  overflow: hidden;
   flex-grow: 1;
   flex-shrink: 1;
   height: 100vh;
-  overflow: hidden;
 }
 
 .selection {
   position: absolute;
+  display: none;
   border: 1px solid #0089ff;
   background: rgba(0, 114, 255, 0.4);
-  display: none;
 }

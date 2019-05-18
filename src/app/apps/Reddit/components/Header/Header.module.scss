@@ -1,9 +1,9 @@
 @import '../../constants';
 
 .header {
-  color: $textColor;
   display: flex;
   justify-content: space-between;
+  color: $textColor;
 }
 
 .path {

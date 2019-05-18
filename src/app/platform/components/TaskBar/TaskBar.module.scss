@@ -2,9 +2,9 @@
 
 .taskBar {
   flex-basis: 60px;
-  flex-shrink: 0;
   flex-grow: 0;
+  flex-shrink: 0;
   height: 100vh;
-  background: $background-color;
   color: $text-color;
+  background: $background-color;
 }

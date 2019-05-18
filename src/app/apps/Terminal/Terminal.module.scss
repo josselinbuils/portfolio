@@ -1,22 +1,22 @@
 @import './constants';
 
 .caret {
-  background: #4d4d4d;
   position: absolute;
   top: 0;
   width: 1.1ch;
   height: 100%;
+  background: #4d4d4d;
 }
 
 .terminal {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.8em;
-  padding: 5px 8px;
-  color: $text-color;
-  box-sizing: border-box;
-  height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 5px 8px;
+  color: $text-color;
 }
 
 .userInput {

@@ -10,18 +10,18 @@
 }
 
 .defaultIcon {
-  color: $reddit;
   font-size: 1.2em;
   font-weight: normal;
+  color: $reddit;
 }
 
 .icon {
-  border-radius: 0.6em;
   height: 1.2em;
+  border-radius: 0.6em;
 }
 
 .iconContainer {
   display: inline-block;
-  margin: 0 0.3em 0 0;
   width: 1.2em;
+  margin: 0 0.3em 0 0;
 }

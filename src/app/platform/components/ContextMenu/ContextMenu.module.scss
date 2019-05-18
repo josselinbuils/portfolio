@@ -1,15 +1,15 @@
 @import '../../constants';
 
 .contextMenu {
-  position: fixed;
-  background: $background-color;
-  border-radius: 4px;
-  margin: 0;
-  z-index: 1000;
-  padding: 0;
-  min-width: 120px;
   font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 0.8em;
+  position: fixed;
+  z-index: 1000;
+  min-width: 120px;
+  margin: 0;
+  padding: 0;
   user-select: none;
   color: $text-color;
+  border-radius: 4px;
+  background: $background-color;
 }
