@@ -51,9 +51,9 @@ export function useSize(
   }, [contentRef, keepContentRatio]);
 
   useEffect(() => {
-    setDeltaY(
-      getRefElementSize(windowRef).height - getRefElementSize(contentRef).height
-    );
+    const windowHeight = getRefElementSize(windowRef).height;
+    const contentHeight = getRefElementSize(contentRef).height;
+    setDeltaY(windowHeight - contentHeight);
   }, [contentRef, windowRef]);
 
   return [size, updateSize];

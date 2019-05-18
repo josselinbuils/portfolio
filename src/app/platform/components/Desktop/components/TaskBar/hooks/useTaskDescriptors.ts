@@ -15,11 +15,13 @@ export function useTaskDescriptors(
   );
   const windowManager = useInjector(WindowManager);
 
-  useEffect(() => {
-    return windowManager.windowInstancesSubject.subscribe(windowInstances => {
-      setTasks(getTaskDescriptors(pinnedWindowComponents, windowInstances));
-    });
-  }, [pinnedWindowComponents, windowManager]);
+  useEffect(
+    () =>
+      windowManager.windowInstancesSubject.subscribe(windowInstances =>
+        setTasks(getTaskDescriptors(pinnedWindowComponents, windowInstances))
+      ),
+    [pinnedWindowComponents, windowManager]
+  );
 
   return tasks;
 }

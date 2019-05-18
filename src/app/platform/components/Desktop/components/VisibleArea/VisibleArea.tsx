@@ -16,13 +16,13 @@ export const VisibleArea: FC = () => {
   const visibleAreaRef = useRef<HTMLDivElement>(null);
   const windowManager = useInjector(WindowManager);
 
-  useEffect(() => {
-    setVisibleAreaSize(getRefElementSize(visibleAreaRef));
-  }, []);
+  useEffect(() => setVisibleAreaSize(getRefElementSize(visibleAreaRef)), []);
 
-  useEventListener('resize', () => {
-    setVisibleAreaSize(getRefElementSize(visibleAreaRef));
-  });
+  useEventListener('resize', () =>
+    requestAnimationFrame(() =>
+      setVisibleAreaSize(getRefElementSize(visibleAreaRef))
+    )
+  );
 
   const mouseDownHandler = useDragAndDrop(
     (downEvent: MouseEvent) => {

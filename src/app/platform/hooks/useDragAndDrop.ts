@@ -12,13 +12,13 @@ export function useDragAndDrop(
   const moveHandlerRef = useRef<MouseMoveHandler>(noop);
   const upHandlerRef = useRef<MouseUpHandler>(noop);
 
-  useEventListener('mousemove', (moveEvent: MouseEvent) => {
-    requestAnimationFrame(() => moveHandlerRef.current(moveEvent));
-  });
+  useEventListener('mousemove', (moveEvent: MouseEvent) =>
+    requestAnimationFrame(() => moveHandlerRef.current(moveEvent))
+  );
 
-  useEventListener('mouseup', (upEvent: MouseEvent) => {
-    upHandlerRef.current(upEvent);
-  });
+  useEventListener('mouseup', (upEvent: MouseEvent) =>
+    upHandlerRef.current(upEvent)
+  );
 
   return function dragAndDropHandler(downEvent: React.MouseEvent) {
     if (downEvent.button !== MouseButton.Left) {

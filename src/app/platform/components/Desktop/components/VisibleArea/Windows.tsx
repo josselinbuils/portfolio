@@ -10,11 +10,13 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
-  useEffect(() => {
-    return windowManager.windowInstancesSubject.subscribe(windowInstances => {
-      setWindowInstances(windowInstances);
-    });
-  }, [windowManager]);
+  useEffect(
+    () =>
+      windowManager.windowInstancesSubject.subscribe(windowInstances =>
+        setWindowInstances(windowInstances)
+      ),
+    [windowManager]
+  );
 
   return (
     <>
