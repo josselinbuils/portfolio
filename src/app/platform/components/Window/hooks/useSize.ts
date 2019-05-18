@@ -9,11 +9,7 @@ export function useSize(
   windowRef: RefObject<HTMLElement>,
   contentRef: RefObject<HTMLElement>,
   callback: (size: Size) => void
-): [
-  Size,
-  (width: number, height: number, force?: boolean) => Size,
-  () => Size
-] {
+): [Size, (width: number, height: number, force?: boolean) => Size] {
   const { maxHeight, maxWidth, minHeight, minWidth } = sizeLimits;
   const [deltaY, setDeltaY] = useState(0);
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
@@ -31,7 +27,7 @@ export function useSize(
         }
       }
 
-      const newSize = Object.freeze({ width, height });
+      const newSize = { width, height };
 
       setSize(newSize);
       callbackRef.current(newSize);
@@ -40,11 +36,6 @@ export function useSize(
     },
     [deltaY, maxHeight, maxWidth, minHeight, minWidth]
   );
-
-  const setMaxSize = useCallback(() => {
-    const { width, height } = getSize(desktopRef);
-    return updateSize(width, height, true);
-  }, [desktopRef, updateSize]);
 
   useEffect(() => {
     callbackRef.current = callback;
@@ -63,7 +54,7 @@ export function useSize(
     setDeltaY(getSize(windowRef).height - getSize(contentRef).height);
   }, [contentRef, windowRef]);
 
-  return [size, updateSize, setMaxSize];
+  return [size, updateSize];
 }
 
 interface SizeLimits {

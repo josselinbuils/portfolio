@@ -5,7 +5,7 @@ import {
   WindowManager
 } from '~/platform/services/WindowManager';
 
-export const Windows: FC<Props> = ({ desktopRef }) => {
+export const Windows: FC<Props> = ({ visibleAreaRef }) => {
   const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
@@ -28,7 +28,6 @@ export const Windows: FC<Props> = ({ desktopRef }) => {
         }) => (
           <WindowComponent
             active={active}
-            desktopRef={desktopRef}
             key={id}
             id={id}
             minimizedTopPosition={minimizedTopPosition}
@@ -36,6 +35,7 @@ export const Windows: FC<Props> = ({ desktopRef }) => {
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
             visible={visible}
+            visibleAreaRef={visibleAreaRef}
             zIndex={zIndex}
           />
         )
@@ -45,5 +45,5 @@ export const Windows: FC<Props> = ({ desktopRef }) => {
 };
 
 interface Props {
-  desktopRef: RefObject<HTMLElement>;
+  visibleAreaRef: RefObject<HTMLElement>;
 }

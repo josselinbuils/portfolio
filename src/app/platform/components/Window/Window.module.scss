@@ -6,10 +6,6 @@
   user-select: none;
 }
 
-.frozen {
-  pointer-events: none;
-}
-
 .resize {
   position: absolute;
   right: -2px;
@@ -26,23 +22,6 @@
   flex-direction: column;
   opacity: 0.9;
 
-  &.active {
-    opacity: 1;
-
-    .content {
-      user-select: inherit;
-    }
-  }
-
-  &.animated {
-    transition-timing-function: ease-in-out;
-    transition-property: all;
-  }
-
-  &.minimized {
-    opacity: 0;
-  }
-
   &:not(.maximized) {
     border-radius: 6px; /* Needed by box shadow */
     box-shadow: 0 0 10px #1f1f1f;
@@ -52,4 +31,34 @@
       border-bottom-left-radius: 6px;
     }
   }
+}
+
+// Modifiers
+
+.active {
+  opacity: 1;
+
+  .content {
+    user-select: inherit;
+  }
+}
+
+.animated {
+  transition-timing-function: ease-in-out;
+  transition-property: all;
+}
+
+.frozen {
+  pointer-events: none;
+}
+
+.maximized {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.minimized {
+  opacity: 0;
 }

@@ -1,9 +1,20 @@
 import cn from 'classnames';
-import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
-import { useDragAndDrop, useEventListener } from '~/platform/hooks';
+import React, {
+  CSSProperties,
+  FC,
+  RefObject,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+import { useDragAndDrop } from '~/platform/hooks';
 import { Position, Size } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
-import { ANIMATION_DURATION, VERTICAL_OFFSET_TO_UNMAXIMIZE } from './constants';
+import {
+  ANIMATION_DURATION,
+  ANIMATION_DURATION_FAST,
+  VERTICAL_OFFSET_TO_UNMAXIMIZE
+} from './constants';
 import { useAnimation, useSize } from './hooks';
 import { TitleBar } from './TitleBar';
 import { boundPosition, getRelativeOffset, getSize } from './utils';
@@ -12,7 +23,6 @@ import styles from './Window.module.scss';
 export const Window: FC<Props> = ({
   active,
   background,
-  desktopRef,
   children,
   keepContentRatio = false,
   id,
@@ -30,6 +40,7 @@ export const Window: FC<Props> = ({
   titleBackground,
   titleColor,
   visible,
+  visibleAreaRef,
   zIndex
 }) => {
   const [frozen, setFrozen] = useState(false);
@@ -38,50 +49,57 @@ export const Window: FC<Props> = ({
   const windowRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLMainElement>(null);
   const [animationDurationMs, animate] = useAnimation();
-  const [size, setSize, setMaxSize] = useSize(
+  const [size, setSize] = useSize(
     { maxHeight, maxWidth, minHeight, minWidth },
     keepContentRatio,
-    desktopRef,
+    visibleAreaRef,
     windowRef,
     contentRef,
     onResize
   );
-  const desktopSize = getSize(desktopRef);
+  const visibleAreaSize = getSize(visibleAreaRef);
   const [position, setPosition] = useState<Position>(() => ({
-    x: Math.round((desktopSize.width - size.width) * 0.5),
-    y: Math.round((desktopSize.height - size.height) * 0.2)
+    x: Math.round((visibleAreaSize.width - size.width) * 0.5),
+    y: Math.round((visibleAreaSize.height - size.height) * 0.2)
   }));
   const maximized = unmaximizeProps !== undefined;
   const minimized = size.width === 0 && size.height === 0;
 
-  function toggleMaximize(
-    keepPosition: boolean = false,
-    animationDuration: number = ANIMATION_DURATION
-  ) {
+  function maximize(): void {
     if (!resizable) {
+      return;
+    }
+
+    animate(ANIMATION_DURATION);
+    setUnmaximizeProps({ ...position, ...size });
+    setPosition({ x: 0, y: 0 });
+  }
+
+  function toggleMaximize(): void {
+    if (!resizable) {
+      return;
+    }
+    if (unmaximizeProps !== undefined) {
+      unmaximize();
+    } else {
+      maximize();
+    }
+  }
+
+  function unmaximize(keepPosition: boolean = false): Size {
+    if (unmaximizeProps === undefined) {
       return size;
     }
+    const { height, width, x, y } = unmaximizeProps;
 
-    animate(animationDuration);
+    animate(keepPosition ? ANIMATION_DURATION_FAST : ANIMATION_DURATION);
 
-    if (unmaximizeProps !== undefined) {
-      const { height, width, x, y } = unmaximizeProps;
-
-      if (!keepPosition) {
-        const position = boundPosition(x, y, desktopSize, width);
-        setPosition(position);
-      }
-      setUnmaximizeProps(undefined);
-      return setSize(width, height);
-    } else {
-      setUnmaximizeProps({ ...position, ...size });
-
-      if (!keepPosition) {
-        const position = boundPosition(0, 0, desktopSize, size.width);
-        setPosition(position);
-      }
-      return setMaxSize();
+    if (!keepPosition) {
+      const position = boundPosition(x, y, visibleAreaSize, width);
+      setPosition(position);
     }
+    setUnmaximizeProps(undefined);
+    return setSize(width, height);
   }
 
   const moveStartHandler = useDragAndDrop(
@@ -97,7 +115,7 @@ export const Window: FC<Props> = ({
 
       if (unmaximizeProps !== undefined) {
         const nextWidth = unmaximizeProps.width;
-        dx += getRelativeOffset(downEvent, width, nextWidth);
+        dx += getRelativeOffset(downEvent, visibleAreaSize.width, nextWidth);
         shouldToggleMaximize = true;
       }
 
@@ -109,14 +127,14 @@ export const Window: FC<Props> = ({
           return;
         }
         if (shouldToggleMaximize) {
-          width = toggleMaximize(true, 50).width;
+          width = unmaximize(true).width;
           shouldToggleMaximize = false;
         }
 
         const { x, y } = boundPosition(
           moveEvent.clientX + dx,
           moveEvent.clientY + dy,
-          desktopSize,
+          visibleAreaSize,
           width
         );
 
@@ -171,18 +189,11 @@ export const Window: FC<Props> = ({
     animate,
     minimizedTopPosition,
     position,
-    setPosition,
     setSize,
     size,
     unminimizeProps,
     visible
   ]);
-
-  useEventListener('resize', () => {
-    if (maximized) {
-      setMaxSize();
-    }
-  });
 
   const animated = animationDurationMs !== undefined;
   const className = cn(styles.window, {
@@ -191,17 +202,21 @@ export const Window: FC<Props> = ({
     [styles.maximized]: maximized,
     [styles.minimized]: minimized
   });
-  const { x, y } = position;
-  const { height, width } = size;
-  const style = {
-    background,
-    height,
-    left: x,
-    top: y,
-    transitionDuration: animated ? `${animationDurationMs}ms` : undefined,
-    width,
-    zIndex
-  };
+  const style: CSSProperties = { background, zIndex };
+
+  if (animated) {
+    style.transitionDuration = `${animationDurationMs}ms`;
+  }
+
+  if (!maximized) {
+    const { x, y } = position;
+    const { height, width } = size;
+
+    style.height = height;
+    style.left = x;
+    style.top = y;
+    style.width = width;
+  }
 
   return (
     <div
@@ -218,9 +233,9 @@ export const Window: FC<Props> = ({
         title={title}
         maximized={maximized}
         onClose={() => onClose(id)}
-        onMaximize={toggleMaximize}
         onMinimise={() => onMinimise(id)}
         onMoveStart={moveStartHandler}
+        onToggleMaximize={toggleMaximize}
       />
       <main
         className={cn(styles.content, { [styles.frozen]: frozen })}
@@ -238,7 +253,6 @@ export const Window: FC<Props> = ({
 interface Props {
   active: boolean;
   background: string;
-  desktopRef: RefObject<HTMLElement>;
   keepContentRatio?: boolean;
   id: number;
   maxHeight?: number;
@@ -251,6 +265,7 @@ interface Props {
   titleBackground?: string;
   titleColor: string;
   visible: boolean;
+  visibleAreaRef: RefObject<HTMLElement>;
   zIndex: number;
   onClose(id: number): void;
   onMinimise(id: number): void;

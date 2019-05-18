@@ -2,5 +2,4 @@
 // specific imports are needed
 export { ContextMenu } from './ContextMenu';
 export { Desktop } from './Desktop';
-export { TaskBar } from './TaskBar';
 export { Window } from './Window';

@@ -8,9 +8,9 @@ export interface WindowComponent extends FC<InjectedWindowProps> {
 interface InjectedWindowProps {
   active: boolean;
   id: number;
-  desktopRef: RefObject<HTMLElement>;
   minimizedTopPosition?: number;
   visible: boolean;
+  visibleAreaRef: RefObject<HTMLElement>;
   zIndex: number;
   onClose(id: number): void;
   onMinimise(id: number): void;

@@ -8,9 +8,9 @@ export const TitleBar: FC<Props> = ({
   frozen,
   maximized,
   onClose,
-  onMaximize,
   onMinimise,
   onMoveStart,
+  onToggleMaximize,
   showMaximizeButton,
   title
 }) => (
@@ -36,14 +36,14 @@ export const TitleBar: FC<Props> = ({
       {showMaximizeButton && (
         <button
           className={cn(styles.button, styles.maximize)}
-          onClick={() => onMaximize()}
+          onClick={() => onToggleMaximize()}
           style={{ color }}
         >
           <i className="fas fa-plus" />
         </button>
       )}
     </div>
-    <div onMouseDown={onMoveStart} onDoubleClick={() => onMaximize()}>
+    <div onMouseDown={onMoveStart} onDoubleClick={() => onToggleMaximize()}>
       <span className={styles.title}>{title}</span>
     </div>
   </header>
@@ -57,7 +57,7 @@ interface Props {
   showMaximizeButton: boolean;
   title: string;
   onClose(): void;
-  onMaximize(): void;
   onMinimise(): void;
   onMoveStart(downEvent: MouseEvent): void;
+  onToggleMaximize(): void;
 }

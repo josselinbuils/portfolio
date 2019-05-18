@@ -1,0 +1,13 @@
+.selection {
+  position: absolute;
+  display: none;
+  border: 1px solid #0089ff;
+  background: rgba(0, 114, 255, 0.4);
+}
+
+.visibleArea {
+  position: relative;
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+}

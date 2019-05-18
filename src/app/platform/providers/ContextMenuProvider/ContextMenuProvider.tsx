@@ -16,15 +16,16 @@ import styles from './ContextMenuProvider.module.scss';
 export const ContextMenuProvider: FC = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
   const hide = () => setDescriptor(undefined);
-  const child = Children.only(children) as ReactElement;
-  const childClassName = cn(
-    child.props.className,
-    descriptor && styles.eventLess
-  );
 
   return (
     <ContextMenuContext.Provider value={setDescriptor}>
-      {cloneElement(child, { className: childClassName })}
+      {Children.map(children as ReactElement[], child =>
+        cloneElement(child, {
+          className: cn(child.props.className, {
+            [styles.eventLess]: descriptor
+          })
+        })
+      )}
       {descriptor && (
         <>
           <div className={styles.overlay} onMouseDown={hide} />

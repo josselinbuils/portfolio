@@ -1,6 +1,7 @@
-@import '../../constants';
+@import '../../../../constants';
 
 .taskBar {
+  z-index: 999;
   flex-basis: 60px;
   flex-grow: 0;
   flex-shrink: 0;

@@ -1,14 +1,8 @@
 .desktop {
-  position: relative;
+  display: flex;
   overflow: hidden;
-  flex-grow: 1;
-  flex-shrink: 1;
+  width: 100vw;
   height: 100vh;
-}
-
-.selection {
-  position: absolute;
-  display: none;
-  border: 1px solid #0089ff;
-  background: rgba(0, 114, 255, 0.4);
+  background-image: url('./assets/wallpaper.jpg');
+  background-size: cover;
 }
