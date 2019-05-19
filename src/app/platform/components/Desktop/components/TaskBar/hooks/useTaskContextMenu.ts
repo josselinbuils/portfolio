@@ -18,7 +18,7 @@ export function useTaskContextMenu(
 ): () => ContextMenuDescriptor {
   const windowManager = useInjector(WindowManager);
 
-  return function getTaskContextMenuDescriptor() {
+  return function getTaskContextMenuDescriptor(): ContextMenuDescriptor {
     if (taskBarRef.current === null) {
       throw new Error('Unable to retrieve taskbar html element');
     }

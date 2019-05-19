@@ -20,7 +20,7 @@ export function useDragAndDrop(
     upHandlerRef.current(upEvent)
   );
 
-  return function dragAndDropHandler(downEvent: React.MouseEvent) {
+  return function dragAndDropHandler(downEvent: React.MouseEvent): void {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }

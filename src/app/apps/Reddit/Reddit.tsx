@@ -9,9 +9,9 @@ export const Reddit: WindowComponent = props => {
   const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
 
-  const goTo = (subreddit: string, filter: RedditFilter = 'hot') => {
-    setSubreddit(subreddit);
-    setFilter(filter);
+  const goTo = (newSubreddit: string, newFilter: RedditFilter = 'hot') => {
+    setSubreddit(newSubreddit);
+    setFilter(newFilter);
   };
 
   useLayoutEffect(() => {

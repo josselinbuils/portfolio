@@ -9,9 +9,12 @@
     "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
-    "start": "node dist/server/server.js",
     "dev:client": "react-app-rewired start",
-    "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'"
+    "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
+    "lint": "yarn lint:client && yarn lint:server",
+    "lint:client": "tslint -p tsconfig.json --fix",
+    "lint:server": "tslint -p server/tsconfig.json --fix",
+    "start": "node dist/server/server.js"
   },
   "dependencies": {
     "@josselinbuils/utils": "^0.1.2",
@@ -44,10 +47,12 @@
     "typescript": "^3.4.5"
   },
   "devDependencies": {
+    "@josselinbuils/tslint": "^3.0.0",
     "concurrently": "^4.1.0",
     "csscomb": "^4.3.0",
     "nodemon": "^1.19.0",
-    "source-map-explorer": "^1.8.0"
+    "source-map-explorer": "^1.8.0",
+    "tslint": "^5.16.0"
   },
   "browserslist": [
     ">0.2%",

@@ -1,0 +1,14 @@
+{
+  "extends": "@josselinbuils/tslint",
+  "rules": {
+    "no-floating-promises": false,
+    "only-arrow-functions": [
+      true,
+      "allow-declarations",
+      "allow-named-functions"
+    ],
+    "semicolon": [true, "always", "strict-bound-class-methods"],
+    "return-undefined": false,
+    "no-object-literal-type-assertion": false
+  }
+}

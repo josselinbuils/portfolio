@@ -21,14 +21,14 @@ export const TitleBar: FC<Props> = ({
     <div className={cn(styles.buttons, { [styles.frozen]: frozen })}>
       <button
         className={cn(styles.button, styles.close)}
-        onClick={() => onClose()}
+        onClick={onClose}
         style={{ color }}
       >
         <i className="fas fa-times" />
       </button>
       <button
         className={cn(styles.button, styles.minimize)}
-        onClick={() => onMinimise()}
+        onClick={onMinimise}
         style={{ color }}
       >
         <i className="fas fa-minus" />
@@ -36,14 +36,14 @@ export const TitleBar: FC<Props> = ({
       {showMaximizeButton && (
         <button
           className={cn(styles.button, styles.maximize)}
-          onClick={() => onToggleMaximize()}
+          onClick={onToggleMaximize}
           style={{ color }}
         >
           <i className="fas fa-plus" />
         </button>
       )}
     </div>
-    <div onMouseDown={onMoveStart} onDoubleClick={() => onToggleMaximize()}>
+    <div onMouseDown={onMoveStart} onDoubleClick={onToggleMaximize}>
       <span className={styles.title}>{title}</span>
     </div>
   </header>

@@ -23,7 +23,7 @@ export class JamendoController {
     return get('/tracks', options);
   }
 
-  static init() {
+  static init(): void {
     if (!jamendo || !jamendo.clientId) {
       throw Error('Invalid configuration: jamendo');
     }
@@ -39,7 +39,10 @@ async function get(path: string, options: Options): Promise<any[]> {
 
   Logger.info(`-> GET ${url}`);
 
-  const { headers, results, status } = await request({ json: true, url });
+  const { headers, results, status } = await request({
+    json: true,
+    url
+  }).promise();
 
   if (status === 'success') {
     return results;

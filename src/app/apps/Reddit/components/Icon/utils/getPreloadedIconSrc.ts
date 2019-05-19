@@ -7,7 +7,7 @@ export async function getPreloadedIconSrc(
   const iconSrc = getIn(await getSubreddit(subreddit), 'iconSrc');
 
   if (iconSrc === undefined) {
-    return undefined;
+    return;
   }
 
   return new Promise((resolve, reject) => {

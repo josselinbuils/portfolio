@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
+import { Icon } from '~/apps/Reddit/components/Icon';
 import commonStyles from '../../../common.module.scss';
 import styles from './PostDetails.module.scss';
-import { Icon } from '~/apps/Reddit/components/Icon';
 
 export const PostDetails: FC<Props> = ({
   author,
@@ -32,8 +32,8 @@ export const PostDetails: FC<Props> = ({
 interface Props {
   author: string;
   currentSubreddit: string;
-  onClickSubreddit: (subreddit: string) => void;
   since: string;
   stickied: boolean;
   subreddit: string;
+  onClickSubreddit(subreddit: string): void;
 }

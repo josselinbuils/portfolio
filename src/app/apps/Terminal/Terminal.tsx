@@ -79,7 +79,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     };
 
     if (isAsyncExecutor(executor)) {
-      const deferred = new Deferred();
+      const deferred = new Deferred<Error | undefined>();
 
       execution.inProgress = true;
       execution.releaseHandler = deferred.resolve;
@@ -97,7 +97,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     }
   }
 
-  function navigate(event: KeyboardEvent) {
+  function navigate(event: KeyboardEvent): void {
     switch (event.key) {
       case 'ArrowDown':
       case 'Down':
@@ -249,16 +249,22 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
     >
       <div className={styles.terminal} ref={terminalRef}>
         {executions.map(
-          ({ args, executor: Executor, id, inProgress, releaseHandler }) =>
-            isAsyncExecutor(Executor) ? (
-              <Executor
+          ({
+            args,
+            executor: ExecutorComponent,
+            id,
+            inProgress,
+            releaseHandler
+          }) =>
+            isAsyncExecutor(ExecutorComponent) ? (
+              <ExecutorComponent
                 alive={inProgress as boolean}
                 args={args}
                 key={id}
                 onRelease={releaseHandler as () => void}
               />
             ) : (
-              <Executor args={args} key={id} />
+              <ExecutorComponent args={args} key={id} />
             )
         )}
         <div className={styles.userInput}>
@@ -283,5 +289,5 @@ interface Execution {
   executor: Executor | AsyncExecutor;
   id: number;
   inProgress?: boolean;
-  releaseHandler?: (error?: Error) => void;
+  releaseHandler?(error?: Error): void;
 }

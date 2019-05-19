@@ -16,9 +16,9 @@ export class Logger {
 function formatLevel(level: Level): string {
   switch (level) {
     case Level.Error:
-      return '\x1b[91m[' + level + ']';
+      return `\x1b[91m[${level}]`;
     case Level.Info:
-      return '\x1b[32m[' + level + ']\x1b[0m';
+      return `\x1b[32m[${level}]\x1b[0m`;
     default:
       throw new Error('Unknown log level');
   }

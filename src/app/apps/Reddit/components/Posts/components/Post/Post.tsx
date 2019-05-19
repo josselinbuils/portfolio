@@ -1,13 +1,13 @@
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../RedditPost';
+import styles from './Post.module.scss';
 import { PostDetails } from './PostDetails';
 import {
   formatNumber,
   getPreviewDisplaySize,
   getPreviewResolution
 } from './utils';
-import styles from './Post.module.scss';
 
 const REDDIT_URL = 'https://www.reddit.com';
 
@@ -61,6 +61,6 @@ export const Post: FC<Props> = ({
 
 interface Props extends RedditPost {
   currentSubreddit: string;
-  onClickSubreddit: (subreddit: string) => void;
   outdated: boolean;
+  onClickSubreddit(subreddit: string): void;
 }

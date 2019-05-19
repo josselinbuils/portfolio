@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { subreddits } from '../../subreddits';
-import { MenuItem } from './MenuItem';
 import styles from './Menu.module.scss';
+import { MenuItem } from './MenuItem';
 
 export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
   <nav className={styles.menu}>
@@ -18,5 +18,5 @@ export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
 
 interface Props {
   activeSubreddit: string;
-  onClickSubreddit: (subreddit: string) => void;
+  onClickSubreddit(subreddit: string): void;
 }

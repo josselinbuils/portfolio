@@ -14,7 +14,7 @@ export function useList<T>(): [T[], ListManager<T>] {
 }
 
 interface ListManager<T> {
-  clear: () => void;
-  push: (...items: T[]) => void;
-  update: () => void;
+  clear(): void;
+  push(...items: T[]): void;
+  update(): void;
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { Logger } from './Logger';
 import { HTTP_INTERNAL_ERROR } from './constants';
+import { Logger } from './Logger';
 
 export function asyncRoute(handler: AsyncRequestHandler): RequestHandler {
   return (req: Request, res: Response) => {

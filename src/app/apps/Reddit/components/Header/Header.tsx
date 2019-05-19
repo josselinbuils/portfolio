@@ -18,6 +18,6 @@ export const Header: FC<Props> = ({ filter, onClickFilter, subreddit }) => (
 
 interface Props {
   filter: RedditFilter;
-  onClickFilter: (filter: RedditFilter) => void;
   subreddit: string;
+  onClickFilter(filter: RedditFilter): void;
 }

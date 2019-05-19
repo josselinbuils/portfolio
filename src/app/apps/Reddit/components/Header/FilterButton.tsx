@@ -24,5 +24,5 @@ export const FilterButton: FC<Props> = ({ filter, onClick }) => {
 
 interface Props {
   filter: RedditFilter;
-  onClick: (filter: RedditFilter) => void;
+  onClick(filter: RedditFilter): void;
 }

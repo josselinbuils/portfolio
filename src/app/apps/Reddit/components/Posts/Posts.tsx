@@ -15,10 +15,10 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
     setLoading(true);
 
     const promise = getPosts(subreddit, filter)
-      .then(({ posts, subreddit }) => {
+      .then(result => {
         if (loadingPromiseRef.current === promise) {
-          setCurrentSubreddit(subreddit);
-          setPosts(posts);
+          setCurrentSubreddit(result.subreddit);
+          setPosts(result.posts);
         }
       })
       .finally(() => {
@@ -49,6 +49,6 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
 
 interface Props {
   filter: RedditFilter;
-  onClickSubreddit: (subreddit: string) => void;
   subreddit: string;
+  onClickSubreddit(subreddit: string): void;
 }

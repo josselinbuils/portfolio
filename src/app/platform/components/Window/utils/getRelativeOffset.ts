@@ -8,7 +8,7 @@ export function getRelativeOffset(
   downNativeEvent: MouseEvent,
   maximizedWidth: number,
   nextWidth: number
-) {
+): number {
   const offsetX = downNativeEvent.offsetX;
   const widthRatio = nextWidth / maximizedWidth;
 

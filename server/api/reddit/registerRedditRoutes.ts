@@ -1,9 +1,9 @@
 import { Router } from 'express';
+import { asyncRoute } from '../../asyncRoute';
 import { Logger } from '../../Logger';
 import { RedditController } from './RedditController';
-import { asyncRoute } from '../../asyncRoute';
 
-export function registerRedditRoutes(router: Router) {
+export function registerRedditRoutes(router: Router): void {
   Logger.info('Initializes reddit routes');
 
   const controller = new RedditController();

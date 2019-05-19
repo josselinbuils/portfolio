@@ -38,7 +38,7 @@ export class RedditController {
   getSubreddit = async (req: Request): Promise<Subreddit> => {
     const subreddit = (await (this.snoowrap
       .getSubreddit(req.params.subreddit)
-      .fetch() as unknown)) as SnoowrapSubreddit;
+      .fetch() as any)) as SnoowrapSubreddit;
 
     return {
       iconSrc: subreddit.icon_img || undefined

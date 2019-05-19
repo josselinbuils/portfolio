@@ -1,11 +1,11 @@
 import React, { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useEventListener, useInjector } from '~/platform/hooks';
-import { WindowManager } from '~/platform/services/WindowManager';
-import { Windows } from './Windows';
-import styles from './VisibleArea.module.scss';
 import { Size } from '~/platform/interfaces';
+import { WindowManager } from '~/platform/services/WindowManager';
 import { getRefElementSize } from '~/platform/utils';
 import { Selection } from './Selection';
+import styles from './VisibleArea.module.scss';
+import { Windows } from './Windows';
 
 export const VisibleArea: FC = () => {
   const [selectionVisible, setSelectionVisible] = useState(false);

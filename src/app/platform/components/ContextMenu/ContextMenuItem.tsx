@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { FC } from 'react';
-import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 import styles from './ContextMenuItem.module.scss';
+import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 
 export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   onClick,

@@ -86,8 +86,8 @@ export const Window: FC<Props> = ({
     animate(keepPosition ? ANIMATION_DURATION_FAST : ANIMATION_DURATION);
 
     if (!keepPosition) {
-      const position = boundPosition(x, y, visibleAreaSize, width);
-      setPosition(position);
+      const newPosition = boundPosition(x, y, visibleAreaSize, width);
+      setPosition(newPosition);
     }
     setUnmaximizeProps(undefined);
     return setSize(width, height);

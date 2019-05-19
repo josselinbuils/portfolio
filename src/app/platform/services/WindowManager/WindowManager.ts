@@ -1,6 +1,6 @@
 import { Subject } from '@josselinbuils/utils';
-import { WindowInstance } from './WindowInstance';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
@@ -46,7 +46,7 @@ export class WindowManager {
     this.selectWindow(windowInstance.id);
   }
 
-  setMinimizedTopPosition(id: number, topPosition: number) {
+  setMinimizedTopPosition(id: number, topPosition: number): void {
     this.getWindowInstance(id).minimizedTopPosition = topPosition;
     this.publishWindowInstances();
   }
@@ -63,11 +63,11 @@ export class WindowManager {
       let i = 0;
 
       this.windowInstances
-        .filter(windowInstance => windowInstance.id !== id)
+        .filter(instance => instance.id !== id)
         .sort((a, b) => (a.zIndex < b.zIndex ? -1 : 1))
-        .forEach(windowInstance => {
-          windowInstance.active = false;
-          windowInstance.zIndex = ++i;
+        .forEach(instance => {
+          instance.active = false;
+          instance.zIndex = ++i;
         });
 
       windowInstance.active = true;

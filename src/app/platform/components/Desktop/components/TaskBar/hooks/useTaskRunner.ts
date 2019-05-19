@@ -8,10 +8,10 @@ import {
 export function useTaskRunner(
   windowComponent: WindowComponent,
   windowInstance?: WindowInstance
-) {
+): () => void {
   const windowManager = useInjector(WindowManager);
 
-  return function run() {
+  return function run(): void {
     if (windowInstance !== undefined) {
       const id = windowInstance.id;
 

@@ -3,7 +3,7 @@ import { EventHandler } from '~/platform/interfaces';
 import { noop } from '~/platform/utils';
 
 export function useEventListener<EventType extends keyof WindowEventMap>(
-  event: EventType,
+  eventType: EventType,
   handler: EventHandler<EventType>,
   active: boolean = true
 ): void {
@@ -18,9 +18,9 @@ export function useEventListener<EventType extends keyof WindowEventMap>(
       const listener: EventHandler<EventType> = event => {
         handlerRef.current(event);
       };
-      window.addEventListener(event, listener);
+      window.addEventListener(eventType, listener);
 
-      return () => window.removeEventListener(event, listener);
+      return () => window.removeEventListener(eventType, listener);
     }
-  }, [active, event]);
+  }, [active, eventType]);
 }

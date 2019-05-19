@@ -15,7 +15,7 @@ export function startWsClient<T>(
     }
   };
 
-  wsInstance.onerror = () => errorHandler();
+  wsInstance.onerror = errorHandler;
 
   return wsInstance;
 }

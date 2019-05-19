@@ -13,5 +13,5 @@ export function isAsyncExecutor(
 
 interface AsyncExecutorProps {
   alive: boolean;
-  onRelease: (error?: Error) => void;
+  onRelease(error?: Error): void;
 }

@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useState } from 'react';
+import { Icon } from '~/apps/Reddit/components/Icon';
 import { uppercaseFirstLetter } from '../../utils';
 import commonStyles from '../common.module.scss';
 import styles from './MenuItem.module.scss';
-import { Icon } from '~/apps/Reddit/components/Icon';
 
 export const MenuItem: FC<Props> = ({
   activeSubreddit,
@@ -38,6 +38,6 @@ export const MenuItem: FC<Props> = ({
 
 interface Props {
   activeSubreddit: string;
-  onClickSubreddit: (subreddit: string) => void;
   subreddit: string;
+  onClickSubreddit(subreddit: string): void;
 }

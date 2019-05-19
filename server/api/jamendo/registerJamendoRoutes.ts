@@ -3,7 +3,7 @@ import { asyncRoute } from '../../asyncRoute';
 import { Logger } from '../../Logger';
 import { JamendoController } from './JamendoController';
 
-export function registerJamendoRoutes(router: Router) {
+export function registerJamendoRoutes(router: Router): void {
   Logger.info('Initializes jamendo routes');
 
   JamendoController.init();
