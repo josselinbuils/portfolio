@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useAnimation(): [number | undefined, (delay: number) => void] {
   const [duration, setDuration] = useState<number>();
-  const animate = useCallback(setDuration, []);
 
   useEffect(() => {
     if (duration !== undefined) {
@@ -11,5 +10,5 @@ export function useAnimation(): [number | undefined, (delay: number) => void] {
     }
   }, [duration]);
 
-  return [duration, animate];
+  return [duration, setDuration];
 }

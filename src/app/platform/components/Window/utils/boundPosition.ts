@@ -5,13 +5,13 @@ import { bound } from '../utils';
 export function boundPosition(
   x: number,
   y: number,
-  desktopSize: Size,
+  visibleAreaSize: Size,
   windowWidth: number
 ): Position {
   const xMin = -windowWidth + MIN_USABLE_SIZE;
   const yMin = 0;
-  const xMax = desktopSize.width - BUTTONS_MAX_WIDTH - MIN_USABLE_SIZE;
-  const yMax = desktopSize.height - MIN_USABLE_SIZE;
+  const xMax = visibleAreaSize.width - BUTTONS_MAX_WIDTH - MIN_USABLE_SIZE;
+  const yMax = visibleAreaSize.height - MIN_USABLE_SIZE;
 
   return {
     x: bound(x, xMin, xMax),

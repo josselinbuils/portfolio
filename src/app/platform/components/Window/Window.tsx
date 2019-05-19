@@ -60,10 +60,10 @@ export const Window: FC<Props> = ({
     if (!resizable) {
       return;
     }
-
     animate(ANIMATION_DURATION);
-    setUnmaximizeProps({ ...position, ...size });
+    setSize(visibleAreaSize.width, visibleAreaSize.height, true);
     setPosition({ x: 0, y: 0 });
+    setUnmaximizeProps({ ...position, ...size });
   }
 
   function toggleMaximize(): void {
@@ -77,20 +77,28 @@ export const Window: FC<Props> = ({
     }
   }
 
-  function unmaximize(keepPosition: boolean = false): Size {
+  function unmaximize(
+    keepPosition: boolean = false,
+    callback: () => void = noop
+  ): void {
     if (unmaximizeProps === undefined) {
-      return size;
+      return;
     }
     const { height, width, x, y } = unmaximizeProps;
 
-    animate(keepPosition ? ANIMATION_DURATION_FAST : ANIMATION_DURATION);
+    const duration = keepPosition
+      ? ANIMATION_DURATION_FAST
+      : ANIMATION_DURATION;
+
+    animate(duration);
+    setTimeout(callback, duration);
 
     if (!keepPosition) {
       const newPosition = boundPosition(x, y, visibleAreaSize, width);
       setPosition(newPosition);
     }
     setUnmaximizeProps(undefined);
-    return setSize(width, height);
+    setSize(width, height);
   }
 
   const moveStartHandler = useDragAndDrop(
@@ -101,12 +109,13 @@ export const Window: FC<Props> = ({
       let dx = position.x - downEvent.clientX;
       let shouldToggleMaximize = false;
       let width = size.width;
+      let freeze = false;
 
       setFrozen(true);
 
       if (unmaximizeProps !== undefined) {
-        const nextWidth = unmaximizeProps.width;
-        dx += getRelativeOffset(downEvent, visibleAreaSize.width, nextWidth);
+        dx += getRelativeOffset(downEvent, width, unmaximizeProps.width);
+        width = unmaximizeProps.width;
         shouldToggleMaximize = true;
       }
 
@@ -117,20 +126,24 @@ export const Window: FC<Props> = ({
         ) {
           return;
         }
-        if (shouldToggleMaximize) {
-          width = unmaximize(true).width;
-          shouldToggleMaximize = false;
+
+        if (!freeze) {
+          const { x, y } = boundPosition(
+            moveEvent.clientX + dx,
+            moveEvent.clientY + dy,
+            visibleAreaSize,
+            width
+          );
+
+          windowStyle.left = `${x}px`;
+          windowStyle.top = `${y}px`;
         }
 
-        const { x, y } = boundPosition(
-          moveEvent.clientX + dx,
-          moveEvent.clientY + dy,
-          visibleAreaSize,
-          width
-        );
-
-        windowStyle.left = `${x}px`;
-        windowStyle.top = `${y}px`;
+        if (shouldToggleMaximize) {
+          unmaximize(true, () => (freeze = false));
+          shouldToggleMaximize = false;
+          freeze = true;
+        }
       };
     },
     () => {
@@ -166,7 +179,6 @@ export const Window: FC<Props> = ({
         animate(ANIMATION_DURATION);
         setUnminimizeProps({ ...position, ...size });
         setSize(0, 0, true);
-        setPosition(position);
         setPosition({ x: 0, y: minimizedTopPosition || 0 });
       }
     } else if (unminimizeProps !== undefined) {
@@ -190,23 +202,19 @@ export const Window: FC<Props> = ({
   const className = cn(styles.window, {
     [styles.active]: active,
     [styles.animated]: animated,
-    [styles.maximized]: maximized,
     [styles.minimized]: minimized
   });
-  const style: CSSProperties = { background, zIndex };
+  const style: CSSProperties = {
+    background,
+    height: size.height,
+    left: position.x,
+    top: position.y,
+    width: size.width,
+    zIndex
+  };
 
   if (animated) {
     style.transitionDuration = `${animationDurationMs}ms`;
-  }
-
-  if (!maximized) {
-    const { x, y } = position;
-    const { height, width } = size;
-
-    style.height = height;
-    style.left = x;
-    style.top = y;
-    style.width = width;
   }
 
   return (
