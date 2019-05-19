@@ -4,7 +4,8 @@ import { noop } from '~/platform/utils';
 
 export function useEventListener<EventType extends keyof WindowEventMap>(
   event: EventType,
-  handler: EventHandler<EventType>
+  handler: EventHandler<EventType>,
+  active: boolean = true
 ): void {
   const handlerRef = useRef<EventHandler<EventType>>(noop);
 
@@ -13,11 +14,13 @@ export function useEventListener<EventType extends keyof WindowEventMap>(
   }, [handler]);
 
   useEffect(() => {
-    const listener: EventHandler<EventType> = event => {
-      handlerRef.current(event);
-    };
-    window.addEventListener(event, listener);
+    if (active) {
+      const listener: EventHandler<EventType> = event => {
+        handlerRef.current(event);
+      };
+      window.addEventListener(event, listener);
 
-    return () => window.removeEventListener(event, listener);
-  }, [event]);
+      return () => window.removeEventListener(event, listener);
+    }
+  }, [active, event]);
 }
