@@ -47,7 +47,7 @@
     "typescript": "^3.4.5"
   },
   "devDependencies": {
-    "@josselinbuils/tslint": "^3.0.0",
+    "@josselinbuils/tslint": "^4.0.0",
     "concurrently": "^4.1.0",
     "csscomb": "^4.3.0",
     "nodemon": "^1.19.0",

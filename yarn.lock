@@ -1331,10 +1331,10 @@
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/yargs" "^12.0.9"
 
-"@josselinbuils/tslint@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-3.0.0.tgz#57a26b817cde6b4fb6e50d0dce59fcbe514e5e97"
-  integrity sha512-s1AZCkLi22phqgn82uRipKNwtLMoZh1jiwKbIsWIEQIHYlWGw2vUu4kpwk54C5BXn/O6sJhj2IVFih4up3RNQA==
+"@josselinbuils/tslint@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-4.0.0.tgz#b8f8a1fe4b6ce0c5226d47a0dfbcb86db9336712"
+  integrity sha512-KIy+qoe5doLPiQ8uekDzWb970WXNXLdw/39m7FZUtvj9O5/i13VWUHWpcA7H++KJjQgCGGN8Vaoj5Q40D1rcdg==
 
 "@josselinbuils/utils@^0.1.2":
   version "0.1.2"
