@@ -22,7 +22,7 @@ export const Window: FC<Props> = ({
   maxHeight = Infinity,
   maxWidth = Infinity,
   minHeight,
-  minimizedTopPosition,
+  minimizedTopPosition = 0,
   minWidth,
   onClose,
   onMinimise,
@@ -66,17 +66,6 @@ export const Window: FC<Props> = ({
     setUnmaximizeProps({ ...position, ...size });
   }
 
-  function toggleMaximize(): void {
-    if (!resizable) {
-      return;
-    }
-    if (unmaximizeProps !== undefined) {
-      unmaximize();
-    } else {
-      maximize();
-    }
-  }
-
   function unmaximize(
     keepPosition: boolean = false,
     callback: () => void = noop
@@ -94,11 +83,18 @@ export const Window: FC<Props> = ({
     setTimeout(callback, duration);
 
     if (!keepPosition) {
-      const newPosition = boundPosition(x, y, visibleAreaSize, width);
-      setPosition(newPosition);
+      setPosition({ x, y });
     }
     setUnmaximizeProps(undefined);
     setSize(width, height);
+  }
+
+  function toggleMaximize(): void {
+    if (unmaximizeProps !== undefined) {
+      unmaximize();
+    } else {
+      maximize();
+    }
   }
 
   const moveStartHandler = useDragAndDrop(
@@ -178,7 +174,7 @@ export const Window: FC<Props> = ({
         animate(ANIMATION_DURATION);
         setUnminimizeProps({ ...position, ...size });
         setSize(0, 0, true);
-        setPosition({ x: 0, y: minimizedTopPosition || 0 });
+        setPosition({ x: 0, y: minimizedTopPosition });
       }
     } else if (unminimizeProps !== undefined) {
       const { height, width, x, y } = unminimizeProps;
