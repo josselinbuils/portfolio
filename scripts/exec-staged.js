@@ -6,10 +6,10 @@ for (let i = 2; i < process.argv.length; i += 2) {
   const execCommand = `LIST=\`git diff-index --name-only --diff-filter=d HEAD | grep -E "${regex}"\`; if [ "$LIST" ]; then echo ${command} $LIST; ${command} $LIST; fi`;
 
   try {
-      execSync(execCommand, {
-        cwd: process.cwd(),
-        stdio: [process.stdin, process.stdout, process.stderr]
-      });
+    execSync(execCommand, {
+      cwd: process.cwd(),
+      stdio: [process.stdin, process.stdout, process.stderr]
+    });
   } catch (e) {
     process.exit(1);
   }

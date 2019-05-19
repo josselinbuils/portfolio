@@ -4,6 +4,7 @@
   "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
+    "add:staged": "node scripts/exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
     "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
     "build": "yarn build:server && yarn build:client",
     "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
@@ -21,7 +22,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged"
+      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged && npm run add:staged"
     }
   },
   "dependencies": {
