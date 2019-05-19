@@ -9,16 +9,19 @@
     "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
+    "csscomb:staged": "node scripts/exec-staged 'csscomb -v' '.*\\.scss$'",
     "dev:client": "react-app-rewired start",
     "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
-    "lint": "npm run lint:client && npm run lint:server",
+    "lint": "yarn lint:client && yarn lint:server",
     "lint:client": "tslint -p tsconfig.json --fix",
     "lint:server": "tslint -p server/tsconfig.json --fix",
+    "lint:staged": "node scripts/exec-staged 'npm run lint:client' '^src.*\\.tsx?$' 'npm run lint:server' '^server.*\\.ts$'",
+    "prettier:staged": "node scripts/exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && pretty-quick --staged --pattern \"**/*.(ts|tsx)\" && csscomb src"
+      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged"
     }
   },
   "dependencies": {
@@ -58,7 +61,6 @@
     "husky": "^2.3.0",
     "nodemon": "^1.19.0",
     "prettier": "^1.17.1",
-    "pretty-quick": "^1.10.0",
     "source-map-explorer": "^1.8.0",
     "tslint": "^5.16.0"
   },
