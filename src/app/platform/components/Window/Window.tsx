@@ -107,7 +107,7 @@ export const Window: FC<Props> = ({
       const dy = position.y - downEvent.clientY;
 
       let dx = position.x - downEvent.clientX;
-      let shouldToggleMaximize = false;
+      let shouldUnmaximize = false;
       let width = size.width;
       let freeze = false;
 
@@ -116,12 +116,12 @@ export const Window: FC<Props> = ({
       if (unmaximizeProps !== undefined) {
         dx += getRelativeOffset(downEvent, width, unmaximizeProps.width);
         width = unmaximizeProps.width;
-        shouldToggleMaximize = true;
+        shouldUnmaximize = true;
       }
 
       return (moveEvent: MouseEvent) => {
         if (
-          shouldToggleMaximize &&
+          shouldUnmaximize &&
           moveEvent.clientY < downEvent.clientY + VERTICAL_OFFSET_TO_UNMAXIMIZE
         ) {
           return;
@@ -134,14 +134,13 @@ export const Window: FC<Props> = ({
             visibleAreaSize,
             width
           );
-
           windowStyle.left = `${x}px`;
           windowStyle.top = `${y}px`;
         }
 
-        if (shouldToggleMaximize) {
+        if (shouldUnmaximize) {
           unmaximize(true, () => (freeze = false));
-          shouldToggleMaximize = false;
+          shouldUnmaximize = false;
           freeze = true;
         }
       };
