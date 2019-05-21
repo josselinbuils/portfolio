@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import commonStyles from '../common.module.scss';
+import commonStyles from '../../common.module.scss';
 import styles from './Controls.module.scss';
 
 export const Controls: FC<Props> = ({

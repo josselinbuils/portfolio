@@ -19,3 +19,19 @@
     color: lighten($textColor, 15%);
   }
 }
+
+.defaultPreview {
+  text-align: center;
+  color: #000;
+  background: #fff;
+}
+
+.duration {
+  margin: 0 10px;
+}
+
+.player {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 0.8em;
+  color: $textColor;
+}

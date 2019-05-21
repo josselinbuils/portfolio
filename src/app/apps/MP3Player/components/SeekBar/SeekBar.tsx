@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
+import commonStyles from '../../common.module.scss';
 import { Music } from '../../interfaces';
-import commonStyles from '../common.module.scss';
 import { ProgressBar, ProgressBarProps } from './ProgressBar';
 import styles from './SeekBar.module.scss';
 
@@ -12,10 +12,12 @@ export const SeekBar: FC<Props> = ({
   ...progressBarProps
 }) => (
   // TODO remove max modifier
-  <div className={cn(styles.time, { [styles.max]: !min, [styles.min]: min })}>
+  <div
+    className={cn(styles.seekBar, { [styles.max]: !min, [styles.min]: min })}
+  >
     <div className={styles.currentTime}>00:00</div>
     <ProgressBar {...progressBarProps} min={min} />
-    <div className={styles.duration}>
+    <div className={cn(commonStyles.duration, styles.duration)}>
       {currentMusic ? currentMusic.readableDuration : '00:00'}
     </div>
     <div
@@ -30,7 +32,7 @@ export const SeekBar: FC<Props> = ({
 );
 
 interface Props extends ProgressBarProps {
-  currentMusic: Music;
+  currentMusic?: Music;
   min: boolean;
   progress: number;
   onClickTogglePlaylist(): void;
