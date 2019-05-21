@@ -43,8 +43,12 @@ export const TitleBar: FC<Props> = ({
         </button>
       )}
     </div>
-    <div onMouseDown={onMoveStart} onDoubleClick={onToggleMaximize}>
-      <span className={styles.title}>{title}</span>
+    <div
+      className={styles.movingArea}
+      onMouseDown={onMoveStart}
+      onDoubleClick={onToggleMaximize}
+    >
+      {title}
     </div>
   </header>
 );
