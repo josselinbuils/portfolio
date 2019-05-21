@@ -7,17 +7,14 @@ import styles from './SeekBar.module.scss';
 
 export const SeekBar: FC<Props> = ({
   currentMusic,
-  min,
+  min = false,
   onClickTogglePlaylist,
   ...progressBarProps
 }) => (
-  // TODO remove max modifier
-  <div
-    className={cn(styles.seekBar, { [styles.max]: !min, [styles.min]: min })}
-  >
+  <div className={styles.seekBar}>
     <div className={styles.currentTime}>00:00</div>
-    <ProgressBar {...progressBarProps} min={min} />
-    <div className={cn(commonStyles.duration, styles.duration)}>
+    <ProgressBar {...progressBarProps} />
+    <div className={styles.duration}>
       {currentMusic ? currentMusic.readableDuration : '00:00'}
     </div>
     <div
@@ -33,7 +30,7 @@ export const SeekBar: FC<Props> = ({
 
 interface Props extends ProgressBarProps {
   currentMusic?: Music;
-  min: boolean;
+  min?: boolean;
   progress: number;
   onClickTogglePlaylist(): void;
 }

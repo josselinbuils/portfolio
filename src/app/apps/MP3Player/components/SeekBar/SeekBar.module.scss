@@ -1,11 +1,13 @@
 .currentTime {
-  margin: 0 10px 0 15px;
+  margin-left: 15px;
 }
 
 .currentTime,
 .duration {
   font-size: 0.8em;
   line-height: 16px;
+  margin: auto 10px;
+  user-select: none;
   text-align: center;
 }
 
@@ -18,24 +20,6 @@
 
 .seekBar {
   display: flex;
-}
-
-// Modifiers
-
-.max {
-  position: relative;
-  width: 90%;
-  max-width: 700px;
+  max-width: 650px;
   margin: 0 auto;
-}
-
-.min {
-  .currentTime,
-  .duration {
-    line-height: 28px;
-  }
-
-  .playlistButton {
-    line-height: 28px;
-  }
 }
