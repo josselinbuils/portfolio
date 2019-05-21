@@ -1,0 +1,21 @@
+@import './constants';
+
+.button {
+  display: inline-block;
+  margin-right: 15px;
+  margin-left: 15px;
+  vertical-align: middle;
+
+  & + & {
+    margin-left: 0;
+  }
+
+  &:active,
+  &.checked {
+    color: $primaryColor;
+  }
+
+  &:hover {
+    color: lighten($textColor, 15%);
+  }
+}

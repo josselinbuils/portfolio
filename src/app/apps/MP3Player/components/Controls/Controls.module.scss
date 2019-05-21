@@ -1,0 +1,27 @@
+.controls {
+  margin-right: 24px;
+  text-align: center;
+}
+
+.playButton {
+  font-size: 50px;
+  line-height: 80px;
+}
+
+.previousButton,
+.nextButton {
+  font-size: 30px;
+}
+
+.randomButton,
+.repeatButton {
+  font-size: 15px;
+  margin-top: 1px;
+}
+
+// Modifiers
+
+.min .playButton {
+  font-size: 50px;
+  line-height: 80px;
+}
