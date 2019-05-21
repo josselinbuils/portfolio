@@ -12,19 +12,19 @@ export const SeekBar: FC<Props> = ({
   ...progressBarProps
 }) => (
   <div className={styles.seekBar}>
-    <div className={styles.currentTime}>00:00</div>
+    <time className={styles.currentTime}>00:00</time>
     <ProgressBar {...progressBarProps} />
-    <div className={styles.duration}>
+    <time className={styles.duration}>
       {currentMusic ? currentMusic.readableDuration : '00:00'}
-    </div>
-    <div
+    </time>
+    <button
       className={cn(commonStyles.button, styles.playlistButton, {
         [commonStyles.checked]: !min
       })}
       onClick={onClickTogglePlaylist}
     >
       <i className="fas fa-list" />
-    </div>
+    </button>
   </div>
 );
 

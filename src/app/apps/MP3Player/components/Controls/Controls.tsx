@@ -15,40 +15,40 @@ export const Controls: FC<Props> = ({
   repeat
 }) => (
   <div className={cn(styles.controls, { [styles.min]: min })}>
-    <div
+    <button
       className={cn(commonStyles.button, styles.randomButton, {
         [commonStyles.checked]: random
       })}
       onClick={onClickRandom}
     >
       <i className="fas fa-random" />
-    </div>
-    <div
+    </button>
+    <button
       className={cn(commonStyles.button, styles.previousButton)}
       onClick={onClickPrevious}
     >
       <i className="fas fa-step-backward" />
-    </div>
-    <div
+    </button>
+    <button
       className={cn(commonStyles.button, styles.playButton)}
       onClick={onClickPlay}
     >
       <i className={cn('fas', paused ? 'fa-play-circle' : 'fa-pause-circle')} />
-    </div>
-    <div
+    </button>
+    <button
       className={cn(commonStyles.button, styles.nextButton)}
       onClick={onClickNext}
     >
       <i className="fas fa-step-forward" />
-    </div>
-    <div
+    </button>
+    <button
       className={cn(commonStyles.button, styles.repeatButton, {
         [commonStyles.checked]: repeat
       })}
       onClick={onClickRepeat}
     >
       <i className="fas fa-repeat" />
-    </div>
+    </button>
   </div>
 );
 
