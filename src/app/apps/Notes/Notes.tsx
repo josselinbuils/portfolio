@@ -11,7 +11,7 @@ const smileys: { [smiley: string]: string } = {
   ';p': '\uD83D\uDE1C'
 };
 
-export const Notes: WindowComponent = props => {
+export const Notes: WindowComponent = injectedWindowProps => {
   const [notes, setNotes] = useState(getDefaultNotes);
 
   function saveNotes(event: ChangeEvent<HTMLTextAreaElement>): void {
@@ -26,7 +26,7 @@ export const Notes: WindowComponent = props => {
 
   return (
     <Window
-      {...props}
+      {...injectedWindowProps}
       background="#fff59c"
       minHeight={350}
       minWidth={400}

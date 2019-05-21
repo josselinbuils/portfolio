@@ -4,7 +4,7 @@ import { Header, Logo, Menu, Posts } from './components';
 import { RedditFilter } from './interfaces';
 import styles from './Reddit.module.scss';
 
-export const Reddit: WindowComponent = props => {
+export const Reddit: WindowComponent = injectedWindowProps => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
   const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ export const Reddit: WindowComponent = props => {
 
   return (
     <Window
-      {...props}
+      {...injectedWindowProps}
       background="#fbfbfb"
       titleColor="#ff4501"
       minWidth={850}
