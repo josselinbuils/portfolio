@@ -1,0 +1,21 @@
+@import '../../constants';
+
+$navBarHeight: 75px;
+$sidebarWidth: 120px;
+
+.body {
+  display: flex;
+  overflow: hidden;
+  flex: 0 1 auto;
+  height: calc(100% - #{$navBarHeight});
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar {
+  width: $sidebarWidth;
+  padding: 15px;
+}

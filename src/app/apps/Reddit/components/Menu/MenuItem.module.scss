@@ -1,10 +1,12 @@
-.active {
-  font-weight: bold;
-}
-
 .item {
   font-size: 1em;
   line-height: 20px;
   display: block;
   margin-top: 6px;
+}
+
+// Modifiers
+
+.active {
+  font-weight: bold;
 }

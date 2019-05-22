@@ -1,38 +1,24 @@
 @import './constants';
 
-.button {
-  display: inline-block;
-  margin-right: 15px;
-  margin-left: 15px;
+.buttonLink {
+  font-family: $fontFamily;
   padding: 0;
-  vertical-align: middle;
-  color: $textColor;
-  border: 0;
-  outline: 0;
-  background: transparent;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
 
-  & + & {
-    margin-left: 0;
+  &:not([disabled]) {
+    cursor: pointer;
   }
 
-  &:active,
-  &.checked {
-    color: $primaryColor;
+  &:hover:not([disabled]) {
+    text-decoration: underline;
   }
-
-  &:hover {
-    color: lighten($textColor, 15%);
-  }
-}
-
-.defaultPreview {
-  text-align: center;
-  color: #000;
-  background: #fff;
 }
 
 .player {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-family: $fontFamily;
   font-size: 0.8em;
   color: $textColor;
 }

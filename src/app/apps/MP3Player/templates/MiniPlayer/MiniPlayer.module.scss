@@ -1,13 +1,8 @@
-.defaultPreview {
-  font-size: 56px;
-  line-height: 70px;
-}
-
 .flex {
   display: flex;
 }
 
-.left {
+.controls {
   flex-grow: 1;
 }
 
@@ -20,12 +15,4 @@
   text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.musicPreview {
-  flex: 0 0 70px;
-  height: 70px;
-  margin-right: 15px;
-  background-repeat: no-repeat;
-  background-size: 70px;
 }

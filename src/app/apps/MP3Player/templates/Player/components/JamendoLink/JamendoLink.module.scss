@@ -1,0 +1,10 @@
+@import '../../../../constants';
+
+.brand {
+  font-size: 0.8em;
+  display: block;
+  margin-top: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  color: lighten($secondaryColor, 10%) !important;
+}

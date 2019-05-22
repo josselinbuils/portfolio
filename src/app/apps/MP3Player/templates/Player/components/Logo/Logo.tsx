@@ -3,6 +3,6 @@ import styles from './Logo.module.scss';
 
 export const Logo: FC = () => (
   <figure className={styles.logo}>
-    <i className="fab fa-reddit-alien" />
+    <i className="fas fa-headphones" />
   </figure>
 );

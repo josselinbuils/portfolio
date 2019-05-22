@@ -1,15 +1,15 @@
 import React, { FC, RefObject, useEffect } from 'react';
 import styles from './Audio.module.scss';
 
-export const Audio: FC<Props> = ({ audioRef, currentMusicSrc }, ref) => {
+export const Audio: FC<Props> = ({ currentMusicSrc, innerRef }) => {
   useEffect(() => {
-    if (audioRef.current !== null) {
-      audioRef.current.load();
+    if (innerRef.current !== null) {
+      innerRef.current.load();
     }
-  }, [audioRef, currentMusicSrc]);
+  }, [currentMusicSrc, innerRef]);
 
   return (
-    <audio className={styles.audio} ref={ref}>
+    <audio className={styles.audio} ref={innerRef}>
       {currentMusicSrc && <source src={currentMusicSrc} type="audio/mp3" />}
     </audio>
   );
@@ -17,5 +17,6 @@ export const Audio: FC<Props> = ({ audioRef, currentMusicSrc }, ref) => {
 
 interface Props {
   currentMusicSrc?: string;
-  audioRef: RefObject<HTMLAudioElement>;
+  // Use innerRef instead of forwardRef as it could provide a function as ref
+  innerRef: RefObject<HTMLAudioElement>;
 }
