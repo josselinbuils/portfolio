@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { playlists } from '~/apps/MP3Player/playlists';
 import commonStyles from '../../common.module.scss';
 import { Music, Playlist } from '../../interfaces';
-import { JamendoLink, Logo, Menu } from './components';
+import { Footer, JamendoLink, Logo, Menu } from './components';
 import styles from './Player.module.scss';
 
 export const Player: FC<Props> = ({ currentMusic }) => {
@@ -21,10 +21,11 @@ export const Player: FC<Props> = ({ currentMusic }) => {
           <JamendoLink />
         </aside>
       </div>
+      <Footer currentMusic={currentMusic} />
     </div>
   );
 };
 
 interface Props {
-  currentMusic?: Music;
+  currentMusic: Music | undefined;
 }

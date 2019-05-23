@@ -10,7 +10,6 @@ export const MiniPlayer: FC<Props> = ({ currentMusic }) => (
     <div className={styles.flex}>
       <Controls
         className={styles.controls}
-        min
         onClickNext={noop}
         onClickPlay={noop}
         onClickPrevious={noop}
@@ -19,6 +18,7 @@ export const MiniPlayer: FC<Props> = ({ currentMusic }) => (
         paused={false}
         random={false}
         repeat={false}
+        size={50}
       />
       <MusicPreview music={currentMusic} size={50} />
     </div>
@@ -39,5 +39,5 @@ export const MiniPlayer: FC<Props> = ({ currentMusic }) => (
 );
 
 interface Props {
-  currentMusic?: Music;
+  currentMusic: Music | undefined;
 }

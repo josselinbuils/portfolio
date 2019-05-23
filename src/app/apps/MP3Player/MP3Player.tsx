@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { Audio } from './components';
-import { MiniPlayer } from './templates';
+import { MiniPlayer, Player } from './templates';
 
 const size = {
   min: {
@@ -15,7 +15,7 @@ const size = {
 };
 
 export const MP3Player: WindowComponent = injectedWindowProps => {
-  const [min] = useState(true);
+  const [min] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { height, width } = min ? size.min : size.max;
 
@@ -29,7 +29,11 @@ export const MP3Player: WindowComponent = injectedWindowProps => {
       title={min ? '' : MP3Player.appName}
       titleColor="#efefef"
     >
-      <MiniPlayer />
+      {min ? (
+        <MiniPlayer currentMusic={undefined} />
+      ) : (
+        <Player currentMusic={undefined} />
+      )}
       <Audio innerRef={audioRef} />
     </Window>
   );

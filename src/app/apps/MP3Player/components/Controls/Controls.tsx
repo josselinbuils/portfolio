@@ -6,7 +6,6 @@ import styles from './Controls.module.scss';
 
 export const Controls: FC<Props> = ({
   className,
-  min,
   onClickNext,
   onClickPlay,
   onClickPrevious,
@@ -14,9 +13,10 @@ export const Controls: FC<Props> = ({
   onClickRepeat,
   paused,
   random,
-  repeat
+  repeat,
+  size
 }) => (
-  <div className={cn(styles.controls, className, { [styles.min]: min })}>
+  <div className={cn(styles.controls, className)} style={{ fontSize: size }}>
     <Button
       className={cn(styles.randomButton, {
         [commonStyles.checked]: random
@@ -47,10 +47,10 @@ export const Controls: FC<Props> = ({
 
 interface Props {
   className?: string;
-  min: boolean;
   paused: boolean;
   random: boolean;
   repeat: boolean;
+  size: number;
   onClickNext(): void;
   onClickPlay(): void;
   onClickPrevious(): void;

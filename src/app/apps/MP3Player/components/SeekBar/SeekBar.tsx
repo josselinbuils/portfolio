@@ -30,7 +30,7 @@ export const SeekBar: FC<Props> = ({
 );
 
 interface Props extends ProgressBarProps {
-  currentMusic?: Music;
+  currentMusic: Music | undefined;
   min?: boolean;
   progress: number;
   onClickTogglePlaylist(): void;
