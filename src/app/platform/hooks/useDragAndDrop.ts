@@ -6,8 +6,8 @@ import { useEventListener } from './useEventListener';
 
 // TODO remove global event listeners
 export function useDragAndDrop(
-  downHandler: (downEvent: MouseEvent) => MouseMoveHandler | void,
-  upHandler: MouseUpHandler
+  downHandler: (downEvent: React.MouseEvent) => MouseMoveHandler | void,
+  upHandler: MouseUpHandler = noop
 ): (downEvent: React.MouseEvent) => void {
   const moveHandlerRef = useRef<MouseMoveHandler>(noop);
   const upHandlerRef = useRef<MouseUpHandler>(noop);
@@ -25,7 +25,7 @@ export function useDragAndDrop(
       return;
     }
 
-    const moveHandler = downHandler(downEvent.nativeEvent);
+    const moveHandler = downHandler(downEvent);
 
     // Handler could be canceled inside down handler
     if (moveHandler !== undefined) {
