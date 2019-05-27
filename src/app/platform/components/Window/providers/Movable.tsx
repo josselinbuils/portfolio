@@ -34,8 +34,8 @@ export const Movable: FC<Props> = ({
   onMoveStartRef.current = useDragAndDrop(
     (downEvent: React.MouseEvent) => {
       const windowStyle = (windowRef.current as HTMLElement).style;
-      const dy = position.y - downEvent.clientY;
       const dx = position.x - downEvent.clientX;
+      const dy = position.y - downEvent.clientY;
 
       return (moveEvent: MouseEvent) => {
         const { x, y } = boundPosition(

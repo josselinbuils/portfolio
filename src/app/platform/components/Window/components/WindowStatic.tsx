@@ -69,14 +69,12 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
         onMoveStartRef.current(downEvent);
         return;
       }
-      const newPosition = { ...position };
 
-      newPosition.x += getRelativeOffset(
+      const dx = getRelativeOffset(
         downEvent.nativeEvent,
         size.width,
         unmaximizeSize.width
       );
-
       let moveStarted = false;
 
       return (moveEvent: MouseEvent) => {
@@ -85,11 +83,18 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
           moveEvent.clientY > downEvent.clientY + VERTICAL_OFFSET_TO_UNMAXIMIZE
         ) {
           const duration = ANIMATION_DURATION_FAST;
+
           animate(duration);
           setTimeout(() => onMoveStartRef.current(downEvent), duration);
           clearUnmaximizePosition();
-          setPosition(newPosition);
+          setPosition({
+            x: position.x - downEvent.clientX + moveEvent.clientX + dx,
+            y: position.y - downEvent.clientY + moveEvent.clientY
+          });
           resetSize();
+
+          downEvent.clientX = moveEvent.clientX;
+          downEvent.clientY = moveEvent.clientY;
           moveStarted = true;
         }
       };
