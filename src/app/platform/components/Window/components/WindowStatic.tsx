@@ -125,6 +125,7 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
     const className = cn(styles.window, {
       [styles.active]: active,
       [styles.animated]: animated,
+      [styles.maximized]: maximized,
       [styles.minimized]: minimized
     });
     const style: CSSProperties = {
