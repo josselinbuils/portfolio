@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import React, { CSSProperties, forwardRef, useEffect } from 'react';
 import { useDragAndDrop } from '~/platform/hooks';
+import { Size } from '~/platform/interfaces';
 import {
   ANIMATION_DURATION,
   ANIMATION_DURATION_FAST,
@@ -53,65 +54,51 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
   ) => {
     const [animationDurationMs, animate] = useAnimation();
 
-    function maximize(): void {
-      if (!resizable) {
-        return;
+    const maximizedMoveStartHandler = useDragAndDrop(
+      (downEvent: React.MouseEvent) => {
+        const unmaximizeSize = getUnmaximizeSize() as Size;
+        const dx = getRelativeOffset(
+          downEvent.nativeEvent,
+          size.width,
+          unmaximizeSize.width
+        );
+        let moveStarted = false;
+
+        return (moveEvent: MouseEvent) => {
+          if (
+            !moveStarted &&
+            moveEvent.clientY >
+              downEvent.clientY + VERTICAL_OFFSET_TO_UNMAXIMIZE
+          ) {
+            const duration = ANIMATION_DURATION_FAST;
+
+            animate(duration);
+            setTimeout(() => onMoveStartRef.current(downEvent), duration);
+            clearUnmaximizePosition();
+            setPosition({
+              x: position.x - downEvent.clientX + moveEvent.clientX + dx,
+              y: position.y - downEvent.clientY + moveEvent.clientY
+            });
+            resetSize();
+
+            downEvent.clientX = moveEvent.clientX;
+            downEvent.clientY = moveEvent.clientY;
+            moveStarted = true;
+          }
+        };
       }
-      animate(ANIMATION_DURATION);
-      setMaximizedSize();
-      setMaximizedPosition();
-    }
-
-    const moveStartHandler = useDragAndDrop((downEvent: React.MouseEvent) => {
-      const unmaximizeSize = getUnmaximizeSize();
-
-      if (unmaximizeSize === undefined) {
-        onMoveStartRef.current(downEvent);
-        return;
-      }
-
-      const dx = getRelativeOffset(
-        downEvent.nativeEvent,
-        size.width,
-        unmaximizeSize.width
-      );
-      let moveStarted = false;
-
-      return (moveEvent: MouseEvent) => {
-        if (
-          !moveStarted &&
-          moveEvent.clientY > downEvent.clientY + VERTICAL_OFFSET_TO_UNMAXIMIZE
-        ) {
-          const duration = ANIMATION_DURATION_FAST;
-
-          animate(duration);
-          setTimeout(() => onMoveStartRef.current(downEvent), duration);
-          clearUnmaximizePosition();
-          setPosition({
-            x: position.x - downEvent.clientX + moveEvent.clientX + dx,
-            y: position.y - downEvent.clientY + moveEvent.clientY
-          });
-          resetSize();
-
-          downEvent.clientX = moveEvent.clientX;
-          downEvent.clientY = moveEvent.clientY;
-          moveStarted = true;
-        }
-      };
-    });
+    );
 
     function toggleMaximize(): void {
       if (maximized) {
-        unmaximize();
-      } else {
-        maximize();
+        animate(ANIMATION_DURATION);
+        resetPosition();
+        resetSize();
+      } else if (resizable) {
+        animate(ANIMATION_DURATION);
+        setMaximizedSize();
+        setMaximizedPosition();
       }
-    }
-
-    function unmaximize(): void {
-      animate(ANIMATION_DURATION);
-      resetPosition();
-      resetSize();
     }
 
     useEffect(() => {
@@ -131,6 +118,9 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
     const animated = animationDurationMs !== undefined;
     const frozen = moving || resizing;
     const showResizeElement = resizable && !maximized;
+    const moveStartHandler = maximized
+      ? maximizedMoveStartHandler
+      : onMoveStartRef.current;
 
     const className = cn(styles.window, {
       [styles.active]: active,
