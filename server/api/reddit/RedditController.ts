@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import Snoowrap, { Subreddit as SnoowrapSubreddit } from 'snoowrap';
-import { reddit } from '../../config.json';
+import { reddit } from '../../config';
 import { RedditPost, Subreddit } from './interfaces';
 import { isRedditConfig } from './RedditConfig';
 import { formatPosts } from './utils';

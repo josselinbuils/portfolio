@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import request from 'request-promise-native';
-import { jamendo } from '../../config.json';
+import { jamendo } from '../../config';
 import { Logger } from '../../Logger';
 
 export class JamendoController {
