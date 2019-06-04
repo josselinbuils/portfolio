@@ -1,6 +1,8 @@
+import cn from 'classnames';
 import React, { FC } from 'react';
 import { RedditFilter } from '../../interfaces';
 import commonStyles from '../common.module.scss';
+import styles from './FilterButton.module.scss';
 
 const filters: RedditFilter[] = ['hot', 'top'];
 
@@ -14,7 +16,7 @@ export const FilterButton: FC<Props> = ({ filter, onClick }) => {
 
   return (
     <button
-      className={commonStyles.buttonLink}
+      className={cn(commonStyles.buttonLink, styles.filterButton)}
       onClick={() => onClick(otherFilter)}
     >
       {labelMap[otherFilter]}
