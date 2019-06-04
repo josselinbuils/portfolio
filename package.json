@@ -4,20 +4,20 @@
   "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
-    "add:staged": "node scripts/exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
+    "add:staged": "exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
     "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
     "build": "yarn build:server && yarn build:client",
     "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
-    "csscomb:staged": "node scripts/exec-staged 'csscomb -v' '.*\\.scss$'",
+    "csscomb:staged": "exec-staged 'csscomb -v' '.*\\.scss$'",
     "dev:client": "react-app-rewired start",
     "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
     "lint": "yarn lint:client && yarn lint:server",
     "lint:client": "tslint -p tsconfig.json --fix",
     "lint:server": "tslint -p server/tsconfig.json --fix",
-    "lint:staged": "node scripts/exec-staged 'npm run lint:client' '^src.*\\.tsx?$' 'npm run lint:server' '^server.*\\.ts$'",
-    "prettier:staged": "node scripts/exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
+    "lint:staged": "exec-staged 'npm run lint:client' '^src.*\\.tsx?$' 'npm run lint:server' '^server.*\\.ts$'",
+    "prettier:staged": "exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
   },
   "husky": {
@@ -56,6 +56,7 @@
     "typescript": "~3.4.5"
   },
   "devDependencies": {
+    "@josselinbuils/exec-staged": "^0.1.1",
     "@josselinbuils/tslint": "^4.1.0",
     "concurrently": "^4.1.0",
     "csscomb": "^4.3.0",

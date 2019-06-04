@@ -1090,6 +1090,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@josselinbuils/exec-staged@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-0.1.1.tgz#c003c68874ddc3deea993792f395b7224aa32e64"
+  integrity sha512-xU/FBe5FGvtm5ncW5ftG3svsERD/mZZhSZfwoKlPLPtknjrTZc9WAeZzRKRF9nZXn+fEjg34dtZhDNQoAwz8Bw==
+
 "@josselinbuils/tslint@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-4.1.0.tgz#27c50462f074ed6e21e27a8707d851a48283e2ce"
