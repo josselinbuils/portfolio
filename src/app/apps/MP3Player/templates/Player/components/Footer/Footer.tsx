@@ -6,7 +6,7 @@ import { MusicInfo } from './MusicInfo';
 
 export const Footer: FC<Props> = ({ currentMusic }) => (
   <footer className={styles.footer}>
-    <MusicPreview music={currentMusic} size={56} />
+    <MusicPreview music={currentMusic} size={50} />
     <MusicInfo music={currentMusic} />
     <div className={styles.grow}>
       <Controls

@@ -1,9 +1,10 @@
-.flex {
-  display: flex;
-}
-
 .controls {
   flex-grow: 1;
+}
+
+.header {
+  display: flex;
+  height: 80px;
 }
 
 .musicInfo {

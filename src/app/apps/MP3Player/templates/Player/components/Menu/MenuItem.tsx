@@ -19,9 +19,7 @@ export const MenuItem: FC<Props> = ({
       disabled={isActivePlaylist}
       onClick={() => onClickPlaylist(playlist)}
     >
-      <span className={cn({ [styles.active]: isActivePlaylist })}>
-        {playlist.name}
-      </span>
+      {playlist.name}
     </button>
   );
 };

@@ -1,10 +1,19 @@
 @import '../../../../constants';
 
-.brand {
-  font-size: 0.8em;
+.jamendoLink {
+  font-size: 0.9em;
   display: block;
   margin-top: 5px;
-  cursor: pointer;
   text-decoration: none;
-  color: lighten($secondaryColor, 10%) !important;
+
+  &,
+  &:active,
+  &:hover,
+  &:focus {
+    color: $primaryColor;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

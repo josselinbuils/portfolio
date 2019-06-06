@@ -7,7 +7,7 @@ import styles from './MiniPlayer.module.scss';
 
 export const MiniPlayer: FC<Props> = ({ currentMusic }) => (
   <div className={commonStyles.player}>
-    <div className={styles.flex}>
+    <div className={styles.header}>
       <Controls
         className={styles.controls}
         onClickNext={noop}
@@ -20,7 +20,7 @@ export const MiniPlayer: FC<Props> = ({ currentMusic }) => (
         repeat={false}
         size={50}
       />
-      <MusicPreview music={currentMusic} size={50} />
+      <MusicPreview music={currentMusic} size={56} />
     </div>
     {currentMusic && (
       <div className={styles.musicInfo}>
