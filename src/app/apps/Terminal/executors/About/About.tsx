@@ -11,7 +11,7 @@ const socialLinks = [
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <img src={photo} alt="me" />
+    <img className={styles.photo} src={photo} alt="me" />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I'm Josselin, a full-stack JavaScript developer :)
