@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
+import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
 import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
@@ -10,6 +11,7 @@ import styles from './Open.module.scss';
 // TODO find a way to retrieve registered apps automatically
 const appDescriptors: { [name: string]: AppDescriptor } = {
   notes: NotesDescriptor,
+  reddit: RedditDescriptor,
   teravia: TeraviaDescriptor
 };
 
