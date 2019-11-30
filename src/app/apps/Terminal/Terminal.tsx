@@ -47,7 +47,7 @@ const Terminal: WindowComponent = ({ active, ...rest }) => {
     await loadExecutor(Command, [USER, str]);
 
     if (command.length > 0) {
-      if (commands[commands.length - 1] !== command) {
+      if (commands[commands.length - 1] !== str) {
         commandManager.push(str);
         setCommandIndex(commands.length + 1);
       } else {
