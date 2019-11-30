@@ -1,28 +1,29 @@
 import React, { useEffect } from 'react';
-import { Notes, Teravia } from '~/apps';
-import { WindowComponent } from '~/platform/components/Window';
+import { AppDescriptor } from '~/apps/AppDescriptor';
+import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
+import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
 import { Executor } from '../Executor';
 import styles from './Open.module.scss';
 
 // TODO find a way to retrieve registered apps automatically
-const apps: { [name: string]: WindowComponent } = {
-  notes: Notes,
-  teravia: Teravia
+const appDescriptors: { [name: string]: AppDescriptor } = {
+  notes: NotesDescriptor,
+  teravia: TeraviaDescriptor
 };
 
 export const Open: Executor = ({ args }) => {
   const windowManager = useInjector(WindowManager);
-  const appNames = Object.keys(apps);
-  const app = apps[args[0]];
-  const exists = app !== undefined;
+  const appNames = Object.keys(appDescriptors);
+  const appDescriptor = appDescriptors[args[0]];
+  const exists = appDescriptor !== undefined;
 
   useEffect(() => {
     if (exists) {
-      windowManager.openWindow(app);
+      windowManager.openWindow(appDescriptor);
     }
-  }, [app, exists, windowManager]);
+  }, [appDescriptor, exists, windowManager]);
 
   return exists ? null : (
     <div className={styles.help}>

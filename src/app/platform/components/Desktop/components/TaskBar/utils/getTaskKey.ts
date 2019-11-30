@@ -1,12 +1,12 @@
-import { WindowComponent } from '~/platform/components/Window';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import { WindowInstance } from '~/platform/services/WindowManager';
 
 export function getTaskKey(
-  windowComponent: WindowComponent,
+  appDescriptor: AppDescriptor,
   windowInstance: WindowInstance | undefined,
   // Necessary to recompute minimized position when task position changes
   index: number
 ): string {
   const instanceKey = windowInstance !== undefined ? windowInstance.id : '';
-  return `${windowComponent.appName}${index}${instanceKey}`;
+  return `${appDescriptor.appName}${index}${instanceKey}`;
 }

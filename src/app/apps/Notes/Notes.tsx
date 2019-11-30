@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import styles from './Notes.module.scss';
+import { NotesDescriptor } from './NotesDescriptor';
 
 const smileys: { [smiley: string]: string } = {
   ':D': '\uD83D\uDE00',
@@ -11,7 +12,7 @@ const smileys: { [smiley: string]: string } = {
   ';p': '\uD83D\uDE1C'
 };
 
-export const Notes: WindowComponent = injectedWindowProps => {
+const Notes: WindowComponent = injectedWindowProps => {
   const [notes, setNotes] = useState(getDefaultNotes);
 
   function saveNotes(event: ChangeEvent<HTMLTextAreaElement>): void {
@@ -30,7 +31,7 @@ export const Notes: WindowComponent = injectedWindowProps => {
       background="#fff59c"
       minHeight={350}
       minWidth={400}
-      title={Notes.appName}
+      title={NotesDescriptor.appName}
       titleColor="black"
     >
       <textarea
@@ -42,8 +43,9 @@ export const Notes: WindowComponent = injectedWindowProps => {
   );
 };
 
-Notes.appName = 'Notes';
-Notes.iconClass = 'fas fa-sticky-note';
+Notes.appDescriptor = NotesDescriptor;
+
+export default Notes;
 
 function getDefaultNotes(): string {
   return localStorage.getItem('notes') !== null

@@ -3,8 +3,9 @@ import { Window, WindowComponent } from '~/platform/components/Window';
 import { Header, Logo, Menu, Posts } from './components';
 import { RedditFilter } from './interfaces';
 import styles from './Reddit.module.scss';
+import { RedditDescriptor } from './RedditDescriptor';
 
-export const Reddit: WindowComponent = injectedWindowProps => {
+const Reddit: WindowComponent = injectedWindowProps => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
   const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -27,7 +28,7 @@ export const Reddit: WindowComponent = injectedWindowProps => {
       titleColor="#ff4501"
       minWidth={850}
       minHeight={600}
-      title={Reddit.appName}
+      title={RedditDescriptor.appName}
     >
       <div className={styles.reddit}>
         <aside className={styles.sidebar}>
@@ -51,5 +52,6 @@ export const Reddit: WindowComponent = injectedWindowProps => {
   );
 };
 
-Reddit.appName = 'Reddit';
-Reddit.iconClass = 'fab fa-reddit-alien';
+Reddit.appDescriptor = RedditDescriptor;
+
+export default Reddit;

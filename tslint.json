@@ -1,3 +1,6 @@
 {
-  "extends": "@josselinbuils/tslint"
+  "extends": "@josselinbuils/tslint",
+  "rules": {
+    "no-default-export": false
+  }
 }

@@ -2,8 +2,9 @@ import cn from 'classnames';
 import React from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import styles from './Teravia.module.scss';
+import { TeraviaDescriptor } from './TeraviaDescriptor';
 
-export const Teravia: WindowComponent = ({ active, ...rest }) => {
+const Teravia: WindowComponent = ({ active, ...rest }) => {
   return (
     <Window
       {...rest}
@@ -14,7 +15,7 @@ export const Teravia: WindowComponent = ({ active, ...rest }) => {
       maxWidth={1367}
       minHeight={472}
       minWidth={800}
-      title={Teravia.appName}
+      title={TeraviaDescriptor.appName}
       titleColor="#2b5158"
     >
       <iframe
@@ -22,12 +23,13 @@ export const Teravia: WindowComponent = ({ active, ...rest }) => {
         className={cn(styles.iframe, { [styles.inactive]: !active })}
         height="100%"
         src="https://josselinbuils.me/teravia"
-        title={Teravia.appName}
+        title={TeraviaDescriptor.appName}
         width="100%"
       />
     </Window>
   );
 };
 
-Teravia.appName = 'Teravia';
-Teravia.iconClass = 'fas fa-gamepad';
+Teravia.appDescriptor = TeraviaDescriptor;
+
+export default Teravia;

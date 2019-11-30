@@ -1,9 +1,9 @@
 import { FC } from 'react';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import { Size } from '~/platform/interfaces';
 
 export interface WindowComponent extends FC<InjectedWindowProps> {
-  appName: string;
-  iconClass: string;
+  appDescriptor: AppDescriptor;
 }
 
 interface InjectedWindowProps {

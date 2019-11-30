@@ -1,25 +1,33 @@
 import cn from 'classnames';
 import React, { FC, useRef } from 'react';
-import { Notes, Reddit, Teravia, Terminal } from '~/apps';
+import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
+import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
+import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
+import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
 import { useTaskDescriptors } from './hooks';
 import { Task } from './Task';
 import styles from './TaskBar.module.scss';
 import { getTaskKey } from './utils';
 
 // Has to be in a constant to avoid useless recurrent computations
-const PINNED_WINDOW_COMPONENTS = [Terminal, Teravia, Reddit, Notes];
+const PINNED_APPS_DESCRIPTORS = [
+  TerminalDescriptor,
+  TeraviaDescriptor,
+  RedditDescriptor,
+  NotesDescriptor
+];
 
 export const TaskBar: FC<Props> = ({ className }) => {
   const taskBarRef = useRef(null);
-  const taskDescriptors = useTaskDescriptors(PINNED_WINDOW_COMPONENTS);
+  const taskDescriptors = useTaskDescriptors(PINNED_APPS_DESCRIPTORS);
 
   return (
     <div className={cn(styles.taskBar, className)} ref={taskBarRef}>
-      {taskDescriptors.map(({ windowComponent, windowInstance }, index) => (
+      {taskDescriptors.map(({ appDescriptor, windowInstance }, index) => (
         <Task
+          appDescriptor={appDescriptor}
           taskBarRef={taskBarRef}
-          key={getTaskKey(windowComponent, windowInstance, index)}
-          windowComponent={windowComponent}
+          key={getTaskKey(appDescriptor, windowInstance, index)}
           windowInstance={windowInstance}
         />
       ))}

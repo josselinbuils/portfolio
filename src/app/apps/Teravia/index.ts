@@ -1,1 +1,1 @@
-export { Teravia } from './Teravia';
+export * from './Teravia';

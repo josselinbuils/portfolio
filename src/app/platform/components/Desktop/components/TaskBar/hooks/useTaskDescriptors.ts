@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { WindowComponent } from '~/platform/components/Window';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
@@ -8,36 +8,37 @@ import {
 import { TaskDescriptor } from '../TaskDescriptor';
 
 export function useTaskDescriptors(
-  pinnedWindowComponents: WindowComponent[]
+  pinnedAppDescriptors: AppDescriptor[]
 ): TaskDescriptor[] {
   const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
-    getTaskDescriptors(pinnedWindowComponents)
+    getTaskDescriptors(pinnedAppDescriptors)
   );
   const windowManager = useInjector(WindowManager);
 
   useEffect(
     () =>
       windowManager.windowInstancesSubject.subscribe(windowInstances =>
-        setTasks(getTaskDescriptors(pinnedWindowComponents, windowInstances))
+        setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances))
       ),
-    [pinnedWindowComponents, windowManager]
+    [pinnedAppDescriptors, windowManager]
   );
 
   return tasks;
 }
 
 function getTaskDescriptors(
-  pinnedWindowComponents: WindowComponent[],
+  pinnedAppDescriptors: AppDescriptor[],
   windowInstances: WindowInstance[] = []
 ): TaskDescriptor[] {
-  const pinnedTaskDescriptors: TaskDescriptor[] = pinnedWindowComponents.map(
-    windowComponent => ({ windowComponent })
+  const pinnedTaskDescriptors: TaskDescriptor[] = pinnedAppDescriptors.map(
+    appDescriptor => ({ appDescriptor })
   );
   const taskDescriptors = [...pinnedTaskDescriptors];
 
   windowInstances.forEach(windowInstance => {
     const pinnedTaskDescriptor = pinnedTaskDescriptors.find(
-      task => task.windowComponent === windowInstance.windowComponent
+      task =>
+        task.appDescriptor === windowInstance.windowComponent.appDescriptor
     );
 
     if (
@@ -46,9 +47,10 @@ function getTaskDescriptors(
     ) {
       pinnedTaskDescriptor.windowInstance = windowInstance;
     } else {
-      // windowInstance is optional so we have to provide windowComponent
+      const { appDescriptor } = windowInstance.windowComponent;
+
       taskDescriptors.push({
-        windowComponent: windowInstance.windowComponent,
+        appDescriptor,
         windowInstance
       });
     }

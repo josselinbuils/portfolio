@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import {
   ContextMenuDescriptor,
   ContextMenuItemDescriptor
 } from '~/platform/components/ContextMenu';
-import { WindowComponent } from '~/platform/components/Window';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
@@ -11,9 +11,9 @@ import {
 } from '~/platform/services/WindowManager';
 
 export function useTaskContextMenu(
+  appDescriptor: AppDescriptor,
   taskBarRef: RefObject<HTMLDivElement>,
   taskRef: RefObject<HTMLDivElement>,
-  windowComponent: WindowComponent,
   windowInstance?: WindowInstance
 ): () => ContextMenuDescriptor {
   const windowManager = useInjector(WindowManager);
@@ -31,9 +31,9 @@ export function useTaskContextMenu(
 
     const items: ContextMenuItemDescriptor[] = [
       {
-        iconClass: windowComponent.iconClass,
-        title: windowComponent.appName,
-        onClick: () => windowManager.openWindow(windowComponent)
+        iconClass: appDescriptor.iconClass,
+        title: appDescriptor.appName,
+        onClick: () => windowManager.openWindow(appDescriptor)
       }
     ];
 

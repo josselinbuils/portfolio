@@ -16,6 +16,7 @@ import {
   Work
 } from './executors';
 import styles from './Terminal.module.scss';
+import { TerminalDescriptor } from './TerminalDescriptor';
 
 const DEFAULT_ERROR_MESSAGE = 'an error occurred';
 const USER = 'guest';
@@ -29,7 +30,7 @@ const executors: { [name: string]: Executor | AsyncExecutor } = {
   work: Work
 };
 
-export const Terminal: WindowComponent = ({ active, ...rest }) => {
+const Terminal: WindowComponent = ({ active, ...rest }) => {
   const [caretIndex, setCaretIndex] = useState(0);
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);
@@ -243,7 +244,7 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
       background="rgba(30, 30, 30, 0.9)"
       minHeight={400}
       minWidth={800}
-      title={Terminal.appName}
+      title={TerminalDescriptor.appName}
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"
     >
@@ -281,8 +282,9 @@ export const Terminal: WindowComponent = ({ active, ...rest }) => {
   );
 };
 
-Terminal.appName = 'Terminal';
-Terminal.iconClass = 'fas fa-terminal';
+Terminal.appDescriptor = TerminalDescriptor;
+
+export default Terminal;
 
 interface Execution {
   args: string[];

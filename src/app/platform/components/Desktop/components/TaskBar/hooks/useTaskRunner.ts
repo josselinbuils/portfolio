@@ -1,4 +1,4 @@
-import { WindowComponent } from '~/platform/components/Window';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
@@ -6,7 +6,7 @@ import {
 } from '~/platform/services/WindowManager';
 
 export function useTaskRunner(
-  windowComponent: WindowComponent,
+  appDescriptor: AppDescriptor,
   windowInstance?: WindowInstance
 ): () => void {
   const windowManager = useInjector(WindowManager);
@@ -25,7 +25,7 @@ export function useTaskRunner(
         windowManager.showWindow(id);
       }
     } else {
-      windowManager.openWindow(windowComponent);
+      windowManager.openWindow(appDescriptor);
     }
   };
 }

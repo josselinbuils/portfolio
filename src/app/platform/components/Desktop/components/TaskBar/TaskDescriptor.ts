@@ -1,7 +1,7 @@
-import { WindowComponent } from '~/platform/components/Window';
+import { AppDescriptor } from '~/apps/AppDescriptor';
 import { WindowInstance } from '~/platform/services/WindowManager';
 
 export interface TaskDescriptor {
-  windowComponent: WindowComponent;
+  appDescriptor: AppDescriptor;
   windowInstance?: WindowInstance;
 }
