@@ -1,7 +1,7 @@
 {
   "name": "portfolio-react",
   "version": "0.1.0",
-  "homepage": "https://josselinbuils.me",
+  "homepage": "https://josselinbuils.me/portfolio-react",
   "private": true,
   "scripts": {
     "add:staged": "exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
