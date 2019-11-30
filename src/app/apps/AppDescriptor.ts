@@ -1,3 +1,4 @@
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { WindowComponent } from '~/platform/components/Window';
 
 type AppFactory = <T extends WindowComponent>() => Promise<{
@@ -7,5 +8,6 @@ type AppFactory = <T extends WindowComponent>() => Promise<{
 export interface AppDescriptor {
   appName: string;
   factory: AppFactory;
-  iconClass: string;
+  icon: IconDefinition;
+  iconScale?: number;
 }

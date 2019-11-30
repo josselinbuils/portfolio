@@ -1,3 +1,4 @@
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { RefObject } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import {
@@ -31,7 +32,7 @@ export function useTaskContextMenu(
 
     const items: ContextMenuItemDescriptor[] = [
       {
-        iconClass: appDescriptor.iconClass,
+        icon: appDescriptor.icon,
         title: appDescriptor.appName,
         onClick: () => windowManager.openWindow(appDescriptor)
       }
@@ -39,7 +40,7 @@ export function useTaskContextMenu(
 
     if (windowInstance !== undefined) {
       items.push({
-        iconClass: 'fas fa-times',
+        icon: faTimes,
         title: 'Close',
         onClick: () => windowManager.closeWindow(windowInstance.id)
       });

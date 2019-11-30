@@ -1,7 +1,9 @@
+import { faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const TeraviaDescriptor = {
   appName: 'Teravia',
   factory: () => import('./Teravia'),
-  iconClass: 'fas fa-gamepad'
+  icon: faGamepad,
+  iconScale: 0.8
 } as AppDescriptor;

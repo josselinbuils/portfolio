@@ -1,3 +1,12 @@
+import {
+  faCircle,
+  faPauseCircle,
+  faRandom,
+  faRedoAlt,
+  faStepBackward,
+  faStepForward
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
 import commonStyles from '../../common.module.scss';
@@ -23,16 +32,16 @@ export const Controls: FC<Props> = ({
       })}
       onClick={onClickRandom}
     >
-      <i className="fas fa-random" />
+      <FontAwesomeIcon icon={faRandom} />
     </Button>
     <Button className={cn(styles.previousButton)} onClick={onClickPrevious}>
-      <i className="fas fa-step-backward" />
+      <FontAwesomeIcon icon={faStepBackward} />
     </Button>
     <Button className={cn(styles.playButton)} onClick={onClickPlay}>
-      <i className={cn('fas', paused ? 'fa-play-circle' : 'fa-pause-circle')} />
+      <FontAwesomeIcon icon={paused ? faCircle : faPauseCircle} />
     </Button>
     <Button className={cn(styles.nextButton)} onClick={onClickNext}>
-      <i className="fas fa-step-forward" />
+      <FontAwesomeIcon icon={faStepForward} />
     </Button>
     <Button
       className={cn(styles.repeatButton, {
@@ -40,7 +49,7 @@ export const Controls: FC<Props> = ({
       })}
       onClick={onClickRepeat}
     >
-      <i className="fas fa-redo-alt" />
+      <FontAwesomeIcon icon={faRedoAlt} />
     </Button>
   </div>
 );

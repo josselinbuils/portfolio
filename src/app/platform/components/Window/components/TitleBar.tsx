@@ -1,3 +1,5 @@
+import { faMinus, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
 import styles from './TitleBar.module.scss';
@@ -24,14 +26,14 @@ export const TitleBar: FC<Props> = ({
         onClick={onClose}
         style={{ color }}
       >
-        <i className="fas fa-times" />
+        <FontAwesomeIcon icon={faTimes} />
       </button>
       <button
         className={cn(styles.button, styles.minimize)}
         onClick={onMinimise}
         style={{ color }}
       >
-        <i className="fas fa-minus" />
+        <FontAwesomeIcon icon={faMinus} />
       </button>
       {showMaximizeButton && (
         <button
@@ -39,7 +41,7 @@ export const TitleBar: FC<Props> = ({
           onClick={onToggleMaximize}
           style={{ color }}
         >
-          <i className="fas fa-plus" />
+          <FontAwesomeIcon icon={faPlus} />
         </button>
       )}
     </div>

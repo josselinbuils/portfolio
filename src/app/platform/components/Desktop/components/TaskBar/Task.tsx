@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, RefObject, useEffect, useRef } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
@@ -25,8 +26,7 @@ export const Task: FC<Props> = ({
   const run = useTaskRunner(appDescriptor, windowInstance);
   const windowManager = useInjector(WindowManager);
   const active = windowInstance && windowInstance.active;
-  const { iconClass } = appDescriptor;
-  const iconClassName = cn(iconClass, styles[iconClass.split(' ')[1]]);
+  const { icon, iconScale = 1 } = appDescriptor;
 
   useEffect(() => {
     if (
@@ -47,7 +47,10 @@ export const Task: FC<Props> = ({
         onClick={run}
         ref={taskRef}
       >
-        <i className={iconClassName} />
+        <FontAwesomeIcon
+          icon={icon}
+          style={{ transform: `scale(${iconScale})` }}
+        />
         {windowInstance && <div className={styles.runIndicator} />}
       </div>
     </WithContextMenu>

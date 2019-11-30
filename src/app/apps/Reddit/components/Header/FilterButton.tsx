@@ -1,3 +1,5 @@
+import { faChartBar, faFireAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
 import { RedditFilter } from '../../interfaces';
@@ -7,8 +9,8 @@ import styles from './FilterButton.module.scss';
 const filters: RedditFilter[] = ['hot', 'top'];
 
 const labelMap = {
-  hot: <i className="fas fa-fire-alt" />,
-  top: <i className="fas fa-chart-bar" />
+  hot: <FontAwesomeIcon icon={faFireAlt} />,
+  top: <FontAwesomeIcon icon={faChartBar} />
 };
 
 export const FilterButton: FC<Props> = ({ filter, onClick }) => {

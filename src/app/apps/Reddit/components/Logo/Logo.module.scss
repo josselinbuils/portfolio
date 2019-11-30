@@ -1,11 +1,11 @@
 @import '../../constants';
 
+.icon {
+  font-size: 100px;
+  color: $reddit;
+}
+
 .logo {
   font-size: 0;
   text-align: center;
-
-  i {
-    font-size: 100px;
-    color: $reddit;
-  }
 }

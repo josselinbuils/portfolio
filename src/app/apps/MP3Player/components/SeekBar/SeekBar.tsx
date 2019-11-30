@@ -1,3 +1,5 @@
+import { faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
 import commonStyles from '../../common.module.scss';
@@ -24,7 +26,7 @@ export const SeekBar: FC<Props> = ({
       })}
       onClick={onClickTogglePlaylist}
     >
-      <i className="fas fa-list" />
+      <FontAwesomeIcon icon={faList} />
     </Button>
   </div>
 );

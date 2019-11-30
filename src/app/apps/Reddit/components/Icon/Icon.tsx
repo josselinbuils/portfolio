@@ -1,3 +1,5 @@
+import { faReddit } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useEffect, useState } from 'react';
 import { cancelable } from '~/platform/utils';
@@ -27,10 +29,11 @@ export const Icon: FC<Props> = ({ active = true, subreddit }) => {
           src={src}
         />
       ) : (
-        <i
-          className={cn('fab fa-reddit', styles.defaultIcon, {
+        <FontAwesomeIcon
+          className={cn(styles.defaultIcon, {
             [styles.active]: active
           })}
+          icon={faReddit}
         />
       )}
     </figure>

@@ -11,10 +11,10 @@ export const ContextMenu: FC<Props> = ({ items, onHide, position, style }) => {
 
   return (
     <ul className={styles.contextMenu} style={{ ...style, left: x, top: y }}>
-      {items.map(({ onClick, iconClass, title }) => (
+      {items.map(({ onClick, icon, title }) => (
         <ContextMenuItem
           key={title}
-          iconClass={iconClass}
+          icon={icon}
           onClick={event => {
             onClick(event);
             onHide();

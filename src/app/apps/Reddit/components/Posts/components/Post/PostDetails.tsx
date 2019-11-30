@@ -1,3 +1,5 @@
+import { faAnchor } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
 import { Icon } from '~/apps/Reddit/components/Icon';
@@ -25,7 +27,7 @@ export const PostDetails: FC<Props> = ({
     <span>
       Posted <time>{since}</time> by {author}
     </span>
-    {stickied && <i className={cn('fas fa-anchor', styles.anchor)} />}
+    {stickied && <FontAwesomeIcon className={styles.anchor} icon={faAnchor} />}
   </div>
 );
 

@@ -1,3 +1,5 @@
+import { faComment } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../RedditPost';
@@ -51,7 +53,7 @@ export const Post: FC<Props> = ({
           />
         )}
         <div className={styles.footer}>
-          <i className="far fa-comment" />
+          <FontAwesomeIcon icon={faComment} />
           <span className={styles.comments}>{formatNumber(numComments)}</span>
         </div>
       </main>
