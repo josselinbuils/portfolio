@@ -1,7 +1,7 @@
 import React from 'react';
 import { Executor } from '../Executor';
 import styles from './About.module.scss';
-import photo from './josselinbuils.png';
+import photo from './josselinbuils.webp';
 
 const socialLinks = [
   ['linkedin', 'https://linkedin.com/in/josselinbuils'],
