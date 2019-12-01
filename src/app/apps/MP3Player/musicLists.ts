@@ -1,6 +1,6 @@
-import { Playlist } from './interfaces';
+import { MusicList } from './interfaces';
 
-export const playlists = [
+export const musicLists = [
   { name: 'Top 50', path: '/tracks' },
   { name: 'Classical', path: '/tracks/classical' },
   { name: 'Dance', path: '/tracks/dance' },
@@ -12,4 +12,4 @@ export const playlists = [
   { name: 'Reggae', path: '/tracks/reggae' },
   { name: 'Rock', path: '/tracks/rock' },
   { name: 'Soundtrack', path: '/tracks/soundtrack' }
-] as Playlist[];
+] as MusicList[];

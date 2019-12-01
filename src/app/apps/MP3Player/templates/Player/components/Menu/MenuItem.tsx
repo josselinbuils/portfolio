@@ -1,31 +1,31 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import { Playlist } from '~/apps/MP3Player/interfaces';
+import { MusicList } from '~/apps/MP3Player/interfaces';
 import commonStyles from '../../../../common.module.scss';
 import styles from './MenuItem.module.scss';
 
 export const MenuItem: FC<Props> = ({
-  activePlaylist,
+  activeMusicList,
   onClickPlaylist,
-  playlist
+  musicList
 }) => {
-  const isActivePlaylist = playlist === activePlaylist;
+  const isActiveMusicList = musicList === activeMusicList;
 
   return (
     <button
       className={cn(commonStyles.buttonLink, styles.item, {
-        [styles.active]: isActivePlaylist
+        [styles.active]: isActiveMusicList
       })}
-      disabled={isActivePlaylist}
-      onClick={() => onClickPlaylist(playlist)}
+      disabled={isActiveMusicList}
+      onClick={() => onClickPlaylist(musicList)}
     >
-      {playlist.name}
+      {musicList.name}
     </button>
   );
 };
 
 interface Props {
-  activePlaylist: Playlist;
-  playlist: Playlist;
-  onClickPlaylist(playlist: Playlist): void;
+  activeMusicList: MusicList;
+  musicList: MusicList;
+  onClickPlaylist(musicList: MusicList): void;
 }

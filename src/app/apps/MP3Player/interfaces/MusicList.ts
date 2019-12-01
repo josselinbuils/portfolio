@@ -1,4 +1,4 @@
-export interface Playlist {
+export interface MusicList {
   name: string;
   path: string;
 }

@@ -1,22 +1,22 @@
 import React, { FC } from 'react';
-import { Playlist } from '../../../../interfaces';
-import { playlists } from '../../../../playlists';
+import { MusicList } from '../../../../interfaces';
+import { musicLists } from '../../../../musicLists';
 import { MenuItem } from './MenuItem';
 
-export const Menu: FC<Props> = ({ activePlaylist, onClickPlaylist }) => (
+export const Menu: FC<Props> = ({ activeMusicList, onClickMusicList }) => (
   <nav>
-    {playlists.map(playlist => (
+    {musicLists.map(musicList => (
       <MenuItem
-        activePlaylist={activePlaylist}
-        key={playlist.path}
-        onClickPlaylist={onClickPlaylist}
-        playlist={playlist}
+        activeMusicList={activeMusicList}
+        key={musicList.path}
+        musicList={musicList}
+        onClickPlaylist={onClickMusicList}
       />
     ))}
   </nav>
 );
 
 interface Props {
-  activePlaylist: Playlist;
-  onClickPlaylist(playlist: Playlist): void;
+  activeMusicList: MusicList;
+  onClickMusicList(playlist: MusicList): void;
 }

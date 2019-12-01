@@ -1,13 +1,15 @@
 import cn from 'classnames';
 import React, { FC, useState } from 'react';
-import { playlists } from '~/apps/MP3Player/playlists';
 import commonStyles from '../../common.module.scss';
-import { Music, Playlist } from '../../interfaces';
+import { Music, MusicList } from '../../interfaces';
+import { musicLists } from '../../musicLists';
 import { Footer, JamendoLink, Logo, Menu } from './components';
 import styles from './Player.module.scss';
 
 export const Player: FC<Props> = ({ currentMusic }) => {
-  const [activePlaylist, setActivePlaylist] = useState<Playlist>(playlists[0]);
+  const [activeMusicList, setActiveMusicList] = useState<MusicList>(
+    musicLists[0]
+  );
 
   return (
     <div className={cn(commonStyles.player, styles.player)}>
@@ -15,8 +17,8 @@ export const Player: FC<Props> = ({ currentMusic }) => {
         <aside className={styles.sidebar}>
           <Logo />
           <Menu
-            activePlaylist={activePlaylist}
-            onClickPlaylist={setActivePlaylist}
+            activeMusicList={activeMusicList}
+            onClickMusicList={setActiveMusicList}
           />
           <JamendoLink />
         </aside>
