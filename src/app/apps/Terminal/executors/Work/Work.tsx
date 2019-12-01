@@ -31,7 +31,7 @@ export const Work: Executor = () => (
     <div className={styles.entry}>
       <p className={styles.header}>
         <span>Frontend developer at ManoMano</span>
-        <span className={styles.location}>(Paris, France)</span>
+        <span className={styles.location}>(Bordeaux, France)</span>
         <span className={styles.period}>dec 2018 -> now</span>
       </p>
       <p className={styles.description}>I work on the ManoMano website.</p>
