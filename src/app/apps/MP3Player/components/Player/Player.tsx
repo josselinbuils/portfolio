@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
+import { MusicList } from '../../interfaces';
+import { musicLists } from '../../musicLists';
 import { Footer, JamendoLink, Logo, Menu } from './components';
-import { MusicList } from './interfaces';
-import { musicLists } from './musicLists';
 import styles from './Player.module.scss';
 
 export const Player: FC = () => {

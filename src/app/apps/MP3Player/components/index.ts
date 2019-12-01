@@ -1,8 +1,6 @@
 export { AudioProvider } from './AudioProvider';
 export * from './Controls';
-export * from './Footer';
-export * from './JamendoLink';
-export * from './Logo';
-export * from './Menu';
+export * from './MiniPlayer';
 export * from './MusicPreview';
+export * from './Player';
 export * from './SeekBar';

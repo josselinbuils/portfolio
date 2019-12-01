@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { noop } from '~/platform/utils';
-import { Controls, MusicPreview, SeekBar } from './components';
-import { AudioContext } from './components/AudioProvider';
+import { AudioContext } from '../AudioProvider';
+import { Controls, MusicPreview, SeekBar } from '../index';
 import styles from './MiniPlayer.module.scss';
 
 export const MiniPlayer: FC = () => {

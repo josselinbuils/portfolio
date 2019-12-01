@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { AudioProvider } from './components';
-import { MiniPlayer } from './MiniPlayer';
+import { AudioProvider, MiniPlayer, Player } from './components';
 import { MP3PlayerDescriptor } from './MP3PlayerDescriptor';
-import { Player } from './Player';
 
 const size = {
   min: {
