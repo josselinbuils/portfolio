@@ -39,12 +39,12 @@ async function get(path: string, options: Options): Promise<any[]> {
 
   Logger.info(`-> GET ${url}`);
 
-  const { headers, results, status } = await request({
+  const { headers, results } = await request({
     json: true,
     url
   }).promise();
 
-  if (status === 'success') {
+  if (headers.status === 'success') {
     return results;
   } else {
     const { code, error_message } = headers;

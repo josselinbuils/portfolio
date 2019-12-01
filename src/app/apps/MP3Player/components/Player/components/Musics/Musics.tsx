@@ -40,9 +40,12 @@ export const Musics: FC<Props> = ({ musicList }) => {
           <h2>{musicList.name}</h2>
           <div className={styles.select}>
             <FontAwesomeIcon className={styles.selectIcon} icon={faArrowDown} />
-            <select onChange={event => setOrder(event.target.value)}>
+            <select
+              onChange={event => setOrder(event.target.value)}
+              value={order}
+            >
               {ORDERS.map(({ name, value }) => (
-                <option key={value} value={value} selected={value === order}>
+                <option key={value} value={value}>
                   {name}
                 </option>
               ))}

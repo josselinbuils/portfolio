@@ -3,6 +3,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import serveStatic from 'serve-static';
+import { registerJamendoRoutes } from './api/jamendo';
 import { registerRedditRoutes } from './api/reddit';
 import {
   ASSETS_DIR,
@@ -62,7 +63,7 @@ export function registerRouter(app: Express): Express {
   router.use(bodyParser.json());
 
   // registerDicomRoutes(router);
-  // registerJamendoRoutes(router);
+  registerJamendoRoutes(router);
   registerRedditRoutes(router);
 
   router.get('*', (req, res) => res.status(HTTP_NOT_FOUND).end());
