@@ -30,8 +30,13 @@ export const Musics: FC<Props> = ({ musicList }) => {
     return null;
   }
 
-  const { playMusic } = audioController;
+  const { playMusic, setPlaylist } = audioController;
   const { currentMusic, paused } = audioState;
+
+  function play(music: Music): void {
+    setPlaylist(musics);
+    playMusic(music);
+  }
 
   return (
     <div className={styles.musicList}>
@@ -82,7 +87,7 @@ export const Musics: FC<Props> = ({ musicList }) => {
                   [styles.active]: currentMusic && music.id === currentMusic.id
                 })}
                 key={music.id}
-                onDoubleClick={() => playMusic(music)}
+                onDoubleClick={() => play(music)}
               >
                 <td className={styles.colPreview}>
                   <div
@@ -90,12 +95,13 @@ export const Musics: FC<Props> = ({ musicList }) => {
                     style={{ backgroundImage: `url(${music.image})` }}
                   >
                     <FontAwesomeIcon
+                      className={styles.previewIcon}
                       icon={
                         music === currentMusic && !paused
                           ? faPauseCircle
                           : faPlayCircle
                       }
-                      onClick={() => playMusic(music)}
+                      onClick={() => play(music)}
                     />
                   </div>
                 </td>

@@ -2,29 +2,23 @@ import { Subject } from '@josselinbuils/utils';
 import { Music } from '../../interfaces';
 
 export class AudioController {
-  audioStateSubject = new Subject<AudioState>(this.getState());
+  audioStateSubject: Subject<AudioState>;
 
+  private readonly audioElement = new Audio();
   private currentMusic?: Music;
   private get paused(): boolean {
     return this.audioElement.paused;
   }
-  private readonly playlist: Music[] = [];
+  private playlist: Music[] = [];
   private progress = 0;
   private random = false;
   private repeat = false;
 
-  constructor(private readonly audioElement: HTMLAudioElement) {
-    audioElement.addEventListener('ended', this.musicEndListener);
-    audioElement.addEventListener('timeupdate', this.timeUpdateListener);
+  constructor() {
+    this.audioElement.addEventListener('ended', this.musicEndListener);
+    this.audioElement.addEventListener('timeupdate', this.timeUpdateListener);
+    this.audioStateSubject = new Subject(this.getState());
   }
-
-  destroy = (): void => {
-    this.audioElement.removeEventListener('ended', this.musicEndListener);
-    this.audioElement.removeEventListener(
-      'timeupdate',
-      this.timeUpdateListener
-    );
-  };
 
   next = async (): Promise<void> => {
     if (this.currentMusic === undefined) {
@@ -41,9 +35,11 @@ export class AudioController {
       newIndex = 0;
     }
 
+    const paused = this.paused;
+
     this.loadMusic(this.playlist[newIndex]);
 
-    if (!this.paused) {
+    if (!paused) {
       await this.play();
     }
   };
@@ -53,12 +49,15 @@ export class AudioController {
       return;
     }
 
+    let promise = Promise.resolve();
+
     if (this.paused) {
-      await this.audioElement.play();
+      promise = this.audioElement.play();
     } else {
       this.audioElement.pause();
     }
     this.publishState();
+    await promise;
   };
 
   playMusic = async (music: Music): Promise<void> => {
@@ -83,9 +82,11 @@ export class AudioController {
       newIndex = this.playlist.length - 1;
     }
 
+    const paused = this.paused;
+
     this.loadMusic(this.playlist[newIndex]);
 
-    if (!this.paused) {
+    if (!paused) {
       await this.play();
     }
   };
@@ -100,6 +101,11 @@ export class AudioController {
       Math.round(value * duration),
       duration - 1
     );
+  };
+
+  setPlaylist = (playlist: Music[]): void => {
+    this.playlist = playlist;
+    this.publishState();
   };
 
   toggleRepeat = (): void => {
@@ -128,6 +134,8 @@ export class AudioController {
       throw new Error('playlist does not contain the given music');
     }
     this.currentMusic = music;
+    this.audioElement.src = music.audio;
+    this.audioElement.load();
     this.progress = 0;
     this.publishState();
   }
@@ -145,10 +153,11 @@ export class AudioController {
 
   private readonly rand = async (): Promise<void> => {
     const newIndex = Math.round(this.playlist.length * Math.random());
+    const paused = this.audioElement.paused;
 
     this.loadMusic(this.playlist[newIndex]);
 
-    if (!this.paused) {
+    if (!paused) {
       await this.play();
     }
   };

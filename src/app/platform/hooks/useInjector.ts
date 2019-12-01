@@ -4,7 +4,7 @@ const InjectorContext = createContext<{ [name: string]: any }>({});
 
 export function useInjector<T>(singletonCLass: new () => T): T {
   const injectorStore = useContext(InjectorContext);
-  const name = singletonCLass.constructor.name;
+  const name = singletonCLass.name;
 
   if (injectorStore[name] === undefined) {
     injectorStore[name] = new singletonCLass();
