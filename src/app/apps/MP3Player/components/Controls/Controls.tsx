@@ -8,13 +8,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC } from 'react';
-import { useAudioController } from '../AudioProvider';
+import React, { FC, useContext } from 'react';
+import { AudioContext } from '../../components/AudioProvider';
 import { Button } from '../Button';
 import styles from './Controls.module.scss';
 
 export const Controls: FC<Props> = ({ className, size }) => {
-  const { audioController, audioState } = useAudioController();
+  const { audioController, audioState } = useContext(AudioContext);
 
   if (audioController === undefined || audioState === undefined) {
     return null;

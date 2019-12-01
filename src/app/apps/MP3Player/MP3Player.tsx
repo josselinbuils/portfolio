@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { AudioProvider } from './components';
+import { MiniPlayer } from './MiniPlayer';
 import { MP3PlayerDescriptor } from './MP3PlayerDescriptor';
-import { MiniPlayer, Player } from './templates';
+import { Player } from './Player';
 
 const size = {
   min: {
@@ -29,13 +30,7 @@ const MP3Player: WindowComponent = injectedWindowProps => {
       title={min ? '' : MP3PlayerDescriptor.appName}
       titleColor="#efefef"
     >
-      <AudioProvider>
-        {min ? (
-          <MiniPlayer currentMusic={undefined} />
-        ) : (
-          <Player currentMusic={undefined} />
-        )}
-      </AudioProvider>
+      <AudioProvider>{min ? <MiniPlayer /> : <Player />}</AudioProvider>
     </Window>
   );
 };

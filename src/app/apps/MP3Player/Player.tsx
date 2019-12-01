@@ -1,12 +1,12 @@
 import cn from 'classnames';
 import React, { FC, useState } from 'react';
-import commonStyles from '../../common.module.scss';
-import { Music, MusicList } from '../../interfaces';
-import { musicLists } from '../../musicLists';
+import commonStyles from './common.module.scss';
 import { Footer, JamendoLink, Logo, Menu } from './components';
+import { MusicList } from './interfaces';
+import { musicLists } from './musicLists';
 import styles from './Player.module.scss';
 
-export const Player: FC<Props> = ({ currentMusic }) => {
+export const Player: FC = () => {
   const [activeMusicList, setActiveMusicList] = useState<MusicList>(
     musicLists[0]
   );
@@ -23,11 +23,7 @@ export const Player: FC<Props> = ({ currentMusic }) => {
           <JamendoLink />
         </aside>
       </div>
-      <Footer currentMusic={currentMusic} />
+      <Footer />
     </div>
   );
 };
-
-interface Props {
-  currentMusic: Music | undefined;
-}
