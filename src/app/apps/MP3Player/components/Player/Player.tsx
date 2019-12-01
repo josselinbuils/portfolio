@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { MusicList } from '../../interfaces';
 import { musicLists } from '../../musicLists';
-import { Footer, JamendoLink, Logo, Menu } from './components';
+import { Footer, JamendoLink, Logo, Menu, Musics } from './components';
 import styles from './Player.module.scss';
 
 export const Player: FC = () => {
@@ -20,6 +20,7 @@ export const Player: FC = () => {
           />
           <JamendoLink />
         </aside>
+        <Musics musicList={activeMusicList} />
       </div>
       <Footer />
     </div>

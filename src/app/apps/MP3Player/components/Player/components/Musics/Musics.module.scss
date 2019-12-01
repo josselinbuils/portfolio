@@ -1,0 +1,176 @@
+@import '../../../../constants';
+@import '../../constants';
+
+.musicList {
+  width: calc(100% - #{$sidebarWidth});
+  margin: 5px 15px 15px 15px;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    flex: 0 0 auto;
+    padding-right: 18px;
+
+    & > div {
+      display: flex;
+      justify-content: space-between;
+
+      .select {
+        $line-height: 1.6em;
+
+        display: inline-block;
+        width: 130px;
+        position: relative;
+        margin-left: auto;
+        float: right;
+
+        .selectIcon {
+          position: absolute;
+          top: 6px;
+          right: 10px;
+          pointer-events: none;
+          line-height: $line-height;
+          margin-top: 2px;
+        }
+
+        select {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background: transparent;
+          padding: 6px 30px 6px 10px;
+          border: 1px solid $secondaryColor;
+          border-radius: 5px;
+          color: $textColor;
+          width: 100%;
+          outline: none;
+          font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+          font-size: 1em;
+          line-height: $line-height;
+
+          option {
+            background: $backgroundColor;
+          }
+        }
+      }
+
+      h2 {
+        margin: auto 0;
+      }
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+
+      th {
+        padding: 3px 15px 10px 0;
+        text-align: left;
+      }
+    }
+  }
+
+  table {
+    width: calc(100% - 10px);
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    td {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+      height: 46px;
+      user-select: text;
+      padding-right: 15px;
+    }
+
+    td:last-child,
+    th:last-child {
+      text-align: right;
+      padding-right: 0;
+    }
+
+    tr {
+      border-bottom: 1px solid lighten($backgroundColor, 5%);
+      color: $textColor;
+
+      .colAlbum {
+        width: 20%;
+      }
+
+      .colArtist {
+        width: 20%;
+      }
+
+      .colDuration {
+        width: 9%;
+        padding-right: 10px;
+      }
+
+      .colPreview {
+        width: 32px;
+        padding-left: 7px;
+      }
+
+      .colRelease {
+        width: 15%;
+      }
+    }
+
+    tbody tr {
+      &.active {
+        color: $primaryColor;
+
+        .inlineMusicPreview {
+          background-color: transparent;
+          background-image: none !important;
+
+          i {
+            display: inherit;
+          }
+        }
+      }
+
+      &.active:hover .inlineMusicPreview {
+        i:hover:not(:active) {
+          color: lighten($primaryColor, 10%);
+        }
+      }
+
+      &:hover {
+        background: lighten($backgroundColor, 2%);
+
+        .inlineMusicPreview {
+          background-color: transparent;
+          background-image: none !important;
+
+          i {
+            display: inherit;
+          }
+
+          i:active {
+            color: $primaryColor;
+          }
+
+          i:hover:not(:active) {
+            color: lighten($textColor, 10%);
+          }
+        }
+      }
+
+      .inlineMusicPreview {
+        width: 32px;
+        height: 32px;
+        background-size: 32px;
+        background-repeat: no-repeat;
+        text-align: center;
+
+        i {
+          display: none;
+          line-height: 32px;
+          font-size: 32px;
+        }
+      }
+    }
+  }
+}
