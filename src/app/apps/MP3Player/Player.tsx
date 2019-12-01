@@ -1,6 +1,4 @@
-import cn from 'classnames';
 import React, { FC, useState } from 'react';
-import commonStyles from './common.module.scss';
 import { Footer, JamendoLink, Logo, Menu } from './components';
 import { MusicList } from './interfaces';
 import { musicLists } from './musicLists';
@@ -12,7 +10,7 @@ export const Player: FC = () => {
   );
 
   return (
-    <div className={cn(commonStyles.player, styles.player)}>
+    <div className={styles.player}>
       <div className={styles.body}>
         <aside className={styles.sidebar}>
           <Logo />

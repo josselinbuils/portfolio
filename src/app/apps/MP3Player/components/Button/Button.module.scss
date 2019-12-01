@@ -1,14 +1,15 @@
 @import '../../constants';
 
 .button {
+  font-family: $fontFamily;
   font-size: inherit;
   display: inline-block;
   padding: 0;
   vertical-align: middle;
   color: $textColor;
-  border: 0;
-  outline: 0;
-  background: transparent;
+  border: none;
+  outline: none;
+  background: none;
 
   & + & {
     margin-left: 15px;
@@ -19,13 +20,19 @@
       color: lighten($textColor, 15%);
     }
 
+    &:active {
+      color: $primaryColor;
+    }
+
     &:active,
     &.checked {
-      color: $primaryColor;
-
       &:hover {
         color: lighten($primaryColor, 15%);
       }
     }
+  }
+
+  &.checked {
+    color: $primaryColor;
   }
 }

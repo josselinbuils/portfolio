@@ -1,4 +1,4 @@
-@import '../constants';
+@import '../../constants';
 
 .buttonLink {
   font-family: $fontFamily;
@@ -8,11 +8,11 @@
   outline: none;
   background: none;
 
-  &:not([disabled]) {
+  &:not(:disabled) {
     cursor: pointer;
-  }
 
-  &:hover:not([disabled]) {
-    text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

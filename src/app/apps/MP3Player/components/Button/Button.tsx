@@ -22,5 +22,4 @@ interface Props
     HTMLButtonElement
   > {
   checked?: boolean;
-  className?: string;
 }

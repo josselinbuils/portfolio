@@ -1,8 +1,6 @@
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import cn from 'classnames';
 import React, { FC } from 'react';
-import commonStyles from '../../common.module.scss';
 import { Music } from '../../interfaces';
 import { Button } from '../Button';
 import { ProgressBar, ProgressBarProps } from './ProgressBar';
@@ -21,9 +19,8 @@ export const SeekBar: FC<Props> = ({
       {currentMusic ? currentMusic.readableDuration : '00:00'}
     </time>
     <Button
-      className={cn(styles.playlistButton, {
-        [commonStyles.checked]: !min
-      })}
+      checked={!min}
+      className={styles.playlistButton}
       onClick={onClickTogglePlaylist}
     >
       <FontAwesomeIcon icon={faList} />

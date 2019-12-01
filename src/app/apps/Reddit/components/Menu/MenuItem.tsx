@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useState } from 'react';
-import { Icon } from '~/apps/Reddit/components/Icon';
 import { uppercaseFirstLetter } from '../../utils';
-import commonStyles from '../common.module.scss';
+import { ButtonLink } from '../ButtonLink';
+import { Icon } from '../Icon';
 import styles from './MenuItem.module.scss';
 
 export const MenuItem: FC<Props> = ({
@@ -21,8 +21,8 @@ export const MenuItem: FC<Props> = ({
   }, [isActiveSubreddit, overflew]);
 
   return (
-    <button
-      className={cn(commonStyles.buttonLink, styles.item)}
+    <ButtonLink
+      className={styles.item}
       disabled={isActiveSubreddit}
       onClick={() => onClickSubreddit(subreddit)}
       onMouseEnter={() => setOverflew(true)}
@@ -32,7 +32,7 @@ export const MenuItem: FC<Props> = ({
       <span className={cn({ [styles.active]: isActiveSubreddit })}>
         {uppercaseFirstLetter(subreddit.slice(2))}
       </span>
-    </button>
+    </ButtonLink>
   );
 };
 

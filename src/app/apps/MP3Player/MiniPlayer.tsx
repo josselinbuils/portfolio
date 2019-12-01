@@ -1,6 +1,5 @@
 import React, { FC, useContext } from 'react';
 import { noop } from '~/platform/utils';
-import commonStyles from './common.module.scss';
 import { Controls, MusicPreview, SeekBar } from './components';
 import { AudioContext } from './components/AudioProvider';
 import styles from './MiniPlayer.module.scss';
@@ -15,7 +14,7 @@ export const MiniPlayer: FC = () => {
   const { currentMusic } = audioState;
 
   return (
-    <div className={commonStyles.player}>
+    <div className={styles.miniPlayer}>
       <div className={styles.header}>
         <Controls className={styles.controls} size={50} />
         <MusicPreview music={currentMusic} size={56} />

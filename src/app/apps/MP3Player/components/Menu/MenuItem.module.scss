@@ -4,10 +4,12 @@
   font-size: 1.2em;
   display: block;
   margin-top: 5px;
-}
 
-// Modifiers
+  &:not(:disabled) {
+    cursor: pointer;
 
-.active {
-  color: $primaryColor;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

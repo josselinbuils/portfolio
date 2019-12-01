@@ -1,3 +1,5 @@
+@import 'constants';
+
 .controls {
   flex-grow: 1;
 }
@@ -5,6 +7,13 @@
 .header {
   display: flex;
   height: 80px;
+}
+
+.miniPlayer {
+  font-family: $fontFamily;
+  font-size: 0.8em;
+  height: 100%;
+  color: $textColor;
 }
 
 .musicInfo {

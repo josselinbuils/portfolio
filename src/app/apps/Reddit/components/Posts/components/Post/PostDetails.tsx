@@ -1,9 +1,8 @@
 import { faAnchor } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import cn from 'classnames';
 import React, { FC } from 'react';
-import { Icon } from '~/apps/Reddit/components/Icon';
-import commonStyles from '../../../common.module.scss';
+import { ButtonLink } from '../../../ButtonLink';
+import { Icon } from '../../../Icon';
 import styles from './PostDetails.module.scss';
 
 export const PostDetails: FC<Props> = ({
@@ -16,13 +15,13 @@ export const PostDetails: FC<Props> = ({
 }) => (
   <div className={styles.details}>
     {currentSubreddit === 'r/popular' && (
-      <button
-        className={cn(commonStyles.buttonLink, styles.subreddit)}
+      <ButtonLink
+        className={styles.subreddit}
         onClick={() => onClickSubreddit(subreddit)}
       >
         <Icon subreddit={subreddit} />
         <span>{subreddit}</span>
-      </button>
+      </ButtonLink>
     )}
     <span>
       Posted <time>{since}</time> by {author}

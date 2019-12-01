@@ -2,7 +2,6 @@ import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
-import commonStyles from '../../common.module.scss';
 import { Music } from '../../interfaces';
 import styles from './MusicPreview.module.scss';
 
@@ -11,13 +10,9 @@ export const MusicPreview: FC<Props> = ({ music, size }) => {
 
   return (
     <div
-      className={cn(
-        styles.musicPreview,
-        useDefaultPreview && [
-          commonStyles.defaultPreview,
-          styles.defaultPreview
-        ]
-      )}
+      className={cn(styles.musicPreview, {
+        [styles.defaultPreview]: useDefaultPreview
+      })}
       style={{
         backgroundImage: music ? `url(${music.image})` : 'none',
         fontSize: size

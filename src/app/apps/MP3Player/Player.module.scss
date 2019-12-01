@@ -13,6 +13,10 @@ $sidebarWidth: 120px;
 .player {
   display: flex;
   flex-direction: column;
+  font-family: $fontFamily;
+  font-size: 0.8em;
+  height: 100%;
+  color: $textColor;
 }
 
 .sidebar {
