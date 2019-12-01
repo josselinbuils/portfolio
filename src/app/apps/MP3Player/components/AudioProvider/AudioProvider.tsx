@@ -1,23 +1,28 @@
 import React, { createContext, FC, useEffect, useState } from 'react';
-import { AudioController } from './AudioController';
+import { AudioController, AudioState } from './AudioController';
 import styles from './AudioProvider.module.scss';
 
 export const AudioContext = createContext<{
   audioController: AudioController | undefined;
-}>({ audioController: undefined });
+  audioState: AudioState | undefined;
+}>({
+  audioController: undefined,
+  audioState: undefined
+});
 
 export const AudioProvider: FC = ({ children }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
   const [audioController, setAudioController] = useState<AudioController>();
-  const [currentMusicSrc, setCurrentMusicSrc] = useState<string>();
+  const [audioState, setAudioState] = useState<AudioState>();
+  const currentMusic = audioState && audioState.currentMusic;
 
   useEffect(() => {
-    if (audioElement !== null && currentMusicSrc !== undefined) {
+    if (audioElement !== null && currentMusic !== undefined) {
       audioElement.load();
     }
-  }, [audioElement, currentMusicSrc]);
+  }, [audioElement, currentMusic]);
 
   useEffect(() => {
     if (audioElement !== null) {
@@ -27,8 +32,8 @@ export const AudioProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (audioController !== undefined) {
-      const unsubscribe = audioController.currentMusicSubject.subscribe(music =>
-        setCurrentMusicSrc(music.audio)
+      const unsubscribe = audioController.audioStateSubject.subscribe(
+        setAudioState
       );
 
       return () => {
@@ -36,15 +41,15 @@ export const AudioProvider: FC = ({ children }) => {
         audioController.destroy();
       };
     }
-  }, [audioController, setCurrentMusicSrc]);
+  }, [audioController]);
 
   return (
     <>
-      <AudioContext.Provider value={{ audioController }}>
+      <AudioContext.Provider value={{ audioController, audioState }}>
         {children}
       </AudioContext.Provider>
       <audio className={styles.audio} ref={setAudioElement}>
-        {currentMusicSrc && <source src={currentMusicSrc} type="audio/mp3" />}
+        {currentMusic && <source src={currentMusic.audio} type="audio/mp3" />}
       </audio>
     </>
   );

@@ -2,17 +2,16 @@ import { Subject } from '@josselinbuils/utils';
 import { Music } from '../../interfaces';
 
 export class AudioController {
-  currentMusic?: Music;
-  currentMusicSubject = new Subject<Music>();
+  audioStateSubject = new Subject<AudioState>(this.getState());
 
-  get paused(): boolean {
+  private currentMusic?: Music;
+  private get paused(): boolean {
     return this.audioElement.paused;
   }
-
-  playlist: Music[] = [];
-  progress = 0;
-  random = false;
-  repeat = false;
+  private readonly playlist: Music[] = [];
+  private progress = 0;
+  private random = false;
+  private repeat = false;
 
   constructor(private readonly audioElement: HTMLAudioElement) {
     audioElement.addEventListener('ended', this.musicEndListener);
@@ -42,21 +41,24 @@ export class AudioController {
       newIndex = 0;
     }
 
-    const paused = this.audioElement.paused;
-
     this.loadMusic(this.playlist[newIndex]);
 
-    if (!paused) {
+    if (!this.paused) {
       await this.play();
     }
   };
 
   play = async (): Promise<void> => {
-    if (this.audioElement.paused) {
+    if (this.currentMusic === undefined) {
+      return;
+    }
+
+    if (this.paused) {
       await this.audioElement.play();
     } else {
       this.audioElement.pause();
     }
+    this.publishState();
   };
 
   playMusic = async (music: Music): Promise<void> => {
@@ -81,22 +83,9 @@ export class AudioController {
       newIndex = this.playlist.length - 1;
     }
 
-    const paused = this.audioElement.paused;
-
     this.loadMusic(this.playlist[newIndex]);
 
-    if (!paused) {
-      await this.play();
-    }
-  };
-
-  rand = async (): Promise<void> => {
-    const newIndex = Math.round(this.playlist.length * Math.random());
-    const paused = this.audioElement.paused;
-
-    this.loadMusic(this.playlist[newIndex]);
-
-    if (!paused) {
+    if (!this.paused) {
       await this.play();
     }
   };
@@ -115,15 +104,32 @@ export class AudioController {
 
   toggleRepeat = (): void => {
     this.repeat = !this.repeat;
+    this.publishState();
   };
+
+  toggleRandom = (): void => {
+    this.random = !this.random;
+    this.publishState();
+  };
+
+  private getState(): AudioState {
+    return {
+      currentMusic: this.currentMusic,
+      paused: this.paused,
+      playlist: this.playlist,
+      progress: this.progress,
+      random: this.random,
+      repeat: this.repeat
+    };
+  }
 
   private loadMusic(music: Music): void {
     if (!this.playlist.includes(music)) {
-      throw new Error('playList does not contain the given music');
+      throw new Error('playlist does not contain the given music');
     }
     this.currentMusic = music;
-    this.currentMusicSubject.next(music);
     this.progress = 0;
+    this.publishState();
   }
 
   private readonly musicEndListener = async () => {
@@ -133,10 +139,34 @@ export class AudioController {
     await this.play();
   };
 
+  private publishState(): void {
+    this.audioStateSubject.next(this.getState());
+  }
+
+  private readonly rand = async (): Promise<void> => {
+    const newIndex = Math.round(this.playlist.length * Math.random());
+
+    this.loadMusic(this.playlist[newIndex]);
+
+    if (!this.paused) {
+      await this.play();
+    }
+  };
+
   private readonly timeUpdateListener = () => {
     this.progress =
       Math.round(
         (this.audioElement.currentTime / this.audioElement.duration) * 10000
       ) / 100;
+    this.publishState();
   };
+}
+
+export interface AudioState {
+  currentMusic?: Music;
+  paused: boolean;
+  playlist: Music[];
+  progress: number;
+  random: boolean;
+  repeat: boolean;
 }

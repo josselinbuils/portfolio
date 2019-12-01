@@ -9,52 +9,54 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
-import commonStyles from '../../common.module.scss';
 import { useAudioController } from '../AudioProvider';
 import { Button } from '../Button';
 import styles from './Controls.module.scss';
 
 export const Controls: FC<Props> = ({ className, size }) => {
-  const { audioController } = useAudioController();
+  const { audioController, audioState } = useAudioController();
 
-  if (audioController === undefined) {
+  if (audioController === undefined || audioState === undefined) {
     return null;
   }
 
-  const {
-    next,
-    paused,
-    play,
-    prev,
-    random,
-    rand,
-    repeat,
-    toggleRepeat
-  } = audioController;
+  const { next, play, prev, toggleRandom, toggleRepeat } = audioController;
+  const { currentMusic, paused, random, repeat } = audioState;
+  const isThereCurrentMusic = currentMusic !== undefined;
 
   return (
     <div className={cn(styles.controls, className)} style={{ fontSize: size }}>
       <Button
-        className={cn(styles.randomButton, {
-          [commonStyles.checked]: random
-        })}
-        onClick={rand}
+        checked={random}
+        className={styles.randomButton}
+        onClick={toggleRandom}
       >
         <FontAwesomeIcon icon={faRandom} />
       </Button>
-      <Button className={cn(styles.previousButton)} onClick={prev}>
+      <Button
+        className={cn(styles.previousButton)}
+        disabled={!isThereCurrentMusic}
+        onClick={prev}
+      >
         <FontAwesomeIcon icon={faStepBackward} />
       </Button>
-      <Button className={cn(styles.playButton)} onClick={play}>
+      <Button
+        className={cn(styles.playButton)}
+        disabled={!isThereCurrentMusic}
+        onClick={play}
+      >
         <FontAwesomeIcon icon={paused ? faPlayCircle : faPauseCircle} />
       </Button>
-      <Button className={cn(styles.nextButton)} onClick={next}>
+      <Button
+        className={cn(styles.nextButton)}
+        disabled={!isThereCurrentMusic}
+        onClick={next}
+      >
         <FontAwesomeIcon icon={faStepForward} />
       </Button>
       <Button
-        className={cn(styles.repeatButton, {
-          [commonStyles.checked]: repeat
-        })}
+        checked={repeat}
+        className={styles.repeatButton}
         onClick={toggleRepeat}
       >
         <FontAwesomeIcon icon={faRedoAlt} />
