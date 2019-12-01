@@ -9,17 +9,7 @@ export const Footer: FC<Props> = ({ currentMusic }) => (
     <MusicPreview music={currentMusic} size={50} />
     <MusicInfo music={currentMusic} />
     <div className={styles.grow}>
-      <Controls
-        paused={false}
-        random={false}
-        repeat={false}
-        onClickNext={() => {}}
-        onClickPlay={() => {}}
-        onClickPrevious={() => {}}
-        onClickRandom={() => {}}
-        onClickRepeat={() => {}}
-        size={40}
-      />
+      <Controls size={40} />
       <SeekBar
         currentMusic={currentMusic}
         progress={0}

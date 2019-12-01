@@ -4,6 +4,11 @@ import { Music } from '../../interfaces';
 export class AudioController {
   currentMusic?: Music;
   currentMusicSubject = new Subject<Music>();
+
+  get paused(): boolean {
+    return this.audioElement.paused;
+  }
+
   playlist: Music[] = [];
   progress = 0;
   random = false;
@@ -14,15 +19,15 @@ export class AudioController {
     audioElement.addEventListener('timeupdate', this.timeUpdateListener);
   }
 
-  destroy(): void {
+  destroy = (): void => {
     this.audioElement.removeEventListener('ended', this.musicEndListener);
     this.audioElement.removeEventListener(
       'timeupdate',
       this.timeUpdateListener
     );
-  }
+  };
 
-  async next(): Promise<void> {
+  next = async (): Promise<void> => {
     if (this.currentMusic === undefined) {
       return;
     }
@@ -44,24 +49,24 @@ export class AudioController {
     if (!paused) {
       await this.play();
     }
-  }
+  };
 
-  async play(): Promise<void> {
+  play = async (): Promise<void> => {
     if (this.audioElement.paused) {
       await this.audioElement.play();
     } else {
       this.audioElement.pause();
     }
-  }
+  };
 
-  async playMusic(music: Music): Promise<void> {
+  playMusic = async (music: Music): Promise<void> => {
     if (this.currentMusic === undefined || music.id !== this.currentMusic.id) {
       this.loadMusic(music);
     }
     await this.play();
-  }
+  };
 
-  async prev(): Promise<void> {
+  prev = async (): Promise<void> => {
     if (this.currentMusic === undefined) {
       return;
     }
@@ -83,9 +88,9 @@ export class AudioController {
     if (!paused) {
       await this.play();
     }
-  }
+  };
 
-  async rand(): Promise<void> {
+  rand = async (): Promise<void> => {
     const newIndex = Math.round(this.playlist.length * Math.random());
     const paused = this.audioElement.paused;
 
@@ -94,18 +99,23 @@ export class AudioController {
     if (!paused) {
       await this.play();
     }
-  }
+  };
 
   /**
    * @param value 0 -> 1
    */
-  setCurrentTime(value: number): void {
+  setCurrentTime = (value: number): void => {
     const duration = this.audioElement.duration;
+
     this.audioElement.currentTime = Math.min(
       Math.round(value * duration),
       duration - 1
     );
-  }
+  };
+
+  toggleRepeat = (): void => {
+    this.repeat = !this.repeat;
+  };
 
   private loadMusic(music: Music): void {
     if (!this.playlist.includes(music)) {
