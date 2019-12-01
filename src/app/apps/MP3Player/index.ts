@@ -1,1 +1,1 @@
-export * from './MP3Player';
+export { default } from './MP3Player';

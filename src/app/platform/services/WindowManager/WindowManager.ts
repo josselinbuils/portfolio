@@ -1,5 +1,5 @@
 import { Subject } from '@josselinbuils/utils';
-import { AppDescriptor } from '~/apps/AppDescriptor';
+import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
 
@@ -34,13 +34,16 @@ export class WindowManager {
     return this.getWindowInstance(id).visible;
   }
 
-  async openWindow(appDescriptor: AppDescriptor): Promise<void> {
+  async openWindow(app: AppDescriptor | WindowComponent): Promise<void> {
+    const windowComponent = isAppDescriptor(app)
+      ? (await app.factory()).default
+      : app;
+
     const windowInstance: WindowInstance = {
       active: false,
       id: ++this.id,
       visible: true,
-      windowComponent: (await appDescriptor.factory())
-        .default as WindowComponent,
+      windowComponent,
       zIndex: 0
     };
 

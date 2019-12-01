@@ -1,1 +1,1 @@
-export * from './Teravia';
+export { default } from './Teravia';

@@ -11,3 +11,7 @@ export interface AppDescriptor {
   icon: IconDefinition;
   iconScale?: number;
 }
+
+export function isAppDescriptor(app: any): app is AppDescriptor {
+  return typeof app.factory === 'function';
+}

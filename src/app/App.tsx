@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
+import Terminal from '~/apps/Terminal';
 import { Desktop } from '~/platform/components';
 import { useInjector } from '~/platform/hooks';
 import { ContextMenuProvider } from '~/platform/providers';
@@ -9,7 +9,7 @@ export const App = () => {
   const windowManager = useInjector(WindowManager);
 
   useEffect(() => {
-    windowManager.openWindow(TerminalDescriptor);
+    windowManager.openWindow(Terminal);
   }, [windowManager]);
 
   return (
