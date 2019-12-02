@@ -5,8 +5,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, useContext, useEffect, useState } from 'react';
-import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { Spinner } from '~/platform/components';
+import { AudioContext } from '../../../../components/AudioProvider';
 import { Music, MusicList } from '../../../../interfaces';
 import { loadTracks } from '../../../../utils';
 import styles from './Musics.module.scss';
@@ -21,10 +22,28 @@ export const Musics: FC<Props> = ({ musicList }) => {
   const { audioController, audioState } = useContext(AudioContext);
   const [musics, setMusics] = useState<Music[]>([]);
   const [order, setOrder] = useState<string>('popularity_total');
+  const [loading, setLoading] = useState(false);
+
+  const loadingPromiseRef = useRef<Promise<any>>(Promise.resolve());
 
   useEffect(() => {
-    loadTracks(musicList.path, order).then(setMusics);
-  }, [musicList, order]);
+    setLoading(true);
+    setMusics([]);
+
+    const promise = loadTracks(musicList.path, order)
+      .then(newMusics => {
+        if (loadingPromiseRef.current === promise) {
+          setMusics(newMusics);
+        }
+      })
+      .finally(() => {
+        if (loadingPromiseRef.current === promise) {
+          setLoading(false);
+        }
+      });
+
+    loadingPromiseRef.current = promise;
+  }, [musicList.path, order]);
 
   if (audioController === undefined || audioState === undefined) {
     return null;
@@ -40,6 +59,7 @@ export const Musics: FC<Props> = ({ musicList }) => {
 
   return (
     <div className={styles.musicList}>
+      {loading && <Spinner color="#007ad8" />}
       <div className={styles.header}>
         <div>
           <h2>{musicList.name}</h2>

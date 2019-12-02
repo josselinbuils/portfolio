@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
+import { Spinner } from '~/platform/components';
 import { RedditFilter } from '../../interfaces';
-import { Post, Spinner } from './components';
+import { Post } from './components';
 import { RedditPost } from './RedditPost';
 import { getPosts } from './utils';
 
@@ -32,7 +33,7 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {loading && <Spinner color="#ff4501" />}
       {currentSubreddit &&
         posts.map(post => (
           <Post
