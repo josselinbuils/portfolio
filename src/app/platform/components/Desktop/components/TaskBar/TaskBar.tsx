@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React, { FC, useRef } from 'react';
+import { MP3PlayerDescriptor } from '~/apps/MP3Player/MP3PlayerDescriptor';
 import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
 import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
 import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
@@ -12,6 +13,7 @@ import { getTaskKey } from './utils';
 // Has to be in a constant to avoid useless recurrent computations
 const PINNED_APPS_DESCRIPTORS = [
   TerminalDescriptor,
+  MP3PlayerDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
   NotesDescriptor

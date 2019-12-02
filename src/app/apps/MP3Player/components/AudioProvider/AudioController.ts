@@ -1,4 +1,5 @@
 import { Subject } from '@josselinbuils/utils';
+import dayjs from 'dayjs';
 import { Music } from '../../interfaces';
 
 export class AudioController {
@@ -6,6 +7,7 @@ export class AudioController {
 
   private readonly audioElement = new Audio();
   private currentMusic?: Music;
+  private currentTime = '00:00';
   private get paused(): boolean {
     return this.audioElement.paused;
   }
@@ -121,6 +123,7 @@ export class AudioController {
   private getState(): AudioState {
     return {
       currentMusic: this.currentMusic,
+      currentTime: this.currentTime,
       paused: this.paused,
       playlist: this.playlist,
       progress: this.progress,
@@ -163,6 +166,9 @@ export class AudioController {
   };
 
   private readonly timeUpdateListener = () => {
+    this.currentTime = dayjs(
+      Math.round(this.audioElement.currentTime) * 1000
+    ).format('mm:ss');
     this.progress =
       Math.round(
         (this.audioElement.currentTime / this.audioElement.duration) * 10000
@@ -173,6 +179,7 @@ export class AudioController {
 
 export interface AudioState {
   currentMusic?: Music;
+  currentTime: string;
   paused: boolean;
   playlist: Music[];
   progress: number;

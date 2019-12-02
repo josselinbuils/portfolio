@@ -1,36 +1,40 @@
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC } from 'react';
-import { Music } from '../../interfaces';
+import React, { FC, useContext } from 'react';
+import { noop } from '~/platform/utils';
+import { AudioContext } from '../../components/AudioProvider';
 import { Button } from '../Button';
-import { ProgressBar, ProgressBarProps } from './ProgressBar';
+import { ProgressBar } from './ProgressBar';
 import styles from './SeekBar.module.scss';
 
-export const SeekBar: FC<Props> = ({
-  currentMusic,
-  min = false,
-  onClickTogglePlaylist,
-  ...progressBarProps
-}) => (
-  <div className={styles.seekBar}>
-    <time className={styles.currentTime}>00:00</time>
-    <ProgressBar {...progressBarProps} />
-    <time className={styles.duration}>
-      {currentMusic ? currentMusic.readableDuration : '00:00'}
-    </time>
-    <Button
-      checked={!min}
-      className={styles.playlistButton}
-      onClick={onClickTogglePlaylist}
-    >
-      <FontAwesomeIcon icon={faList} />
-    </Button>
-  </div>
-);
+export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
+  const { audioController, audioState } = useContext(AudioContext);
 
-interface Props extends ProgressBarProps {
-  currentMusic: Music | undefined;
+  if (audioController === undefined || audioState === undefined) {
+    return null;
+  }
+
+  const { currentMusic, currentTime, progress } = audioState;
+
+  return (
+    <div className={styles.seekBar}>
+      <time className={styles.currentTime}>{currentTime}</time>
+      <ProgressBar progress={progress} onSeekStart={noop} />
+      <time className={styles.duration}>
+        {currentMusic ? currentMusic.readableDuration : '00:00'}
+      </time>
+      <Button
+        checked={!min}
+        className={styles.playlistButton}
+        onClick={onClickTogglePlaylist}
+      >
+        <FontAwesomeIcon icon={faList} />
+      </Button>
+    </div>
+  );
+};
+
+interface Props {
   min?: boolean;
-  progress: number;
   onClickTogglePlaylist(): void;
 }

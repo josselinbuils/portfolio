@@ -25,13 +25,7 @@ export const MiniPlayer: FC = () => {
           {currentMusic.name && <span> - {currentMusic.name}</span>}
         </div>
       )}
-      <SeekBar
-        currentMusic={currentMusic}
-        min
-        onClickTogglePlaylist={noop}
-        onSeekStart={noop}
-        progress={0}
-      />
+      <SeekBar min onClickTogglePlaylist={noop} />
     </div>
   );
 };

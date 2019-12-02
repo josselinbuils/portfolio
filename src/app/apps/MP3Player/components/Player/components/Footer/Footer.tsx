@@ -19,12 +19,7 @@ export const Footer: FC = () => {
       <MusicInfo music={currentMusic} />
       <div className={styles.grow}>
         <Controls size={40} />
-        <SeekBar
-          currentMusic={currentMusic}
-          progress={0}
-          onClickTogglePlaylist={() => {}}
-          onSeekStart={() => {}}
-        />
+        <SeekBar onClickTogglePlaylist={() => {}} />
       </div>
     </footer>
   );
