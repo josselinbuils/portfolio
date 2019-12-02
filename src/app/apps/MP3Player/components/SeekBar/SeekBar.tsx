@@ -1,7 +1,7 @@
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, useContext } from 'react';
-import { noop } from '~/platform/utils';
+import React, { createRef, FC, useContext } from 'react';
+import { useDragAndDrop } from '~/platform/hooks';
 import { AudioContext } from '../../components/AudioProvider';
 import { Button } from '../Button';
 import { ProgressBar } from './ProgressBar';
@@ -9,17 +9,40 @@ import styles from './SeekBar.module.scss';
 
 export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
   const { audioController, audioState } = useContext(AudioContext);
+  const progressBarRef = createRef<HTMLDivElement>();
+  const seekStartHandler = useDragAndDrop(onSeekStart);
 
   if (audioController === undefined || audioState === undefined) {
     return null;
   }
 
-  const { currentMusic, currentTime, progress } = audioState;
+  const { setCurrentTime } = audioController;
+  const { currentMusic, currentTime, paused, progress } = audioState;
+
+  function onSeekStart(
+    downEvent: React.MouseEvent
+  ): ((moveEvent: MouseEvent) => void) | void {
+    if (progressBarRef.current === null || paused) {
+      return;
+    }
+
+    const progressBarWidth = progressBarRef.current.clientWidth;
+    const dx = downEvent.nativeEvent.offsetX - downEvent.clientX;
+
+    setCurrentTime(downEvent.nativeEvent.offsetX / progressBarWidth);
+
+    return (moveEvent: MouseEvent) =>
+      setCurrentTime((moveEvent.clientX + dx) / progressBarWidth);
+  }
 
   return (
     <div className={styles.seekBar}>
       <time className={styles.currentTime}>{currentTime}</time>
-      <ProgressBar progress={progress} onSeekStart={noop} />
+      <ProgressBar
+        progress={progress}
+        onSeekStart={seekStartHandler}
+        ref={progressBarRef}
+      />
       <time className={styles.duration}>
         {currentMusic ? currentMusic.readableDuration : '00:00'}
       </time>
