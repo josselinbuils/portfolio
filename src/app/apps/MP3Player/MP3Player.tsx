@@ -15,7 +15,7 @@ const size = {
 };
 
 const MP3Player: WindowComponent = injectedWindowProps => {
-  const [min, setMin] = useState(true);
+  const [min, setMin] = useState(false);
   const { height, width } = min ? size.min : size.max;
 
   return (
