@@ -1,6 +1,7 @@
+import cn from 'classnames';
 import React, { FC } from 'react';
 import { MusicList } from '~/apps/MP3Player/interfaces';
-import { Button } from '../../../Button';
+import { ButtonLink } from '~/platform/components';
 import styles from './MenuItem.module.scss';
 
 export const MenuItem: FC<Props> = ({
@@ -11,14 +12,13 @@ export const MenuItem: FC<Props> = ({
   const isActiveMusicList = musicList === activeMusicList;
 
   return (
-    <Button
-      checked={isActiveMusicList}
-      className={styles.item}
+    <ButtonLink
+      className={cn(styles.item, { [styles.checked]: isActiveMusicList })}
       disabled={isActiveMusicList}
       onClick={() => onClickPlaylist(musicList)}
     >
       {musicList.name}
-    </Button>
+    </ButtonLink>
   );
 };
 

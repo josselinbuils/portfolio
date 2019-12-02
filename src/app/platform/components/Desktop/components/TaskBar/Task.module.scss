@@ -6,7 +6,7 @@
   bottom: 0;
   left: 0;
   height: 3px;
-  background: $primary-color;
+  background: $primaryColor;
 }
 
 .task {
@@ -20,14 +20,14 @@
   text-align: center;
 
   &:hover {
-    background: lighten($background-color, 15%);
+    background: lighten($backgroundColor, 15%);
   }
 
   &.active {
-    background: lighten($background-color, 20%);
+    background: lighten($backgroundColor, 20%);
 
     &:hover {
-      background: lighten($background-color, 25%);
+      background: lighten($backgroundColor, 25%);
     }
   }
 }

@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useState } from 'react';
+import { ButtonLink } from '~/platform/components';
 import { uppercaseFirstLetter } from '../../utils';
-import { ButtonLink } from '../ButtonLink';
 import { Icon } from '../Icon';
 import styles from './MenuItem.module.scss';
 

@@ -5,11 +5,7 @@
   display: block;
   margin-top: 5px;
 
-  &:not(:disabled) {
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  &.checked {
+    color: $primaryColor;
   }
 }
