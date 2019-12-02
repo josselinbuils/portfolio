@@ -17,12 +17,12 @@ export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
   }
 
   const { setCurrentTime } = audioController;
-  const { currentMusic, currentTime, paused, progress } = audioState;
+  const { currentMusic, currentTime, progress } = audioState;
 
   function onSeekStart(
     downEvent: React.MouseEvent
   ): ((moveEvent: MouseEvent) => void) | void {
-    if (progressBarRef.current === null || paused) {
+    if (progressBarRef.current === null || currentMusic === undefined) {
       return;
     }
 
