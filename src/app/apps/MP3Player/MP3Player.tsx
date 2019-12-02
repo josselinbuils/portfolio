@@ -15,7 +15,7 @@ const size = {
 };
 
 const MP3Player: WindowComponent = injectedWindowProps => {
-  const [min] = useState(false);
+  const [min, setMin] = useState(true);
   const { height, width } = min ? size.min : size.max;
 
   return (
@@ -28,7 +28,13 @@ const MP3Player: WindowComponent = injectedWindowProps => {
       title={min ? '' : MP3PlayerDescriptor.appName}
       titleColor="#efefef"
     >
-      <AudioProvider>{min ? <MiniPlayer /> : <Player />}</AudioProvider>
+      <AudioProvider>
+        {min ? (
+          <MiniPlayer onClickTogglePlaylist={() => setMin(false)} />
+        ) : (
+          <Player onClickTogglePlaylist={() => setMin(true)} />
+        )}
+      </AudioProvider>
     </Window>
   );
 };

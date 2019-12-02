@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useLayoutEffect, useState } from 'react';
 import { useDragAndDrop } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import { TOOLBAR_HEIGHT } from '../constants';
@@ -17,6 +17,10 @@ export const Resizable: FC<Props> = ({
   const [unmaximizeSize, setUnmaximizeSize] = useState<Size>();
   const [unminimizeSize, setUnminimizeSize] = useState<Size>();
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
+
+  useLayoutEffect(() => {
+    setSize({ height: minHeight, width: minWidth });
+  }, [minHeight, minWidth]);
 
   function applyContentRatio(sizeToUpdate: Size): Size {
     const { width } = sizeToUpdate;

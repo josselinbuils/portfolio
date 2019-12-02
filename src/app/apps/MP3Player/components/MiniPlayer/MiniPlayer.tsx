@@ -1,10 +1,9 @@
 import React, { FC, useContext } from 'react';
-import { noop } from '~/platform/utils';
 import { AudioContext } from '../AudioProvider';
 import { Controls, MusicPreview, SeekBar } from '../index';
 import styles from './MiniPlayer.module.scss';
 
-export const MiniPlayer: FC = () => {
+export const MiniPlayer: FC<Props> = ({ onClickTogglePlaylist }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {
@@ -25,7 +24,11 @@ export const MiniPlayer: FC = () => {
           {currentMusic.name && <span> - {currentMusic.name}</span>}
         </div>
       )}
-      <SeekBar min onClickTogglePlaylist={noop} />
+      <SeekBar min onClickTogglePlaylist={onClickTogglePlaylist} />
     </div>
   );
 };
+
+interface Props {
+  onClickTogglePlaylist(): void;
+}

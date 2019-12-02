@@ -4,7 +4,7 @@ import { musicLists } from '../../musicLists';
 import { Footer, JamendoLink, Logo, Menu, Musics } from './components';
 import styles from './Player.module.scss';
 
-export const Player: FC = () => {
+export const Player: FC<Props> = ({ onClickTogglePlaylist }) => {
   const [activeMusicList, setActiveMusicList] = useState<MusicList>(
     musicLists[0]
   );
@@ -22,7 +22,11 @@ export const Player: FC = () => {
         </aside>
         <Musics musicList={activeMusicList} />
       </div>
-      <Footer />
+      <Footer onClickTogglePlaylist={onClickTogglePlaylist} />
     </div>
   );
 };
+
+interface Props {
+  onClickTogglePlaylist(): void;
+}

@@ -4,7 +4,7 @@ import { Controls, MusicPreview, SeekBar } from '../../../index';
 import styles from './Footer.module.scss';
 import { MusicInfo } from './MusicInfo';
 
-export const Footer: FC = () => {
+export const Footer: FC<Props> = ({ onClickTogglePlaylist }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {
@@ -19,8 +19,12 @@ export const Footer: FC = () => {
       <MusicInfo music={currentMusic} />
       <div className={styles.grow}>
         <Controls size={40} />
-        <SeekBar onClickTogglePlaylist={() => {}} />
+        <SeekBar onClickTogglePlaylist={onClickTogglePlaylist} />
       </div>
     </footer>
   );
 };
+
+interface Props {
+  onClickTogglePlaylist(): void;
+}
