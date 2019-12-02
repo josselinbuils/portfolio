@@ -4,6 +4,8 @@ import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
+  static injectionId = 'WindowManager';
+
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
   private readonly windowInstances: WindowInstance[] = [];
