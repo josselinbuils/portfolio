@@ -1,20 +1,25 @@
 @import '../../../../constants';
 
-.artist,
-.name {
-  overflow: hidden;
-  user-select: text;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .musicInfo {
+  height: 62px;
   line-height: 20px;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   overflow: hidden;
-  flex: 0 0 20px;
-  margin: 0 15px;
-  text-align: center;
+  flex: 0 0 20ch;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  .artist {
+    font-size: 0.8em;
+  }
+
+  .artist,
+  .name {
+    overflow: hidden;
+    user-select: text;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }

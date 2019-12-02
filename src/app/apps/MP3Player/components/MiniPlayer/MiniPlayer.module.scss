@@ -1,5 +1,10 @@
 @import '../../constants';
 
+* {
+  user-select: none;
+  cursor: default;
+}
+
 .controls {
   flex-grow: 1;
 }

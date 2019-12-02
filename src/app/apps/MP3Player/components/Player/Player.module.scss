@@ -3,6 +3,11 @@
 
 $navBarHeight: 75px;
 
+* {
+  user-select: none;
+  cursor: default;
+}
+
 .body {
   display: flex;
   overflow: hidden;
