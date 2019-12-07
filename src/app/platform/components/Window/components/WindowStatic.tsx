@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { CSSProperties, forwardRef, useEffect } from 'react';
+import React, { CSSProperties, forwardRef, useLayoutEffect } from 'react';
 import { useDragAndDrop } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import {
@@ -13,8 +13,6 @@ import { ResizableProps } from '../providers/Resizable';
 import { getRelativeOffset } from '../utils';
 import { TitleBar } from './TitleBar';
 import styles from './WindowStatic.module.scss';
-
-// TODO try useReducer to reduce the number of props there
 
 export const WindowStatic = forwardRef<HTMLDivElement, Props>(
   (
@@ -101,7 +99,7 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
       }
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (!visible) {
         if (!minimized) {
           animate(ANIMATION_DURATION);
@@ -114,6 +112,12 @@ export const WindowStatic = forwardRef<HTMLDivElement, Props>(
         resetSize();
       }
     });
+
+    useLayoutEffect(() => {
+      if (!resizing) {
+        animate(ANIMATION_DURATION);
+      }
+    }, [animate, resizing, size.height, size.width]);
 
     const animated = animationDurationMs !== undefined;
     const frozen = moving || resizing;

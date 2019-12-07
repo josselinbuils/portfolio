@@ -26,8 +26,15 @@
   display: block;
   overflow: hidden;
   flex: 0 0 20px;
+  min-height: 20px;
   margin: 0 15px;
   text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+// Modifiers
+
+.hidden {
+  display: none;
 }

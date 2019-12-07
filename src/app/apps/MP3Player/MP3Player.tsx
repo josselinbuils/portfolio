@@ -29,11 +29,8 @@ const MP3Player: WindowComponent = injectedWindowProps => {
       titleColor="#efefef"
     >
       <AudioProvider>
-        {min ? (
-          <MiniPlayer onClickTogglePlaylist={() => setMin(false)} />
-        ) : (
-          <Player onClickTogglePlaylist={() => setMin(true)} />
-        )}
+        <MiniPlayer min={min} onClickTogglePlaylist={() => setMin(false)} />
+        <Player min={min} onClickTogglePlaylist={() => setMin(true)} />
       </AudioProvider>
     </Window>
   );
