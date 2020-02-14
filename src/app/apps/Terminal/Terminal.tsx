@@ -172,68 +172,75 @@ const Terminal: WindowComponent = ({ active, ...rest }) => {
     }
   }
 
-  useEventListener('keydown', (event: KeyboardEvent) => {
-    if (!active) {
-      return;
-    }
+  useEventListener(
+    'keydown',
+    (event: KeyboardEvent) => {
+      if (
+        !event.altKey &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === 'c'
+      ) {
+        event.preventDefault();
 
-    if (
-      !event.altKey &&
-      (event.metaKey || event.ctrlKey) &&
-      event.key.toLowerCase() === 'c'
-    ) {
-      event.preventDefault();
+        if (waiting) {
+          executions[executions.length - 1].inProgress = false;
+          executionManager.update();
+        } else {
+          loadExecutor(Command, [USER, userInput]);
+          setUserInput('');
+        }
+      }
 
       if (waiting) {
-        executions[executions.length - 1].inProgress = false;
-        executionManager.update();
-      } else {
-        loadExecutor(Command, [USER, userInput]);
-        setUserInput('');
-      }
-    }
-
-    if (waiting) {
-      return;
-    }
-
-    if (
-      !event.altKey &&
-      (event.metaKey || event.ctrlKey) &&
-      event.key.toLowerCase() === 'k'
-    ) {
-      event.preventDefault();
-      executionManager.clear();
-    } else if (event.key.length === 1) {
-      if (
-        /[a-z]/i.test(event.key) &&
-        (event.altKey || event.metaKey || event.ctrlKey)
-      ) {
         return;
       }
-      event.preventDefault();
-      setUserInput(
-        userInput.slice(0, caretIndex) + event.key + userInput.slice(caretIndex)
-      );
-      setCaretIndex(caretIndex + 1);
-    } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
-      navigate(event);
-    }
-  });
+
+      if (
+        !event.altKey &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === 'k'
+      ) {
+        event.preventDefault();
+        executionManager.clear();
+      } else if (event.key.length === 1) {
+        if (
+          /[a-z]/i.test(event.key) &&
+          (event.altKey || event.metaKey || event.ctrlKey)
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setUserInput(
+          userInput.slice(0, caretIndex) +
+            event.key +
+            userInput.slice(caretIndex)
+        );
+        setCaretIndex(caretIndex + 1);
+      } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
+        navigate(event);
+      }
+    },
+    active
+  );
 
   useEffect(() => setCaretIndex(userInput.length), [userInput]);
 
   useEffect(() => {
     const terminal = terminalRef.current as HTMLElement;
 
-    new MutationObserver(
+    const observer = new MutationObserver(
       () => (terminal.scrollTop = terminal.scrollHeight)
-    ).observe(terminal, {
+    );
+
+    observer.observe(terminal, {
       childList: true,
       subtree: true
     });
 
     exec('about');
+
+    return () => observer.disconnect();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
