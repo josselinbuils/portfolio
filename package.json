@@ -20,6 +20,11 @@
     "prettier:staged": "exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged && npm run add:staged"
+    }
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-brands-svg-icons": "^5.12.1",
@@ -60,7 +65,7 @@
     "@josselinbuils/tslint": "^4.1.0",
     "concurrently": "^5.1.0",
     "csscomb": "^4.3.0",
-    "husky": "^4.2.3",
+    "husky": "^3.1.0",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "source-map-explorer": "^2.3.1",
