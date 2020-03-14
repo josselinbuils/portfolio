@@ -126,7 +126,7 @@ const Terminal: WindowComponent = ({
       case 'Right':
         event.preventDefault();
         if (caretIndex < userInput.length) {
-          setCaretIndex(caretIndex - 1);
+          setCaretIndex(caretIndex + 1);
         }
         break;
 
@@ -153,6 +153,7 @@ const Terminal: WindowComponent = ({
       case 'Enter':
         event.preventDefault();
         setUserInput('');
+        setCaretIndex(0);
         exec(userInput);
         break;
 
@@ -215,19 +216,16 @@ const Terminal: WindowComponent = ({
         }
         event.preventDefault();
         setUserInput(
-          userInput.slice(0, caretIndex) +
-            event.key +
-            userInput.slice(caretIndex)
+          input =>
+            input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
         );
-        setCaretIndex(caretIndex + 1);
+        setCaretIndex(index => index + 1);
       } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
         navigate(event);
       }
     },
     active
   );
-
-  useEffect(() => setCaretIndex(userInput.length), [userInput]);
 
   useEffect(() => {
     const terminal = terminalRef.current as HTMLElement;
