@@ -20,24 +20,19 @@
     "prettier:staged": "exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged && npm run add:staged"
-    }
-  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-brands-svg-icons": "^5.12.1",
     "@fortawesome/free-regular-svg-icons": "^5.12.1",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
-    "@fortawesome/react-fontawesome": "^0.1.8",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "@josselinbuils/utils": "^0.1.2",
-    "@types/classnames": "^2.2.9",
-    "@types/express": "^4.17.2",
-    "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.1",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.4",
+    "@types/classnames": "^2.2.10",
+    "@types/express": "^4.17.3",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.1",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
     "@types/request-promise-native": "^1.0.17",
     "@types/snoowrap": "^1.19.0",
     "@types/source-map-support": "^0.5.1",
@@ -45,31 +40,31 @@
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
     "cpx": "^1.5.0",
-    "dayjs": "^1.8.20",
+    "dayjs": "^1.8.22",
     "express": "^4.17.1",
     "node-sass": "^4.13.1",
-    "react": "^16.12.0",
+    "react": "^16.13.0",
     "react-app-rewired": "^2.1.5",
-    "react-dom": "^16.12.0",
-    "react-scripts": "^3.3.1",
+    "react-dom": "^16.13.0",
+    "react-scripts": "^3.4.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "rimraf": "^3.0.2",
     "serve-static": "^1.14.1",
-    "snoowrap": "^1.20.1",
+    "snoowrap": "^1.21.0",
     "source-map-support": "^0.5.16",
-    "typescript": "~3.7.5"
+    "typescript": "~3.8.3"
   },
   "devDependencies": {
     "@josselinbuils/exec-staged": "^0.1.1",
     "@josselinbuils/tslint": "^4.1.0",
     "concurrently": "^5.1.0",
     "csscomb": "^4.3.0",
-    "husky": "^3.1.0",
+    "husky": "^4.2.3",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
-    "source-map-explorer": "^2.2.2",
-    "tslint": "^6.0.0"
+    "source-map-explorer": "^2.3.1",
+    "tslint": "^6.1.0"
   },
   "browserslist": [
     ">0.2%",
