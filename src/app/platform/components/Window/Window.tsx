@@ -13,8 +13,6 @@ import { TitleBar } from './TitleBar';
 import { boundPosition, getRelativeOffset } from './utils';
 import styles from './Window.module.scss';
 
-// TODO use a HOC
-
 export const Window: FC<Props> = ({
   active,
   background,

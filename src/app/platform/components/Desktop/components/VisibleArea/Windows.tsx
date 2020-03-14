@@ -11,9 +11,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
 
   useEffect(
-    () =>
-      windowManager.windowInstancesSubject.subscribe(setWindowInstances
-      ),
+    () => windowManager.windowInstancesSubject.subscribe(setWindowInstances),
     [windowManager]
   );
 

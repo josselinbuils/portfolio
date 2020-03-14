@@ -4,8 +4,8 @@ module.exports = config => {
   config.resolve = {
     ...config.resolve,
     alias: {
-      '~': path.resolve(__dirname, 'src/app'),
-    },
+      '~': path.resolve(__dirname, 'src/app')
+    }
   };
   return config;
 };
