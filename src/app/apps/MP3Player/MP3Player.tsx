@@ -22,6 +22,8 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
     <Window
       {...injectedWindowProps}
       background="#111625"
+      maxHeight={min ? height : Infinity}
+      maxWidth={min ? width : Infinity}
       minHeight={height}
       minWidth={width}
       ref={windowRef}

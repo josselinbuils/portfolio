@@ -32,6 +32,24 @@ export class Window extends Component<Props, State> {
     };
   }
 
+  componentDidUpdate(prevProps: Props): void {
+    if (!this.props.resizable && prevProps.resizable && this.state.maximized) {
+      this.setState({ maximized: false });
+      delete this.lastDisplayProperties.maximize;
+    }
+    if (
+      this.props.maxHeight !== prevProps.maxHeight ||
+      this.props.maxWidth !== prevProps.maxWidth ||
+      this.props.minHeight !== prevProps.minHeight ||
+      this.props.minWidth !== prevProps.minWidth
+    ) {
+      this.startAnimation().ready(() => {
+        const { height, width } = this.getSize();
+        this.setSize(width, height);
+      });
+    }
+  }
+
   componentDidMount(): void {
     const { keepContentRatio, minHeight, minWidth } = this.props;
 
