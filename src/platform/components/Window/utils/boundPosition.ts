@@ -1,6 +1,6 @@
 import { Position, Size } from '~/platform/interfaces';
 import { BUTTONS_MAX_WIDTH, MIN_USABLE_SIZE } from '../constants';
-import { bound } from '../utils';
+import { bound } from './bound';
 
 export function boundPosition(
   x: number,

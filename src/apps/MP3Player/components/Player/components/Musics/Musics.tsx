@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Spinner } from '~/platform/components';
-import { AudioContext } from '../../../../components/AudioProvider';
 import { Music, MusicList } from '../../../../interfaces';
 import { loadTracks } from '../../../../utils';
+import { AudioContext } from '../../../AudioProvider';
 import styles from './Musics.module.scss';
 
 const ORDERS = [

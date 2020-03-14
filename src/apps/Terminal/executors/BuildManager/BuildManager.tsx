@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { formatLogs } from '~/apps/Terminal/executors/BuildManager/utils/formatLogs';
 import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
 import { Log } from './Log';
-import { hasOption, startWsClient, stopWsClient } from './utils';
+import { formatLogs, hasOption, startWsClient, stopWsClient } from './utils';
 
 export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
   const [showHelp, setShowHelp] = useState(false);

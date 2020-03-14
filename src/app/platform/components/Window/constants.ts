@@ -1,7 +1,0 @@
-export const ANIMATION_DURATION = 200;
-export const ANIMATION_DURATION_FAST = 50;
-export const BUTTONS_MAX_WIDTH = 66;
-export const TOOLBAR_HEIGHT = 22;
-export const VERTICAL_OFFSET_TO_UNMAXIMIZE = 5;
-
-export const MIN_USABLE_SIZE = TOOLBAR_HEIGHT;

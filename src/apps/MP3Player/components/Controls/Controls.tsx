@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext } from 'react';
-import { AudioContext } from '../../components/AudioProvider';
+import { AudioContext } from '../AudioProvider';
 import { Button } from '../Button';
 import styles from './Controls.module.scss';
 

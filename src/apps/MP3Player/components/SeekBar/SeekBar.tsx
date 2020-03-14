@@ -2,7 +2,7 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { createRef, FC, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks';
-import { AudioContext } from '../../components/AudioProvider';
+import { AudioContext } from '../AudioProvider';
 import { Button } from '../Button';
 import { ProgressBar } from './ProgressBar';
 import styles from './SeekBar.module.scss';

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { EventHandler } from '~/platform/interfaces';
-import { noop } from '~/platform/utils';
+import { EventHandler } from '../interfaces';
+import { noop } from '../utils';
 
 export function useEventListener<EventType extends keyof WindowEventMap>(
   eventType: EventType,
