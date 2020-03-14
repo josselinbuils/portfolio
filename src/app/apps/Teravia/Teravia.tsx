@@ -4,10 +4,14 @@ import { Window, WindowComponent } from '~/platform/components/Window';
 import styles from './Teravia.module.scss';
 import { TeraviaDescriptor } from './TeraviaDescriptor';
 
-const Teravia: WindowComponent = ({ active, ...rest }) => {
+const Teravia: WindowComponent = ({
+  active,
+  windowRef,
+  ...injectedWindowProps
+}) => {
   return (
     <Window
-      {...rest}
+      {...injectedWindowProps}
       active={active}
       background="#1a1d1e"
       keepContentRatio={true}
@@ -15,6 +19,7 @@ const Teravia: WindowComponent = ({ active, ...rest }) => {
       maxWidth={1367}
       minHeight={472}
       minWidth={800}
+      ref={windowRef}
       title={TeraviaDescriptor.appName}
       titleColor="#2b5158"
     >

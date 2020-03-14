@@ -5,7 +5,7 @@ import { RedditFilter } from './interfaces';
 import styles from './Reddit.module.scss';
 import { RedditDescriptor } from './RedditDescriptor';
 
-const Reddit: WindowComponent = injectedWindowProps => {
+const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
   const [subreddit, setSubreddit] = useState('r/popular');
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -28,6 +28,7 @@ const Reddit: WindowComponent = injectedWindowProps => {
       titleColor="#ff4501"
       minWidth={850}
       minHeight={600}
+      ref={windowRef}
       title={RedditDescriptor.appName}
     >
       <div className={styles.reddit}>

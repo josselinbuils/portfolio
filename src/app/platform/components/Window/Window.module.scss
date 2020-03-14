@@ -44,8 +44,9 @@
 }
 
 .animated {
+  transition-duration: 0.2s;
+  transition-property: height, left, opacity, top, width;
   transition-timing-function: ease-in-out;
-  transition-property: all;
 }
 
 .frozen {

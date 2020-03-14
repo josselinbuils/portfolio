@@ -1,4 +1,5 @@
 import { Subject } from '@josselinbuils/utils';
+import { createRef } from 'react';
 import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
@@ -24,8 +25,12 @@ export class WindowManager {
   };
 
   hideWindow = (id: number): void => {
-    this.getWindowInstance(id).visible = false;
-    this.unselectWindow(id);
+    const componentInstance = this.getWindowInstance(id).ref.current;
+
+    if (componentInstance !== null) {
+      componentInstance.hide();
+      this.unselectWindow(id);
+    }
   };
 
   isWindowSelected(id: number): boolean {
@@ -33,7 +38,8 @@ export class WindowManager {
   }
 
   isWindowVisible(id: number): boolean {
-    return this.getWindowInstance(id).visible;
+    const componentInstance = this.getWindowInstance(id).ref.current;
+    return componentInstance !== null ? componentInstance.visible : false;
   }
 
   async openWindow(app: AppDescriptor | WindowComponent): Promise<void> {
@@ -44,7 +50,7 @@ export class WindowManager {
     const windowInstance: WindowInstance = {
       active: false,
       id: ++this.id,
-      visible: true,
+      ref: createRef(),
       windowComponent,
       zIndex: 0
     };
@@ -59,8 +65,12 @@ export class WindowManager {
   }
 
   showWindow(id: number): void {
-    this.getWindowInstance(id).visible = true;
-    this.selectWindow(id);
+    const componentInstance = this.getWindowInstance(id).ref.current;
+
+    if (componentInstance !== null) {
+      componentInstance.show();
+      this.selectWindow(id);
+    }
   }
 
   selectWindow = (id: number): void => {

@@ -1,10 +1,11 @@
-import { WindowComponent } from '~/platform/components/Window';
+import { RefObject } from 'react';
+import { Window, WindowComponent } from '~/platform/components/Window';
 
 export interface WindowInstance {
   active: boolean;
   id: number;
   minimizedTopPosition?: number;
-  visible: boolean;
-  zIndex: number;
+  ref: RefObject<Window>;
   windowComponent: WindowComponent;
+  zIndex: number;
 }

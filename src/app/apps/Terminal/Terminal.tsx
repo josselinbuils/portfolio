@@ -30,7 +30,11 @@ const executors: { [name: string]: Executor | AsyncExecutor } = {
   work: Work
 };
 
-const Terminal: WindowComponent = ({ active, ...rest }) => {
+const Terminal: WindowComponent = ({
+  active,
+  windowRef,
+  ...injectedWindowProps
+}) => {
   const [caretIndex, setCaretIndex] = useState(0);
   const [commands, commandManager] = useList<string>();
   const [commandIndex, setCommandIndex] = useState(0);
@@ -246,11 +250,12 @@ const Terminal: WindowComponent = ({ active, ...rest }) => {
 
   return (
     <Window
-      {...rest}
+      {...injectedWindowProps}
       active={active}
       background="rgba(30, 30, 30, 0.9)"
       minHeight={400}
       minWidth={800}
+      ref={windowRef}
       title={TerminalDescriptor.appName}
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"

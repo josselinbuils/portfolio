@@ -22,7 +22,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
           active,
           id,
           minimizedTopPosition,
-          visible,
+          ref,
           windowComponent: WindowComponent,
           zIndex
         }) => (
@@ -34,8 +34,8 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
-            visible={visible}
             visibleAreaSize={visibleAreaSize}
+            windowRef={ref}
             zIndex={zIndex}
           />
         )

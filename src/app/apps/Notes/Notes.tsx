@@ -12,7 +12,7 @@ const smileys: { [smiley: string]: string } = {
   ';p': '\uD83D\uDE1C'
 };
 
-const Notes: WindowComponent = injectedWindowProps => {
+const Notes: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [notes, setNotes] = useState(getDefaultNotes);
 
   function saveNotes(event: ChangeEvent<HTMLTextAreaElement>): void {
@@ -31,6 +31,7 @@ const Notes: WindowComponent = injectedWindowProps => {
       background="#fff59c"
       minHeight={350}
       minWidth={400}
+      ref={windowRef}
       title={NotesDescriptor.appName}
       titleColor="black"
     >

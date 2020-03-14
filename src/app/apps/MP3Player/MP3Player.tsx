@@ -14,7 +14,7 @@ const size = {
   }
 };
 
-const MP3Player: WindowComponent = injectedWindowProps => {
+const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [min, setMin] = useState(false);
   const { height, width } = min ? size.min : size.max;
 
@@ -24,6 +24,7 @@ const MP3Player: WindowComponent = injectedWindowProps => {
       background="#111625"
       minHeight={height}
       minWidth={width}
+      ref={windowRef}
       resizable={!min}
       title={min ? '' : MP3PlayerDescriptor.appName}
       titleColor="#efefef"
