@@ -8,10 +8,10 @@ import {
 export function useTaskRunner(
   appDescriptor: AppDescriptor,
   windowInstance?: WindowInstance
-): () => void {
+): () => Promise<void> {
   const windowManager = useInjector(WindowManager);
 
-  return function run(): void {
+  return async function run(): Promise<void> {
     if (windowInstance !== undefined) {
       const id = windowInstance.id;
 
@@ -25,7 +25,7 @@ export function useTaskRunner(
         windowManager.showWindow(id);
       }
     } else {
-      windowManager.openWindow(appDescriptor);
+      await windowManager.openWindow(appDescriptor);
     }
   };
 }

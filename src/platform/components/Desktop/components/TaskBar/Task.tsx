@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, RefObject, useEffect, useRef } from 'react';
+import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import { useInjector } from '~/platform/hooks';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
@@ -11,12 +11,15 @@ import {
 import { useTaskContextMenu, useTaskRunner } from './hooks';
 import styles from './Task.module.scss';
 
+const LOADER_APPARITION_DELAY_MS = 50;
+
 export const Task: FC<Props> = ({
   appDescriptor,
   taskBarRef,
   windowInstance
 }) => {
   const taskRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
   const getTaskContextMenuDescriptor = useTaskContextMenu(
     appDescriptor,
     taskBarRef,
@@ -26,6 +29,7 @@ export const Task: FC<Props> = ({
   const run = useTaskRunner(appDescriptor, windowInstance);
   const windowManager = useInjector(WindowManager);
   const active = windowInstance && windowInstance.active;
+  const running = !!windowInstance || loading;
   const { icon, iconScale = 1 } = appDescriptor;
 
   useEffect(() => {
@@ -40,18 +44,30 @@ export const Task: FC<Props> = ({
     }
   }, [taskBarRef, windowInstance, windowManager]);
 
+  async function runTask(): Promise<void> {
+    // Delay loader apparition to avoid displaying it when app already loaded
+    const displayLoaderTimeout = setTimeout(
+      () => setLoading(true),
+      LOADER_APPARITION_DELAY_MS
+    );
+    await run();
+    clearTimeout(displayLoaderTimeout);
+    setLoading(false);
+  }
+
   return (
     <WithContextMenu descriptor={getTaskContextMenuDescriptor}>
       <div
         className={cn(styles.task, { [styles.active]: active })}
-        onClick={run}
+        onClick={runTask}
         ref={taskRef}
       >
         <FontAwesomeIcon
+          className={cn({ [styles.loading]: loading })}
           icon={icon}
-          style={{ transform: `scale(${iconScale})` }}
+          style={{ fontSize: `${iconScale}em` }}
         />
-        {windowInstance && <div className={styles.runIndicator} />}
+        {running && <div className={styles.runIndicator} />}
       </div>
     </WithContextMenu>
   );
