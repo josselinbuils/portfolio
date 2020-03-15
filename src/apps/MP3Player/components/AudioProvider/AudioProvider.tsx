@@ -1,5 +1,4 @@
-import React, { createContext, FC, useEffect, useState } from 'react';
-import { useInjector } from '~/platform/hooks';
+import React, { createContext, FC, useEffect, useMemo, useState } from 'react';
 import { AudioController, AudioState } from './AudioController';
 
 export const AudioContext = createContext<{
@@ -11,11 +10,17 @@ export const AudioContext = createContext<{
 });
 
 export const AudioProvider: FC = ({ children }) => {
-  const audioController = useInjector(AudioController);
+  const audioController = useMemo(() => new AudioController(), []);
   const [audioState, setAudioState] = useState<AudioState>();
 
   useEffect(() => {
-    return audioController.audioStateSubject.subscribe(setAudioState);
+    const unsubscribe = audioController.audioStateSubject.subscribe(
+      setAudioState
+    );
+    return () => {
+      unsubscribe();
+      audioController.clear();
+    };
   }, [audioController]);
 
   return (

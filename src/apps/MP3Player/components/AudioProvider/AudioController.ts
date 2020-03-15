@@ -24,6 +24,15 @@ export class AudioController {
     this.audioStateSubject = new Subject(this.getState());
   }
 
+  clear(): void {
+    this.audioElement.removeEventListener('ended', this.musicEndListener);
+    this.audioElement.removeEventListener(
+      'timeupdate',
+      this.timeUpdateListener
+    );
+    this.audioElement.pause();
+  }
+
   next = async (): Promise<void> => {
     if (this.currentMusic === undefined) {
       return;
