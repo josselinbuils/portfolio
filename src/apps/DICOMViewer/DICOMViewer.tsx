@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Spinner } from '~/platform/components';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { cancelable } from '~/platform/utils';
@@ -7,7 +7,8 @@ import { RendererType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { DatasetDescriptor } from './interfaces';
-import { getDatasets } from './utils';
+import { DicomFrame } from './models';
+import { getDatasets, loadFrames } from './utils';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -15,6 +16,7 @@ const DICOMViewer: WindowComponent = ({
 }) => {
   const [dataset, setDataset] = useState<DatasetDescriptor>();
   const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
+  const [frames, setFrames] = useState<DicomFrame[]>([]);
   const [loading, setLoading] = useState(true);
   const [rendererType, setRendererType] = useState<RendererType>();
 
@@ -23,6 +25,20 @@ const DICOMViewer: WindowComponent = ({
     datasetsPromise.then(setDatasets).then(() => setLoading(false));
     return cancelDatasetsPromise;
   }, []);
+
+  useLayoutEffect(() => {
+    if (dataset === undefined) {
+      return;
+    }
+    setLoading(true);
+
+    const [framesPromise, cancelFramesPromise] = cancelable(
+      loadFrames(dataset)
+    );
+    framesPromise.then(setFrames).then(() => setLoading(false));
+
+    return cancelFramesPromise;
+  }, [dataset]);
 
   return (
     <Window
@@ -35,13 +51,22 @@ const DICOMViewer: WindowComponent = ({
       title={DICOMViewerDescriptor.appName}
     >
       <div className={styles.dicomViewer}>
-        {!dataset && (
-          <SelectDataset datasets={datasets} onDatasetSelected={setDataset} />
+        {loading ? (
+          <Spinner color="white" />
+        ) : (
+          <>
+            {!dataset && (
+              <SelectDataset
+                datasets={datasets}
+                onDatasetSelected={setDataset}
+              />
+            )}
+            {dataset && !rendererType && (
+              <SelectRenderer onRendererTypeSelected={setRendererType} />
+            )}
+            {dataset && rendererType && frames.length}
+          </>
         )}
-        {dataset && !rendererType && (
-          <SelectRenderer onRendererTypeSelected={setRendererType} />
-        )}
-        {loading && <Spinner color="white" />}
       </div>
     </Window>
   );
