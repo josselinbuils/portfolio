@@ -7,36 +7,22 @@
   margin: 20px 0 0 -10px;
 }
 
-.dataset {
-  line-height: 130px;
-  width: 130px;
-  height: 130px;
+.renderer {
+  max-height: 100px;
   margin: 12px;
   cursor: pointer;
-  text-align: center;
-  background: #080808;
 
   &:hover {
     filter: brightness(115%);
   }
-
-  img {
-    height: 100%;
-  }
-
-  span {
-    display: block;
-    overflow: hidden;
-    width: calc(100% - 10px);
-    margin: 0 auto;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
 }
 
-.selectDataset {
-  overflow-y: auto;
-  padding: 60px;
+.selectRenderer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 450px;
+  transform: translate(-50%, -50%);
 
   &::-webkit-scrollbar {
     width: 8px;

@@ -4,8 +4,8 @@ import { DatasetDescriptor } from '../../interfaces';
 import styles from './SelectDataset.module.scss';
 
 export const SelectDataset: FC<Props> = ({ datasets, onDatasetSelected }) => (
-  <div className={styles.chooseDataset}>
-    <h1>Choose the dataset</h1>
+  <div className={styles.selectDataset}>
+    <h1>Select the dataset</h1>
     <div className={styles.container}>
       {datasets.map(dataset => (
         <div
