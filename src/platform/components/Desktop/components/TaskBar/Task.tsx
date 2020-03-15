@@ -11,7 +11,7 @@ import {
 import { useTaskContextMenu, useTaskRunner } from './hooks';
 import styles from './Task.module.scss';
 
-const LOADER_APPARITION_DELAY_MS = 50;
+const LOADER_APPARITION_DELAY_MS = 200;
 
 export const Task: FC<Props> = ({
   appDescriptor,
