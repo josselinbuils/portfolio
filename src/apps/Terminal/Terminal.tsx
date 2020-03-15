@@ -109,8 +109,11 @@ const Terminal: WindowComponent = ({
         event.preventDefault();
         if (commandIndex < commands.length) {
           const newIndex = commandIndex + 1;
+          const newCommand =
+            newIndex < commands.length ? commands[newIndex] : '';
           setCommandIndex(newIndex);
-          setUserInput(newIndex < commands.length ? commands[newIndex] : '');
+          setUserInput(newCommand);
+          setCaretIndex(newCommand.length);
         }
         break;
 
@@ -135,8 +138,10 @@ const Terminal: WindowComponent = ({
         event.preventDefault();
         if (commandIndex > 0) {
           const newIndex = commandIndex - 1;
+          const newCommand = commands[newIndex];
           setCommandIndex(newIndex);
-          setUserInput(commands[newIndex]);
+          setUserInput(newCommand);
+          setCaretIndex(newCommand.length);
         }
         break;
 
@@ -169,6 +174,7 @@ const Terminal: WindowComponent = ({
 
         if (command !== undefined) {
           setUserInput(command);
+          setCaretIndex(command.length);
         }
         break;
 
