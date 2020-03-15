@@ -1,0 +1,12 @@
+@import 'constants';
+
+.dicomViewer {
+  font-family: monospace;
+  display: flex;
+  height: 100%;
+  color: $color;
+
+  * {
+    user-select: none;
+  }
+}

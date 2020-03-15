@@ -30,6 +30,7 @@ export const Musics: FC<Props> = ({ musicList }) => {
     setLoading(true);
     setMusics([]);
 
+    // TODO use cancelable util
     const promise = loadTracks(musicList.path, order)
       .then(newMusics => {
         if (loadingPromiseRef.current === promise) {
