@@ -1,5 +1,4 @@
 export const ASSETS_DIR = '/assets';
-export const ASSETS_DIR_DEV = '/src/assets';
 export const ENV_DEV = 'development';
 export const HTTP_DEFAULT_PREFIX = '/';
 export const HTTP_INTERNAL_ERROR = 500;

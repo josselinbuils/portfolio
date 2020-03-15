@@ -3,11 +3,11 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import serveStatic from 'serve-static';
+import { registerDicomRoutes } from './api/dicom';
 import { registerJamendoRoutes } from './api/jamendo';
 import { registerRedditRoutes } from './api/reddit';
 import {
   ASSETS_DIR,
-  ASSETS_DIR_DEV,
   ENV_DEV,
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
@@ -18,10 +18,7 @@ import {
 import { Logger } from './Logger';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
-const ASSETS_PATH = join(
-  process.cwd(),
-  ENV === ENV_DEV ? ASSETS_DIR_DEV : ASSETS_DIR
-);
+const ASSETS_PATH = join(process.cwd(), ASSETS_DIR);
 const CLIENT_PATH = join(process.cwd(), PUBLIC_DIR);
 const HTTP_PREFIX = process.env.HTTP_PREFIX || HTTP_DEFAULT_PREFIX;
 
@@ -62,7 +59,7 @@ export function registerRouter(app: Express): Express {
   router.use(serveStatic(CLIENT_PATH));
   router.use(bodyParser.json());
 
-  // registerDicomRoutes(router);
+  registerDicomRoutes(router);
   registerJamendoRoutes(router);
   registerRedditRoutes(router);
 

@@ -1,14 +1,10 @@
 import { lstatSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { ASSETS_DIR, ASSETS_DIR_DEV, ENV_DEV } from '../../constants';
+import { ASSETS_DIR, ENV_DEV } from '../../constants';
 import { Logger } from '../../Logger';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
-const dicomPath = join(
-  process.cwd(),
-  ENV === ENV_DEV ? ASSETS_DIR_DEV : ASSETS_DIR,
-  '/dicom'
-);
+const dicomPath = join(process.cwd(), ASSETS_DIR, '/dicom');
 const datasetsPath = join(dicomPath, '/datasets');
 const previewsPath = join(dicomPath, '/previews');
 
