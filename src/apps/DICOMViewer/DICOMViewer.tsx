@@ -8,7 +8,7 @@ import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { DatasetDescriptor } from './interfaces';
 import { DicomFrame } from './models';
-import { getDatasets, loadFrames } from './utils';
+import { loadDatasetList, loadFrames } from './utils';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -21,7 +21,9 @@ const DICOMViewer: WindowComponent = ({
   const [rendererType, setRendererType] = useState<RendererType>();
 
   useEffect(() => {
-    const [datasetsPromise, cancelDatasetsPromise] = cancelable(getDatasets());
+    const [datasetsPromise, cancelDatasetsPromise] = cancelable(
+      loadDatasetList()
+    );
     datasetsPromise.then(setDatasets).then(() => setLoading(false));
     return cancelDatasetsPromise;
   }, []);

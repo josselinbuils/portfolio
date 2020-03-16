@@ -1,5 +1,11 @@
 import { V } from '../math';
 
+import { DicomFrame } from '../models';
+import {
+  computeFrames,
+  computeSharedProperties,
+  computeVolume
+} from '../utils';
 import { CoordinateSpace } from './CoordinateSpace';
 import { Frame } from './Frame';
 import { Model } from './Model';
@@ -14,6 +20,13 @@ export class Dataset extends Model implements CoordinateSpace {
 
   // Shared properties (needed in both 2D/3D)
   voxelSpacing!: number[];
+
+  static create(dicomFrames: DicomFrame[]): Dataset {
+    const frames = computeFrames(dicomFrames);
+    const sharedProperties = computeSharedProperties(frames);
+    const volume = computeVolume(frames, sharedProperties);
+    return new Dataset({ frames, ...sharedProperties, volume });
+  }
 
   constructor(config: any) {
     super();
