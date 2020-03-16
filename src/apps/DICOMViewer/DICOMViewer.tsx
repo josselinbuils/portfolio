@@ -1,10 +1,17 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  ReactElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
 import { Toolbox } from '~/apps/DICOMViewer/Toolbox';
 import { Spinner } from '~/platform/components';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
 import { SelectDataset, SelectRenderer } from './components';
+import { ViewportElement } from './components';
 import { MouseTool, RendererType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
@@ -25,6 +32,8 @@ const DICOMViewer: WindowComponent = ({
   const [rendererType, setRendererType] = useState<RendererType>();
   const [toolbox, setToolbox] = useState<Toolbox>();
   const [viewport, setViewport] = useState<Viewport>();
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
   const viewportElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,6 +85,37 @@ const DICOMViewer: WindowComponent = ({
     return cancelFramesPromise;
   }, [datasetDescriptor]);
 
+  function render(): ReactElement | null {
+    if (loading) {
+      return <Spinner color="white" />;
+    }
+    if (!dataset) {
+      return (
+        <SelectDataset
+          datasets={datasets}
+          onDatasetSelected={setDatasetDescriptor}
+        />
+      );
+    }
+    if (!rendererType) {
+      return <SelectRenderer onRendererTypeSelected={setRendererType} />;
+    }
+    if (toolbox && viewport) {
+      return (
+        <ViewportElement
+          height={viewportHeight}
+          onCanvasMouseDown={downEvent =>
+            toolbox.startTool(downEvent.nativeEvent)
+          }
+          rendererType={rendererType}
+          viewport={viewport}
+          width={viewportWidth}
+        />
+      );
+    }
+    return null;
+  }
+
   return (
     <Window
       {...injectedWindowProps}
@@ -83,26 +123,14 @@ const DICOMViewer: WindowComponent = ({
       titleColor="#efefef"
       minWidth={880}
       minHeight={500}
+      onResize={({ height, width }) => {
+        setViewportHeight(height);
+        setViewportWidth(width);
+      }}
       ref={windowRef}
       title={DICOMViewerDescriptor.appName}
     >
-      <div className={styles.dicomViewer}>
-        {loading ? (
-          <Spinner color="white" />
-        ) : (
-          <>
-            {!dataset && (
-              <SelectDataset
-                datasets={datasets}
-                onDatasetSelected={setDatasetDescriptor}
-              />
-            )}
-            {dataset && !rendererType && (
-              <SelectRenderer onRendererTypeSelected={setRendererType} />
-            )}
-          </>
-        )}
-      </div>
+      <div className={styles.dicomViewer}>{render()}</div>
     </Window>
   );
 };
