@@ -8,6 +8,8 @@ export class Renderable extends Model {
   private dirty!: boolean;
 
   decorateProperties(): void {
+    this.onUpdate = new Subject<void>();
+
     for (const [key, startValue] of Object.entries(this)) {
       let value = startValue;
 
@@ -27,8 +29,6 @@ export class Renderable extends Model {
         }
       });
     }
-    this.dirty = true;
-    this.onUpdate = new Subject<void>();
   }
 
   fillProperties(config: any): void {

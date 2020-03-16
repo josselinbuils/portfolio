@@ -16,16 +16,17 @@ const MANDATORY_FIELDS = ['frames', 'voxelSpacing'];
 export class Dataset extends Model implements CoordinateSpace {
   frames!: Frame[];
   is3D: boolean;
+  name!: string;
   volume?: Volume;
 
   // Shared properties (needed in both 2D/3D)
   voxelSpacing!: number[];
 
-  static create(dicomFrames: DicomFrame[]): Dataset {
+  static create(name: string, dicomFrames: DicomFrame[]): Dataset {
     const frames = computeFrames(dicomFrames);
     const sharedProperties = computeSharedProperties(frames);
     const volume = computeVolume(frames, sharedProperties);
-    return new Dataset({ frames, ...sharedProperties, volume });
+    return new Dataset({ frames, name, ...sharedProperties, volume });
   }
 
   constructor(config: any) {

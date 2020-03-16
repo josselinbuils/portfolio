@@ -1,6 +1,6 @@
-import { ViewType } from '../constants';
+import { getAvailableViewTypes } from '~/apps/DICOMViewer/utils';
+import { RendererType, ViewType } from '../constants';
 import { V } from '../math';
-
 import { Annotations } from './Annotations';
 import { Camera } from './Camera';
 import { CoordinateSpace } from './CoordinateSpace';
@@ -23,6 +23,31 @@ export class Viewport extends Renderable implements CoordinateSpace {
   private basis?: number[][];
   private imageZoom?: number;
   private origin?: number[];
+
+  static create(dataset: Dataset, rendererType: RendererType): Viewport {
+    const annotations = { datasetName: dataset.name, rendererType };
+    const frame = dataset.frames[Math.floor(dataset.frames.length / 2)];
+    const { windowCenter, windowWidth } = frame;
+    const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
+
+    const viewType = availableViewTypes.includes(ViewType.Axial)
+      ? ViewType.Axial
+      : ViewType.Native;
+
+    const camera =
+      viewType === ViewType.Native
+        ? Camera.fromFrame(frame)
+        : Camera.fromVolume(dataset.volume as Volume, viewType);
+
+    return new Viewport({
+      annotations,
+      camera,
+      dataset,
+      viewType,
+      windowCenter,
+      windowWidth
+    });
+  }
 
   constructor(config: object) {
     super();

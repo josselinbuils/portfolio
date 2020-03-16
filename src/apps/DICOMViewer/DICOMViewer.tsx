@@ -1,24 +1,31 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Toolbox } from '~/apps/DICOMViewer/Toolbox';
 import { Spinner } from '~/platform/components';
 import { Window, WindowComponent } from '~/platform/components/Window';
+import { MouseButton } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
 import { SelectDataset, SelectRenderer } from './components';
-import { RendererType } from './constants';
+import { MouseTool, RendererType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { DatasetDescriptor } from './interfaces';
-import { DicomFrame } from './models';
+import { Dataset, Viewport } from './models';
 import { loadDatasetList, loadFrames } from './utils';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
 }) => {
-  const [dataset, setDataset] = useState<DatasetDescriptor>();
+  const [dataset, setDataset] = useState<Dataset>();
+  const [datasetDescriptor, setDatasetDescriptor] = useState<
+    DatasetDescriptor
+  >();
   const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
-  const [frames, setFrames] = useState<DicomFrame[]>([]);
   const [loading, setLoading] = useState(true);
   const [rendererType, setRendererType] = useState<RendererType>();
+  const [toolbox, setToolbox] = useState<Toolbox>();
+  const [viewport, setViewport] = useState<Viewport>();
+  const viewportElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const [datasetsPromise, cancelDatasetsPromise] = cancelable(
@@ -28,19 +35,46 @@ const DICOMViewer: WindowComponent = ({
     return cancelDatasetsPromise;
   }, []);
 
+  useEffect(() => {
+    if (dataset !== undefined && rendererType !== undefined) {
+      const newViewport = Viewport.create(dataset, rendererType);
+      setViewport(newViewport);
+      return () => newViewport.destroy();
+    }
+  }, [dataset, rendererType]);
+
+  useEffect(() => {
+    if (viewport === undefined) {
+      return;
+    }
+    const newToolbox = new Toolbox(viewport, viewportElementRef);
+
+    newToolbox.selectActiveTool({
+      button: MouseButton.Left,
+      tool:
+        viewport.dataset.frames.length > 1
+          ? MouseTool.Paging
+          : MouseTool.Windowing
+    });
+    setToolbox(newToolbox);
+  }, [viewport]);
+
   useLayoutEffect(() => {
-    if (dataset === undefined) {
+    if (datasetDescriptor === undefined) {
       return;
     }
     setLoading(true);
 
     const [framesPromise, cancelFramesPromise] = cancelable(
-      loadFrames(dataset)
+      loadFrames(datasetDescriptor)
     );
-    framesPromise.then(setFrames).then(() => setLoading(false));
+    framesPromise.then(dicomFrames => {
+      setLoading(false);
+      setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
+    });
 
     return cancelFramesPromise;
-  }, [dataset]);
+  }, [datasetDescriptor]);
 
   return (
     <Window
@@ -60,13 +94,12 @@ const DICOMViewer: WindowComponent = ({
             {!dataset && (
               <SelectDataset
                 datasets={datasets}
-                onDatasetSelected={setDataset}
+                onDatasetSelected={setDatasetDescriptor}
               />
             )}
             {dataset && !rendererType && (
               <SelectRenderer onRendererTypeSelected={setRendererType} />
             )}
-            {dataset && rendererType && frames.length}
           </>
         )}
       </div>
