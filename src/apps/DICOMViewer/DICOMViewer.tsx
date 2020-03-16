@@ -104,9 +104,7 @@ const DICOMViewer: WindowComponent = ({
       return (
         <ViewportElement
           height={viewportHeight}
-          onCanvasMouseDown={downEvent =>
-            toolbox.startTool(downEvent.nativeEvent)
-          }
+          onCanvasMouseDown={downEvent => toolbox.startTool(downEvent)}
           rendererType={rendererType}
           viewport={viewport}
           width={viewportWidth}
@@ -124,7 +122,7 @@ const DICOMViewer: WindowComponent = ({
       minWidth={880}
       minHeight={500}
       onResize={({ height, width }) => {
-        setViewportHeight(height);
+        setViewportHeight(height - 42);
         setViewportWidth(width);
       }}
       ref={windowRef}

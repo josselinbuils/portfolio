@@ -8,9 +8,10 @@ export class Renderable extends Model {
   private dirty!: boolean;
 
   decorateProperties(): void {
-    this.onUpdate = new Subject<void>();
-
     for (const [key, startValue] of Object.entries(this)) {
+      if (startValue === undefined) {
+        continue;
+      }
       let value = startValue;
 
       Object.defineProperty(this, key, {
@@ -29,6 +30,8 @@ export class Renderable extends Model {
         }
       });
     }
+    this.dirty = true;
+    this.onUpdate = new Subject<void>();
   }
 
   fillProperties(config: any): void {
