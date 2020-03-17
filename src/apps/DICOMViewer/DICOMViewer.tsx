@@ -98,6 +98,8 @@ const DICOMViewer: WindowComponent = ({
     if (rendererType) {
       setToolbox(undefined);
       setViewport(undefined);
+      setActiveLeftTool(MouseTool.Paging);
+      setActiveRightTool(MouseTool.Zoom);
       setRendererType(undefined);
     } else if (dataset) {
       dataset.destroy();
