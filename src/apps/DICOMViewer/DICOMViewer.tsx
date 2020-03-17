@@ -19,6 +19,8 @@ import { DatasetDescriptor } from './interfaces';
 import { Dataset, Viewport } from './models';
 import { loadDatasetList, loadFrames } from './utils';
 
+// TODO display progressbar when loading datasets
+
 const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
@@ -85,6 +87,17 @@ const DICOMViewer: WindowComponent = ({
     return cancelFramesPromise;
   }, [datasetDescriptor]);
 
+  function back(): void {
+    if (rendererType) {
+      setToolbox(undefined);
+      setViewport(undefined);
+      setRendererType(undefined);
+    } else if (dataset) {
+      setDataset(undefined);
+      setDatasetDescriptor(undefined);
+    }
+  }
+
   function render(): ReactElement | null {
     if (loading) {
       return <Spinner color="white" />;
@@ -128,7 +141,14 @@ const DICOMViewer: WindowComponent = ({
       ref={windowRef}
       title={DICOMViewerDescriptor.appName}
     >
-      <div className={styles.dicomViewer}>{render()}</div>
+      <div className={styles.dicomViewer}>
+        {dataset && (
+          <button className={styles.button} onClick={back}>
+            Back
+          </button>
+        )}
+        {render()}
+      </div>
     </Window>
   );
 };

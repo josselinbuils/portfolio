@@ -1,12 +1,33 @@
 @import 'constants';
 
+* {
+  user-select: none;
+}
+
 .dicomViewer {
   font-family: monospace;
   display: flex;
   height: 100%;
   color: $color;
+  position: relative;
+}
 
-  * {
-    user-select: none;
+.button {
+  background: $background-color;
+  color: $color;
+  border-radius: $radius;
+  outline: none;
+  border: 1px solid $color;
+  padding: 3px 5px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  &:active:hover {
+    background: lighten($background-color, 25%);
+  }
+
+  &:hover {
+    background: lighten($background-color, 15%);
   }
 }
