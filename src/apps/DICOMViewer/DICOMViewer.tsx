@@ -137,6 +137,7 @@ const DICOMViewer: WindowComponent = ({
             onCanvasMouseDown={downEvent =>
               toolbox.startTool(downEvent, activeLeftTool, activeRightTool)
             }
+            ref={viewportElementRef}
             rendererType={rendererType}
             viewport={viewport}
             width={viewportWidth}
