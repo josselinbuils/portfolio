@@ -1,0 +1,95 @@
+@import '../../constants';
+
+.tool {
+  padding: 3px 5px;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  border: none;
+  border-radius: 0;
+  display: block;
+  position: relative;
+
+  &:active:hover {
+    background: lighten($background-color, 25%);
+  }
+
+  &:hover {
+    background: lighten($background-color, 15%);
+  }
+
+  &:first-child {
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+
+    &.activeLeft:before {
+      border-top-left-radius: $radius;
+    }
+
+    &.activeRight:before {
+      border-top-right-radius: $radius;
+    }
+  }
+
+  &:last-child {
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
+
+    &.activeLeft:before {
+      border-bottom-left-radius: $radius;
+    }
+
+    &.activeRight:before {
+      border-bottom-right-radius: $radius;
+    }
+  }
+
+  &.activeLeft:before {
+    left: 0;
+  }
+
+  &.activeLeft.activeRight:before {
+    width: 32px;
+  }
+
+  &.activeLeft,
+  &.activeRight {
+    &:before {
+      position: absolute;
+      top: 0;
+      width: 16px;
+      height: 32px;
+      background: $color;
+      content: '';
+    }
+
+    svg {
+      color: $color;
+      mix-blend-mode: difference;
+    }
+  }
+
+  &.activeRight:before {
+    right: 0;
+  }
+
+  & + & {
+    border-top: 1px solid $color;
+  }
+}
+
+.toolbar {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  border-radius: $radius;
+  border: 1px solid $color;
+}
+
+.tool,
+.toolbar {
+  background: $background-color;
+  color: $color;
+  outline: none;
+}

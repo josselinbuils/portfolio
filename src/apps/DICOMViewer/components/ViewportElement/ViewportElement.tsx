@@ -57,7 +57,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
         const contextMenuListener = (event: MouseEvent) => {
           event.preventDefault();
           window.removeEventListener('contextmenu', contextMenuListener);
-          return false;
         };
         window.addEventListener('contextmenu', contextMenuListener);
       }

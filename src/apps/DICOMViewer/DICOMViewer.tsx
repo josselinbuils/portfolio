@@ -10,8 +10,12 @@ import { Spinner } from '~/platform/components';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
-import { SelectDataset, SelectRenderer } from './components';
-import { ViewportElement } from './components';
+import {
+  SelectDataset,
+  SelectRenderer,
+  Toolbar,
+  ViewportElement
+} from './components';
 import { MouseTool, RendererType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
@@ -25,6 +29,12 @@ const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
 }) => {
+  const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
+    MouseTool.Paging
+  );
+  const [activeRightTool, setActiveRightTool] = useState<MouseTool>(
+    MouseTool.Zoom
+  );
   const [dataset, setDataset] = useState<Dataset>();
   const [datasetDescriptor, setDatasetDescriptor] = useState<
     DatasetDescriptor
@@ -50,7 +60,6 @@ const DICOMViewer: WindowComponent = ({
     if (dataset !== undefined && rendererType !== undefined) {
       const newViewport = Viewport.create(dataset, rendererType);
       setViewport(newViewport);
-      return () => newViewport.destroy();
     }
   }, [dataset, rendererType]);
 
@@ -60,13 +69,11 @@ const DICOMViewer: WindowComponent = ({
     }
     const newToolbox = new Toolbox(viewport, viewportElementRef);
 
-    newToolbox.selectActiveTool({
-      button: MouseButton.Left,
-      tool:
-        viewport.dataset.frames.length > 1
-          ? MouseTool.Paging
-          : MouseTool.Windowing
-    });
+    setActiveLeftTool(
+      viewport.dataset.frames.length > 1
+        ? MouseTool.Paging
+        : MouseTool.Windowing
+    );
     setToolbox(newToolbox);
   }, [viewport]);
 
@@ -93,6 +100,7 @@ const DICOMViewer: WindowComponent = ({
       setViewport(undefined);
       setRendererType(undefined);
     } else if (dataset) {
+      dataset.destroy();
       setDataset(undefined);
       setDatasetDescriptor(undefined);
     }
@@ -115,16 +123,39 @@ const DICOMViewer: WindowComponent = ({
     }
     if (toolbox && viewport) {
       return (
-        <ViewportElement
-          height={viewportHeight}
-          onCanvasMouseDown={downEvent => toolbox.startTool(downEvent)}
-          rendererType={rendererType}
-          viewport={viewport}
-          width={viewportWidth}
-        />
+        <>
+          <Toolbar
+            activeLeftTool={activeLeftTool}
+            activeRightTool={activeRightTool}
+            viewport={viewport}
+            onToolSelected={selectActiveTool}
+          />
+          <ViewportElement
+            height={viewportHeight}
+            onCanvasMouseDown={downEvent =>
+              toolbox.startTool(downEvent, activeLeftTool, activeRightTool)
+            }
+            rendererType={rendererType}
+            viewport={viewport}
+            width={viewportWidth}
+          />
+        </>
       );
     }
     return null;
+  }
+
+  function selectActiveTool(tool: MouseTool, button: MouseButton): void {
+    switch (button) {
+      case MouseButton.Left:
+        setActiveLeftTool(tool);
+        break;
+      case MouseButton.Right:
+        setActiveRightTool(tool);
+        break;
+      default:
+        throw new Error('Unknown button');
+    }
   }
 
   return (

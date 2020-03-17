@@ -12,7 +12,6 @@ export class RedditController {
 
   constructor() {
     if (!isRedditConfig(reddit)) {
-      console.log(reddit);
       throw Error('Invalid configuration: reddit');
     }
 

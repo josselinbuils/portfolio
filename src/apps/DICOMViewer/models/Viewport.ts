@@ -62,10 +62,6 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  destroy(): void {
-    this.dataset.destroy();
-  }
-
   getWorldBasis(): number[][] {
     if (this.basis === undefined) {
       const cameraBasis = this.camera.getWorldBasis();

@@ -12,44 +12,16 @@ import {
 } from './tools';
 
 export class Toolbox {
-  private activeLeftTool = MouseTool.Paging;
-  private activeRightTool = MouseTool.Zoom;
-
   constructor(
     private readonly viewport: Viewport,
     private readonly viewportElementRef: RefObject<HTMLElement>
   ) {}
 
-  getActiveTool(button: MouseButton): MouseTool {
-    switch (button) {
-      case MouseButton.Left:
-        return this.activeLeftTool;
-      case MouseButton.Right:
-        return this.activeRightTool;
-      default:
-        throw new Error('Unknown button');
-    }
-  }
-
-  selectActiveTool(combination: {
-    button: MouseButton;
-    tool: MouseTool;
-  }): void {
-    const { button, tool } = combination;
-
-    switch (button) {
-      case MouseButton.Left:
-        this.activeLeftTool = tool;
-        break;
-      case MouseButton.Right:
-        this.activeRightTool = tool;
-        break;
-      default:
-        throw new Error('Unknown button');
-    }
-  }
-
-  startTool(downEvent: MouseEvent): void {
+  startTool(
+    downEvent: MouseEvent,
+    activeLeftTool: MouseTool,
+    activeRightTool: MouseTool
+  ): void {
     downEvent.preventDefault();
 
     const isMacOS = navigator.platform.indexOf('Mac') !== -1;
@@ -57,13 +29,13 @@ export class Toolbox {
 
     switch (downEvent.button) {
       case MouseButton.Left:
-        tool = this.activeLeftTool;
+        tool = activeLeftTool;
         break;
       case MouseButton.Middle:
         tool = MouseTool.Pan;
         break;
       case MouseButton.Right:
-        tool = this.activeRightTool;
+        tool = activeRightTool;
         break;
       default:
         throw new Error('Unknown button');
@@ -116,7 +88,6 @@ export class Toolbox {
       const contextMenuListener = () => {
         window.removeEventListener('mousemove', moveListener);
         window.removeEventListener('contextmenu', contextMenuListener);
-        return false;
       };
       window.addEventListener('contextmenu', contextMenuListener);
     }
