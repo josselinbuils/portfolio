@@ -34,7 +34,7 @@ export function registerRouter(app: Express): Express {
       res.set('Access-Control-Allow-Origin', '*');
       res.set(
         'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers'
+        'Origin, X-Requested-With, Content-Type, Accept'
       );
     }
     next();
