@@ -46,7 +46,7 @@ export function registerRouter(app: Express): Express {
 
     if (existsSync(gzPath)) {
       req.url += '.gz';
-      res.set('Transfer-Encoding', 'gzip');
+      res.set('Content-Encoding', 'gzip');
       res.set('Content-Type', 'application/octet-stream');
 
       if (existsSync(path)) {
