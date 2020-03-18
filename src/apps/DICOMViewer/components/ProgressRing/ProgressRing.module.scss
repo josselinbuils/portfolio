@@ -1,0 +1,9 @@
+.backgroundRing {
+  opacity: 0.5;
+}
+
+.progressRing {
+  transition: 0.35s stroke-dashoffset;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}

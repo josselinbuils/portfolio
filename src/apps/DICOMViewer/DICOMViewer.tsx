@@ -11,6 +11,7 @@ import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
 import {
+  ProgressRing,
   SelectDataset,
   SelectRenderer,
   Toolbar,
@@ -41,6 +42,7 @@ const DICOMViewer: WindowComponent = ({
   >();
   const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [rendererType, setRendererType] = useState<RendererType>();
   const [toolbox, setToolbox] = useState<Toolbox>();
   const [viewport, setViewport] = useState<Viewport>();
@@ -82,9 +84,10 @@ const DICOMViewer: WindowComponent = ({
       return;
     }
     setLoading(true);
+    setLoadingProgress(0);
 
     const [framesPromise, cancelFramesPromise] = cancelable(
-      loadFrames(datasetDescriptor)
+      loadFrames(datasetDescriptor, setLoadingProgress)
     );
     framesPromise.then(dicomFrames => {
       setLoading(false);
@@ -108,9 +111,21 @@ const DICOMViewer: WindowComponent = ({
     }
   }
 
+  console.log(loadingProgress);
+
   function render(): ReactElement | null {
     if (loading) {
-      return <Spinner color="white" />;
+      return datasetDescriptor && !dataset ? (
+        <ProgressRing
+          className={styles.progressRing}
+          color="white"
+          progress={loadingProgress}
+          radius={50}
+          thickness={4}
+        />
+      ) : (
+        <Spinner color="white" />
+      );
     }
     if (!dataset) {
       return (

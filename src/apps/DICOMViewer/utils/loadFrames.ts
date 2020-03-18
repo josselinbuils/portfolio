@@ -2,24 +2,35 @@ import dicomParser from 'dicom-parser';
 import untar from 'js-untar';
 import cloneDeep from 'lodash.clonedeep';
 import { BASE_URL } from '~/platform/constants';
+import { onFetchProgress } from '~/platform/utils';
 import { PhotometricInterpretation } from '../constants';
 import { DatasetDescriptor } from '../interfaces';
 import { DicomFrame } from '../models';
 
 export async function loadFrames(
-  dataset: DatasetDescriptor
+  dataset: DatasetDescriptor,
+  onProgress: (progress: number) => void
 ): Promise<DicomFrame[]> {
   let frames: DicomFrame[];
   const fileBuffers: any[] = [];
+  const filesToLoadCount = dataset.files.length;
+  let filesLoadedCount = 0;
+
+  function onFileProgress(currentFileProgress: number): void {
+    onProgress(
+      Math.min((filesLoadedCount + currentFileProgress) / filesToLoadCount, 1)
+    );
+  }
 
   for (const file of dataset.files) {
     if (/\.tar$/.test(file)) {
-      const tarBuffer = await getDicomFile(file);
+      const tarBuffer = await getDicomFile(file, onFileProgress);
       const tarFiles = (await untar(tarBuffer)) as any[];
       fileBuffers.push(...tarFiles.map(res => res.buffer));
     } else {
-      fileBuffers.push(await getDicomFile(file));
+      fileBuffers.push(await getDicomFile(file, onFileProgress));
     }
+    filesLoadedCount++;
   }
 
   if (fileBuffers.length === 1) {
@@ -98,9 +109,14 @@ function floatStringsToArray(
   return undefined;
 }
 
-async function getDicomFile(path: string): Promise<ArrayBuffer> {
+async function getDicomFile(
+  path: string,
+  onProgress: (progress: number) => void
+): Promise<ArrayBuffer> {
   try {
-    const response = await fetch(`${BASE_URL}/assets/dicom/datasets/${path}`);
+    const response = await fetch(
+      `${BASE_URL}/assets/dicom/datasets/${path}`
+    ).then(onFetchProgress(onProgress));
     return response.arrayBuffer();
   } catch (error) {
     throw new Error(`Unable to retrieve DICOM file: ${error.stack}`);
