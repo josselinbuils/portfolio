@@ -9,7 +9,6 @@ export function throttle(
   function call(this: any): any {
     lastCallTime = Date.now();
     timeout = undefined;
-    console.log(lastCallTime);
     return func.apply(this, lastArgs);
   }
 
