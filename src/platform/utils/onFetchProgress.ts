@@ -1,6 +1,10 @@
+import { throttle } from '~/platform/utils/throttle';
+
 export function onFetchProgress(
   onProgress: (progress: number) => void
 ): (response: Response) => Response {
+  const onProgressThrottled = throttle(onProgress, 300);
+
   return function responseHandler(response: Response): Response {
     const contentLength = response.headers.get('content-length');
 
@@ -30,7 +34,7 @@ export function onFetchProgress(
                 }
                 if (value !== undefined) {
                   loadedBytes += value.byteLength;
-                  onProgress(loadedBytes / totalBytes);
+                  onProgressThrottled(loadedBytes / totalBytes);
                   controller.enqueue(value);
                 }
                 read();

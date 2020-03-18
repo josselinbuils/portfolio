@@ -111,8 +111,6 @@ const DICOMViewer: WindowComponent = ({
     }
   }
 
-  console.log(loadingProgress);
-
   function render(): ReactElement | null {
     if (loading) {
       return datasetDescriptor && !dataset ? (
