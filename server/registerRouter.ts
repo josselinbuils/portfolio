@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express, { Express, NextFunction, Request, Response } from 'express';
-import { existsSync } from 'fs';
+import { existsSync, statSync } from 'fs';
 import { join } from 'path';
 import serveStatic from 'serve-static';
 import { registerDicomRoutes } from './api/dicom';
@@ -34,19 +34,26 @@ export function registerRouter(app: Express): Express {
       res.set('Access-Control-Allow-Origin', '*');
       res.set(
         'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
+        'Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers'
       );
     }
     next();
   });
 
   router.use(ASSETS_DIR, (req, res, next) => {
-    const gzPath = join(ASSETS_PATH, `${req.url}.gz`);
+    const path = join(ASSETS_PATH, req.url);
+    const gzPath = `${path}.gz`;
 
     if (existsSync(gzPath)) {
       req.url += '.gz';
       res.set('Transfer-Encoding', 'gzip');
       res.set('Content-Type', 'application/octet-stream');
+
+      if (existsSync(path)) {
+        const { size } = statSync(path);
+        res.set('Access-Control-Expose-Headers', 'Content-Length-Uncompressed');
+        res.set('Content-Length-Uncompressed', size.toString());
+      }
     }
     next();
   });

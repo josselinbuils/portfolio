@@ -6,7 +6,9 @@ export function onFetchProgress(
   const onProgressThrottled = throttle(onProgress, 300);
 
   return function responseHandler(response: Response): Response {
-    const contentLength = response.headers.get('content-length');
+    const contentLength =
+      response.headers.get('content-length-uncompressed') ||
+      response.headers.get('content-length');
 
     if (!contentLength) {
       throw Error('Unable to retrieve content-length header');
