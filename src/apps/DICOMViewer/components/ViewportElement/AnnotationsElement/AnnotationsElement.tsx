@@ -51,25 +51,33 @@ export const AnnotationsElement: FC<Props> = ({
   return (
     <>
       <div className={styles.overlayTopLeft}>
-        <p>{datasetName || '-'}</p>
-        <p onClick={showViewTypeMenu} ref={viewTypeElementRef}>
+        <p className={styles.annotation}>{datasetName || '-'}</p>
+        <p
+          className={styles.annotation}
+          onClick={showViewTypeMenu}
+          ref={viewTypeElementRef}
+        >
           {viewType}
         </p>
       </div>
       <div className={styles.overlayTopRight}>
-        <p>renderer: {rendererType || '-'}</p>
-        <p>framerate: {fps ? `${fps}fps` : '-'}</p>
-        <p>
+        <p className={styles.annotation}>renderer: {rendererType || '-'}</p>
+        <p className={styles.annotation}>
+          framerate: {fps ? `${fps}fps` : '-'}
+        </p>
+        <p className={styles.annotation}>
           rendering:{' '}
           {meanRenderDuration ? `${meanRenderDuration.toFixed(2)}ms` : '-'}
         </p>
       </div>
       <div className={styles.overlayBottomRight}>
-        <p>zoom: {zoom ? zoom.toFixed(2) : '-'}</p>
+        <p className={styles.annotation}>
+          zoom: {zoom ? zoom.toFixed(2) : '-'}
+        </p>
       </div>
       <div className={styles.overlayBottomLeft}>
-        <p>wc: {windowCenter || '-'}</p>
-        <p>ww: {windowWidth || '-'}</p>
+        <p className={styles.annotation}>wc: {windowCenter || '-'}</p>
+        <p className={styles.annotation}>ww: {windowWidth || '-'}</p>
       </div>
     </>
   );
