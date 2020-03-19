@@ -2,7 +2,7 @@ export function throttle(
   func: (...args: any[]) => any,
   delayMs: number
 ): (...args: any[]) => any {
-  let lastCallTime = 0;
+  let lastCallTime = Date.now();
   let lastArgs: any[];
   let timeout: number | undefined;
 
