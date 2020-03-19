@@ -17,12 +17,12 @@ import {
   Toolbar,
   ViewportElement
 } from './components';
-import { MouseTool, RendererType } from './constants';
+import { MouseTool, RendererType, ViewType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { DatasetDescriptor } from './interfaces';
 import { Dataset, Viewport } from './models';
-import { loadDatasetList, loadFrames } from './utils';
+import { getAvailableViewTypes, loadDatasetList, loadFrames } from './utils';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
@@ -60,7 +60,11 @@ const DICOMViewer: WindowComponent = ({
 
   useEffect(() => {
     if (dataset !== undefined && rendererType !== undefined) {
-      const newViewport = Viewport.create(dataset, rendererType);
+      const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
+      const viewType = availableViewTypes.includes(ViewType.Axial)
+        ? ViewType.Axial
+        : ViewType.Native;
+      const newViewport = Viewport.create(dataset, viewType, rendererType);
       setViewport(newViewport);
     }
   }, [dataset, rendererType]);
@@ -153,6 +157,7 @@ const DICOMViewer: WindowComponent = ({
             onCanvasMouseDown={downEvent =>
               toolbox.startTool(downEvent, activeLeftTool, activeRightTool)
             }
+            onViewTypeSwitch={switchViewType}
             ref={viewportElementRef}
             rendererType={rendererType}
             viewport={viewport}
@@ -175,6 +180,26 @@ const DICOMViewer: WindowComponent = ({
       default:
         throw new Error('Unknown button');
     }
+  }
+
+  function switchViewType(viewType: ViewType): void {
+    if (dataset === undefined) {
+      throw new Error('Dataset undefined');
+    }
+    if (rendererType === undefined) {
+      throw new Error('Renderer type undefined');
+    }
+
+    if (viewType === ViewType.Native) {
+      if (activeLeftTool === MouseTool.Rotate) {
+        setActiveLeftTool(MouseTool.Paging);
+      }
+      if (activeRightTool === MouseTool.Rotate) {
+        setActiveRightTool(MouseTool.Paging);
+      }
+    }
+
+    setViewport(Viewport.create(dataset, viewType, rendererType));
   }
 
   return (

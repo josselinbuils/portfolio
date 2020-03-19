@@ -8,6 +8,7 @@ import React, {
 import { AnnotationsElement } from '~/apps/DICOMViewer/components/ViewportElement/AnnotationsElement';
 import { Annotations } from '~/apps/DICOMViewer/interfaces';
 import { WebGLRenderer } from '~/apps/DICOMViewer/renderer/webgl/WebGLRenderer';
+import { getAvailableViewTypes } from '~/apps/DICOMViewer/utils';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
 import { Viewport } from '../../models';
@@ -15,7 +16,17 @@ import { JSFrameRenderer, JSVolumeRenderer, Renderer } from '../../renderer';
 import styles from './ViewportElement.module.scss';
 
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
-  ({ height, onCanvasMouseDown, rendererType, viewport, width }, ref) => {
+  (
+    {
+      height,
+      onCanvasMouseDown,
+      onViewTypeSwitch,
+      rendererType,
+      viewport,
+      width
+    },
+    ref
+  ) => {
     const [annotations, setAnnotations] = useState<Annotations>({});
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
 
@@ -89,7 +100,14 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           ref={canvasElementRef}
           width={width}
         />
-        <AnnotationsElement annotations={annotations} />
+        <AnnotationsElement
+          annotations={annotations}
+          availableViewTypes={getAvailableViewTypes(
+            viewport.dataset,
+            rendererType
+          )}
+          onViewTypeSwitch={onViewTypeSwitch}
+        />
       </div>
     );
   }
@@ -101,4 +119,5 @@ interface Props {
   viewport: Viewport;
   width: number;
   onCanvasMouseDown(downEvent: MouseEvent): void;
+  onViewTypeSwitch(viewType: ViewType): void;
 }

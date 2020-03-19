@@ -1,2 +1,3 @@
-export { ContextMenuProvider } from './ContextMenuProvider';
-export { WithContextMenu } from './WithContextMenu';
+export * from './ContextMenuProvider';
+export * from './useContextMenu';
+export * from './WithContextMenu';
