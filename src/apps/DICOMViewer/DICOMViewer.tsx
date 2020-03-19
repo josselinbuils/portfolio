@@ -24,7 +24,7 @@ import { DatasetDescriptor } from './interfaces';
 import { Dataset, Viewport } from './models';
 import { loadDatasetList, loadFrames } from './utils';
 
-// TODO display progressbar when loading datasets
+const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -90,8 +90,11 @@ const DICOMViewer: WindowComponent = ({
       loadFrames(datasetDescriptor, setLoadingProgress)
     );
     framesPromise.then(dicomFrames => {
-      setLoading(false);
-      setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
+      // Be sure that 100% will be display on the progress ring
+      setTimeout(() => {
+        setLoading(false);
+        setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
+      }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
     });
 
     return cancelFramesPromise;
