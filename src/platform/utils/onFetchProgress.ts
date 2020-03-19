@@ -36,7 +36,6 @@ export function onFetchProgress(
                 }
                 if (value !== undefined) {
                   loadedBytes += value.byteLength;
-                  console.log(loadedBytes, totalBytes);
                   onProgressThrottled(loadedBytes / totalBytes);
                   controller.enqueue(value);
                 }
