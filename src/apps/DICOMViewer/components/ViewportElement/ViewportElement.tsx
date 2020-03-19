@@ -15,6 +15,8 @@ import { Viewport } from '../../models';
 import { JSFrameRenderer, JSVolumeRenderer, Renderer } from '../../renderer';
 import styles from './ViewportElement.module.scss';
 
+const ANNOTATIONS_REFRESH_DELAY = 500;
+
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
     {
@@ -42,6 +44,9 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       }
       const canvasElement = canvasElementRef.current as HTMLCanvasElement;
       let renderer: Renderer;
+      let frameDurations: number[] = [];
+      let renderDurations: number[] = [];
+      let lastTime = performance.now();
 
       switch (rendererType) {
         case RendererType.JavaScript:
@@ -60,16 +65,61 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
         }
 
         if (viewport.isDirty()) {
-          renderer.render(viewport);
-          viewport.makeClean();
+          const t = performance.now();
+
+          try {
+            renderer.render(viewport);
+            viewport.makeClean();
+            renderDurations.push(performance.now() - t);
+            frameDurations.push(t - lastTime);
+            lastTime = t;
+          } catch (error) {
+            // TODO Manage errors
+            // handleError('Unable to render viewport');
+            throw error;
+          }
         }
 
         window.requestAnimationFrame(render);
       };
+
+      const statsInterval = window.setInterval(() => {
+        if (viewport === undefined) {
+          return;
+        }
+        let fps: number;
+        let meanRenderDuration: number;
+
+        if (frameDurations.length > 0) {
+          const meanFrameDuration =
+            frameDurations.reduce((sum, d) => sum + d, 0) /
+            frameDurations.length;
+          fps = Math.round(1000 / meanFrameDuration);
+          frameDurations = [];
+        } else {
+          fps = 0;
+        }
+
+        if (renderDurations.length > 0) {
+          meanRenderDuration =
+            renderDurations.reduce((sum, d) => sum + d, 0) /
+            renderDurations.length;
+          renderDurations = [];
+        } else {
+          meanRenderDuration = 0;
+        }
+
+        viewport.updateAnnotations({ fps, meanRenderDuration });
+        viewport.updateAnnotations();
+      }, ANNOTATIONS_REFRESH_DELAY);
+
       render();
       viewport.updateAnnotations();
 
-      return () => renderer.destroy?.();
+      return () => {
+        clearInterval(statsInterval);
+        renderer.destroy?.();
+      };
     }, [rendererType, viewport]);
 
     useLayoutEffect(() => {
