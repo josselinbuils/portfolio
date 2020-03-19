@@ -1,4 +1,12 @@
-import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
+import { AnnotationsElement } from '~/apps/DICOMViewer/components/ViewportElement/AnnotationsElement';
+import { Annotations } from '~/apps/DICOMViewer/interfaces';
 import { WebGLRenderer } from '~/apps/DICOMViewer/renderer/webgl/WebGLRenderer';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
@@ -8,7 +16,14 @@ import styles from './ViewportElement.module.scss';
 
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   ({ height, onCanvasMouseDown, rendererType, viewport, width }, ref) => {
+    const [annotations, setAnnotations] = useState<Annotations>({});
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+      if (viewport !== undefined) {
+        return viewport.annotationsSubject.subscribe(setAnnotations);
+      }
+    }, [viewport]);
 
     useEffect(() => {
       if (!viewport) {
@@ -41,6 +56,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
         window.requestAnimationFrame(render);
       };
       render();
+      viewport.updateAnnotations();
 
       return () => renderer.destroy?.();
     }, [rendererType, viewport]);
@@ -73,6 +89,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           ref={canvasElementRef}
           width={width}
         />
+        <AnnotationsElement annotations={annotations} />
       </div>
     );
   }

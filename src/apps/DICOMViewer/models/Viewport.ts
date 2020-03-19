@@ -1,7 +1,8 @@
+import { Subject } from '@josselinbuils/utils';
 import { getAvailableViewTypes } from '~/apps/DICOMViewer/utils';
 import { RendererType, ViewType } from '../constants';
+import { Annotations } from '../interfaces/Annotations';
 import { V } from '../math';
-import { Annotations } from './Annotations';
 import { Camera } from './Camera';
 import { CoordinateSpace } from './CoordinateSpace';
 import { Dataset } from './Dataset';
@@ -12,6 +13,7 @@ const MANDATORY_FIELDS = ['camera', 'dataset', 'viewType'];
 
 export class Viewport extends Renderable implements CoordinateSpace {
   annotations: Annotations = {};
+  annotationsSubject = new Subject<Annotations>({});
   camera!: Camera;
   dataset!: Dataset;
   height = 0;
@@ -129,6 +131,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
         this.annotations.windowWidth = this.windowWidth;
         this.annotations.zoom = this.getImageZoom();
       }
+      this.annotationsSubject.next({ ...this.annotations });
     } catch (error) {
       throw new Error(`Unable to compute annotations: ${error.stack}`);
     }

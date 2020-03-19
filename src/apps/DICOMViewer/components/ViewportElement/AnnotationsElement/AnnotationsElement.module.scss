@@ -1,0 +1,41 @@
+$overlay-margin: 10px;
+
+.overlayBottomLeft {
+  position: absolute;
+  bottom: $overlay-margin;
+  left: $overlay-margin;
+}
+
+.overlayBottomRight {
+  position: absolute;
+  bottom: $overlay-margin;
+  right: $overlay-margin;
+  text-align: right;
+}
+
+.overlayTopLeft {
+  position: absolute;
+  top: 40px;
+  left: $overlay-margin;
+}
+
+.overlayTopRight {
+  position: absolute;
+  top: $overlay-margin;
+  right: $overlay-margin;
+  text-align: right;
+}
+
+p {
+  text-shadow: #000 0 0 1px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 22ch;
+  filter: drop-shadow(0px 0px 1px #000);
+
+  & + p {
+    margin-top: 5px;
+  }
+}
