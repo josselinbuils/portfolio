@@ -1,5 +1,6 @@
 import React, {
   ReactElement,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -41,6 +42,7 @@ const DICOMViewer: WindowComponent = ({
     DatasetDescriptor
   >();
   const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [rendererType, setRendererType] = useState<RendererType>();
@@ -54,18 +56,29 @@ const DICOMViewer: WindowComponent = ({
     const [datasetsPromise, cancelDatasetsPromise] = cancelable(
       loadDatasetList()
     );
-    datasetsPromise.then(setDatasets).then(() => setLoading(false));
+    datasetsPromise
+      .then(setDatasets)
+      .catch(error => {
+        setErrorMessage('Unable to retrieve datasets');
+        throw error;
+      })
+      .finally(() => setLoading(false));
     return cancelDatasetsPromise;
   }, []);
 
   useEffect(() => {
     if (dataset !== undefined && rendererType !== undefined) {
-      const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
-      const viewType = availableViewTypes.includes(ViewType.Axial)
-        ? ViewType.Axial
-        : ViewType.Native;
-      const newViewport = Viewport.create(dataset, viewType, rendererType);
-      setViewport(newViewport);
+      try {
+        const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
+        const viewType = availableViewTypes.includes(ViewType.Axial)
+          ? ViewType.Axial
+          : ViewType.Native;
+        const newViewport = Viewport.create(dataset, viewType, rendererType);
+        setViewport(newViewport);
+      } catch (error) {
+        setErrorMessage('Unable to create viewport');
+        throw error;
+      }
     }
   }, [dataset, rendererType]);
 
@@ -93,18 +106,26 @@ const DICOMViewer: WindowComponent = ({
     const [framesPromise, cancelFramesPromise] = cancelable(
       loadFrames(datasetDescriptor, setLoadingProgress)
     );
-    framesPromise.then(dicomFrames => {
-      // Be sure that 100% will be display on the progress ring
-      setTimeout(() => {
+    framesPromise
+      .then(dicomFrames => {
+        // Be sure that 100% will be display on the progress ring
+        setTimeout(() => {
+          setLoading(false);
+          setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
+        }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
+      })
+      .catch(error => {
         setLoading(false);
-        setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
-      }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
-    });
+        setErrorMessage('Unable to retrieve frames');
+        throw error;
+      });
 
     return cancelFramesPromise;
   }, [datasetDescriptor]);
 
   function back(): void {
+    setErrorMessage(undefined);
+
     if (rendererType) {
       setToolbox(undefined);
       setViewport(undefined);
@@ -117,6 +138,11 @@ const DICOMViewer: WindowComponent = ({
       setDatasetDescriptor(undefined);
     }
   }
+
+  const handleError = useCallback((message: string): void => {
+    setErrorMessage(message);
+    setLoading(false);
+  }, []);
 
   function render(): ReactElement | null {
     if (loading) {
@@ -157,6 +183,7 @@ const DICOMViewer: WindowComponent = ({
             onCanvasMouseDown={downEvent =>
               toolbox.startTool(downEvent, activeLeftTool, activeRightTool)
             }
+            onError={handleError}
             onViewTypeSwitch={switchViewType}
             ref={viewportElementRef}
             rendererType={rendererType}
@@ -223,6 +250,7 @@ const DICOMViewer: WindowComponent = ({
           </button>
         )}
         {render()}
+        {errorMessage && <div className={styles.error}>{errorMessage}</div>}
       </div>
     </Window>
   );

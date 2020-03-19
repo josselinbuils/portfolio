@@ -22,6 +22,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
     {
       height,
       onCanvasMouseDown,
+      onError,
       onViewTypeSwitch,
       rendererType,
       viewport,
@@ -48,15 +49,20 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       let renderDurations: number[] = [];
       let lastTime = performance.now();
 
-      switch (rendererType) {
-        case RendererType.JavaScript:
-          renderer =
-            (viewport as Viewport).viewType === ViewType.Native
-              ? new JSFrameRenderer(canvasElement)
-              : new JSVolumeRenderer(canvasElement);
-          break;
-        case RendererType.WebGL:
-          renderer = new WebGLRenderer(canvasElement);
+      try {
+        switch (rendererType) {
+          case RendererType.JavaScript:
+            renderer =
+              (viewport as Viewport).viewType === ViewType.Native
+                ? new JSFrameRenderer(canvasElement)
+                : new JSVolumeRenderer(canvasElement);
+            break;
+          case RendererType.WebGL:
+            renderer = new WebGLRenderer(canvasElement);
+        }
+      } catch (error) {
+        onError(`Unable to instantiate ${rendererType} renderer`);
+        throw error;
       }
 
       const render = () => {
@@ -74,8 +80,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
             frameDurations.push(t - lastTime);
             lastTime = t;
           } catch (error) {
-            // TODO Manage errors
-            // handleError('Unable to render viewport');
+            onError('Unable to render viewport');
             throw error;
           }
         }
@@ -120,7 +125,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
         clearInterval(statsInterval);
         renderer.destroy?.();
       };
-    }, [rendererType, viewport]);
+    }, [onError, rendererType, viewport]);
 
     useLayoutEffect(() => {
       viewport.height = height;
@@ -169,5 +174,6 @@ interface Props {
   viewport: Viewport;
   width: number;
   onCanvasMouseDown(downEvent: MouseEvent): void;
+  onError(message: string): void;
   onViewTypeSwitch(viewType: ViewType): void;
 }
