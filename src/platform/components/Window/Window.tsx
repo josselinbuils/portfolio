@@ -9,7 +9,6 @@ const ANIMATION_DURATION = 200;
 const BUTTONS_WIDTH = 66;
 const DOM_UPDATE_DELAY = 10;
 const LEFT_OFFSET = 60;
-const STYLE_KEYS_WITH_PX_DEFAULT_UNIT = ['height', 'left', 'top', 'width'];
 
 export class Window extends Component<Props, State> {
   visible = true;
@@ -208,7 +207,7 @@ export class Window extends Component<Props, State> {
             this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy),
           () => {
             isUnmaximazing = false;
-            this.setStyle({ transform: '' });
+            this.setStyle('transform', '');
             this.setPosition(
               lastMoveEvent.clientX + dx,
               lastMoveEvent.clientY + dy
@@ -218,10 +217,11 @@ export class Window extends Component<Props, State> {
       }
 
       if (isUnmaximazing) {
-        this.setStyle({
-          transform: `translate(${moveEvent.clientX -
+        this.setStyle(
+          'transform',
+          `translate(${moveEvent.clientX -
             downEvent.clientX}px, ${moveEvent.clientY - downEvent.clientY}px)`
-        });
+        );
       } else {
         this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
       }
@@ -379,7 +379,8 @@ export class Window extends Component<Props, State> {
     x = Math.round(x);
     y = Math.round(y);
 
-    this.setStyle({ left: x, top: y });
+    this.setStyle('left', `${x}px`);
+    this.setStyle('top', `${y}px`);
   }
 
   private setSize(width: number, height: number, force: boolean = false): void {
@@ -406,24 +407,19 @@ export class Window extends Component<Props, State> {
       }
     }
 
-    this.setStyle({ width, height });
+    this.setStyle('width', `${width}px`);
+    this.setStyle('height', `${height}px`);
 
     if (onResize !== undefined) {
       onResize({ width, height });
     }
   }
 
-  private setStyle(style: { [key: string]: any }): void {
+  private setStyle(key: string, value: any): void {
     const windowElement = this.windowRef.current;
 
     if (windowElement !== null) {
-      Object.entries(style).forEach(([key, value]) => {
-        windowElement.style[key as any] =
-          typeof value === 'number' &&
-          STYLE_KEYS_WITH_PX_DEFAULT_UNIT.includes(key)
-            ? `${value}px`
-            : value;
-      });
+      windowElement.style[key as any] = value;
     }
   }
 
