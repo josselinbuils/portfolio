@@ -5,7 +5,11 @@
   height: 20px;
   padding: 3px 10px 3px 0;
   list-style: none;
-  cursor: pointer;
+
+  &,
+  * {
+    cursor: pointer;
+  }
 
   &:first-child {
     margin-top: 4px;

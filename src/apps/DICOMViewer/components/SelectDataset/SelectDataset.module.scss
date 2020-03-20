@@ -12,7 +12,6 @@
   width: 130px;
   height: 130px;
   margin: 12px;
-  cursor: pointer;
   text-align: center;
   background: #080808;
 
@@ -22,6 +21,7 @@
 
   img {
     height: 100%;
+    cursor: pointer;
   }
 
   span {

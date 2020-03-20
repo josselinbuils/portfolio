@@ -9,7 +9,10 @@
   background: none;
 
   &:not(:disabled) {
-    cursor: pointer;
+    &,
+    * {
+      cursor: pointer;
+    }
 
     &:hover {
       text-decoration: underline;

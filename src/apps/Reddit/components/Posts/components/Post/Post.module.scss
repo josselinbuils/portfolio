@@ -29,11 +29,15 @@
   display: flex;
   width: 550px;
   margin: 20px auto 0 auto;
-  cursor: pointer;
   color: $textColor;
   border: 1px solid $borderColor;
   border-radius: 4px;
   background: $backgroundSecondaryColor;
+
+  &,
+  * {
+    cursor: pointer;
+  }
 
   &:hover {
     border-color: darken($borderColor, 20%);
