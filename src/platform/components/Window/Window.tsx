@@ -128,7 +128,9 @@ export class Window extends Component<Props, State> {
           onToggleMaximize={() => this.toggleMaximize()}
         />
         <main
-          className={cn(styles.content, { [styles.frozen]: frozen })}
+          className={cn(styles.content, {
+            [styles.frozen]: animated || frozen
+          })}
           ref={this.contentRef}
         >
           {children}
@@ -174,8 +176,6 @@ export class Window extends Component<Props, State> {
     let isUnmaximazing = false;
     let lastMoveEvent: MouseEvent;
 
-    this.setState({ frozen: true });
-
     const moveHandler = (moveEvent: MouseEvent) => {
       if (
         moveEvent.clientX === downEvent.clientX &&
@@ -184,6 +184,10 @@ export class Window extends Component<Props, State> {
         return;
       }
       lastMoveEvent = moveEvent;
+
+      if (!this.state.frozen) {
+        this.setState({ frozen: true });
+      }
 
       if (
         !isUnmaximazing &&
@@ -249,13 +253,16 @@ export class Window extends Component<Props, State> {
       return;
     }
 
-    this.setState({ frozen: true });
-
     const startSize = this.getSize();
 
     const moveHandler = (moveEvent: MouseEvent) => {
       const width = startSize.width + moveEvent.clientX - downEvent.clientX;
       const height = startSize.height + moveEvent.clientY - downEvent.clientY;
+
+      if (!this.state.frozen) {
+        this.setState({ frozen: true });
+      }
+
       this.setSize(width, height);
     };
 
