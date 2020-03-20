@@ -110,8 +110,8 @@ const DICOMViewer: WindowComponent = ({
       .then(dicomFrames => {
         // Be sure that 100% will be display on the progress ring
         setTimeout(() => {
-          setLoading(false);
           setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
+          setLoading(false);
         }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
       })
       .catch(error => {
