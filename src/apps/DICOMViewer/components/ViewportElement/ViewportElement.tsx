@@ -70,7 +70,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           return;
         }
 
-        if (viewport.isDirty()) {
+        if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
           const t = performance.now();
 
           try {
