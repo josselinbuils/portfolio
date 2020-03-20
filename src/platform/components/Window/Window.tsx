@@ -9,6 +9,8 @@ const ANIMATION_DURATION = 200;
 const BUTTONS_WIDTH = 66;
 const DOM_UPDATE_DELAY = 10;
 const LEFT_OFFSET = 60;
+const MIN_USABLE_SIZE = 20;
+const TOOLBAR_HEIGHT = 22;
 
 export class Window extends Component<Props, State> {
   visible = true;
@@ -154,6 +156,7 @@ export class Window extends Component<Props, State> {
               width,
               height
             } = this.lastDisplayProperties.minimize;
+
             this.setState({ minimized: false });
             this.setSize(width, height);
             this.setPosition(left, top, true);
@@ -375,10 +378,11 @@ export class Window extends Component<Props, State> {
   private setPosition(x: number, y: number, force: boolean = false): void {
     if (!force) {
       // This cannot be done when showing again a minimized window because its dimensions are null
-      const xMin = -this.getSize().width + 90;
-      const yMin = -1;
-      const xMax = window.innerWidth - 30;
-      const yMax = window.innerHeight - 21;
+      const { visibleAreaSize } = this.props;
+      const xMin = -this.getSize().width + MIN_USABLE_SIZE;
+      const yMin = 0;
+      const xMax = visibleAreaSize.width - BUTTONS_WIDTH - MIN_USABLE_SIZE;
+      const yMax = visibleAreaSize.height - TOOLBAR_HEIGHT;
 
       x = Math.min(Math.max(x, xMin), xMax);
       y = Math.min(Math.max(y, yMin), yMax);
