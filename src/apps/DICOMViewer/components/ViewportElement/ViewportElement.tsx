@@ -62,7 +62,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
         }
       } catch (error) {
         onError(`Unable to instantiate ${rendererType} renderer`);
-        console.log(error);
+        console.error(error);
       }
 
       const render = () => {
@@ -81,7 +81,8 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
             lastTime = t;
           } catch (error) {
             onError('Unable to render viewport');
-            console.log(error);
+            console.error(error);
+            return;
           }
         }
 
