@@ -104,6 +104,7 @@ export class Window extends Component<Props, State> {
     const className = cn(styles.window, {
       [styles.active]: active,
       [styles.animated]: animated,
+      [styles.frozen]: frozen,
       [styles.maximized]: maximized,
       [styles.minimized]: minimized
     });
