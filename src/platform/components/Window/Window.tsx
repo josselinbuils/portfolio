@@ -8,7 +8,6 @@ import styles from './Window.module.scss';
 const ANIMATION_DURATION = 200;
 const BUTTONS_WIDTH = 66;
 const DOM_UPDATE_DELAY = 10;
-const LEFT_OFFSET = 60;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
@@ -376,7 +375,7 @@ export class Window extends Component<Props, State> {
 
   private setMaxSize(): void {
     const { height, width } = this.props.visibleAreaSize;
-    this.setSize(width - LEFT_OFFSET, height, true);
+    this.setSize(width, height, true);
   }
 
   private setPosition(x: number, y: number, force: boolean = false): void {
