@@ -60,7 +60,7 @@ const DICOMViewer: WindowComponent = ({
       .then(setDatasets)
       .catch(error => {
         setErrorMessage('Unable to retrieve datasets');
-        throw error;
+        console.log(error);
       })
       .finally(() => setLoading(false));
     return cancelDatasetsPromise;
@@ -77,7 +77,7 @@ const DICOMViewer: WindowComponent = ({
         setViewport(newViewport);
       } catch (error) {
         setErrorMessage('Unable to create viewport');
-        throw error;
+        console.log(error);
       }
     }
   }, [dataset, rendererType]);
@@ -117,7 +117,7 @@ const DICOMViewer: WindowComponent = ({
       .catch(error => {
         setLoading(false);
         setErrorMessage('Unable to retrieve frames');
-        throw error;
+        console.log(error);
       });
 
     return cancelFramesPromise;
