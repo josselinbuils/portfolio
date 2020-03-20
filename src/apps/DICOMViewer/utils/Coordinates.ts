@@ -28,7 +28,7 @@ export class Coordinates {
   ): { from: number[][]; to: number[][] } {
     const basis = space.getWorldBasis();
     const origin = space.getWorldOrigin();
-    const cacheKey = JSON.stringify([basis, origin]);
+    const cacheKey = `${basis}${origin}`;
 
     if (this.cache[cacheKey] === undefined) {
       // Translation
@@ -42,7 +42,7 @@ export class Coordinates {
       ];
       const to = M4(from).inv();
 
-      if (Object.values(this.cache).length > 10) {
+      if (Object.keys(this.cache).length > 10) {
         this.cache = {};
       }
       this.cache[cacheKey] = { from, to };
