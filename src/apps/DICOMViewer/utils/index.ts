@@ -1,3 +1,4 @@
+export * from './areFloatEquals';
 export * from './computeFrames';
 export * from './computeSharedProperties';
 export * from './computeVolume';

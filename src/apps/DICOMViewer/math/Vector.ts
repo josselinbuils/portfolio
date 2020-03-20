@@ -1,3 +1,5 @@
+import { areFloatEquals } from '../utils';
+
 export function V(...args: number[] | number[][]): Vector {
   return new Vector(...args);
 }
@@ -42,8 +44,16 @@ export class Vector extends Array<number> {
     );
   }
 
+  div(factor: number): Vector {
+    return this.mul(1 / factor);
+  }
+
   dot(vector: number[]): number {
     return this[0] * vector[0] + this[1] * vector[1] + this[2] * vector[2];
+  }
+
+  equals(vector: number[]): boolean {
+    return vector.every((value, index) => areFloatEquals(value, this[index]));
   }
 
   mul(factor: number): Vector {
@@ -51,10 +61,6 @@ export class Vector extends Array<number> {
     this[1] *= factor;
     this[2] *= factor;
     return this;
-  }
-
-  div(factor: number): Vector {
-    return this.mul(1 / factor);
   }
 
   neg(): Vector {

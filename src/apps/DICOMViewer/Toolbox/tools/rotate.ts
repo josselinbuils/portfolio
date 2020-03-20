@@ -1,6 +1,7 @@
 import { ViewType } from '../../constants';
 import { M3, V } from '../../math';
 import { Camera, Viewport, Volume } from '../../models';
+import { areFloatEquals } from '../../utils';
 import { ToolMoveListener } from '../Toolbox';
 
 export function startRotate(
@@ -33,20 +34,22 @@ export function startRotate(
       trackballRadius,
       cursorPosition
     );
+
+    if (V(currentVector).equals(previousVector)) {
+      return;
+    }
+
     const { angle, axis } = computeRotation(previousVector, currentVector);
+    const { camera } = viewport;
+    rotateCamera(camera, axis, angle);
+    camera.baseFieldOfView = (viewport.dataset
+      .volume as Volume).getOrientedDimensionMm(camera.upVector);
+    viewport.updateAnnotations({ zoom: viewport.getImageZoom() });
+    previousVector = currentVector;
 
-    if (Math.abs(angle) > 0) {
-      const camera = viewport.camera;
-      rotateCamera(camera, axis, angle);
-      camera.baseFieldOfView = (viewport.dataset
-        .volume as Volume).getOrientedDimensionMm(camera.upVector);
-      viewport.updateAnnotations({ zoom: viewport.getImageZoom() });
-      previousVector = currentVector;
-
-      if (viewport.viewType !== ViewType.Oblique) {
-        viewport.viewType = ViewType.Oblique;
-        viewport.updateAnnotations({ viewType: viewport.viewType });
-      }
+    if (viewport.viewType !== ViewType.Oblique) {
+      viewport.viewType = ViewType.Oblique;
+      viewport.updateAnnotations({ viewType: viewport.viewType });
     }
   };
 }
@@ -76,7 +79,12 @@ function computeTrackball(
   }
 
   const fromCenterNormSquared = V(fromCenter).dot(fromCenter);
-  fromCenter[2] = -Math.sqrt(Math.pow(radius, 2) - fromCenterNormSquared);
+  const radiusSquared = Math.pow(radius, 2);
+
+  fromCenter[2] = !areFloatEquals(fromCenterNormSquared, radiusSquared)
+    ? -Math.sqrt(radiusSquared - fromCenterNormSquared)
+    : 0;
+
   return fromCenter;
 }
 
