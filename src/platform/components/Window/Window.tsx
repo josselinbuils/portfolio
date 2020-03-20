@@ -52,13 +52,18 @@ export class Window extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { keepContentRatio, minHeight, minWidth } = this.props;
+    const {
+      keepContentRatio,
+      minHeight,
+      minWidth,
+      visibleAreaSize
+    } = this.props;
 
     this.setSize(minWidth, minHeight);
 
     const size = this.getSize();
-    const x = Math.round((window.innerWidth - size.width) * 0.5);
-    const y = Math.round((window.innerHeight - size.height) * 0.2);
+    const x = Math.round((visibleAreaSize.width - size.width) * 0.5);
+    const y = Math.round((visibleAreaSize.height - size.height) * 0.2);
 
     this.setPosition(x, y);
 
@@ -370,9 +375,8 @@ export class Window extends Component<Props, State> {
   }
 
   private setMaxSize(): void {
-    const maxWidth = window.innerWidth - LEFT_OFFSET;
-    const maxHeight = window.innerHeight;
-    this.setSize(maxWidth, maxHeight, true);
+    const { height, width } = this.props.visibleAreaSize;
+    this.setSize(width - LEFT_OFFSET, height, true);
   }
 
   private setPosition(x: number, y: number, force: boolean = false): void {
