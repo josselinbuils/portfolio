@@ -1,18 +1,8 @@
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
-import { Spinner } from '~/platform/components';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
-import { cancelable } from '~/platform/utils';
 import {
   AnnotationsElement,
-  ProgressRing,
   SelectDataset,
   SelectRenderer,
   Toolbar,
@@ -21,16 +11,9 @@ import {
 import { MouseTool, RendererType, ViewType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
-import { Annotations, DatasetDescriptor } from './interfaces';
+import { Annotations } from './interfaces';
 import { Dataset, Viewport } from './models';
-import {
-  getAvailableViewTypes,
-  loadDatasetList,
-  loadFrames,
-  startTool
-} from './utils';
-
-const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
+import { getAvailableViewTypes, startTool } from './utils';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -43,33 +26,13 @@ const DICOMViewer: WindowComponent = ({
     MouseTool.Zoom
   );
   const [dataset, setDataset] = useState<Dataset>();
-  const [datasetDescriptor, setDatasetDescriptor] = useState<
-    DatasetDescriptor
-  >();
   const [annotations, setAnnotations] = useState<Annotations>({});
-  const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [loading, setLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [rendererType, setRendererType] = useState<RendererType>();
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportHeight, setViewportHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const viewportElementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const [datasetsPromise, cancelDatasetsPromise] = cancelable(
-      loadDatasetList()
-    );
-    datasetsPromise
-      .then(setDatasets)
-      .catch(error => {
-        setErrorMessage('Unable to retrieve datasets');
-        console.error(error);
-      })
-      .finally(() => setLoading(false));
-    return cancelDatasetsPromise;
-  }, []);
 
   useEffect(() => {
     if (dataset !== undefined && rendererType !== undefined) {
@@ -99,33 +62,6 @@ const DICOMViewer: WindowComponent = ({
     return viewport.annotationsSubject.subscribe(setAnnotations);
   }, [viewport]);
 
-  useLayoutEffect(() => {
-    if (datasetDescriptor === undefined) {
-      return;
-    }
-    setLoading(true);
-    setLoadingProgress(0);
-
-    const [framesPromise, cancelFramesPromise] = cancelable(
-      loadFrames(datasetDescriptor, setLoadingProgress)
-    );
-    framesPromise
-      .then(dicomFrames => {
-        // Be sure that 100% will be display on the progress ring
-        setTimeout(() => {
-          setDataset(Dataset.create(datasetDescriptor.name, dicomFrames));
-          setLoading(false);
-        }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
-      })
-      .catch(error => {
-        setLoading(false);
-        setErrorMessage('Unable to retrieve frames');
-        console.error(error);
-      });
-
-    return cancelFramesPromise;
-  }, [datasetDescriptor]);
-
   function back(): void {
     setErrorMessage(undefined);
 
@@ -138,34 +74,15 @@ const DICOMViewer: WindowComponent = ({
     } else if (dataset) {
       dataset.destroy();
       setDataset(undefined);
-      setDatasetDescriptor(undefined);
     }
   }
 
-  const handleError = useCallback((message: string): void => {
-    setErrorMessage(message);
-    setLoading(false);
-  }, []);
-
   function render(): ReactElement | null {
-    if (loading) {
-      return datasetDescriptor && !dataset ? (
-        <ProgressRing
-          className={styles.progressRing}
-          color="white"
-          progress={loadingProgress}
-          radius={50}
-          thickness={4}
-        />
-      ) : (
-        <Spinner color="white" />
-      );
-    }
     if (!dataset) {
       return (
         <SelectDataset
-          datasets={datasets}
-          onDatasetSelected={setDatasetDescriptor}
+          onDatasetSelected={setDataset}
+          onError={setErrorMessage}
         />
       );
     }
@@ -184,7 +101,7 @@ const DICOMViewer: WindowComponent = ({
           <ViewportElement
             height={viewportHeight}
             onCanvasMouseDown={startActiveTool}
-            onError={handleError}
+            onError={setErrorMessage}
             ref={viewportElementRef}
             rendererType={rendererType}
             viewport={viewport}
