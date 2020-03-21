@@ -3,10 +3,9 @@ import { MouseButton } from '~/platform/constants';
 import { ViewportElement } from '../../components';
 import { MouseTool, RendererType, ViewType } from '../../constants';
 import { Dataset, Viewport } from '../../models';
-import { getAvailableViewTypes } from '../../utils';
+import { getAvailableViewTypes, startTool } from '../../utils';
 import { Annotations } from './Annotations';
 import { AnnotationsElement, Toolbar } from './components';
-import { startTool } from './utils';
 
 export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(

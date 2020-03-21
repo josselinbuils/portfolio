@@ -1,5 +1,5 @@
-import { Viewport, Volume } from '../../../../../models';
-import { changePointSpace } from '../../../../../utils';
+import { Viewport, Volume } from '../../../models';
+import { changePointSpace } from '../../../utils';
 
 const DELTA_LIMIT = 0.02;
 

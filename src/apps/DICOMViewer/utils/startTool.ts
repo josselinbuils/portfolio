@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 import { MouseButton } from '~/platform/constants';
-import { MouseTool } from '../../../constants';
-import { Viewport } from '../../../models';
+import { MouseTool } from '../constants';
+import { Viewport } from '../models';
 import {
   startPaging,
   startPan,
@@ -16,7 +16,7 @@ export function startTool(
   activeRightTool: MouseTool,
   viewport: Viewport,
   viewportElementRef: RefObject<HTMLElement>,
-  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void
+  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {}
 ): void {
   downEvent.preventDefault();
 
