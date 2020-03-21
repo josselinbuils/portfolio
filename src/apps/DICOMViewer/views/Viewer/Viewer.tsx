@@ -5,8 +5,9 @@ import { ViewportElement } from '../../components';
 import { MouseTool, RendererType, ViewType } from '../../constants';
 import { Annotations } from '../../interfaces';
 import { Dataset, Viewport } from '../../models';
-import { getAvailableViewTypes, startTool } from '../../utils';
+import { getAvailableViewTypes } from '../../utils';
 import { AnnotationsElement, Toolbar } from './components';
+import { startTool } from './utils';
 
 export const Viewer: FC<Props> = ({
   dataset,

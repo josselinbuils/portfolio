@@ -1,7 +1,7 @@
-import { ViewType } from '../../constants';
-import { Dataset, Viewport, Volume } from '../../models';
-import { changePointSpace } from '../../utils';
-import { V } from '../../utils/math';
+import { ViewType } from '../../../../constants';
+import { Dataset, Viewport, Volume } from '../../../../models';
+import { changePointSpace } from '../../../../utils';
+import { V } from '../../../../utils/math';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,

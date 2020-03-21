@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 import { MouseButton } from '~/platform/constants';
-import { MouseTool } from '../constants';
-import { Viewport } from '../models';
+import { MouseTool } from '../../../constants';
+import { Viewport } from '../../../models';
 import {
   startPaging,
   startPan,

@@ -7,7 +7,7 @@ import {
   JSVolumeRenderer,
   Renderer,
   WebGLRenderer
-} from '../../renderers';
+} from './renderers';
 import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;

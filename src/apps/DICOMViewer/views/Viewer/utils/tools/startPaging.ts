@@ -1,5 +1,5 @@
-import { Viewport } from '../../models';
-import { V } from '../math';
+import { Viewport } from '../../../../models';
+import { V } from '../../../../utils/math';
 
 const PAGING_SENSIBILITY = 1.2;
 

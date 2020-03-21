@@ -1,5 +1,5 @@
-import { NormalizedImageFormat } from '../../constants';
-import { Frame, Viewport } from '../../models';
+import { NormalizedImageFormat } from '../../../../constants';
+import { Frame, Viewport } from '../../../../models';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,

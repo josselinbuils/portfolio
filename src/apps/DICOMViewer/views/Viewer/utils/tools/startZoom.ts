@@ -1,4 +1,4 @@
-import { Viewport } from '../../models';
+import { Viewport } from '../../../../models';
 import { isImageCentered } from './utils';
 
 const ZOOM_LIMIT = 0.07;

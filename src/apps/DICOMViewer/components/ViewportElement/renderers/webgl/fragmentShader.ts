@@ -1,4 +1,4 @@
-import { NormalizedImageFormat } from '../../constants';
+import { NormalizedImageFormat } from '../../../../constants';
 
 import { GRAYSCALE_FRAGMENT_SHADER_SRC } from './fragment/grayscale';
 import { RGB_FRAGMENT_SHADER_SRC } from './fragment/rgb';

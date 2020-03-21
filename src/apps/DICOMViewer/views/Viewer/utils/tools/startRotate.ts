@@ -1,7 +1,7 @@
-import { ViewType } from '../../constants';
-import { Camera, Viewport, Volume } from '../../models';
-import { areFloatEquals } from '../areFloatEquals';
-import { M3, V } from '../math';
+import { ViewType } from '../../../../constants';
+import { Camera, Viewport, Volume } from '../../../../models';
+import { areFloatEquals } from '../../../../utils';
+import { M3, V } from '../../../../utils/math';
 
 export function startRotate(
   viewport: Viewport,
