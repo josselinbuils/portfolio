@@ -7,7 +7,8 @@ import {
   RenderingProperties
 } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import { drawImageData, getVOILut, VOILut } from './common';
+import { drawImageData, getCanvasRenderingContexts, getVOILut } from './utils';
+import { VOILut } from './VOILut';
 
 export class JSFrameRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
@@ -15,15 +16,7 @@ export class JSFrameRenderer implements Renderer {
   private readonly renderingContext: CanvasRenderingContext2D;
 
   constructor(private readonly canvas: HTMLCanvasElement) {
-    const context = canvas.getContext('2d');
-    const renderingContext = (document.createElement(
-      'canvas'
-    ) as HTMLCanvasElement).getContext('2d');
-
-    if (context === null || renderingContext === null) {
-      throw new Error('Unable to retrieve contexts');
-    }
-
+    const { context, renderingContext } = getCanvasRenderingContexts(canvas);
     this.context = context;
     this.renderingContext = renderingContext;
   }
