@@ -1,6 +1,6 @@
 import { ViewType } from '../../constants';
 import { Dataset, Viewport, Volume } from '../../models';
-import { Coordinates } from '../../utils';
+import { changePointSpace } from '../../utils';
 import { V } from '../../utils/math';
 import { Renderer } from '../Renderer';
 import {
@@ -45,7 +45,7 @@ export class JSVolumeRenderer implements Renderer {
     viewportSpace: ViewportSpaceCoordinates
   ): number[] {
     const { dataset } = viewport;
-    return Coordinates.convert(
+    return changePointSpace(
       [viewportSpace.imageX0, viewportSpace.imageY0, 0],
       viewport,
       dataset

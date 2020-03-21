@@ -1,5 +1,5 @@
 import { Viewport, Volume } from '../../../models';
-import { Coordinates } from '../../../utils';
+import { changePointSpace } from '../../../utils';
 import { getLinePlaneIntersection, V } from '../../../utils/math';
 
 const STYLE_FRONT = 'rgba(255, 255, 255, .7)';
@@ -31,11 +31,7 @@ export function displayCube(
   const cornersDisplay = { ...volume.corners } as { [key: string]: number[] };
 
   for (const [name, corner] of Object.entries<number[]>(volume.corners)) {
-    cornersDisplay[name] = Coordinates.convert(
-      corner,
-      viewport.dataset,
-      viewport
-    );
+    cornersDisplay[name] = changePointSpace(corner, viewport.dataset, viewport);
   }
 
   const front: any[] = [];
@@ -53,17 +49,17 @@ export function displayCube(
     const info = getLineInfo(aLPS, bLPS, viewport);
 
     if (info.crossesViewport) {
-      const pointBehindViewportDisplay = Coordinates.convert(
+      const pointBehindViewportDisplay = changePointSpace(
         info.pointBehindViewport as number[],
         viewport.dataset,
         viewport
       );
-      const pointInFrontOfViewportDisplay = Coordinates.convert(
+      const pointInFrontOfViewportDisplay = changePointSpace(
         info.pointInFrontOfViewport as number[],
         viewport.dataset,
         viewport
       );
-      const pointInViewportDisplay = Coordinates.convert(
+      const pointInViewportDisplay = changePointSpace(
         info.pointInViewport as number[],
         viewport.dataset,
         viewport

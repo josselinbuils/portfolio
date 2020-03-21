@@ -1,6 +1,6 @@
 import { ViewType } from '../constants';
 import { Camera, Frame, Viewport, Volume } from '../models';
-import { Coordinates } from '../utils';
+import { changePointSpace } from '../utils';
 import { V } from '../utils/math';
 import {
   BoundedViewportSpaceCoordinates,
@@ -34,12 +34,12 @@ export function getRenderingProperties(
   if (viewport.viewType === ViewType.Native) {
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { columns, imageCenter, rows } = frame;
-    const lookPointViewport = Coordinates.convert(
+    const lookPointViewport = changePointSpace(
       camera.lookPoint,
       dataset,
       viewport
     );
-    const frameCenterViewport = Coordinates.convert(
+    const frameCenterViewport = changePointSpace(
       imageCenter,
       dataset,
       viewport
@@ -268,7 +268,7 @@ function getImageDimensions(
   }
 
   const intersectionsCamera = intersections.map(i =>
-    Coordinates.convert(i, dataset, camera)
+    changePointSpace(i, dataset, camera)
   );
   const intersectionsCameraHorizontal = intersectionsCamera.map(i => i[0]);
   const intersectionsCameraVertical = intersectionsCamera.map(i => i[1]);
@@ -301,7 +301,7 @@ function getImageDimensions(
   }
 
   const intersectionsDisplay = intersections.map(i =>
-    Coordinates.convert(i, dataset, viewport)
+    changePointSpace(i, dataset, viewport)
   );
   const intersectionsDisplayHorizontal = intersectionsDisplay.map(i => i[0]);
   const intersectionsDisplayVertical = intersectionsDisplay.map(i => i[1]);

@@ -1,5 +1,5 @@
 import { Viewport } from '../../models';
-import { isCentered } from './utils';
+import { isImageCentered } from './utils';
 
 const ZOOM_LIMIT = 0.07;
 const ZOOM_MAX = 5;
@@ -32,7 +32,7 @@ export function startZoom(
 
     // Helps to fit the viewport of image is centered
     if (
-      isCentered(viewport) &&
+      isImageCentered(viewport) &&
       Math.abs(baseFieldOfView / camera.fieldOfView - 1) < ZOOM_LIMIT
     ) {
       camera.fieldOfView = baseFieldOfView;

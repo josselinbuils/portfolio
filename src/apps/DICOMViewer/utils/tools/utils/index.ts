@@ -1,1 +1,1 @@
-export * from './isCentered';
+export * from './isImageCentered';

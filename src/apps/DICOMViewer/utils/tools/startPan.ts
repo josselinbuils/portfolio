@@ -1,7 +1,7 @@
 import { Viewport, Volume } from '../../models';
-import { Coordinates } from '../Coordinates';
+import { changePointSpace } from '../../utils';
 import { V } from '../math';
-import { isCentered } from './utils';
+import { isImageCentered } from './utils';
 
 export function startPan(
   viewport: Viewport,
@@ -17,29 +17,30 @@ export function startPan(
       ? (dataset.volume as Volume).center
       : dataset.frames[0].imageCenter;
     const baseCenterViewport = [
-      ...Coordinates.convert(baseCenter, dataset, viewport).slice(0, 2),
+      ...changePointSpace(baseCenter, dataset, viewport).slice(0, 2),
       0
     ];
-    const startLookPointViewport = Coordinates.convert(
+    const startLookPointViewport = changePointSpace(
       startLookPoint,
       dataset,
       viewport
     );
-
     const newLookPointViewport = [
       startLookPointViewport[0] + cursorStartPosition[0] - moveEvent.clientX,
       startLookPointViewport[1] + cursorStartPosition[1] - moveEvent.clientY,
       0
     ];
-
-    camera.lookPoint = isCentered(
+    const isCentered = isImageCentered(
       viewport,
       baseCenterViewport,
       newLookPointViewport
-    )
-      ? Coordinates.convert(baseCenterViewport, viewport, dataset)
-      : Coordinates.convert(newLookPointViewport, viewport, dataset);
+    );
 
+    camera.lookPoint = changePointSpace(
+      isCentered ? baseCenterViewport : newLookPointViewport,
+      viewport,
+      dataset
+    );
     camera.eyePoint = V(camera.lookPoint).sub(direction);
   };
 }
