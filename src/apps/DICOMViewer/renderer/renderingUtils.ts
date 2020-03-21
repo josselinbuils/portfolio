@@ -1,7 +1,7 @@
 import { ViewType } from '../constants';
-import { V } from '../math';
 import { Camera, Frame, Viewport, Volume } from '../models';
 import { Coordinates } from '../utils';
+import { V } from '../utils/math';
 import {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,

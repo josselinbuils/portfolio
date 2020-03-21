@@ -1,4 +1,4 @@
-import { V } from '../math';
+import { V } from '../utils/math';
 
 import { DicomFrame } from '../models';
 import {

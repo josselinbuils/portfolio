@@ -1,7 +1,7 @@
 import { ViewType } from '../../constants';
-import { M3, V } from '../../math';
 import { Camera, Viewport, Volume } from '../../models';
 import { areFloatEquals } from '../../utils';
+import { M3, V } from '../../utils/math';
 import { ToolMoveListener } from '../Toolbox';
 
 export function startRotate(

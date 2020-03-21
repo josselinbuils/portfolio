@@ -1,5 +1,5 @@
-import { M3, M4, V } from '../math';
 import { CoordinateSpace } from '../models';
+import { M3, M4, V } from './math';
 
 export class Coordinates {
   private static cache: {

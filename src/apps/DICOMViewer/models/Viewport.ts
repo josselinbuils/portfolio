@@ -1,7 +1,7 @@
 import { Subject } from '@josselinbuils/utils';
 import { RendererType, ViewType } from '../constants';
 import { Annotations } from '../interfaces/Annotations';
-import { V } from '../math';
+import { V } from '../utils/math';
 import { Camera } from './Camera';
 import { CoordinateSpace } from './CoordinateSpace';
 import { Dataset } from './Dataset';

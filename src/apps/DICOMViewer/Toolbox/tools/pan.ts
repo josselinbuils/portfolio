@@ -1,6 +1,6 @@
-import { V } from '../../math';
 import { Viewport, Volume } from '../../models';
 import { Coordinates } from '../../utils';
+import { V } from '../../utils/math';
 import { ToolMoveListener } from '../Toolbox';
 
 const DELTA_LIMIT = 0.02;

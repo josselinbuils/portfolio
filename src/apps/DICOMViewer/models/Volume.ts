@@ -1,4 +1,4 @@
-import { getLinePlaneIntersection, V } from '../math';
+import { getLinePlaneIntersection, V } from '../utils/math';
 
 import { Model } from './Model';
 

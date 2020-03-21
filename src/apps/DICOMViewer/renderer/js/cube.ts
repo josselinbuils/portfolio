@@ -1,6 +1,6 @@
-import { getLinePlaneIntersection, V } from '../../math';
 import { Viewport, Volume } from '../../models';
 import { Coordinates } from '../../utils';
+import { getLinePlaneIntersection, V } from '../../utils/math';
 
 const STYLE_FRONT = 'rgba(255, 255, 255, .7)';
 const STYLE_BEHIND = 'rgba(255, 255, 255, .2)';

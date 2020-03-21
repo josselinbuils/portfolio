@@ -1,4 +1,4 @@
-import { areFloatEquals } from '../utils';
+import { areFloatEquals } from '../areFloatEquals';
 
 export function V(...args: number[] | number[][]): Vector {
   return new Vector(...args);

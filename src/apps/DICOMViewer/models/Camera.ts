@@ -1,5 +1,5 @@
 import { ViewType } from '../constants';
-import { V } from '../math';
+import { V } from '../utils/math';
 
 import { CoordinateSpace } from './CoordinateSpace';
 import { Frame } from './Frame';
