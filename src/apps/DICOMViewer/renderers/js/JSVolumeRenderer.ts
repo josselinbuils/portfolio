@@ -1,6 +1,6 @@
-import { Coordinates } from '~/apps/DICOMViewer/utils';
 import { ViewType } from '../../constants';
 import { Dataset, Viewport, Volume } from '../../models';
+import { Coordinates } from '../../utils';
 import { V } from '../../utils/math';
 import { Renderer } from '../Renderer';
 import {

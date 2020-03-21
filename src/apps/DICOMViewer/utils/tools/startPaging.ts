@@ -1,13 +1,12 @@
 import { Viewport } from '../../models';
-import { V } from '../../utils/math';
-import { ToolMoveListener } from '../Toolbox';
+import { V } from '../math';
 
 const PAGING_SENSIBILITY = 1.2;
 
 export function startPaging(
   viewport: Viewport,
   downEvent: MouseEvent
-): ToolMoveListener {
+): (moveEvent: MouseEvent) => void {
   const startY = downEvent.clientY;
   const { camera } = viewport;
 

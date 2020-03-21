@@ -1,7 +1,7 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, useRef } from 'react';
-import { ViewType } from '~/apps/DICOMViewer/constants';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
+import { ViewType } from '../../../constants';
 import { Annotations } from '../../../interfaces';
 import styles from './AnnotationsElement.module.scss';
 

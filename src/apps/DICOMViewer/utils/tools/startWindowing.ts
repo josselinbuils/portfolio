@@ -1,5 +1,4 @@
 import { Viewport } from '../../models';
-import { ToolMoveListener } from '../Toolbox';
 
 const WINDOW_LEVEL_SENSIBILITY = 3;
 const WINDOW_WIDTH_SENSIBILITY = 5;
@@ -8,7 +7,7 @@ const WINDOW_WIDTH_MIN = 1;
 export function startWindowing(
   viewport: Viewport,
   downEvent: MouseEvent
-): ToolMoveListener {
+): (moveEvent: MouseEvent) => void {
   const startX = downEvent.clientX;
   const startY = downEvent.clientY;
 

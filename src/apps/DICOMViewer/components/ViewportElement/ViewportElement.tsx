@@ -5,14 +5,18 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { AnnotationsElement } from '~/apps/DICOMViewer/components/ViewportElement/AnnotationsElement';
-import { Annotations } from '~/apps/DICOMViewer/interfaces';
-import { WebGLRenderer } from '~/apps/DICOMViewer/renderer/webgl/WebGLRenderer';
-import { getAvailableViewTypes } from '~/apps/DICOMViewer/utils';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
+import { Annotations } from '../../interfaces';
 import { Viewport } from '../../models';
-import { JSFrameRenderer, JSVolumeRenderer, Renderer } from '../../renderers';
+import {
+  JSFrameRenderer,
+  JSVolumeRenderer,
+  Renderer,
+  WebGLRenderer
+} from '../../renderers';
+import { getAvailableViewTypes } from '../../utils';
+import { AnnotationsElement } from './AnnotationsElement';
 import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;

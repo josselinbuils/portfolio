@@ -1,4 +1,4 @@
-import { CoordinateSpace } from '../models';
+import { CoordinateSpace } from '../interfaces';
 import { M3, M4, V } from './math';
 
 export class Coordinates {

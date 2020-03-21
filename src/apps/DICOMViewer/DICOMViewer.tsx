@@ -6,7 +6,6 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { Toolbox } from '~/apps/DICOMViewer/Toolbox';
 import { Spinner } from '~/platform/components';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
@@ -23,7 +22,12 @@ import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { DatasetDescriptor } from './interfaces';
 import { Dataset, Viewport } from './models';
-import { getAvailableViewTypes, loadDatasetList, loadFrames } from './utils';
+import {
+  getAvailableViewTypes,
+  loadDatasetList,
+  loadFrames,
+  startTool
+} from './utils';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
@@ -46,7 +50,6 @@ const DICOMViewer: WindowComponent = ({
   const [loading, setLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [rendererType, setRendererType] = useState<RendererType>();
-  const [toolbox, setToolbox] = useState<Toolbox>();
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportHeight, setViewportHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
@@ -86,14 +89,11 @@ const DICOMViewer: WindowComponent = ({
     if (viewport === undefined) {
       return;
     }
-    const newToolbox = new Toolbox(viewport, viewportElementRef);
-
     setActiveLeftTool(
       viewport.dataset.frames.length > 1
         ? MouseTool.Paging
         : MouseTool.Windowing
     );
-    setToolbox(newToolbox);
   }, [viewport]);
 
   useLayoutEffect(() => {
@@ -127,7 +127,6 @@ const DICOMViewer: WindowComponent = ({
     setErrorMessage(undefined);
 
     if (rendererType) {
-      setToolbox(undefined);
       setViewport(undefined);
       setActiveLeftTool(MouseTool.Paging);
       setActiveRightTool(MouseTool.Zoom);
@@ -169,7 +168,7 @@ const DICOMViewer: WindowComponent = ({
     if (!rendererType) {
       return <SelectRenderer onRendererTypeSelected={setRendererType} />;
     }
-    if (toolbox && viewport) {
+    if (viewport) {
       return (
         <>
           <Toolbar
@@ -180,9 +179,7 @@ const DICOMViewer: WindowComponent = ({
           />
           <ViewportElement
             height={viewportHeight}
-            onCanvasMouseDown={downEvent =>
-              toolbox.startTool(downEvent, activeLeftTool, activeRightTool)
-            }
+            onCanvasMouseDown={startActiveTool}
             onError={handleError}
             onViewTypeSwitch={switchViewType}
             ref={viewportElementRef}
@@ -207,6 +204,16 @@ const DICOMViewer: WindowComponent = ({
       default:
         throw new Error('Unknown button');
     }
+  }
+
+  function startActiveTool(downEvent: MouseEvent): void {
+    startTool(
+      downEvent,
+      activeLeftTool,
+      activeRightTool,
+      viewport as Viewport,
+      viewportElementRef
+    );
   }
 
   function switchViewType(viewType: ViewType): void {

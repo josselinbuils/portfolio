@@ -1,7 +1,5 @@
 import { Viewport } from '../../models';
-import { ToolMoveListener } from '../Toolbox';
-
-import { isCentered } from './pan';
+import { isCentered } from './utils';
 
 const ZOOM_LIMIT = 0.07;
 const ZOOM_MAX = 5;
@@ -11,7 +9,7 @@ const ZOOM_SENSIBILITY = 1000;
 export function startZoom(
   viewport: Viewport,
   downEvent: MouseEvent
-): ToolMoveListener {
+): (moveEvent: MouseEvent) => void {
   const { camera, height } = viewport;
   const { baseFieldOfView } = camera;
   const startY = downEvent.clientY;

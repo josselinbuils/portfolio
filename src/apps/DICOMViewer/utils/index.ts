@@ -6,3 +6,4 @@ export * from './Coordinates';
 export * from './getAvailableViewTypes';
 export * from './loadDatasetList';
 export * from './loadFrames';
+export * from './startTool';

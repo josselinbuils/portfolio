@@ -1,14 +1,13 @@
 import { ViewType } from '../../constants';
 import { Camera, Viewport, Volume } from '../../models';
-import { areFloatEquals } from '../../utils';
-import { M3, V } from '../../utils/math';
-import { ToolMoveListener } from '../Toolbox';
+import { areFloatEquals } from '../areFloatEquals';
+import { M3, V } from '../math';
 
 export function startRotate(
   viewport: Viewport,
   downEvent: MouseEvent,
   viewportClientRect: ClientRect
-): ToolMoveListener {
+): (moveEvent: MouseEvent) => void {
   if (!viewport.dataset.is3D) {
     throw new Error('Unable to rotate on a 2D dataset');
   }
