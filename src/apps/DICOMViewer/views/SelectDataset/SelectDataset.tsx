@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
-import { Dataset } from '~/apps/DICOMViewer/models';
 import { Spinner } from '~/platform/components';
 import { BASE_URL } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
-import { ProgressRing } from '../../components';
 import { DatasetDescriptor } from '../../interfaces';
+import { Dataset } from '../../models';
+import { ProgressRing } from './ProgressRing';
 import styles from './SelectDataset.module.scss';
 import { loadDatasetList, loadFrames } from './utils';
 
