@@ -1,6 +1,13 @@
-import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
+import { LUTComponent } from '../../interfaces';
 import { Viewport } from '../../models';
 import {
   JSFrameRenderer,
@@ -15,16 +22,17 @@ const ANNOTATIONS_REFRESH_DELAY = 500;
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
     {
-      height,
-      onCanvasMouseDown,
+      lutComponents,
+      onCanvasMouseDown = () => {},
       onError,
       onStatsUpdate = () => {},
       rendererType,
-      viewport,
-      width
+      viewport
     },
     ref
   ) => {
+    const [viewportHeight, setViewportHeight] = useState(0);
+    const [viewportWidth, setViewportWidth] = useState(0);
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -37,12 +45,18 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       let renderDurations: number[] = [];
       let lastTime = performance.now();
 
+      const observer = new ResizeObserver(([{ contentRect }]) => {
+        setViewportHeight(contentRect.height);
+        setViewportWidth(contentRect.width);
+      });
+      observer.observe(canvasElement);
+
       try {
         switch (rendererType) {
           case RendererType.JavaScript:
             renderer =
               (viewport as Viewport).viewType === ViewType.Native
-                ? new JSFrameRenderer(canvasElement)
+                ? new JSFrameRenderer(canvasElement, lutComponents)
                 : new JSVolumeRenderer(canvasElement);
             break;
           case RendererType.WebGL:
@@ -110,14 +124,15 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
 
       return () => {
         clearInterval(statsInterval);
+        observer.disconnect();
         renderer.destroy?.();
       };
-    }, [onError, onStatsUpdate, rendererType, viewport]);
+    }, [lutComponents, onError, onStatsUpdate, rendererType, viewport]);
 
     useLayoutEffect(() => {
-      viewport.height = height;
-      viewport.width = width;
-    }, [height, viewport, width]);
+      viewport.height = viewportHeight;
+      viewport.width = viewportWidth;
+    }, [viewportHeight, viewport, viewportWidth]);
 
     const mouseDownListener = (downEvent: React.MouseEvent) => {
       downEvent.persist();
@@ -136,11 +151,11 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
     return (
       <div className={styles.viewport} ref={ref}>
         <canvas
-          height={height}
+          height={viewportHeight}
           onContextMenu={() => false}
           onMouseDown={mouseDownListener}
           ref={canvasElementRef}
-          width={width}
+          width={viewportWidth}
         />
       </div>
     );
@@ -148,11 +163,10 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
 );
 
 interface Props {
-  height: number;
+  lutComponents?: LUTComponent[];
   rendererType: RendererType;
   viewport: Viewport;
-  width: number;
-  onCanvasMouseDown(downEvent: MouseEvent): void;
+  onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;
   onStatsUpdate?(stats: { fps: number; meanRenderDuration: number }): void;
 }

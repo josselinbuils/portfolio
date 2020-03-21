@@ -1,4 +1,5 @@
 import { NormalizedImageFormat } from '../../../../constants';
+import { LUTComponent } from '../../../../interfaces';
 import { Frame, Viewport } from '../../../../models';
 import { Renderer } from '../Renderer';
 import {
@@ -7,7 +8,12 @@ import {
   RenderingProperties
 } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import { drawImageData, getCanvasRenderingContexts, getVOILut } from './utils';
+import {
+  drawImageData,
+  getCanvasRenderingContexts,
+  getDefaultVOILut,
+  loadVOILut
+} from './utils';
 import { VOILut } from './VOILut';
 
 export class JSFrameRenderer implements Renderer {
@@ -15,7 +21,10 @@ export class JSFrameRenderer implements Renderer {
   private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
 
-  constructor(private readonly canvas: HTMLCanvasElement) {
+  constructor(
+    private readonly canvas: HTMLCanvasElement,
+    private readonly lutComponents?: LUTComponent[]
+  ) {
     const { context, renderingContext } = getCanvasRenderingContexts(canvas);
     this.context = context;
     this.renderingContext = renderingContext;
@@ -41,7 +50,10 @@ export class JSFrameRenderer implements Renderer {
     switch (imageFormat) {
       case NormalizedImageFormat.Int16:
         if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-          this.lut = getVOILut(windowWidth);
+          this.lut =
+            this.lutComponents !== undefined
+              ? loadVOILut(this.lutComponents, windowWidth)
+              : getDefaultVOILut(windowWidth);
         }
 
         const { boundedViewportSpace, imageSpace } = renderingProperties;

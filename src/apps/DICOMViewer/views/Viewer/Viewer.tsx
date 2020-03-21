@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { MouseButton } from '~/platform/constants';
-import { Size } from '~/platform/interfaces';
 import { ViewportElement } from '../../components';
 import { MouseTool, RendererType, ViewType } from '../../constants';
 import { Dataset, Viewport } from '../../models';
@@ -9,12 +8,7 @@ import { Annotations } from './Annotations';
 import { AnnotationsElement, Toolbar } from './components';
 import { startTool } from './utils';
 
-export const Viewer: FC<Props> = ({
-  dataset,
-  onError,
-  rendererType,
-  windowSize
-}) => {
+export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
     MouseTool.Paging
   );
@@ -23,9 +17,7 @@ export const Viewer: FC<Props> = ({
   );
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [viewport, setViewport] = useState<Viewport>();
-  const [viewportHeight, setViewportHeight] = useState(0);
   const [viewportStats, setViewportStats] = useState<object>();
-  const [viewportWidth, setViewportWidth] = useState(0);
   const viewportElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,8 +27,7 @@ export const Viewer: FC<Props> = ({
         const viewType = availableViewTypes.includes(ViewType.Axial)
           ? ViewType.Axial
           : ViewType.Native;
-        const newViewport = Viewport.create(dataset, viewType);
-        setViewport(newViewport);
+        setViewport(Viewport.create(dataset, viewType));
         setAnnotations({ datasetName: dataset.name, rendererType });
       } catch (error) {
         onError('Unable to create viewport');
@@ -74,12 +65,6 @@ export const Viewer: FC<Props> = ({
       })),
     [viewportStats]
   );
-
-  useEffect(() => {
-    const { height, width } = windowSize;
-    setViewportHeight(height - 42);
-    setViewportWidth(width);
-  }, [windowSize]);
 
   function selectActiveTool(tool: MouseTool, button: MouseButton): void {
     switch (button) {
@@ -176,14 +161,12 @@ export const Viewer: FC<Props> = ({
         onToolSelected={selectActiveTool}
       />
       <ViewportElement
-        height={viewportHeight}
         onCanvasMouseDown={startActiveTool}
         onError={onError}
         onStatsUpdate={setViewportStats}
         ref={viewportElementRef}
         rendererType={rendererType}
         viewport={viewport}
-        width={viewportWidth}
       />
       <AnnotationsElement
         annotations={annotations}
@@ -200,6 +183,5 @@ export const Viewer: FC<Props> = ({
 interface Props {
   dataset: Dataset;
   rendererType: RendererType;
-  windowSize: Size;
   onError(message: string): void;
 }

@@ -1,3 +1,9 @@
+export enum LUTColor {
+  Blue = 'blue',
+  Green = 'green',
+  Red = 'red'
+}
+
 export enum MouseTool {
   Paging = 'Paging',
   Pan = 'Pan',

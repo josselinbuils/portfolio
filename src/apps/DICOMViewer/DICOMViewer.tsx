@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { Size } from '~/platform/interfaces';
 import { RendererType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
@@ -14,7 +13,6 @@ const DICOMViewer: WindowComponent = ({
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [rendererType, setRendererType] = useState<RendererType>();
-  const [windowSize, setWindowSize] = useState<Size>();
 
   function back(): void {
     setErrorMessage(undefined);
@@ -39,17 +37,13 @@ const DICOMViewer: WindowComponent = ({
     if (!rendererType) {
       return <SelectRenderer onRendererTypeSelected={setRendererType} />;
     }
-    if (windowSize) {
-      return (
-        <Viewer
-          dataset={dataset}
-          rendererType={rendererType}
-          windowSize={windowSize}
-          onError={setErrorMessage}
-        />
-      );
-    }
-    return null;
+    return (
+      <Viewer
+        dataset={dataset}
+        rendererType={rendererType}
+        onError={setErrorMessage}
+      />
+    );
   }
 
   return (
@@ -59,7 +53,6 @@ const DICOMViewer: WindowComponent = ({
       titleColor="#efefef"
       minWidth={880}
       minHeight={554}
-      onResize={setWindowSize}
       ref={windowRef}
       title={DICOMViewerDescriptor.appName}
     >

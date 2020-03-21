@@ -14,7 +14,7 @@ import {
   displayCube,
   drawImageData,
   getCanvasRenderingContexts,
-  getVOILut
+  getDefaultVOILut
 } from './utils';
 import { VOILut } from './VOILut';
 
@@ -143,7 +143,7 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      this.lut = getVOILut(windowWidth);
+      this.lut = getDefaultVOILut(windowWidth);
     }
 
     const { boundedViewportSpace, imageSpace } = renderingProperties;
