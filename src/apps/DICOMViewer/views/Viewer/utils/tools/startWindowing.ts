@@ -6,7 +6,8 @@ const WINDOW_WIDTH_MIN = 1;
 
 export function startWindowing(
   viewport: Viewport,
-  downEvent: MouseEvent
+  downEvent: MouseEvent,
+  onWindowing: (values: { windowCenter: number; windowWidth: number }) => void
 ): (moveEvent: MouseEvent) => void {
   const startX = downEvent.clientX;
   const startY = downEvent.clientY;
@@ -24,8 +25,10 @@ export function startWindowing(
     const windowCenter =
       startWindowCenter -
       (moveEvent.clientY - startY) * WINDOW_LEVEL_SENSIBILITY;
+
     viewport.windowWidth = windowWidth;
     viewport.windowCenter = windowCenter;
-    viewport.updateAnnotations({ windowCenter, windowWidth });
+
+    onWindowing({ windowCenter, windowWidth });
   };
 }

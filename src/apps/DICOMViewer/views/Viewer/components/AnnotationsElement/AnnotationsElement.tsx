@@ -2,7 +2,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, useRef } from 'react';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
 import { ViewType } from '../../../../constants';
-import { Annotations } from '../../../../interfaces';
+import { Annotations } from '../../Annotations';
 import styles from './AnnotationsElement.module.scss';
 
 export const AnnotationsElement: FC<Props> = ({

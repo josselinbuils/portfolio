@@ -15,7 +15,8 @@ export function startTool(
   activeLeftTool: MouseTool,
   activeRightTool: MouseTool,
   viewport: Viewport,
-  viewportElementRef: RefObject<HTMLElement>
+  viewportElementRef: RefObject<HTMLElement>,
+  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void
 ): void {
   downEvent.preventDefault();
 
@@ -36,6 +37,7 @@ export function startTool(
       throw new Error('Unknown button');
   }
 
+  const handleToolUpdate = (...args: any[]) => onUpdate(tool, ...args);
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
@@ -50,13 +52,18 @@ export function startTool(
         return;
       }
       const viewportClientRect = viewportElementRef.current.getBoundingClientRect();
-      moveListener = startRotate(viewport, downEvent, viewportClientRect);
+      moveListener = startRotate(
+        viewport,
+        downEvent,
+        viewportClientRect,
+        handleToolUpdate
+      );
       break;
     case MouseTool.Windowing:
-      moveListener = startWindowing(viewport, downEvent);
+      moveListener = startWindowing(viewport, downEvent, handleToolUpdate);
       break;
     case MouseTool.Zoom:
-      moveListener = startZoom(viewport, downEvent);
+      moveListener = startZoom(viewport, downEvent, handleToolUpdate);
       break;
     default:
       throw new Error('Unknown tool');

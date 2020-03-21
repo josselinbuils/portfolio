@@ -1,4 +1,3 @@
-import { ViewType } from '../../../../constants';
 import { Camera, Viewport, Volume } from '../../../../models';
 import { areFloatEquals } from '../../../../utils';
 import { M3, V } from '../../../../utils/math';
@@ -6,7 +5,8 @@ import { M3, V } from '../../../../utils/math';
 export function startRotate(
   viewport: Viewport,
   downEvent: MouseEvent,
-  viewportClientRect: ClientRect
+  viewportClientRect: ClientRect,
+  onRotate: () => void
 ): (moveEvent: MouseEvent) => void {
   if (!viewport.dataset.is3D) {
     throw new Error('Unable to rotate on a 2D dataset');
@@ -43,13 +43,9 @@ export function startRotate(
     rotateCamera(camera, axis, angle);
     camera.baseFieldOfView = (viewport.dataset
       .volume as Volume).getOrientedDimensionMm(camera.upVector);
-    viewport.updateAnnotations({ zoom: viewport.getImageZoom() });
     previousVector = currentVector;
 
-    if (viewport.viewType !== ViewType.Oblique) {
-      viewport.viewType = ViewType.Oblique;
-      viewport.updateAnnotations({ viewType: viewport.viewType });
-    }
+    onRotate();
   };
 }
 

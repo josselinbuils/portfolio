@@ -3,9 +3,9 @@ import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces';
 import { ViewportElement } from '../../components';
 import { MouseTool, RendererType, ViewType } from '../../constants';
-import { Annotations } from '../../interfaces';
 import { Dataset, Viewport } from '../../models';
 import { getAvailableViewTypes } from '../../utils';
+import { Annotations } from './Annotations';
 import { AnnotationsElement, Toolbar } from './components';
 import { startTool } from './utils';
 
@@ -24,6 +24,7 @@ export const Viewer: FC<Props> = ({
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportStats, setViewportStats] = useState<object>();
   const [viewportWidth, setViewportWidth] = useState(0);
   const viewportElementRef = useRef<HTMLDivElement>(null);
 
@@ -34,8 +35,9 @@ export const Viewer: FC<Props> = ({
         const viewType = availableViewTypes.includes(ViewType.Axial)
           ? ViewType.Axial
           : ViewType.Native;
-        const newViewport = Viewport.create(dataset, viewType, rendererType);
+        const newViewport = Viewport.create(dataset, viewType);
         setViewport(newViewport);
+        setAnnotations({ datasetName: dataset.name, rendererType });
       } catch (error) {
         onError('Unable to create viewport');
         console.error(error);
@@ -52,8 +54,26 @@ export const Viewer: FC<Props> = ({
         ? MouseTool.Paging
         : MouseTool.Windowing
     );
-    return viewport.annotationsSubject.subscribe(setAnnotations);
+    const { viewType, windowCenter, windowWidth } = viewport;
+    const zoom = viewport.getImageZoom();
+
+    setAnnotations(previousAnnotations => ({
+      ...previousAnnotations,
+      viewType,
+      windowCenter,
+      windowWidth,
+      zoom
+    }));
   }, [viewport]);
+
+  useEffect(
+    () =>
+      setAnnotations(previousAnnotations => ({
+        ...previousAnnotations,
+        ...viewportStats
+      })),
+    [viewportStats]
+  );
 
   useEffect(() => {
     const { height, width } = windowSize;
@@ -80,7 +100,46 @@ export const Viewer: FC<Props> = ({
       activeLeftTool,
       activeRightTool,
       viewport as Viewport,
-      viewportElementRef
+      viewportElementRef,
+      (tool: MouseTool, ...additionalArgs) => {
+        if (viewport === undefined) {
+          return;
+        }
+        switch (tool) {
+          case MouseTool.Rotate:
+            if (viewport.viewType !== ViewType.Oblique) {
+              viewport.viewType = ViewType.Oblique;
+
+              setAnnotations(previousAnnotations => ({
+                ...previousAnnotations,
+                viewType: viewport.viewType
+              }));
+            }
+            setAnnotations(previousAnnotations => ({
+              ...previousAnnotations,
+              zoom: viewport.getImageZoom()
+            }));
+            break;
+
+          case MouseTool.Windowing:
+            const { windowCenter, windowWidth } = additionalArgs[0];
+
+            setAnnotations(previousAnnotations => ({
+              ...previousAnnotations,
+              windowCenter,
+              windowWidth
+            }));
+            break;
+
+          case MouseTool.Zoom:
+            const { zoom } = additionalArgs[0];
+
+            setAnnotations(previousAnnotations => ({
+              ...previousAnnotations,
+              zoom
+            }));
+        }
+      }
     );
   }
 
@@ -101,7 +160,7 @@ export const Viewer: FC<Props> = ({
       }
     }
 
-    setViewport(Viewport.create(dataset, viewType, rendererType));
+    setViewport(Viewport.create(dataset, viewType));
   }
 
   if (!viewport) {
@@ -120,6 +179,7 @@ export const Viewer: FC<Props> = ({
         height={viewportHeight}
         onCanvasMouseDown={startActiveTool}
         onError={onError}
+        onStatsUpdate={setViewportStats}
         ref={viewportElementRef}
         rendererType={rendererType}
         viewport={viewport}

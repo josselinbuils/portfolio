@@ -14,7 +14,15 @@ const ANNOTATIONS_REFRESH_DELAY = 500;
 
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
-    { height, onCanvasMouseDown, onError, rendererType, viewport, width },
+    {
+      height,
+      onCanvasMouseDown,
+      onError,
+      onStatsUpdate = () => {},
+      rendererType,
+      viewport,
+      width
+    },
     ref
   ) => {
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
@@ -95,18 +103,16 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           meanRenderDuration = 0;
         }
 
-        viewport.updateAnnotations({ fps, meanRenderDuration });
-        viewport.updateAnnotations();
+        onStatsUpdate({ fps, meanRenderDuration });
       }, ANNOTATIONS_REFRESH_DELAY);
 
       render();
-      viewport.updateAnnotations();
 
       return () => {
         clearInterval(statsInterval);
         renderer.destroy?.();
       };
-    }, [onError, rendererType, viewport]);
+    }, [onError, onStatsUpdate, rendererType, viewport]);
 
     useLayoutEffect(() => {
       viewport.height = height;
@@ -148,4 +154,5 @@ interface Props {
   width: number;
   onCanvasMouseDown(downEvent: MouseEvent): void;
   onError(message: string): void;
+  onStatsUpdate?(stats: { fps: number; meanRenderDuration: number }): void;
 }

@@ -1,6 +1,5 @@
-import { Subject } from '@josselinbuils/utils';
-import { RendererType, ViewType } from '../constants';
-import { Annotations, CoordinateSpace } from '../interfaces';
+import { ViewType } from '../constants';
+import { CoordinateSpace } from '../interfaces';
 import { V } from '../utils/math';
 import { Camera } from './Camera';
 import { Dataset } from './Dataset';
@@ -10,8 +9,6 @@ import { Volume } from './Volume';
 const MANDATORY_FIELDS = ['camera', 'dataset', 'viewType'];
 
 export class Viewport extends Renderable implements CoordinateSpace {
-  annotations: Annotations = {};
-  annotationsSubject = new Subject<Annotations>({});
   camera!: Camera;
   dataset!: Dataset;
   height = 0;
@@ -24,12 +21,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   private imageZoom?: number;
   private origin?: number[];
 
-  static create(
-    dataset: Dataset,
-    viewType: ViewType,
-    rendererType: RendererType
-  ): Viewport {
-    const annotations = { datasetName: dataset.name, rendererType };
+  static create(dataset: Dataset, viewType: ViewType): Viewport {
     const frame = dataset.frames[Math.floor(dataset.frames.length / 2)];
     const { windowCenter, windowWidth } = frame;
 
@@ -39,7 +31,6 @@ export class Viewport extends Renderable implements CoordinateSpace {
         : Camera.fromVolume(dataset.volume as Volume, viewType);
 
     return new Viewport({
-      annotations,
       camera,
       dataset,
       viewType,
@@ -53,7 +44,6 @@ export class Viewport extends Renderable implements CoordinateSpace {
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
     super.decorateProperties();
-    this.updateAnnotations();
     this.onUpdate.subscribe(() => {
       delete this.basis;
       delete this.origin;
@@ -114,23 +104,5 @@ export class Viewport extends Renderable implements CoordinateSpace {
         .add(direction);
     }
     return this.origin;
-  }
-
-  updateAnnotations(updatedProperties?: any): void {
-    try {
-      if (updatedProperties !== undefined) {
-        Object.entries(updatedProperties).forEach(
-          ([key, value]) => ((this.annotations as any)[key] = value)
-        );
-      } else {
-        this.annotations.viewType = this.viewType;
-        this.annotations.windowCenter = this.windowCenter;
-        this.annotations.windowWidth = this.windowWidth;
-        this.annotations.zoom = this.getImageZoom();
-      }
-      this.annotationsSubject.next({ ...this.annotations });
-    } catch (error) {
-      throw new Error(`Unable to compute annotations: ${error.stack}`);
-    }
   }
 }

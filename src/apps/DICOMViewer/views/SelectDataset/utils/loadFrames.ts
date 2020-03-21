@@ -4,8 +4,8 @@ import cloneDeep from 'lodash.clonedeep';
 import { BASE_URL } from '~/platform/constants';
 import { onFetchProgress } from '~/platform/utils';
 import { PhotometricInterpretation } from '../../../constants';
-import { DatasetDescriptor } from '../../../interfaces';
 import { DicomFrame } from '../../../models';
+import { DatasetDescriptor } from '../DatasetDescriptor';
 
 export async function loadFrames(
   dataset: DatasetDescriptor,

@@ -8,7 +8,8 @@ const ZOOM_SENSIBILITY = 1000;
 
 export function startZoom(
   viewport: Viewport,
-  downEvent: MouseEvent
+  downEvent: MouseEvent,
+  onZoom: (values: { zoom: number }) => void
 ): (moveEvent: MouseEvent) => void {
   const { camera, height } = viewport;
   const { baseFieldOfView } = camera;
@@ -38,6 +39,6 @@ export function startZoom(
       camera.fieldOfView = baseFieldOfView;
     }
 
-    viewport.updateAnnotations({ zoom: viewport.getImageZoom() });
+    onZoom({ zoom: viewport.getImageZoom() });
   };
 }
