@@ -12,7 +12,7 @@ import { getAvailableViewTypes } from '~/apps/DICOMViewer/utils';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
 import { Viewport } from '../../models';
-import { JSFrameRenderer, JSVolumeRenderer, Renderer } from '../../renderer';
+import { JSFrameRenderer, JSVolumeRenderer, Renderer } from '../../renderers';
 import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
