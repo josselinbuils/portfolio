@@ -12,7 +12,7 @@ import { VOILut } from './VOILut';
 
 export class JSFrameRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
-  private lut?: { table: number[]; windowWidth: number };
+  private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
 
   constructor(private readonly canvas: HTMLCanvasElement) {
@@ -70,17 +70,29 @@ export class JSFrameRenderer implements Renderer {
     }
   }
 
-  private getPixelValue(
-    rawValue: number,
+  private getColorPixelValue(
     leftLimit: number,
-    rightLimit: number
+    rightLimit: number,
+    rawValue: number
+  ): number {
+    const color = (this.lut as VOILut).table[
+      Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
+    ] as number[];
+
+    return color[0] | (color[1] << 8) | (color[2] << 16) | (255 << 24);
+  }
+
+  private getMonochromePixelValue(
+    leftLimit: number,
+    rightLimit: number,
+    rawValue: number
   ): number {
     let intensity = 255;
 
     if (rawValue < leftLimit) {
       intensity = 0;
     } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILut).table[rawValue - leftLimit];
+      intensity = (this.lut as VOILut).table[rawValue - leftLimit] as number;
     }
 
     return intensity | (intensity << 8) | (intensity << 16) | (255 << 24);
@@ -107,6 +119,9 @@ export class JSFrameRenderer implements Renderer {
     } = imageSpace as ImageSpaceCoordinates;
 
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
+    const getPixelValue = Array.isArray((this.lut as VOILut).table[0])
+      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
+      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
 
     let dataIndex = 0;
 
@@ -114,11 +129,7 @@ export class JSFrameRenderer implements Renderer {
       for (let x = displayX0; x <= displayX1; x++) {
         const rawValue =
           (pixelData[y * columns + x] * rescaleSlope + rescaleIntercept) | 0;
-        imageData32[dataIndex++] = this.getPixelValue(
-          rawValue,
-          leftLimit,
-          rightLimit
-        );
+        imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }
 
@@ -186,6 +197,9 @@ export class JSFrameRenderer implements Renderer {
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
+    const getPixelValue = Array.isArray((this.lut as VOILut).table[0])
+      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
+      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
 
     let dataIndex = 0;
 
@@ -197,11 +211,7 @@ export class JSFrameRenderer implements Renderer {
           (pixelData[imageY * columns + imageX] * rescaleSlope +
             rescaleIntercept) |
           0;
-        imageData32[dataIndex++] = this.getPixelValue(
-          rawValue,
-          leftLimit,
-          rightLimit
-        );
+        imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }
 

@@ -1,4 +1,4 @@
 export interface VOILut {
-  table: number[];
+  table: number[] | number[][];
   windowWidth: number;
 }

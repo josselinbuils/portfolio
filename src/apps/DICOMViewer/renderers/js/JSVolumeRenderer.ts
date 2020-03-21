@@ -21,7 +21,7 @@ import { VOILut } from './VOILut';
 export class JSVolumeRenderer implements Renderer {
   private background = 0;
   private readonly context: CanvasRenderingContext2D;
-  private lut?: { table: number[]; windowWidth: number };
+  private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
 
   private static getImageWorldBasis(viewport: Viewport): number[][] {
@@ -178,7 +178,7 @@ export class JSVolumeRenderer implements Renderer {
     if (rawValue < leftLimit) {
       intensity = this.background;
     } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILut).table[rawValue - leftLimit];
+      intensity = (this.lut as VOILut).table[rawValue - leftLimit] as number;
     }
 
     const alpha = rawValue < -(Number.MAX_SAFE_INTEGER - 1) ? 0 : 255;
