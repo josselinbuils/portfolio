@@ -1,7 +1,5 @@
-import { LUTColor } from '../constants';
-
 export interface LUTComponent {
-  color: LUTColor;
+  color: number[];
   end: number;
   start: number;
 }

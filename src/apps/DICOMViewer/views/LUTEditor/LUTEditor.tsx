@@ -1,16 +1,16 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { startTool } from '~/apps/DICOMViewer/utils';
 import { ViewportElement } from '../../components';
-import { LUTColor, MouseTool, RendererType, ViewType } from '../../constants';
+import { MouseTool, RendererType, ViewType } from '../../constants';
 import { LUTComponent } from '../../interfaces';
 import { Dataset, Viewport } from '../../models';
 import { LUTPreview } from './components';
 import styles from './LUTEditor.module.scss';
 
 const lutComponents = [
-  { start: 0, end: 65, color: LUTColor.Blue },
-  { start: 45, end: 150, color: LUTColor.Green },
-  { start: 130, end: 255, color: LUTColor.Red }
+  { start: 0, end: 65, color: [0, 0, 255] },
+  { start: 45, end: 150, color: [0, 255, 255] },
+  { start: 130, end: 255, color: [255, 0, 0] }
 ] as LUTComponent[];
 
 export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {

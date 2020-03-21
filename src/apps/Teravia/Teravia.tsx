@@ -14,7 +14,7 @@ const Teravia: WindowComponent = ({
       {...injectedWindowProps}
       active={active}
       background="#1a1d1e"
-      keepContentRatio={true}
+      keepContentRatio
       maxHeight={791}
       maxWidth={1367}
       minHeight={472}

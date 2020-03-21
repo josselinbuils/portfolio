@@ -46,8 +46,8 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       let lastTime = performance.now();
 
       const observer = new ResizeObserver(([{ contentRect }]) => {
-        setViewportHeight(contentRect.height);
-        setViewportWidth(contentRect.width);
+        setViewportHeight(Math.round(contentRect.height));
+        setViewportWidth(Math.round(contentRect.width));
       });
       observer.observe(canvasElement);
 

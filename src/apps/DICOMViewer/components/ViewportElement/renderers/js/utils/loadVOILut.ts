@@ -1,4 +1,3 @@
-import { LUTColor } from '../../../../../constants';
 import { LUTComponent } from '../../../../../interfaces';
 import { VOILut } from '../VOILut';
 
@@ -24,18 +23,9 @@ export function loadVOILut(
           ((x - start) * (x - end) * 255) / ((x2 - start) * (x2 - end))
         );
 
-        switch (color) {
-          case LUTColor.Blue:
-            pixelValue[2] += colorValue;
-            break;
-
-          case LUTColor.Green:
-            pixelValue[1] += colorValue;
-            break;
-
-          case LUTColor.Red:
-            pixelValue[0] += colorValue;
-        }
+        pixelValue[0] += Math.floor((color[0] / 255) * colorValue);
+        pixelValue[1] += Math.floor((color[1] / 255) * colorValue);
+        pixelValue[2] += Math.floor((color[2] / 255) * colorValue);
       });
 
     table.push(pixelValue);

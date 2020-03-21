@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useRef, useState } from 'react';
-import { LUTColor } from '../../../../constants';
 import { LUTComponent } from '../../../../interfaces';
 import styles from './LUTPreview.module.scss';
 
@@ -23,8 +22,8 @@ export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
   useLayoutEffect(() => {
     const canvasElement = canvasElementRef.current as HTMLCanvasElement;
     const observer = new ResizeObserver(([{ contentRect }]) => {
-      setCanvasHeight(contentRect.height);
-      setCanvasWidth(contentRect.width);
+      setCanvasHeight(Math.round(contentRect.height));
+      setCanvasWidth(Math.round(contentRect.width));
     });
     observer.observe(canvasElement);
     return () => observer.disconnect();
@@ -81,21 +80,18 @@ export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
                   ((x - 1 - start) * (x - 1 - end) * 255) /
                     ((x2 - start) * (x2 - end))
                 );
-              drawLine(x - 1, prevY, x, y, color);
+              drawLine(
+                x - 1,
+                prevY,
+                x,
+                y,
+                `rgb(${color[0]}, ${color[1]}, ${color[2]}`
+              );
             }
 
-            switch (color) {
-              case LUTColor.Blue:
-                pixelValue[2] += colorValue;
-                break;
-
-              case LUTColor.Green:
-                pixelValue[1] += colorValue;
-                break;
-
-              case LUTColor.Red:
-                pixelValue[0] += colorValue;
-            }
+            pixelValue[0] += Math.floor((color[0] / 255) * colorValue);
+            pixelValue[1] += Math.floor((color[1] / 255) * colorValue);
+            pixelValue[2] += Math.floor((color[2] / 255) * colorValue);
           });
 
         drawLine(
@@ -103,8 +99,8 @@ export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
           PREVIEW_HEIGHT,
           x,
           PREVIEW_HEIGHT + BAR_HEIGHT,
-          `rgb(${pixelValue[0]}, ${pixelValue[1]}, ${pixelValue[2]})`,
-          4
+          `rgba(${pixelValue[0]}, ${pixelValue[1]}, ${pixelValue[2]}, 0.8)`,
+          10
         );
       }
     }
