@@ -1,13 +1,6 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { RendererType, ViewType } from '../../constants';
-import { Annotations } from '../../interfaces';
 import { Viewport } from '../../models';
 import {
   JSFrameRenderer,
@@ -15,33 +8,16 @@ import {
   Renderer,
   WebGLRenderer
 } from '../../renderers';
-import { getAvailableViewTypes } from '../../utils';
-import { AnnotationsElement } from './AnnotationsElement';
 import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
-    {
-      height,
-      onCanvasMouseDown,
-      onError,
-      onViewTypeSwitch,
-      rendererType,
-      viewport,
-      width
-    },
+    { height, onCanvasMouseDown, onError, rendererType, viewport, width },
     ref
   ) => {
-    const [annotations, setAnnotations] = useState<Annotations>({});
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
-
-    useEffect(() => {
-      if (viewport !== undefined) {
-        return viewport.annotationsSubject.subscribe(setAnnotations);
-      }
-    }, [viewport]);
 
     useEffect(() => {
       if (!viewport) {
@@ -160,14 +136,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           ref={canvasElementRef}
           width={width}
         />
-        <AnnotationsElement
-          annotations={annotations}
-          availableViewTypes={getAvailableViewTypes(
-            viewport.dataset,
-            rendererType
-          )}
-          onViewTypeSwitch={onViewTypeSwitch}
-        />
       </div>
     );
   }
@@ -180,5 +148,4 @@ interface Props {
   width: number;
   onCanvasMouseDown(downEvent: MouseEvent): void;
   onError(message: string): void;
-  onViewTypeSwitch(viewType: ViewType): void;
 }

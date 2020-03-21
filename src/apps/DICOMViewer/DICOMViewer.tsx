@@ -11,6 +11,7 @@ import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
 import {
+  AnnotationsElement,
   ProgressRing,
   SelectDataset,
   SelectRenderer,
@@ -20,7 +21,7 @@ import {
 import { MouseTool, RendererType, ViewType } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
-import { DatasetDescriptor } from './interfaces';
+import { Annotations, DatasetDescriptor } from './interfaces';
 import { Dataset, Viewport } from './models';
 import {
   getAvailableViewTypes,
@@ -45,6 +46,7 @@ const DICOMViewer: WindowComponent = ({
   const [datasetDescriptor, setDatasetDescriptor] = useState<
     DatasetDescriptor
   >();
+  const [annotations, setAnnotations] = useState<Annotations>({});
   const [datasets, setDatasets] = useState<DatasetDescriptor[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -94,6 +96,7 @@ const DICOMViewer: WindowComponent = ({
         ? MouseTool.Paging
         : MouseTool.Windowing
     );
+    return viewport.annotationsSubject.subscribe(setAnnotations);
   }, [viewport]);
 
   useLayoutEffect(() => {
@@ -127,6 +130,7 @@ const DICOMViewer: WindowComponent = ({
     setErrorMessage(undefined);
 
     if (rendererType) {
+      setAnnotations({});
       setViewport(undefined);
       setActiveLeftTool(MouseTool.Paging);
       setActiveRightTool(MouseTool.Zoom);
@@ -181,11 +185,18 @@ const DICOMViewer: WindowComponent = ({
             height={viewportHeight}
             onCanvasMouseDown={startActiveTool}
             onError={handleError}
-            onViewTypeSwitch={switchViewType}
             ref={viewportElementRef}
             rendererType={rendererType}
             viewport={viewport}
             width={viewportWidth}
+          />
+          <AnnotationsElement
+            annotations={annotations}
+            availableViewTypes={getAvailableViewTypes(
+              viewport.dataset,
+              rendererType
+            )}
+            onViewTypeSwitch={switchViewType}
           />
         </>
       );

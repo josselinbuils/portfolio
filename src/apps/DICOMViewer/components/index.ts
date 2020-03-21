@@ -1,3 +1,4 @@
+export * from './AnnotationsElement';
 export * from './ProgressRing';
 export * from './SelectDataset';
 export * from './SelectRenderer';
