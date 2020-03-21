@@ -242,7 +242,7 @@ const DICOMViewer: WindowComponent = ({
       background="black"
       titleColor="#efefef"
       minWidth={880}
-      minHeight={500}
+      minHeight={554}
       onResize={({ height, width }) => {
         setViewportHeight(height - 42);
         setViewportWidth(width);
