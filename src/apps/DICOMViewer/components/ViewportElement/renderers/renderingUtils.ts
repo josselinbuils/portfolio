@@ -123,12 +123,14 @@ export function validateCamera2D(frame: Frame, camera: Camera): void {
   }
 
   // Frame vertical axis is inverted compared to axial view
-  const isUpVectorValid =
-    Math.abs(V(camera.upVector).angle(frame.imageOrientation[1])) - Math.PI <
-    Number.EPSILON;
+  const angle =
+    Math.abs(V(camera.upVector).angle(frame.imageOrientation[1])) - Math.PI;
+  const isUpVectorValid = angle < Number.EPSILON;
 
   if (!isUpVectorValid) {
-    throw new Error('Camera up vector does not match the frame orientation');
+    throw new Error(
+      `Up vector is not collinear to the frame orientation (${angle} should be < ${Number.EPSILON})`
+    );
   }
 
   const cameraFrameDistance = Math.abs(

@@ -21,7 +21,10 @@ export class Vector extends Array<number> {
   }
 
   angle(vector: number[]): number {
-    return Math.acos(this.dot(vector) / (this.norm() * V(vector).norm()));
+    const normalized =
+      Math.round((this.dot(vector) / (this.norm() * V(vector).norm())) * 1e8) /
+      1e8;
+    return Math.acos(normalized);
   }
 
   clone(): Vector {
