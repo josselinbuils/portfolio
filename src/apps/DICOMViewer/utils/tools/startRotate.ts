@@ -5,7 +5,6 @@ import { M3, V } from '~/apps/DICOMViewer/utils/math';
 export function startRotate(
   viewport: Viewport,
   downEvent: MouseEvent,
-  viewportClientRect: ClientRect,
   onRotate: () => void
 ): (moveEvent: MouseEvent) => void {
   if (!viewport.dataset.is3D) {
@@ -13,13 +12,11 @@ export function startRotate(
   }
 
   const { height, width } = viewport;
-  const { top, left } = viewportClientRect;
   const trackballCenter = [width / 2, height / 2];
   const trackballRadius = Math.min(width, height) / 2;
-  const cursorStartPosition = [
-    downEvent.clientX - left,
-    downEvent.clientY - top
-  ];
+  const cursorStartPosition = [downEvent.offsetX, downEvent.offsetY];
+  const left = downEvent.clientX - downEvent.offsetX;
+  const top = downEvent.clientY - downEvent.offsetY;
   let previousVector = computeTrackball(
     trackballCenter,
     trackballRadius,

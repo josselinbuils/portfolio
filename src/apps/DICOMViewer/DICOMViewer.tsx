@@ -73,7 +73,7 @@ const DICOMViewer: WindowComponent = ({
       background="black"
       titleColor="#efefef"
       minWidth={880}
-      minHeight={554}
+      minHeight={534}
       ref={windowRef}
       title={DICOMViewerDescriptor.appName}
     >

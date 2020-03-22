@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { ViewportElement } from '~/apps/DICOMViewer/components';
 import {
   MouseTool,
@@ -27,7 +27,6 @@ export const Viewer: FC<Props> = ({
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportStats, setViewportStats] = useState<object>();
-  const viewportElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (dataset !== undefined && rendererType !== undefined) {
@@ -75,6 +74,15 @@ export const Viewer: FC<Props> = ({
     [viewportStats]
   );
 
+  const handleViewportResize = useCallback(() => {
+    if (viewport !== undefined) {
+      setAnnotations(previousAnnotations => ({
+        ...previousAnnotations,
+        zoom: viewport.getImageZoom()
+      }));
+    }
+  }, [viewport]);
+
   function selectActiveTool(tool: MouseTool, button: MouseButton): void {
     switch (button) {
       case MouseButton.Left:
@@ -92,7 +100,6 @@ export const Viewer: FC<Props> = ({
     startTool(
       downEvent,
       viewport as Viewport,
-      viewportElementRef,
       activeLeftTool,
       MouseTool.Pan,
       activeRightTool,
@@ -173,8 +180,8 @@ export const Viewer: FC<Props> = ({
       <ViewportElement
         onCanvasMouseDown={startActiveTool}
         onError={onError}
+        onResize={handleViewportResize}
         onStatsUpdate={setViewportStats}
-        ref={viewportElementRef}
         rendererType={rendererType}
         viewport={viewport}
       />

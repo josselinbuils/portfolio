@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { ViewportElement } from '~/apps/DICOMViewer/components';
 import {
   MouseTool,
@@ -25,7 +25,6 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     baseLUTComponents
   );
   const [viewport, setViewport] = useState<Viewport>();
-  const viewportElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (dataset !== undefined && rendererType !== undefined) {
@@ -127,15 +126,9 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
         <ViewportElement
           className={styles.viewport}
           onCanvasMouseDown={downEvent => {
-            startTool(
-              downEvent,
-              viewport as Viewport,
-              viewportElementRef,
-              MouseTool.Paging
-            );
+            startTool(downEvent, viewport as Viewport, MouseTool.Paging);
           }}
           onError={onError}
-          ref={viewportElementRef}
           rendererType={rendererType}
           viewport={viewport}
         />

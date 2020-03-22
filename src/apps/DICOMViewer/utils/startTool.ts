@@ -1,4 +1,3 @@
-import { RefObject } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { MouseTool } from '../constants';
 import { Viewport } from '../models';
@@ -13,7 +12,6 @@ import {
 export function startTool(
   downEvent: MouseEvent,
   viewport: Viewport,
-  viewportElementRef: RefObject<HTMLElement>,
   activeLeftTool: MouseTool,
   activeMiddleTool?: MouseTool,
   activeRightTool?: MouseTool,
@@ -54,16 +52,7 @@ export function startTool(
       moveListener = startPan(viewport, downEvent);
       break;
     case MouseTool.Rotate:
-      if (viewportElementRef.current === null) {
-        return;
-      }
-      const viewportClientRect = viewportElementRef.current.getBoundingClientRect();
-      moveListener = startRotate(
-        viewport,
-        downEvent,
-        viewportClientRect,
-        handleToolUpdate
-      );
+      moveListener = startRotate(viewport, downEvent, handleToolUpdate);
       break;
     case MouseTool.Windowing:
       moveListener = startWindowing(viewport, downEvent, handleToolUpdate);
