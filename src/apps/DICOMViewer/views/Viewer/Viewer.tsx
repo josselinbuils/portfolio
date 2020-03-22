@@ -81,10 +81,11 @@ export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
   function startActiveTool(downEvent: MouseEvent): void {
     startTool(
       downEvent,
-      activeLeftTool,
-      activeRightTool,
       viewport as Viewport,
       viewportElementRef,
+      activeLeftTool,
+      MouseTool.Pan,
+      activeRightTool,
       (tool: MouseTool, ...additionalArgs) => {
         if (viewport === undefined) {
           return;

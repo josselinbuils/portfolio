@@ -9,7 +9,7 @@ import styles from './LUTEditor.module.scss';
 
 const lutComponents = [
   { start: 0, end: 65, color: [0, 0, 255] },
-  { start: 45, end: 150, color: [0, 255, 255] },
+  { start: 45, end: 150, color: [0, 255, 0] },
   { start: 130, end: 255, color: [255, 0, 0] }
 ] as LUTComponent[];
 
@@ -40,10 +40,9 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
           onCanvasMouseDown={downEvent =>
             startTool(
               downEvent,
-              MouseTool.Paging,
-              MouseTool.Windowing,
               viewport as Viewport,
-              viewportElementRef
+              viewportElementRef,
+              MouseTool.Paging
             )
           }
           onError={onError}

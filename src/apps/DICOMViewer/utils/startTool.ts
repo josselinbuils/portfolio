@@ -12,23 +12,24 @@ import {
 
 export function startTool(
   downEvent: MouseEvent,
-  activeLeftTool: MouseTool,
-  activeRightTool: MouseTool,
   viewport: Viewport,
   viewportElementRef: RefObject<HTMLElement>,
+  activeLeftTool: MouseTool,
+  activeMiddleTool?: MouseTool,
+  activeRightTool?: MouseTool,
   onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {}
 ): void {
   downEvent.preventDefault();
 
   const isMacOS = navigator.platform.indexOf('Mac') !== -1;
-  let tool: MouseTool;
+  let tool: MouseTool | undefined;
 
   switch (downEvent.button) {
     case MouseButton.Left:
       tool = activeLeftTool;
       break;
     case MouseButton.Middle:
-      tool = MouseTool.Pan;
+      tool = activeMiddleTool;
       break;
     case MouseButton.Right:
       tool = activeRightTool;
@@ -37,7 +38,12 @@ export function startTool(
       throw new Error('Unknown button');
   }
 
-  const handleToolUpdate = (...args: any[]) => onUpdate(tool, ...args);
+  if (tool === undefined) {
+    return;
+  }
+
+  const handleToolUpdate = (...args: any[]) =>
+    onUpdate(tool as MouseTool, ...args);
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
