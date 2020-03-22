@@ -6,10 +6,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
+import { Music, MusicList } from '~/apps/MP3Player/interfaces';
+import { loadTracks } from '~/apps/MP3Player/utils';
 import { Spinner } from '~/platform/components';
-import { Music, MusicList } from '../../../../interfaces';
-import { loadTracks } from '../../../../utils';
-import { AudioContext } from '../../../AudioProvider';
 import styles from './Musics.module.scss';
 
 const ORDERS = [
