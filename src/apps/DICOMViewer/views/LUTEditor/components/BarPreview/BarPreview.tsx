@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useRef } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
-import { loadVOILut } from '~/apps/DICOMViewer/utils';
+import { loadVOILUT } from '~/apps/DICOMViewer/utils';
 import { useElementSize } from '~/platform/hooks';
 import styles from './BarPreview.module.scss';
 
@@ -28,7 +28,7 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
     if (context !== null) {
       context.clearRect(0, 0, canvasWidth - 1, canvasHeight - 1);
 
-      const lut = loadVOILut(lutComponents, canvasWidth);
+      const lut = loadVOILUT(lutComponents, canvasWidth);
 
       (lut.table as number[][]).forEach((color, x) => drawLine(x, color));
     }

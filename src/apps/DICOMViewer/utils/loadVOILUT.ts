@@ -1,26 +1,20 @@
-import { LUTComponent, VOILut } from '../interfaces';
+import { LUTComponent, VOILUT } from '../interfaces';
+import { applyPolynomialInterpolation } from './math';
+import { scaleLUTComponents } from './scaleLUTComponents';
 
-export function loadVOILut(
+export function loadVOILUT(
   lutComponents: LUTComponent[],
   windowWidth: number
-): VOILut {
+): VOILUT {
   const table: number[][] = [];
 
   for (let x = 0; x < windowWidth; x++) {
     const pixelValue = [0, 0, 0];
 
-    lutComponents
-      .map(({ color, end, start }) => ({
-        color,
-        end: Math.round((end / 256) * windowWidth),
-        start: Math.round((start / 256) * windowWidth)
-      }))
+    scaleLUTComponents(lutComponents, windowWidth)
       .filter(({ end, start }) => x - 1 >= start && x <= end)
       .forEach(({ color, end, start }) => {
-        const x2 = start + Math.round((end - start) / 2);
-        const colorValue = Math.round(
-          ((x - start) * (x - end) * 255) / ((x2 - start) * (x2 - end))
-        );
+        const colorValue = applyPolynomialInterpolation(start, end, 255, x);
 
         pixelValue[0] += Math.floor((color[0] / 255) * colorValue);
         pixelValue[1] += Math.floor((color[1] / 255) * colorValue);

@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
-import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks';
@@ -19,7 +18,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
     {
       className,
-      lutComponents,
       onCanvasMouseDown = () => {},
       onError,
       onStatsUpdate = () => {},
@@ -40,13 +38,14 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       let frameDurations: number[] = [];
       let renderDurations: number[] = [];
       let lastTime = performance.now();
+      let requestID: number;
 
       try {
         switch (rendererType) {
           case RendererType.JavaScript:
             renderer =
               (viewport as Viewport).viewType === ViewType.Native
-                ? new JSFrameRenderer(canvasElement, lutComponents)
+                ? new JSFrameRenderer(canvasElement)
                 : new JSVolumeRenderer(canvasElement);
             break;
           case RendererType.WebGL:
@@ -78,7 +77,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
           }
         }
 
-        window.requestAnimationFrame(render);
+        requestID = window.requestAnimationFrame(render);
       };
 
       const statsInterval = window.setInterval(() => {
@@ -113,10 +112,11 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       render();
 
       return () => {
+        cancelAnimationFrame(requestID);
         clearInterval(statsInterval);
         renderer.destroy?.();
       };
-    }, [lutComponents, onError, onStatsUpdate, rendererType, viewport]);
+    }, [onError, onStatsUpdate, rendererType, viewport]);
 
     useLayoutEffect(() => {
       viewport.height = viewportHeight;
@@ -153,7 +153,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
 
 interface Props {
   className?: string;
-  lutComponents?: LUTComponent[];
   rendererType: RendererType;
   viewport: Viewport;
   onCanvasMouseDown?(downEvent: MouseEvent): void;

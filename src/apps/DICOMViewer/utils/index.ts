@@ -4,5 +4,6 @@ export * from './computeFrames';
 export * from './computeSharedProperties';
 export * from './computeVolume';
 export * from './getAvailableViewTypes';
-export * from './loadVOILut';
+export * from './loadVOILUT';
+export * from './scaleLUTComponents';
 export * from './startTool';

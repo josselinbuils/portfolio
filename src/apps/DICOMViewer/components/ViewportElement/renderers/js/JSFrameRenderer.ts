@@ -1,7 +1,7 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import { LUTComponent, VOILut } from '~/apps/DICOMViewer/interfaces';
+import { VOILUT } from '~/apps/DICOMViewer/interfaces';
 import { Frame, Viewport } from '~/apps/DICOMViewer/models';
-import { loadVOILut } from '~/apps/DICOMViewer/utils';
+import { loadVOILUT } from '~/apps/DICOMViewer/utils';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,
@@ -12,7 +12,7 @@ import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import {
   drawImageData,
   getCanvasRenderingContexts,
-  getDefaultVOILut
+  getDefaultVOILUT
 } from './utils';
 
 export class JSFrameRenderer implements Renderer {
@@ -20,10 +20,7 @@ export class JSFrameRenderer implements Renderer {
   private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
 
-  constructor(
-    private readonly canvas: HTMLCanvasElement,
-    private readonly lutComponents?: LUTComponent[]
-  ) {
+  constructor(private readonly canvas: HTMLCanvasElement) {
     const { context, renderingContext } = getCanvasRenderingContexts(canvas);
     this.context = context;
     this.renderingContext = renderingContext;
@@ -50,9 +47,9 @@ export class JSFrameRenderer implements Renderer {
       case NormalizedImageFormat.Int16:
         if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
           this.lut =
-            this.lutComponents !== undefined
-              ? loadVOILut(this.lutComponents, windowWidth)
-              : getDefaultVOILut(windowWidth);
+            viewport.lutComponents !== undefined
+              ? loadVOILUT(viewport.lutComponents, windowWidth)
+              : getDefaultVOILUT(windowWidth);
         }
 
         const { boundedViewportSpace, imageSpace } = renderingProperties;
@@ -86,7 +83,7 @@ export class JSFrameRenderer implements Renderer {
     rightLimit: number,
     rawValue: number
   ): number {
-    const color = (this.lut as VOILut).table[
+    const color = (this.lut as VOILUT).table[
       Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
     ] as number[];
 
@@ -103,7 +100,7 @@ export class JSFrameRenderer implements Renderer {
     if (rawValue < leftLimit) {
       intensity = 0;
     } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILut).table[rawValue - leftLimit] as number;
+      intensity = (this.lut as VOILUT).table[rawValue - leftLimit] as number;
     }
 
     return intensity | (intensity << 8) | (intensity << 16) | (255 << 24);
@@ -130,7 +127,7 @@ export class JSFrameRenderer implements Renderer {
     } = imageSpace as ImageSpaceCoordinates;
 
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
-    const getPixelValue = Array.isArray((this.lut as VOILut).table[0])
+    const getPixelValue = Array.isArray((this.lut as VOILUT).table[0])
       ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
       : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
 
@@ -208,7 +205,7 @@ export class JSFrameRenderer implements Renderer {
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
-    const getPixelValue = Array.isArray((this.lut as VOILut).table[0])
+    const getPixelValue = Array.isArray((this.lut as VOILUT).table[0])
       ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
       : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
 

@@ -1,5 +1,5 @@
 import { ViewType } from '~/apps/DICOMViewer/constants';
-import { VOILut } from '~/apps/DICOMViewer/interfaces';
+import { VOILUT } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport, Volume } from '~/apps/DICOMViewer/models';
 import { changePointSpace } from '~/apps/DICOMViewer/utils';
 import { V } from '~/apps/DICOMViewer/utils/math';
@@ -15,7 +15,7 @@ import {
   displayCube,
   drawImageData,
   getCanvasRenderingContexts,
-  getDefaultVOILut
+  getDefaultVOILUT
 } from './utils';
 
 export class JSVolumeRenderer implements Renderer {
@@ -143,7 +143,7 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      this.lut = getDefaultVOILut(windowWidth);
+      this.lut = getDefaultVOILUT(windowWidth);
     }
 
     const { boundedViewportSpace, imageSpace } = renderingProperties;
@@ -178,7 +178,7 @@ export class JSVolumeRenderer implements Renderer {
     if (rawValue < leftLimit) {
       intensity = this.background;
     } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILut).table[rawValue - leftLimit] as number;
+      intensity = (this.lut as VOILUT).table[rawValue - leftLimit] as number;
     }
 
     const alpha = rawValue < -(Number.MAX_SAFE_INTEGER - 1) ? 0 : 255;

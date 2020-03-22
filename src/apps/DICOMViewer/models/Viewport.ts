@@ -1,5 +1,5 @@
 import { ViewType } from '../constants';
-import { CoordinateSpace } from '../interfaces';
+import { CoordinateSpace, LUTComponent } from '../interfaces';
 import { V } from '../utils/math';
 import { Camera } from './Camera';
 import { Dataset } from './Dataset';
@@ -12,6 +12,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   camera!: Camera;
   dataset!: Dataset;
   height = 0;
+  lutComponents?: LUTComponent[];
   viewType!: ViewType;
   width = 0;
   windowCenter = 30;
@@ -48,6 +49,31 @@ export class Viewport extends Renderable implements CoordinateSpace {
       delete this.basis;
       delete this.origin;
       delete this.imageZoom;
+    });
+  }
+
+  clone(properties: object): Viewport {
+    const {
+      camera,
+      dataset,
+      height,
+      lutComponents,
+      viewType,
+      width,
+      windowCenter,
+      windowWidth
+    } = this;
+
+    return new Viewport({
+      camera,
+      dataset,
+      height,
+      lutComponents,
+      viewType,
+      width,
+      windowCenter,
+      windowWidth,
+      ...properties
     });
   }
 

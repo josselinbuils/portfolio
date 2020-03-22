@@ -1,6 +1,6 @@
-import { VOILut } from '~/apps/DICOMViewer/interfaces';
+import { VOILUT } from '~/apps/DICOMViewer/interfaces';
 
-export function getDefaultVOILut(windowWidth: number): VOILut {
+export function getDefaultVOILUT(windowWidth: number): VOILUT {
   const table: number[] = [];
 
   for (let i = 0; i < windowWidth; i++) {

@@ -1,4 +1,4 @@
 export * from './CoordinateSpace';
 export * from './LUTComponent';
 export * from './SharedProperties';
-export * from './VOILut';
+export * from './VOILUT';
