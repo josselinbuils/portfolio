@@ -9,8 +9,7 @@ import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { startTool } from '~/apps/DICOMViewer/utils';
 import { LUTComponentList } from '~/apps/DICOMViewer/views/LUTEditor/components/LUTComponentList';
-import { GraphPreview } from './components';
-import { BarPreview } from './components';
+import { BarPreview, GraphPreview } from './components';
 import styles from './LUTEditor.module.scss';
 
 const baseLUTComponents = [
@@ -21,8 +20,8 @@ const baseLUTComponents = [
 
 export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
-  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(
-    baseLUTComponents
+  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
+    baseLUTComponents.map(component => ({ ...component }))
   );
   const [viewport, setViewport] = useState<Viewport>();
 
@@ -62,7 +61,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     }
 
     (targetLUTComponent as LUTComponent).color = color;
-    setLUTComponents([...lutComponents]);
+    setLUTComponents(lutComponents.slice());
   }
 
   function handleLUTComponentDelete(componentId: string): void {
@@ -107,7 +106,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
 
       (targetLUTComponent as LUTComponent).start = newStart;
       (targetLUTComponent as LUTComponent).end = newEnd;
-      setLUTComponents([...lutComponents]);
+      setLUTComponents(lutComponents.slice());
     }
 
     function mouseUpListener(): void {
@@ -129,7 +128,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
             startTool(downEvent, viewport as Viewport, MouseTool.Paging);
           }}
           onError={onError}
-          rendererType={rendererType}
+          rendererType={RendererType.JavaScript}
           viewport={viewport}
         />
         <BarPreview
