@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useLayoutEffect, useRef } from 'react';
+import React, { FC, useLayoutEffect, useRef, useState } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { scaleLUTComponents } from '~/apps/DICOMViewer/utils';
 import { applyPolynomialInterpolation } from '~/apps/DICOMViewer/utils/math';
@@ -13,10 +13,12 @@ const TOP_OFFSET = 5;
 const GRAPH_LINE_OFFSET = 10;
 
 export const GraphPreview: FC<Props> = ({
+  activeLUTComponentID,
   className,
   lutComponents,
   onLUTComponentDrag
 }) => {
+  const [hoveredLUTComponentID, setHoveredLUTComponentID] = useState<string>();
   const canvasElementRef = useRef<HTMLCanvasElement>(null);
   const [canvasWidth, canvasHeight] = useElementSize(canvasElementRef);
   const previewWidth =
@@ -42,7 +44,7 @@ export const GraphPreview: FC<Props> = ({
       x1: number,
       y1: number,
       color: string = 'lightgrey',
-      lineWidth: number = 2
+      withShadow: boolean = false
     ): void {
       if (context === null) {
         return;
@@ -50,8 +52,17 @@ export const GraphPreview: FC<Props> = ({
       context.beginPath();
       context.moveTo(getX(x0), getY(y0));
       context.lineTo(getX(x1), getY(y1));
-      context.lineWidth = lineWidth;
+
+      context.lineWidth = withShadow ? 3 : 2;
       context.strokeStyle = color;
+
+      if (withShadow) {
+        context.shadowBlur = 1;
+        context.shadowColor = context.strokeStyle;
+      } else {
+        context.shadowColor = 'transparent';
+      }
+
       context.stroke();
     }
 
@@ -59,7 +70,7 @@ export const GraphPreview: FC<Props> = ({
       context.clearRect(0, 0, canvasWidth, canvasHeight);
 
       scaleLUTComponents(lutComponents, previewWidth).forEach(
-        ({ color, end, start }) => {
+        ({ color, end, id, start }) => {
           let lastY = 0;
 
           for (let x = start; x <= end; x++) {
@@ -73,7 +84,8 @@ export const GraphPreview: FC<Props> = ({
                 lastY,
                 x,
                 y,
-                `rgb(${color[0]}, ${color[1]}, ${color[2]}`
+                `rgb(${color})`,
+                id === hoveredLUTComponentID || id === activeLUTComponentID
               );
             }
             lastY = y;
@@ -115,13 +127,24 @@ export const GraphPreview: FC<Props> = ({
       context.fillStyle = 'lightgrey';
       context.fill();
     }
-  }, [canvasHeight, canvasWidth, lutComponents, previewHeight, previewWidth]);
+  }, [
+    activeLUTComponentID,
+    canvasHeight,
+    canvasWidth,
+    hoveredLUTComponentID,
+    lutComponents,
+    previewHeight,
+    previewWidth
+  ]);
 
-  function handleMouseDown(downEvent: React.MouseEvent): void {
-    const downX = downEvent.nativeEvent.offsetX - LEFT_OFFSET - 1;
-    const downY = canvasHeight - downEvent.nativeEvent.offsetY - BOTTOM_OFFSET;
+  function getCloseLUTComponent(
+    offsetX: number,
+    offsetY: number
+  ): LUTComponent | undefined {
+    const downX = offsetX - LEFT_OFFSET - 1;
+    const downY = canvasHeight - offsetY - BOTTOM_OFFSET;
 
-    const closeLUTComponent = scaleLUTComponents(lutComponents, previewWidth)
+    return scaleLUTComponents(lutComponents, previewWidth)
       .filter(({ end, start }) => downX >= start && downX <= end)
       .find(({ end, start }) => {
         const y = applyPolynomialInterpolation(
@@ -132,17 +155,39 @@ export const GraphPreview: FC<Props> = ({
         );
         return Math.abs(downY - y) < 10;
       });
+  }
+
+  function handleMouseDown(downEvent: React.MouseEvent): void {
+    if (hoveredLUTComponentID !== undefined) {
+      onLUTComponentDrag(
+        downEvent.nativeEvent,
+        previewWidth,
+        hoveredLUTComponentID
+      );
+    }
+  }
+
+  function handleMouseMove(moveEvent: React.MouseEvent): void {
+    const { offsetX, offsetY } = moveEvent.nativeEvent;
+    const closeLUTComponent = getCloseLUTComponent(offsetX, offsetY);
 
     if (closeLUTComponent !== undefined) {
-      onLUTComponentDrag(downEvent.nativeEvent, closeLUTComponent.id);
+      setHoveredLUTComponentID(closeLUTComponent.id);
+    } else if (hoveredLUTComponentID !== undefined) {
+      setHoveredLUTComponentID(undefined);
     }
   }
 
   return (
     <div className={cn(styles.preview, className)}>
       <canvas
+        className={cn({
+          [styles.withActiveComponent]:
+            hoveredLUTComponentID || activeLUTComponentID
+        })}
         height={canvasHeight}
         onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
         ref={canvasElementRef}
         width={canvasWidth}
       />
@@ -151,7 +196,12 @@ export const GraphPreview: FC<Props> = ({
 };
 
 interface Props {
+  activeLUTComponentID: string | undefined;
   className: string;
   lutComponents: LUTComponent[];
-  onLUTComponentDrag(downEvent: MouseEvent, componentId: string): void;
+  onLUTComponentDrag(
+    downEvent: MouseEvent,
+    previewWidth: number,
+    componentId: string
+  ): void;
 }

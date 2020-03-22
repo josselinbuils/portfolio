@@ -21,7 +21,7 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
       context.moveTo(x, 0);
       context.lineTo(x, canvasHeight - 1);
       context.lineWidth = 2;
-      context.strokeStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+      context.strokeStyle = `rgb(${color})`;
       context.stroke();
     }
 

@@ -19,6 +19,7 @@ const baseLUTComponents = [
 ] as LUTComponent[];
 
 export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
+  const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(
     baseLUTComponents
   );
@@ -48,6 +49,55 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     return null;
   }
 
+  function lutComponentDragHandler(
+    downEvent: MouseEvent,
+    previewWidth: number,
+    componentId: string
+  ): void {
+    const targetLUTComponent = lutComponents.find(
+      ({ id }) => id === componentId
+    );
+
+    if (targetLUTComponent === undefined) {
+      throw new Error('Unable to find target LUT component');
+    }
+
+    setActiveLUTComponentID(componentId);
+
+    const baseStart = targetLUTComponent.start;
+    const baseEnd = targetLUTComponent.end;
+    const lutComponentWidth = baseEnd - baseStart;
+
+    function mouseMoveListener(moveEvent: MouseEvent): void {
+      const offset = Math.round(
+        ((moveEvent.clientX - downEvent.clientX) / previewWidth) * 256
+      );
+      let newStart = baseStart + offset;
+      let newEnd = baseEnd + offset;
+
+      if (newStart < 0) {
+        newStart = 0;
+        newEnd = lutComponentWidth;
+      } else if (newEnd > 255) {
+        newEnd = 255;
+        newStart = newEnd - lutComponentWidth;
+      }
+
+      (targetLUTComponent as LUTComponent).start = newStart;
+      (targetLUTComponent as LUTComponent).end = newEnd;
+      setLUTComponents([...baseLUTComponents]);
+    }
+
+    function mouseUpListener(): void {
+      window.removeEventListener('mousemove', mouseMoveListener);
+      window.removeEventListener('mouseup', mouseUpListener);
+      setActiveLUTComponentID(undefined);
+    }
+
+    window.addEventListener('mousemove', mouseMoveListener);
+    window.addEventListener('mouseup', mouseUpListener);
+  }
+
   return (
     <>
       <div className={styles.leftPan}>
@@ -74,47 +124,10 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
       </div>
       <div className={styles.rightPan}>
         <GraphPreview
+          activeLUTComponentID={activeLUTComponentID}
           className={styles.preview}
           lutComponents={lutComponents}
-          onLUTComponentDrag={(downEvent, componentId) => {
-            const targetLUTComponent = lutComponents.find(
-              ({ id }) => id === componentId
-            );
-
-            if (targetLUTComponent === undefined) {
-              throw new Error('Unable to find target LUT component');
-            }
-
-            const baseStart = targetLUTComponent.start;
-            const baseEnd = targetLUTComponent.end;
-            const lutComponentWidth = baseEnd - baseStart;
-
-            function mouseMoveListener(moveEvent: MouseEvent): void {
-              const offset = moveEvent.clientX - downEvent.clientX;
-              let newStart = baseStart + offset;
-              let newEnd = baseEnd + offset;
-
-              if (newStart < 0) {
-                newStart = 0;
-                newEnd = lutComponentWidth;
-              } else if (newEnd > 255) {
-                newEnd = 255;
-                newStart = newEnd - lutComponentWidth;
-              }
-
-              (targetLUTComponent as LUTComponent).start = newStart;
-              (targetLUTComponent as LUTComponent).end = newEnd;
-              setLUTComponents([...baseLUTComponents]);
-            }
-
-            function mouseUpListener(): void {
-              window.removeEventListener('mousemove', mouseMoveListener);
-              window.removeEventListener('mouseup', mouseUpListener);
-            }
-
-            window.addEventListener('mousemove', mouseMoveListener);
-            window.addEventListener('mouseup', mouseUpListener);
-          }}
+          onLUTComponentDrag={lutComponentDragHandler}
         />
       </div>
     </>
