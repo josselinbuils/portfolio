@@ -2,4 +2,3 @@ export * from './displayCube';
 export * from './drawImageData';
 export * from './getCanvasRenderingContexts';
 export * from './getDefaultVOILut';
-export * from './loadVOILut';

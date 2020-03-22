@@ -1,3 +1,4 @@
 export * from './CoordinateSpace';
-export * from './LutComponent';
+export * from './LUTComponent';
 export * from './SharedProperties';
+export * from './VOILut';

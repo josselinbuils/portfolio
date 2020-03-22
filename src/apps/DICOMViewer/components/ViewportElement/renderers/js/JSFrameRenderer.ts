@@ -1,6 +1,8 @@
 import { NormalizedImageFormat } from '../../../../constants';
 import { LUTComponent } from '../../../../interfaces';
+import { VOILut } from '../../../../interfaces';
 import { Frame, Viewport } from '../../../../models';
+import { loadVOILut } from '../../../../utils';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,
@@ -11,10 +13,8 @@ import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import {
   drawImageData,
   getCanvasRenderingContexts,
-  getDefaultVOILut,
-  loadVOILut
+  getDefaultVOILut
 } from './utils';
-import { VOILut } from './VOILut';
 
 export class JSFrameRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;

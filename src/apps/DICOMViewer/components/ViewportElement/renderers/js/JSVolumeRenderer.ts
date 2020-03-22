@@ -1,4 +1,5 @@
 import { ViewType } from '../../../../constants';
+import { VOILut } from '../../../../interfaces';
 import { Dataset, Viewport, Volume } from '../../../../models';
 import { changePointSpace } from '../../../../utils';
 import { V } from '../../../../utils/math';
@@ -16,7 +17,6 @@ import {
   getCanvasRenderingContexts,
   getDefaultVOILut
 } from './utils';
-import { VOILut } from './VOILut';
 
 export class JSVolumeRenderer implements Renderer {
   private background = 0;

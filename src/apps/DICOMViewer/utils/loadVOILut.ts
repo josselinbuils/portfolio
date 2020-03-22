@@ -1,5 +1,4 @@
-import { LUTComponent } from '../../../../../interfaces';
-import { VOILut } from '../VOILut';
+import { LUTComponent, VOILut } from '../interfaces';
 
 export function loadVOILut(
   lutComponents: LUTComponent[],

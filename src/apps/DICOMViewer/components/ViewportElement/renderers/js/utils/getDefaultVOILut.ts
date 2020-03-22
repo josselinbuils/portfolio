@@ -1,4 +1,4 @@
-import { VOILut } from '../VOILut';
+import { VOILut } from '../../../../../interfaces';
 
 export function getDefaultVOILut(windowWidth: number): VOILut {
   const table: number[] = [];

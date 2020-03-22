@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React, { FC, useLayoutEffect, useRef, useState } from 'react';
+import { loadVOILut } from '~/apps/DICOMViewer/utils';
 import { LUTComponent } from '../../../../interfaces';
 import styles from './LUTPreview.module.scss';
 
@@ -61,48 +62,43 @@ export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
     if (context !== null) {
       context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-      for (let x = 0; x < 256; x++) {
-        const pixelValue = [0, 0, 0];
+      lutComponents.forEach(({ color, end, start }) => {
+        const x2 = start + Math.round((end - start) / 2);
+        let lastY = 0;
 
-        lutComponents
-          .filter(({ start, end }) => x - 1 >= start && x <= end)
-          .forEach(({ color, end, start }) => {
-            const x2 = start + Math.round((end - start) / 2);
-            const colorValue = Math.round(
-              ((x - start) * (x - end) * 255) / ((x2 - start) * (x2 - end))
+        for (let x = start; x <= end; x++) {
+          const y =
+            PREVIEW_HEIGHT -
+            Math.round(
+              ((x - start) * (x - end) * PREVIEW_HEIGHT) /
+                ((x2 - start) * (x2 - end))
             );
-            const y = 255 - colorValue;
 
-            if (x > start) {
-              const prevY =
-                255 -
-                Math.round(
-                  ((x - 1 - start) * (x - 1 - end) * 255) /
-                    ((x2 - start) * (x2 - end))
-                );
-              drawLine(
-                x - 1,
-                prevY,
-                x,
-                y,
-                `rgb(${color[0]}, ${color[1]}, ${color[2]}`
-              );
-            }
+          if (x > start) {
+            drawLine(
+              x - 1,
+              lastY,
+              x,
+              y,
+              `rgb(${color[0]}, ${color[1]}, ${color[2]}`
+            );
+          }
+          lastY = y;
+        }
+      });
 
-            pixelValue[0] += Math.floor((color[0] / 255) * colorValue);
-            pixelValue[1] += Math.floor((color[1] / 255) * colorValue);
-            pixelValue[2] += Math.floor((color[2] / 255) * colorValue);
-          });
+      const lut = loadVOILut(lutComponents, 256);
 
+      (lut.table as number[][]).forEach((color, x) =>
         drawLine(
           x,
           PREVIEW_HEIGHT,
           x,
           PREVIEW_HEIGHT + BAR_HEIGHT,
-          `rgba(${pixelValue[0]}, ${pixelValue[1]}, ${pixelValue[2]}, 0.8)`,
+          `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`,
           10
-        );
-      }
+        )
+      );
     }
   }, [canvasHeight, canvasWidth, lutComponents]);
 
