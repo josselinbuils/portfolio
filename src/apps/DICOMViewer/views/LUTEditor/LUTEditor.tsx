@@ -8,11 +8,12 @@ import {
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { startTool } from '~/apps/DICOMViewer/utils';
+import { LUTComponentList } from '~/apps/DICOMViewer/views/LUTEditor/components/LUTComponentList';
 import { GraphPreview } from './components';
 import { BarPreview } from './components';
 import styles from './LUTEditor.module.scss';
 
-const baseLUTComponents = [
+let baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },
   { id: '1', start: 45, end: 150, color: [0, 255, 0] },
   { id: '2', start: 130, end: 255, color: [255, 0, 0] }
@@ -49,7 +50,30 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     return null;
   }
 
-  function lutComponentDragHandler(
+  function handleLUTComponentColorChange(
+    componentId: string,
+    color: number[]
+  ): void {
+    const targetLUTComponent = lutComponents.find(
+      ({ id }) => id === componentId
+    );
+
+    if (targetLUTComponent === undefined) {
+      throw new Error('Unable to find target LUT component');
+    }
+
+    (targetLUTComponent as LUTComponent).color = color;
+    setLUTComponents([...baseLUTComponents]);
+  }
+
+  function handleLUTComponentDelete(componentId: string): void {
+    baseLUTComponents = baseLUTComponents.filter(
+      component => component.id !== componentId
+    );
+    setLUTComponents(baseLUTComponents);
+  }
+
+  function handleLUTComponentDrag(
     downEvent: MouseEvent,
     previewWidth: number,
     componentId: string
@@ -104,7 +128,6 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
         <ViewportElement
           className={styles.viewport}
           onCanvasMouseDown={downEvent => {
-            console.log('startToo');
             startTool(
               downEvent,
               viewport as Viewport,
@@ -125,9 +148,14 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
       <div className={styles.rightPan}>
         <GraphPreview
           activeLUTComponentID={activeLUTComponentID}
-          className={styles.preview}
+          className={styles.graphPreview}
           lutComponents={lutComponents}
-          onLUTComponentDrag={lutComponentDragHandler}
+          onLUTComponentDrag={handleLUTComponentDrag}
+        />
+        <LUTComponentList
+          lutComponents={lutComponents}
+          onLUTComponentColorChange={handleLUTComponentColorChange}
+          onLUTComponentDelete={handleLUTComponentDelete}
         />
       </div>
     </>

@@ -16,9 +16,18 @@ export function loadVOILUT(
       .forEach(({ color, end, start }) => {
         const colorValue = applyPolynomialInterpolation(start, end, 255, x);
 
-        pixelValue[0] += Math.floor((color[0] / 255) * colorValue);
-        pixelValue[1] += Math.floor((color[1] / 255) * colorValue);
-        pixelValue[2] += Math.floor((color[2] / 255) * colorValue);
+        pixelValue[0] = Math.min(
+          pixelValue[0] + Math.floor((color[0] / 255) * colorValue),
+          255
+        );
+        pixelValue[1] = Math.min(
+          pixelValue[1] + Math.floor((color[1] / 255) * colorValue),
+          255
+        );
+        pixelValue[2] = Math.min(
+          pixelValue[2] + Math.floor((color[2] / 255) * colorValue),
+          255
+        );
       });
 
     table.push(pixelValue);

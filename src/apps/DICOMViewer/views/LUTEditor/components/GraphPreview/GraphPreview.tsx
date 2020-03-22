@@ -44,7 +44,7 @@ export const GraphPreview: FC<Props> = ({
       x1: number,
       y1: number,
       color: string = 'lightgrey',
-      withShadow: boolean = false
+      active: boolean = false
     ): void {
       if (context === null) {
         return;
@@ -52,17 +52,8 @@ export const GraphPreview: FC<Props> = ({
       context.beginPath();
       context.moveTo(getX(x0), getY(y0));
       context.lineTo(getX(x1), getY(y1));
-
-      context.lineWidth = withShadow ? 3 : 2;
+      context.lineWidth = active ? 3 : 2;
       context.strokeStyle = color;
-
-      if (withShadow) {
-        context.shadowBlur = 1;
-        context.shadowColor = context.strokeStyle;
-      } else {
-        context.shadowColor = 'transparent';
-      }
-
       context.stroke();
     }
 
@@ -187,6 +178,7 @@ export const GraphPreview: FC<Props> = ({
         })}
         height={canvasHeight}
         onMouseDown={handleMouseDown}
+        onMouseLeave={() => setHoveredLUTComponentID(undefined)}
         onMouseMove={handleMouseMove}
         ref={canvasElementRef}
         width={canvasWidth}
