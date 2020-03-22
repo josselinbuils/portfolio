@@ -3,15 +3,21 @@ import { ViewportElement } from '~/apps/DICOMViewer/components';
 import {
   MouseTool,
   RendererType,
+  View,
   ViewType
 } from '~/apps/DICOMViewer/constants';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { getAvailableViewTypes, startTool } from '~/apps/DICOMViewer/utils';
 import { MouseButton } from '~/platform/constants';
 import { Annotations } from './Annotations';
-import { AnnotationsElement, Toolbar } from './components';
+import { AnnotationsElement, LeftToolbar, RightToolbar } from './components';
 
-export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
+export const Viewer: FC<Props> = ({
+  dataset,
+  onError,
+  onViewChange,
+  rendererType
+}) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
     MouseTool.Paging
   );
@@ -158,7 +164,7 @@ export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
 
   return (
     <>
-      <Toolbar
+      <LeftToolbar
         activeLeftTool={activeLeftTool}
         activeRightTool={activeRightTool}
         viewport={viewport}
@@ -172,6 +178,7 @@ export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
         rendererType={rendererType}
         viewport={viewport}
       />
+      <RightToolbar onClickPalette={() => onViewChange(View.LUTEditor)} />
       <AnnotationsElement
         annotations={annotations}
         availableViewTypes={getAvailableViewTypes(
@@ -187,5 +194,6 @@ export const Viewer: FC<Props> = ({ dataset, onError, rendererType }) => {
 interface Props {
   dataset: Dataset;
   rendererType: RendererType;
+  onViewChange(newView: View): void;
   onError(message: string): void;
 }

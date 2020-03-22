@@ -1,2 +1,3 @@
 export * from './AnnotationsElement';
-export * from './Toolbar';
+export * from './LeftToolbar';
+export * from './RightToolbar';

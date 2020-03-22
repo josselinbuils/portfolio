@@ -13,7 +13,7 @@ import { GraphPreview } from './components';
 import { BarPreview } from './components';
 import styles from './LUTEditor.module.scss';
 
-let baseLUTComponents = [
+const baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },
   { id: '1', start: 45, end: 150, color: [0, 255, 0] },
   { id: '2', start: 130, end: 255, color: [255, 0, 0] }
@@ -63,14 +63,13 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     }
 
     (targetLUTComponent as LUTComponent).color = color;
-    setLUTComponents([...baseLUTComponents]);
+    setLUTComponents([...lutComponents]);
   }
 
   function handleLUTComponentDelete(componentId: string): void {
-    baseLUTComponents = baseLUTComponents.filter(
-      component => component.id !== componentId
+    setLUTComponents(
+      lutComponents.filter(component => component.id !== componentId)
     );
-    setLUTComponents(baseLUTComponents);
   }
 
   function handleLUTComponentDrag(
@@ -109,7 +108,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
 
       (targetLUTComponent as LUTComponent).start = newStart;
       (targetLUTComponent as LUTComponent).end = newEnd;
-      setLUTComponents([...baseLUTComponents]);
+      setLUTComponents([...lutComponents]);
     }
 
     function mouseUpListener(): void {

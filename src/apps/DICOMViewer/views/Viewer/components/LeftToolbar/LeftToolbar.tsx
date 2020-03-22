@@ -11,9 +11,9 @@ import React, { FC } from 'react';
 import { MouseTool, ViewType } from '~/apps/DICOMViewer/constants';
 import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
-import styles from './Toolbar.module.scss';
+import styles from './LeftToolbar.module.scss';
 
-const tools = [
+const mouseTools = [
   {
     condition: (viewport: Viewport) => viewport.dataset.frames.length > 1,
     icon: faArrowsAltV,
@@ -39,17 +39,17 @@ const tools = [
   }
 ];
 
-export const Toolbar: FC<Props> = ({
+export const LeftToolbar: FC<Props> = ({
   activeLeftTool,
   activeRightTool,
   onToolSelected,
   viewport
 }) => (
   <div className={styles.toolbar}>
-    {tools.map(({ condition, icon, tool }) =>
+    {mouseTools.map(({ condition, icon, tool }) =>
       !condition || condition(viewport) ? (
         <button
-          className={cn(styles.tool, {
+          className={cn(styles.mouseTool, {
             [styles.activeLeft]: activeLeftTool === tool,
             [styles.activeRight]: activeRightTool === tool
           })}
