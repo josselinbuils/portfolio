@@ -1,7 +1,7 @@
-import { ViewType } from '../../../constants';
-import { Camera, Frame, Viewport, Volume } from '../../../models';
-import { changePointSpace } from '../../../utils';
-import { V } from '../../../utils/math';
+import { ViewType } from '~/apps/DICOMViewer/constants';
+import { Camera, Frame, Viewport, Volume } from '~/apps/DICOMViewer/models';
+import { changePointSpace } from '~/apps/DICOMViewer/utils';
+import { V } from '~/apps/DICOMViewer/utils/math';
 import {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,

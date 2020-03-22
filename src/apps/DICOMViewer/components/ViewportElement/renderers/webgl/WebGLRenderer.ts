@@ -1,5 +1,5 @@
-import { NormalizedImageFormat } from '../../../../constants';
-import { Frame, Viewport } from '../../../../models';
+import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
+import { Frame, Viewport } from '~/apps/DICOMViewer/models';
 import { Renderer } from '../Renderer';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { getFragmentShaderSrc, getTextureFormat } from './fragmentShader';

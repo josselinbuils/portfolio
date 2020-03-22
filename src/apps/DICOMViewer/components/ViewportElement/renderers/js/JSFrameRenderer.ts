@@ -1,8 +1,7 @@
-import { NormalizedImageFormat } from '../../../../constants';
-import { LUTComponent } from '../../../../interfaces';
-import { VOILut } from '../../../../interfaces';
-import { Frame, Viewport } from '../../../../models';
-import { loadVOILut } from '../../../../utils';
+import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
+import { LUTComponent, VOILut } from '~/apps/DICOMViewer/interfaces';
+import { Frame, Viewport } from '~/apps/DICOMViewer/models';
+import { loadVOILut } from '~/apps/DICOMViewer/utils';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,

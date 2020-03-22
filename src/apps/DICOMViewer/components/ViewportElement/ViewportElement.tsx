@@ -1,14 +1,10 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import cn from 'classnames';
+import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
+import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
-import { RendererType, ViewType } from '../../constants';
-import { LUTComponent } from '../../interfaces';
-import { Viewport } from '../../models';
+import { useElementSize } from '~/platform/hooks';
 import {
   JSFrameRenderer,
   JSVolumeRenderer,
@@ -22,6 +18,7 @@ const ANNOTATIONS_REFRESH_DELAY = 500;
 export const ViewportElement = forwardRef<HTMLDivElement, Props>(
   (
     {
+      className,
       lutComponents,
       onCanvasMouseDown = () => {},
       onError,
@@ -31,9 +28,8 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
     },
     ref
   ) => {
-    const [viewportHeight, setViewportHeight] = useState(0);
-    const [viewportWidth, setViewportWidth] = useState(0);
     const canvasElementRef = useRef<HTMLCanvasElement>(null);
+    const [viewportWidth, viewportHeight] = useElementSize(canvasElementRef);
 
     useEffect(() => {
       if (!viewport) {
@@ -44,12 +40,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
       let frameDurations: number[] = [];
       let renderDurations: number[] = [];
       let lastTime = performance.now();
-
-      const observer = new ResizeObserver(([{ contentRect }]) => {
-        setViewportHeight(Math.round(contentRect.height));
-        setViewportWidth(Math.round(contentRect.width));
-      });
-      observer.observe(canvasElement);
 
       try {
         switch (rendererType) {
@@ -124,7 +114,6 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
 
       return () => {
         clearInterval(statsInterval);
-        observer.disconnect();
         renderer.destroy?.();
       };
     }, [lutComponents, onError, onStatsUpdate, rendererType, viewport]);
@@ -149,7 +138,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
     };
 
     return (
-      <div className={styles.viewport} ref={ref}>
+      <div className={cn(styles.viewport, className)} ref={ref}>
         <canvas
           height={viewportHeight}
           onContextMenu={() => false}
@@ -163,6 +152,7 @@ export const ViewportElement = forwardRef<HTMLDivElement, Props>(
 );
 
 interface Props {
+  className?: string;
   lutComponents?: LUTComponent[];
   rendererType: RendererType;
   viewport: Viewport;

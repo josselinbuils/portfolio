@@ -1,4 +1,4 @@
-import { ViewType } from '../../constants';
+import { ViewType } from '~/apps/DICOMViewer/constants';
 
 export interface Annotations {
   datasetName?: string;

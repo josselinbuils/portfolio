@@ -1,9 +1,13 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
+import { ViewportElement } from '~/apps/DICOMViewer/components';
+import {
+  MouseTool,
+  RendererType,
+  ViewType
+} from '~/apps/DICOMViewer/constants';
+import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
+import { getAvailableViewTypes, startTool } from '~/apps/DICOMViewer/utils';
 import { MouseButton } from '~/platform/constants';
-import { ViewportElement } from '../../components';
-import { MouseTool, RendererType, ViewType } from '../../constants';
-import { Dataset, Viewport } from '../../models';
-import { getAvailableViewTypes, startTool } from '../../utils';
 import { Annotations } from './Annotations';
 import { AnnotationsElement, Toolbar } from './components';
 

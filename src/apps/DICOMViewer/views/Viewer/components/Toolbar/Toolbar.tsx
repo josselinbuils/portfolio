@@ -8,9 +8,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
+import { MouseTool, ViewType } from '~/apps/DICOMViewer/constants';
+import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
-import { MouseTool, ViewType } from '../../../../constants';
-import { Viewport } from '../../../../models';
 import styles from './Toolbar.module.scss';
 
 const tools = [

@@ -1,10 +1,10 @@
 import cn from 'classnames';
-import React, { FC, useLayoutEffect, useRef, useState } from 'react';
-import { loadVOILut } from '~/apps/DICOMViewer/utils';
-import { LUTComponent } from '../../../../interfaces';
-import styles from './LUTPreview.module.scss';
+import React, { FC, useLayoutEffect, useRef } from 'react';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
+import { useElementSize } from '~/platform/hooks';
+import styles from './GraphPreview.module.scss';
 
-const BAR_HEIGHT = 30;
+const BAR_HEIGHT = 0;
 const BOTTOM_OFFSET = 5;
 const LEFT_OFFSET = 5;
 const RIGHT_OFFSET = 5;
@@ -15,20 +15,9 @@ const PREVIEW_HEIGHT = 255;
 const CANVAS_HEIGHT = TOP_OFFSET + PREVIEW_HEIGHT + BAR_HEIGHT + BOTTOM_OFFSET;
 const CANVAS_WIDTH = LEFT_OFFSET + PREVIEW_WIDTH + RIGHT_OFFSET;
 
-export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
-  const [canvasHeight, setCanvasHeight] = useState(0);
-  const [canvasWidth, setCanvasWidth] = useState(0);
+export const GraphPreview: FC<Props> = ({ className, lutComponents }) => {
   const canvasElementRef = useRef<HTMLCanvasElement>(null);
-
-  useLayoutEffect(() => {
-    const canvasElement = canvasElementRef.current as HTMLCanvasElement;
-    const observer = new ResizeObserver(([{ contentRect }]) => {
-      setCanvasHeight(Math.round(contentRect.height));
-      setCanvasWidth(Math.round(contentRect.width));
-    });
-    observer.observe(canvasElement);
-    return () => observer.disconnect();
-  }, []);
+  const [canvasWidth, canvasHeight] = useElementSize(canvasElementRef);
 
   useLayoutEffect(() => {
     const canvasElement = canvasElementRef.current as HTMLCanvasElement;
@@ -86,19 +75,6 @@ export const LUTPreview: FC<Props> = ({ className, lutComponents }) => {
           lastY = y;
         }
       });
-
-      const lut = loadVOILut(lutComponents, 256);
-
-      (lut.table as number[][]).forEach((color, x) =>
-        drawLine(
-          x,
-          PREVIEW_HEIGHT,
-          x,
-          PREVIEW_HEIGHT + BAR_HEIGHT,
-          `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`,
-          10
-        )
-      );
     }
   }, [canvasHeight, canvasWidth, lutComponents]);
 

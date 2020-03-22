@@ -1,8 +1,8 @@
-import { ViewType } from '../../../../constants';
-import { VOILut } from '../../../../interfaces';
-import { Dataset, Viewport, Volume } from '../../../../models';
-import { changePointSpace } from '../../../../utils';
-import { V } from '../../../../utils/math';
+import { ViewType } from '~/apps/DICOMViewer/constants';
+import { VOILut } from '~/apps/DICOMViewer/interfaces';
+import { Dataset, Viewport, Volume } from '~/apps/DICOMViewer/models';
+import { changePointSpace } from '~/apps/DICOMViewer/utils';
+import { V } from '~/apps/DICOMViewer/utils/math';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,

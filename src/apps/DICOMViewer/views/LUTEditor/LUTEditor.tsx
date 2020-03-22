@@ -1,10 +1,15 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
+import { ViewportElement } from '~/apps/DICOMViewer/components';
+import {
+  MouseTool,
+  RendererType,
+  ViewType
+} from '~/apps/DICOMViewer/constants';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
+import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { startTool } from '~/apps/DICOMViewer/utils';
-import { ViewportElement } from '../../components';
-import { MouseTool, RendererType, ViewType } from '../../constants';
-import { LUTComponent } from '../../interfaces';
-import { Dataset, Viewport } from '../../models';
-import { LUTPreview } from './components';
+import { GraphPreview } from './components';
+import { BarPreview } from './components';
 import styles from './LUTEditor.module.scss';
 
 const lutComponents = [
@@ -34,8 +39,9 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
 
   return (
     <>
-      <div className={styles.viewport}>
+      <div className={styles.leftPan}>
         <ViewportElement
+          className={styles.viewport}
           lutComponents={lutComponents}
           onCanvasMouseDown={downEvent =>
             startTool(
@@ -50,9 +56,16 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
           rendererType={rendererType}
           viewport={viewport}
         />
+        <BarPreview
+          className={styles.barPreview}
+          lutComponents={lutComponents}
+        />
       </div>
-      <div className={styles.sidebar}>
-        <LUTPreview className={styles.preview} lutComponents={lutComponents} />
+      <div className={styles.rightPan}>
+        <GraphPreview
+          className={styles.preview}
+          lutComponents={lutComponents}
+        />
       </div>
     </>
   );

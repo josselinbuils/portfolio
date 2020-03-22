@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { RendererType } from '../../constants';
+import { RendererType } from '~/apps/DICOMViewer/constants';
 import javascript from './images/javascript.png';
 import webgl from './images/webgl.png';
 import styles from './SelectRenderer.module.scss';

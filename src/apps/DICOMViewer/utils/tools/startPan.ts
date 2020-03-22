@@ -1,6 +1,6 @@
-import { Viewport, Volume } from '../../models';
-import { changePointSpace } from '../../utils';
-import { V } from '../../utils/math';
+import { Viewport, Volume } from '~/apps/DICOMViewer/models';
+import { changePointSpace } from '~/apps/DICOMViewer/utils';
+import { V } from '~/apps/DICOMViewer/utils/math';
 import { isImageCentered } from './utils';
 
 export function startPan(
