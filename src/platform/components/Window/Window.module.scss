@@ -4,6 +4,7 @@
   overflow: hidden;
   flex-grow: 1;
   user-select: none;
+  height: 100%;
 
   &.frozen {
     display: none;
