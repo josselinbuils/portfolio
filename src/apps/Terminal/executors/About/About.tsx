@@ -1,7 +1,9 @@
 import React from 'react';
+import { Picture } from '~/platform/components';
 import { Executor } from '../Executor';
 import styles from './About.module.scss';
-import photo from './josselinbuils.webp';
+import photoJPG from './josselinbuils.jpg';
+import photoWEBP from './josselinbuils.webp';
 
 const socialLinks = [
   ['linkedin', 'https://linkedin.com/in/josselinbuils'],
@@ -11,7 +13,12 @@ const socialLinks = [
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <img className={styles.photo} src={photo} alt="me" />
+    <Picture
+      alt="me"
+      className={styles.photo}
+      src={photoJPG}
+      webpSrc={photoWEBP}
+    />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I'm Josselin, a full-stack JavaScript developer :)
