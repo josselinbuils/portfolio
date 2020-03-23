@@ -12,7 +12,7 @@
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
     "csscomb:staged": "exec-staged 'csscomb -v' '.*\\.scss$'",
     "dev:client": "react-app-rewired start",
-    "dev:server": "yarn build:server:dev && concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
+    "dev:server": "concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
     "lint": "yarn lint:client && yarn lint:server",
     "lint:client": "tslint -p tsconfig.json --fix",
     "lint:server": "tslint -p server/tsconfig.json --fix",
