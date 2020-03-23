@@ -32,10 +32,6 @@ export function registerRouter(app: Express): Express {
 
     if (ENV === ENV_DEV) {
       res.set('Access-Control-Allow-Origin', '*');
-      res.set(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
-      );
     }
     next();
   });
@@ -44,14 +40,19 @@ export function registerRouter(app: Express): Express {
     const path = join(ASSETS_PATH, req.url);
     const gzPath = `${path}.gz`;
 
+    res.set('Access-Control-Expose-Headers', 'Content-Length');
+
     if (existsSync(gzPath)) {
       req.url += '.gz';
+      res.set(
+        'Access-Control-Expose-Headers',
+        'Content-Length, Content-Length-Uncompressed'
+      );
       res.set('Content-Encoding', 'gzip');
       res.set('Content-Type', 'application/octet-stream');
 
       if (existsSync(path)) {
         const { size } = statSync(path);
-        res.set('Access-Control-Expose-Headers', 'Content-Length-Uncompressed');
         res.set('Content-Length-Uncompressed', size.toString());
       }
     }
