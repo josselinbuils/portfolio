@@ -7,9 +7,9 @@ export function useElementSize(elementRef: RefObject<HTMLElement>): number[] {
     if (elementRef.current === null) {
       return;
     }
-    const observer = new ResizeObserver(([{ contentRect }]) =>
-      setSize([Math.round(contentRect.width), Math.round(contentRect.height)])
-    );
+    const observer = new ResizeObserver(([{ contentRect }]) => {
+      setSize([Math.round(contentRect.width), Math.round(contentRect.height)]);
+    });
     observer.observe(elementRef.current);
 
     return () => observer.disconnect();
