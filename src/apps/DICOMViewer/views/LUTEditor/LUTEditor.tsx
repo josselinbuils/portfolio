@@ -15,7 +15,7 @@ import styles from './LUTEditor.module.scss';
 const baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },
   { id: '1', start: 45, end: 150, color: [0, 255, 0] },
-  { id: '2', start: 130, end: 255, color: [255, 0, 0] }
+  { id: '2', start: 10, end: 135, color: [255, 0, 0] }
 ] as LUTComponent[];
 
 export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
@@ -48,29 +48,25 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     return null;
   }
 
-  function handleLUTComponentColorChange(
-    componentId: string,
-    color: number[]
-  ): void {
-    const targetLUTComponent = lutComponents.find(
-      ({ id }) => id === componentId
-    );
-
-    if (targetLUTComponent === undefined) {
-      throw new Error('Unable to find target LUT component');
-    }
-
-    (targetLUTComponent as LUTComponent).color = color;
-    setLUTComponents(lutComponents.slice());
+  function addLUTComponent(): void {
+    setLUTComponents([
+      ...lutComponents,
+      {
+        id: lutComponents.length.toString(),
+        color: [255, 255, 255],
+        start: 0,
+        end: 85
+      }
+    ]);
   }
 
-  function handleLUTComponentDelete(componentId: string): void {
+  function deleteLUTComponent(componentId: string): void {
     setLUTComponents(
       lutComponents.filter(component => component.id !== componentId)
     );
   }
 
-  function handleLUTComponentDrag(
+  function dragLUTComponent(
     downEvent: MouseEvent,
     previewWidth: number,
     componentId: string
@@ -119,6 +115,19 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
     window.addEventListener('mouseup', mouseUpListener);
   }
 
+  function setLUTComponentColor(componentId: string, color: number[]): void {
+    const targetLUTComponent = lutComponents.find(
+      ({ id }) => id === componentId
+    );
+
+    if (targetLUTComponent === undefined) {
+      throw new Error('Unable to find target LUT component');
+    }
+
+    (targetLUTComponent as LUTComponent).color = color;
+    setLUTComponents(lutComponents.slice());
+  }
+
   return (
     <>
       <div className={styles.leftPan}>
@@ -141,12 +150,13 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
           activeLUTComponentID={activeLUTComponentID}
           className={styles.graphPreview}
           lutComponents={lutComponents}
-          onLUTComponentDrag={handleLUTComponentDrag}
+          onLUTComponentDrag={dragLUTComponent}
         />
         <LUTComponentList
+          onLUTComponentAdd={addLUTComponent}
           lutComponents={lutComponents}
-          onLUTComponentColorChange={handleLUTComponentColorChange}
-          onLUTComponentDelete={handleLUTComponentDelete}
+          onLUTComponentColorChange={setLUTComponentColor}
+          onLUTComponentDelete={deleteLUTComponent}
         />
       </div>
     </>

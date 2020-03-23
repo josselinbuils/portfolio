@@ -1,3 +1,4 @@
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faLongArrowAltRight,
   faTrashAlt
@@ -10,6 +11,7 @@ import styles from './LUTComponentList.module.scss';
 
 export const LUTComponentList: FC<Props> = ({
   lutComponents,
+  onLUTComponentAdd,
   onLUTComponentColorChange,
   onLUTComponentDelete
 }) => (
@@ -19,9 +21,11 @@ export const LUTComponentList: FC<Props> = ({
         <ColorPicker
           color={color}
           onColorChange={newColor => onLUTComponentColorChange(id, newColor)}
-        />{' '}
-        {formatNumber(start)} <FontAwesomeIcon icon={faLongArrowAltRight} />{' '}
-        {formatNumber(end)}{' '}
+        />
+        <span className={styles.colorWindow}>
+          {formatNumber(start)} <FontAwesomeIcon icon={faLongArrowAltRight} />{' '}
+          {formatNumber(end)}
+        </span>
         <FontAwesomeIcon
           className={styles.trashIcon}
           icon={faTrashAlt}
@@ -29,11 +33,19 @@ export const LUTComponentList: FC<Props> = ({
         />
       </li>
     ))}
+    <li>
+      <FontAwesomeIcon
+        className={styles.addIcon}
+        icon={faPlusSquare}
+        onClick={onLUTComponentAdd}
+      />
+    </li>
   </ul>
 );
 
 interface Props {
   lutComponents: LUTComponent[];
+  onLUTComponentAdd(): void;
   onLUTComponentColorChange(componentId: string, color: number[]): void;
   onLUTComponentDelete(componentId: string): void;
 }
