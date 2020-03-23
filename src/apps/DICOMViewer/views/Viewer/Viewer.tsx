@@ -12,12 +12,7 @@ import { MouseButton } from '~/platform/constants';
 import { Annotations } from './Annotations';
 import { AnnotationsElement, LeftToolbar, RightToolbar } from './components';
 
-export const Viewer: FC<Props> = ({
-  dataset,
-  onError,
-  onViewChange,
-  rendererType
-}) => {
+export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
     MouseTool.Paging
   );
@@ -25,17 +20,31 @@ export const Viewer: FC<Props> = ({
     MouseTool.Zoom
   );
   const [annotations, setAnnotations] = useState<Annotations>({});
+  const [rendererType, setRendererType] = useState<RendererType>(
+    dataset.is3D ? RendererType.JavaScript : RendererType.WebGL
+  );
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportStats, setViewportStats] = useState<object>();
 
   useEffect(() => {
-    if (dataset !== undefined && rendererType !== undefined) {
+    if (dataset !== undefined) {
       try {
         const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
         const viewType = availableViewTypes.includes(ViewType.Axial)
           ? ViewType.Axial
           : ViewType.Native;
-        setViewport(Viewport.create(dataset, viewType));
+
+        setViewport(previousViewport => {
+          if (
+            previousViewport === undefined ||
+            previousViewport.dataset !== dataset ||
+            previousViewport.viewType !== viewType
+          ) {
+            return Viewport.create(dataset, viewType, rendererType);
+          }
+          // Keeps the camera when only the renderer type changes
+          return previousViewport.clone({ rendererType });
+        });
         setAnnotations({ datasetName: dataset.name, rendererType });
       } catch (error) {
         onError('Unable to create viewport');
@@ -162,7 +171,7 @@ export const Viewer: FC<Props> = ({
       }
     }
 
-    setViewport(Viewport.create(dataset, viewType));
+    setViewport(Viewport.create(dataset, viewType, rendererType));
   }
 
   if (!viewport) {
@@ -182,7 +191,6 @@ export const Viewer: FC<Props> = ({
         onError={onError}
         onResize={handleViewportResize}
         onStatsUpdate={setViewportStats}
-        rendererType={rendererType}
         viewport={viewport}
       />
       <RightToolbar onClickPalette={() => onViewChange(View.LUTEditor)} />
@@ -192,6 +200,7 @@ export const Viewer: FC<Props> = ({
           viewport.dataset,
           rendererType
         )}
+        onRendererTypeSwitch={setRendererType}
         onViewTypeSwitch={switchViewType}
       />
     </>
@@ -200,7 +209,6 @@ export const Viewer: FC<Props> = ({
 
 interface Props {
   dataset: Dataset;
-  rendererType: RendererType;
   onViewChange(newView: View): void;
   onError(message: string): void;
 }

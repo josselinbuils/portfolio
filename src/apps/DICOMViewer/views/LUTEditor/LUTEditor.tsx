@@ -18,7 +18,7 @@ const baseLUTComponents = [
   { id: '2', start: 10, end: 135, color: [255, 0, 0] }
 ] as LUTComponent[];
 
-export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
+export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
     baseLUTComponents.map(component => ({ ...component }))
@@ -26,15 +26,17 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
   const [viewport, setViewport] = useState<Viewport>();
 
   useEffect(() => {
-    if (dataset !== undefined && rendererType !== undefined) {
+    if (dataset !== undefined) {
       try {
-        setViewport(Viewport.create(dataset, ViewType.Native));
+        setViewport(
+          Viewport.create(dataset, ViewType.Native, RendererType.JavaScript)
+        );
       } catch (error) {
         onError('Unable to create viewport');
         console.error(error);
       }
     }
-  }, [dataset, onError, rendererType]);
+  }, [dataset, onError]);
 
   useEffect(() => {
     setViewport(currentViewport => {
@@ -137,7 +139,6 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
             startTool(downEvent, viewport as Viewport, MouseTool.Paging);
           }}
           onError={onError}
-          rendererType={RendererType.JavaScript}
           viewport={viewport}
         />
         <BarPreview
@@ -165,6 +166,5 @@ export const LUTEditor: FC<Props> = ({ dataset, onError, rendererType }) => {
 
 interface Props {
   dataset: Dataset;
-  rendererType: RendererType;
   onError(message: string): void;
 }

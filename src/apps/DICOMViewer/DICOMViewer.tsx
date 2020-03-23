@@ -1,10 +1,10 @@
 import React, { ReactElement, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { RendererType, View } from './constants';
+import { View } from './constants';
 import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { Dataset } from './models';
-import { LUTEditor, SelectDataset, SelectRenderer, Viewer } from './views';
+import { LUTEditor, SelectDataset, Viewer } from './views';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -12,7 +12,6 @@ const DICOMViewer: WindowComponent = ({
 }) => {
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [rendererType, setRendererType] = useState<RendererType>();
   const [view, setView] = useState<View>(View.Viewer);
 
   function back(): void {
@@ -20,8 +19,6 @@ const DICOMViewer: WindowComponent = ({
 
     if (view === View.LUTEditor) {
       setView(View.Viewer);
-    } else if (rendererType) {
-      setRendererType(undefined);
     } else if (dataset) {
       dataset.destroy();
       setDataset(undefined);
@@ -38,25 +35,14 @@ const DICOMViewer: WindowComponent = ({
       );
     }
 
-    if (!rendererType) {
-      return <SelectRenderer onRendererTypeSelected={setRendererType} />;
-    }
-
     switch (view) {
       case View.LUTEditor:
-        return (
-          <LUTEditor
-            dataset={dataset}
-            rendererType={rendererType}
-            onError={setErrorMessage}
-          />
-        );
+        return <LUTEditor dataset={dataset} onError={setErrorMessage} />;
 
       case View.Viewer:
         return (
           <Viewer
             dataset={dataset}
-            rendererType={rendererType}
             onError={setErrorMessage}
             onViewChange={setView}
           />

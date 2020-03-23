@@ -21,10 +21,14 @@ export const ViewportElement: FC<Props> = ({
   onError,
   onResize = () => {},
   onStatsUpdate = () => {},
-  rendererType,
   viewport
 }) => {
-  const canvasElementRef = useRef<HTMLCanvasElement>(null);
+  const jsCanvasElementRef = useRef<HTMLCanvasElement>(null);
+  const webGLCanvasElementRef = useRef<HTMLCanvasElement>(null);
+  const canvasElementRef =
+    viewport.rendererType === RendererType.JavaScript
+      ? jsCanvasElementRef
+      : webGLCanvasElementRef;
   const [viewportWidth, viewportHeight] = useElementSize(canvasElementRef);
 
   useEffect(() => {
@@ -39,18 +43,23 @@ export const ViewportElement: FC<Props> = ({
     let requestID: number;
 
     try {
-      switch (rendererType) {
+      switch (viewport.rendererType) {
         case RendererType.JavaScript:
           renderer =
             (viewport as Viewport).viewType === ViewType.Native
               ? new JSFrameRenderer(canvasElement)
               : new JSVolumeRenderer(canvasElement);
           break;
+
         case RendererType.WebGL:
           renderer = new WebGLRenderer(canvasElement);
+          break;
+
+        default:
+          throw new Error('Unknown renderer type');
       }
     } catch (error) {
-      onError(`Unable to instantiate ${rendererType} renderer`);
+      onError(`Unable to instantiate ${viewport.rendererType} renderer`);
       console.error(error);
     }
 
@@ -113,7 +122,7 @@ export const ViewportElement: FC<Props> = ({
       clearInterval(statsInterval);
       renderer.destroy?.();
     };
-  }, [onError, onStatsUpdate, rendererType, viewport]);
+  }, [canvasElementRef, onError, onStatsUpdate, viewport]);
 
   useLayoutEffect(() => {
     viewport.height = viewportHeight;
@@ -139,6 +148,7 @@ export const ViewportElement: FC<Props> = ({
     <div className={cn(styles.viewport, className)}>
       <canvas
         height={viewportHeight}
+        key={viewport.rendererType}
         onContextMenu={() => false}
         onMouseDown={mouseDownListener}
         ref={canvasElementRef}
@@ -150,7 +160,6 @@ export const ViewportElement: FC<Props> = ({
 
 interface Props {
   className?: string;
-  rendererType: RendererType;
   viewport: Viewport;
   onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;

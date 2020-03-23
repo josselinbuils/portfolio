@@ -1,4 +1,4 @@
-import { ViewType } from '../constants';
+import { RendererType, ViewType } from '../constants';
 import { CoordinateSpace, LUTComponent } from '../interfaces';
 import { V } from '../utils/math';
 import { Camera } from './Camera';
@@ -13,6 +13,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   dataset!: Dataset;
   height = 0;
   lutComponents?: LUTComponent[];
+  rendererType!: RendererType;
   viewType!: ViewType;
   width = 0;
   windowCenter = 30;
@@ -22,7 +23,11 @@ export class Viewport extends Renderable implements CoordinateSpace {
   private imageZoom?: number;
   private origin?: number[];
 
-  static create(dataset: Dataset, viewType: ViewType): Viewport {
+  static create(
+    dataset: Dataset,
+    viewType: ViewType,
+    rendererType: RendererType
+  ): Viewport {
     const frame = dataset.frames[Math.floor(dataset.frames.length / 2)];
     const { windowCenter, windowWidth } = frame;
 
@@ -34,6 +39,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     return new Viewport({
       camera,
       dataset,
+      rendererType,
       viewType,
       windowCenter,
       windowWidth

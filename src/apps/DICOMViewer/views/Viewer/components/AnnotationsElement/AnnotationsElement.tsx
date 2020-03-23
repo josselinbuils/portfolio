@@ -1,6 +1,8 @@
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import React, { FC, useRef } from 'react';
-import { ViewType } from '~/apps/DICOMViewer/constants';
+import React, { FC, RefObject, useRef } from 'react';
+import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
+import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
 import { Annotations } from '../../Annotations';
 import styles from './AnnotationsElement.module.scss';
@@ -8,6 +10,7 @@ import styles from './AnnotationsElement.module.scss';
 export const AnnotationsElement: FC<Props> = ({
   annotations,
   availableViewTypes,
+  onRendererTypeSwitch,
   onViewTypeSwitch
 }) => {
   const {
@@ -21,19 +24,21 @@ export const AnnotationsElement: FC<Props> = ({
     zoom
   } = annotations;
   const showMenu = useContextMenu();
+  const rendererElementRef = useRef<HTMLSpanElement>(null);
   const viewTypeElementRef = useRef<HTMLParagraphElement>(null);
 
-  const showViewTypeMenu = () => {
-    if (viewTypeElementRef.current === null) {
+  function getMenuItemIcon(isItemActive: boolean): IconDefinition | undefined {
+    return isItemActive ? faCheck : undefined;
+  }
+
+  function showContextMenu(
+    elementRef: RefObject<HTMLElement>,
+    items: ContextMenuItemDescriptor[]
+  ): void {
+    if (elementRef.current === null) {
       return;
     }
-    const { bottom, left } = viewTypeElementRef.current.getBoundingClientRect();
-
-    const items = availableViewTypes.map(type => ({
-      icon: type === annotations.viewType ? faCheck : undefined,
-      title: type as string,
-      onClick: () => onViewTypeSwitch(type)
-    }));
+    const { bottom, left } = elementRef.current.getBoundingClientRect();
 
     showMenu({
       items,
@@ -46,7 +51,25 @@ export const AnnotationsElement: FC<Props> = ({
         border: '1px solid white'
       }
     });
-  };
+  }
+
+  function showRendererTypeMenu(): void {
+    const items = [RendererType.JavaScript, RendererType.WebGL].map(type => ({
+      icon: getMenuItemIcon(type === rendererType),
+      title: type,
+      onClick: () => onRendererTypeSwitch(type)
+    }));
+    showContextMenu(rendererElementRef, items);
+  }
+
+  function showViewTypeMenu(): void {
+    const items = availableViewTypes.map(type => ({
+      icon: getMenuItemIcon(type === annotations.viewType),
+      title: type,
+      onClick: () => onViewTypeSwitch(type)
+    }));
+    showContextMenu(viewTypeElementRef, items);
+  }
 
   return (
     <>
@@ -61,7 +84,12 @@ export const AnnotationsElement: FC<Props> = ({
         </p>
       </div>
       <div className={styles.overlayTopRight}>
-        <p className={styles.annotation}>renderer: {rendererType || '-'}</p>
+        <p className={styles.annotation}>
+          renderer:{' '}
+          <span onClick={showRendererTypeMenu} ref={rendererElementRef}>
+            {rendererType || '-'}
+          </span>
+        </p>
         <p className={styles.annotation}>
           framerate: {fps ? `${fps}fps` : '-'}
         </p>
@@ -86,5 +114,6 @@ export const AnnotationsElement: FC<Props> = ({
 interface Props {
   annotations: Annotations;
   availableViewTypes: ViewType[];
+  onRendererTypeSwitch(rendererType: RendererType): void;
   onViewTypeSwitch(viewType: ViewType): void;
 }
