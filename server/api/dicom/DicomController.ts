@@ -21,6 +21,7 @@ function getDatasetDescriptors(): DatasetDescriptor[] {
 
   try {
     return readdirSync(datasetsPath)
+      .filter(fileName => !fileName.startsWith('.'))
       .map(fileName => {
         const files = getFiles(datasetsPath, fileName);
         const name = fileName.replace(/(\.[a-z]+)+$/, '');
