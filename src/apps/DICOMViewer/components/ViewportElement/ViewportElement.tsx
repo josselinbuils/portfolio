@@ -39,7 +39,7 @@ export const ViewportElement: FC<Props> = ({
     let renderer: Renderer;
     let frameDurations: number[] = [];
     let renderDurations: number[] = [];
-    let lastTime = performance.now();
+    let lastTime = 0;
     let requestID: number;
 
     try {
@@ -75,7 +75,10 @@ export const ViewportElement: FC<Props> = ({
           renderer.render(viewport);
           viewport.makeClean();
           renderDurations.push(performance.now() - t);
-          frameDurations.push(t - lastTime);
+
+          if (lastTime > 0) {
+            frameDurations.push(t - lastTime);
+          }
           lastTime = t;
         } catch (error) {
           onError('Unable to render viewport');
@@ -94,7 +97,7 @@ export const ViewportElement: FC<Props> = ({
       let fps: number;
       let meanRenderDuration: number;
 
-      if (frameDurations.length > 0) {
+      if (frameDurations.length > 1) {
         const meanFrameDuration =
           frameDurations.reduce((sum, d) => sum + d, 0) / frameDurations.length;
         fps = Math.round(1000 / meanFrameDuration);
