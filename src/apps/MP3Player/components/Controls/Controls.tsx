@@ -25,7 +25,10 @@ export const Controls: FC<Props> = ({ className, size }) => {
   const isThereCurrentMusic = currentMusic !== undefined;
 
   return (
-    <div className={cn(styles.controls, className)} style={{ fontSize: size }}>
+    <div
+      className={cn(styles.controls, className)}
+      style={{ fontSize: `${size / 10}rem` }}
+    >
       <Button
         checked={random}
         className={styles.randomButton}

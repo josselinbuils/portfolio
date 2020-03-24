@@ -15,7 +15,7 @@ export const MusicPreview: FC<Props> = ({ music, size }) => {
       })}
       style={{
         backgroundImage: music && music.image ? `url(${music.image})` : 'none',
-        fontSize: size
+        fontSize: `${size / 10}rem`
       }}
     >
       {useDefaultPreview && <FontAwesomeIcon icon={faMusic} />}

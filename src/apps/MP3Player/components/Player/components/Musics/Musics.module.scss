@@ -16,7 +16,7 @@
       justify-content: space-between;
 
       .select {
-        $line-height: 1.6em;
+        $line-height: 2.1rem;
 
         display: inline-block;
         width: 13rem;
@@ -44,7 +44,7 @@
           width: 100%;
           outline: none;
           font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-          font-size: 1em;
+          font-size: 1.3rem;
           line-height: $line-height;
 
           option {

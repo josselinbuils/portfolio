@@ -23,9 +23,16 @@ export const Post: FC<Props> = ({
   ...rest
 }) => {
   const previewResolution = preview && getPreviewResolution(preview);
+  let previewStyle;
 
-  const previewStyle =
-    previewResolution && getPreviewDisplaySize(previewResolution);
+  if (previewResolution) {
+    const { height, width } = getPreviewDisplaySize(previewResolution);
+
+    previewStyle = {
+      height: `${height / 10}rem`,
+      width: `${width / 10}rem`
+    };
+  }
 
   const clickHandler = (event: MouseEvent) => {
     if ((event.target as HTMLElement).nodeName !== 'BUTTON') {

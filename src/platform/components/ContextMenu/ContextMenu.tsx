@@ -19,7 +19,7 @@ export const ContextMenu: FC<Props> = ({
   return (
     <ul
       className={cn(styles.contextMenu, className)}
-      style={{ ...style, left: x, top: y }}
+      style={{ ...style, left: `${x / 10}rem`, top: `${y / 10}rem` }}
     >
       {items.map(({ onClick, icon, title }) => (
         <ContextMenuItem

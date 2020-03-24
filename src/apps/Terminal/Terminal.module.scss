@@ -10,7 +10,7 @@
 
 .terminal {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.8em;
+  font-size: 1.3rem;
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
@@ -21,7 +21,7 @@
 
 .userInput {
   position: relative;
-  height: 1.2em;
+  height: 1.6rem;
 
   div + & {
     margin-top: 0.2rem;
