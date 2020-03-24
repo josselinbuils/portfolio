@@ -41,14 +41,11 @@ export const AnnotationsElement: FC<Props> = ({
     const { bottom, left } = elementRef.current.getBoundingClientRect();
 
     showMenu({
+      className: styles.contextMenu,
       items,
       position: {
         x: left,
         y: bottom + 5
-      },
-      style: {
-        background: 'black',
-        border: '1px solid white'
       }
     });
   }

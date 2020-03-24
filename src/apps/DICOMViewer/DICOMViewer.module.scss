@@ -5,7 +5,7 @@
 }
 
 .dicomViewer {
-  font-family: monospace;
+  font-family: $fontFamily;
   display: flex;
   height: 100%;
   color: $color;
@@ -13,7 +13,7 @@
 }
 
 .button {
-  background: $background-color;
+  background: $backgroundColor;
   color: $color;
   border-radius: $radius;
   outline: none;
@@ -24,11 +24,11 @@
   left: 10px;
 
   &:active:hover {
-    background: lighten($background-color, 25%);
+    background: lighten($backgroundColor, 25%);
   }
 
   &:hover {
-    background: lighten($background-color, 15%);
+    background: lighten($backgroundColor, 15%);
   }
 }
 

@@ -6,7 +6,7 @@
   height: 32px;
   font-size: 20px;
   display: block;
-  background: $background-color;
+  background: $backgroundColor;
   color: $color;
   outline: none;
   border: 1px solid $color;
@@ -14,11 +14,11 @@
   position: relative;
 
   &:active:hover {
-    background: lighten($background-color, 25%);
+    background: lighten($backgroundColor, 25%);
   }
 
   &:hover {
-    background: lighten($background-color, 15%);
+    background: lighten($backgroundColor, 15%);
   }
 
   &:first-child {

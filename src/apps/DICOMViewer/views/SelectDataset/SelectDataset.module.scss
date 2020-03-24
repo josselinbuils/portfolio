@@ -48,7 +48,7 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: $radius;
-    background: lighten($background-color, 15%);
+    background: lighten($backgroundColor, 15%);
   }
 
   &::-webkit-scrollbar-track {
