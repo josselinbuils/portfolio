@@ -1,7 +1,7 @@
 @import '../../constants';
 @import 'constants';
 
-$navBarHeight: 75px;
+$navBarHeight: 7.5rem;
 
 * {
   user-select: none;
@@ -26,7 +26,7 @@ $navBarHeight: 75px;
 
 .sidebar {
   width: $sidebarWidth;
-  padding: 15px;
+  padding: 1.5rem;
 }
 
 // Modifiers

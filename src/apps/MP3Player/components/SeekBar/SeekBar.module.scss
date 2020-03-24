@@ -1,25 +1,25 @@
 .currentTime {
-  margin-left: 15px;
+  margin-left: 1.5rem;
 }
 
 .currentTime,
 .duration {
   font-size: 0.8em;
-  line-height: 16px;
-  margin: auto 10px;
+  line-height: 1.6rem;
+  margin: auto 1rem;
   user-select: none;
   text-align: center;
 }
 
 .playlistButton {
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 1.4rem;
+  line-height: 1.6rem;
   flex: 0 0 1ch;
-  margin-right: 15px;
+  margin-right: 1.5rem;
 }
 
 .seekBar {
   display: flex;
-  max-width: 650px;
+  max-width: 65rem;
   margin: 0 auto;
 }

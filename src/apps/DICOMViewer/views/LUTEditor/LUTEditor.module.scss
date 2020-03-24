@@ -1,5 +1,5 @@
 .barPreview {
-  flex-basis: 30px;
+  flex-basis: 3rem;
   flex-grow: 0;
   flex-shrink: 0;
   font-size: 0; // Prevents a bug in Firefox
@@ -8,11 +8,11 @@
 .graphPreview {
   height: 50%;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .leftPan {
-  padding: 30px 0 30px 30px;
+  padding: 3rem 0 3rem 3rem;
   box-sizing: border-box;
   width: 50%;
   justify-content: space-between;
@@ -27,14 +27,14 @@
 
 .rightPan {
   width: 50%;
-  padding: 50px;
+  padding: 5rem;
   box-sizing: border-box;
 }
 
 .viewport {
   flex-grow: 1;
   flex-shrink: 1;
-  margin-bottom: 30px;
+  margin-bottom: 3rem;
   height: 100%;
   width: 100%;
   font-size: 0; // Prevents a bug in Firefox

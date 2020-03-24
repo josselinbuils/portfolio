@@ -231,8 +231,8 @@ export class Window extends Component<Props, State> {
       if (isUnmaximazing) {
         this.setStyle(
           'transform',
-          `translate(${moveEvent.clientX -
-            downEvent.clientX}px, ${moveEvent.clientY - downEvent.clientY}px)`
+          `translate(${(moveEvent.clientX - downEvent.clientX) /
+            10}rem, ${(moveEvent.clientY - downEvent.clientY) / 10}rem)`
         );
       } else {
         this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
@@ -394,8 +394,8 @@ export class Window extends Component<Props, State> {
     x = Math.round(x);
     y = Math.round(y);
 
-    this.setStyle('left', `${x}px`);
-    this.setStyle('top', `${y}px`);
+    this.setStyle('left', `${x / 10}rem`);
+    this.setStyle('top', `${y / 10}rem`);
   }
 
   private setSize(width: number, height: number, force: boolean = false): void {
@@ -422,8 +422,8 @@ export class Window extends Component<Props, State> {
       }
     }
 
-    this.setStyle('width', `${width}px`);
-    this.setStyle('height', `${height}px`);
+    this.setStyle('width', `${width / 10}rem`);
+    this.setStyle('height', `${height / 10}rem`);
 
     if (onResize !== undefined) {
       onResize({ width, height });

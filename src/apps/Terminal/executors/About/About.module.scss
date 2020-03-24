@@ -1,11 +1,11 @@
 .about {
   display: flex;
-  margin: 2px 0;
+  margin: 0.2rem 0;
 }
 
 .photo {
-  width: 202px;
-  height: 269px;
+  width: 20.2rem;
+  height: 26.9rem;
 }
 
 .help {
@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin: 0 35px;
+  margin: 0 3.5rem;
 
   p {
     margin: 0;

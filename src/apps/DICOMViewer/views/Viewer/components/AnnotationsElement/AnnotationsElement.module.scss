@@ -1,18 +1,18 @@
 @import '../../../../constants';
 
-$overlay-margin: 10px;
+$overlay-margin: 1rem;
 
 .annotation {
-  text-shadow: #000 0 0 1px;
+  text-shadow: #000 0 0 0.1rem;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 22ch;
-  filter: drop-shadow(0px 0px 1px #000);
+  filter: drop-shadow(0 0 0.1rem #000);
 
   & + p {
-    margin-top: 5px;
+    margin-top: 0.5rem;
   }
 }
 
@@ -20,7 +20,7 @@ $overlay-margin: 10px;
   font-family: $fontFamily;
   color: $color;
   background-color: $backgroundColor;
-  border: 1px solid white;
+  border: 0.1rem solid white;
 }
 
 .overlayBottomLeft {
@@ -38,7 +38,7 @@ $overlay-margin: 10px;
 
 .overlayTopLeft {
   position: absolute;
-  top: 40px;
+  top: 4rem;
   left: $overlay-margin;
 }
 

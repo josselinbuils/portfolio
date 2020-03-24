@@ -9,17 +9,17 @@
   right: 0;
   bottom: 0;
   left: 0;
-  height: 3px;
+  height: 0.3rem;
   background: $primaryColor;
 }
 
 .task {
-  font-size: 36px;
-  line-height: 60px;
+  font-size: 3.6rem;
+  line-height: 6rem;
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 6rem;
+  height: 6rem;
   cursor: default;
   text-align: center;
 

@@ -6,6 +6,7 @@
 
 .dicomViewer {
   font-family: $fontFamily;
+  font-size: 1.3rem;
   display: flex;
   height: 100%;
   color: $color;
@@ -17,11 +18,11 @@
   color: $color;
   border-radius: $radius;
   outline: none;
-  border: 1px solid $color;
-  padding: 3px 5px;
+  border: 0.1rem solid $color;
+  padding: 0.3rem 0.5rem;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 1rem;
+  left: 1rem;
 
   &:active:hover {
     background: lighten($backgroundColor, 25%);
