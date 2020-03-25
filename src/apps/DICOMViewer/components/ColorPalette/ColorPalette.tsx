@@ -28,7 +28,7 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
     setLUTComponents([
       ...lutComponents,
       {
-        id: lutComponents.length.toString(),
+        id: Date.now().toString(),
         color: [255, 255, 255],
         start: 0,
         end: 85,
