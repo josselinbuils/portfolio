@@ -27,7 +27,7 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
     }
 
     if (context !== null) {
-      context.clearRect(0, 0, canvasWidth - 1, canvasHeight - 1);
+      context.clearRect(0, 0, canvasWidth, canvasHeight);
 
       const lut = loadVOILUT(lutComponents, canvasWidth);
 
@@ -36,13 +36,12 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
   }, [canvasHeight, canvasWidth, lutComponents]);
 
   return (
-    <div className={cn(styles.barPreview, className)}>
-      <canvas
-        height={canvasHeight}
-        ref={canvasElementRef}
-        width={canvasWidth}
-      />
-    </div>
+    <canvas
+      className={cn(styles.barPreview, className)}
+      height={canvasHeight}
+      ref={canvasElementRef}
+      width={canvasWidth}
+    />
   );
 };
 

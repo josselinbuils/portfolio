@@ -27,11 +27,6 @@ export enum RendererType {
   WebGL = 'WebGL',
 }
 
-export enum View {
-  LUTEditor = 'LUTEditor',
-  Viewer = 'Viewer',
-}
-
 export enum ViewType {
   Axial = 'Axial',
   Coronal = 'Coronal',

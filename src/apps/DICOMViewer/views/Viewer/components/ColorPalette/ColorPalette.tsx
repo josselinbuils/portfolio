@@ -1,17 +1,11 @@
+import { faPalette } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import cn from 'classnames';
 import React, { FC, useEffect, useState } from 'react';
-import { ViewportElement } from '~/apps/DICOMViewer/components';
-import {
-  MouseTool,
-  RendererType,
-  ViewType,
-} from '~/apps/DICOMViewer/constants';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
-import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
-import { startTool } from '~/apps/DICOMViewer/utils';
-import { LUTComponentList } from '~/apps/DICOMViewer/views/LUTEditor/components/LUTComponentList';
-import { BarPreview, GraphPreview } from './components';
+import { BarPreview, GraphPreview, LUTComponentList } from './components';
 
-import styles from './LUTEditor.module.scss';
+import styles from './ColorPalette.module.scss';
 
 const baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },
@@ -19,37 +13,16 @@ const baseLUTComponents = [
   { id: '2', start: 10, end: 135, color: [255, 0, 0] },
 ] as LUTComponent[];
 
-export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
+export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
     baseLUTComponents.map((component) => ({ ...component }))
   );
-  const [viewport, setViewport] = useState<Viewport>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (dataset !== undefined) {
-      try {
-        setViewport(
-          Viewport.create(dataset, ViewType.Native, RendererType.JavaScript)
-        );
-      } catch (error) {
-        onError('Unable to create viewport');
-        console.error(error);
-      }
-    }
-  }, [dataset, onError]);
-
-  useEffect(() => {
-    setViewport((currentViewport) => {
-      if (currentViewport !== undefined) {
-        return currentViewport.clone({ lutComponents });
-      }
-    });
-  }, [lutComponents]);
-
-  if (!viewport) {
-    return null;
-  }
+    onLUTComponentsUpdate(open ? lutComponents : undefined);
+  }, [lutComponents, onLUTComponentsUpdate, open]);
 
   function addLUTComponent(): void {
     setLUTComponents([
@@ -132,40 +105,34 @@ export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
   }
 
   return (
-    <>
-      <div className={styles.leftPan}>
-        <ViewportElement
-          className={styles.viewport}
-          onCanvasMouseDown={(downEvent) => {
-            startTool(downEvent, viewport as Viewport, MouseTool.Paging);
-          }}
-          onError={onError}
-          viewport={viewport}
-        />
-        <BarPreview
-          className={styles.barPreview}
-          lutComponents={lutComponents}
-        />
-      </div>
-      <div className={styles.rightPan}>
-        <GraphPreview
-          activeLUTComponentID={activeLUTComponentID}
-          className={styles.graphPreview}
-          lutComponents={lutComponents}
-          onLUTComponentDrag={dragLUTComponent}
-        />
-        <LUTComponentList
-          onLUTComponentAdd={addLUTComponent}
-          lutComponents={lutComponents}
-          onLUTComponentColorChange={setLUTComponentColor}
-          onLUTComponentDelete={deleteLUTComponent}
-        />
-      </div>
-    </>
+    <div className={cn(styles.colorPalette, { [styles.open]: open })}>
+      <button className={styles.button} onClick={() => setOpen(!open)}>
+        <FontAwesomeIcon icon={faPalette} />
+      </button>
+      {open && (
+        <>
+          <GraphPreview
+            activeLUTComponentID={activeLUTComponentID}
+            className={styles.graphPreview}
+            lutComponents={lutComponents}
+            onLUTComponentDrag={dragLUTComponent}
+          />
+          <BarPreview
+            className={styles.barPreview}
+            lutComponents={lutComponents}
+          />
+          <LUTComponentList
+            onLUTComponentAdd={addLUTComponent}
+            lutComponents={lutComponents}
+            onLUTComponentColorChange={setLUTComponentColor}
+            onLUTComponentDelete={deleteLUTComponent}
+          />
+        </>
+      )}
+    </div>
   );
 };
 
 interface Props {
-  dataset: Dataset;
-  onError(message: string): void;
+  onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
 }

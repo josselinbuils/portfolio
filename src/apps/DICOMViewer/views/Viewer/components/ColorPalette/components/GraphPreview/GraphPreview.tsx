@@ -171,20 +171,22 @@ export const GraphPreview: FC<Props> = ({
   }
 
   return (
-    <div className={cn(styles.preview, className)}>
-      <canvas
-        className={cn({
+    <canvas
+      className={cn(
+        styles.preview,
+        {
           [styles.withActiveComponent]:
             hoveredLUTComponentID || activeLUTComponentID,
-        })}
-        height={canvasHeight}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={() => setHoveredLUTComponentID(undefined)}
-        onMouseMove={handleMouseMove}
-        ref={canvasElementRef}
-        width={canvasWidth}
-      />
-    </div>
+        },
+        className
+      )}
+      height={canvasHeight}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={() => setHoveredLUTComponentID(undefined)}
+      onMouseMove={handleMouseMove}
+      ref={canvasElementRef}
+      width={canvasWidth}
+    />
   );
 };
 

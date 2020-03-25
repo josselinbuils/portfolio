@@ -1,5 +1,11 @@
 @import '../../../../constants';
 
+.barPreview {
+  height: 15px;
+  width: 148px;
+  margin-bottom: 1rem;
+}
+
 .button {
   padding: 0.3rem 0.5rem;
   width: 3.2rem;
@@ -7,10 +13,10 @@
   font-size: 2rem;
   display: block;
   border-radius: $radius;
-  background: $backgroundColor;
   color: $color;
   outline: none;
   border: 0.1rem solid $color;
+  background: transparent;
 
   &:active:hover {
     background: lighten($backgroundColor, 25%);
@@ -21,9 +27,27 @@
   }
 }
 
-.toolbar {
+.graphPreview {
+  width: 148px;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.colorPalette {
   position: absolute;
   top: calc(50%);
   right: 1rem;
   transform: translateY(-50%);
+  background: transparentize($backgroundColor, 0.4);
+
+  &.open {
+    border-radius: 0.4rem;
+    border: 0.1rem solid $color;
+    padding: 0.5rem;
+
+    .button {
+      border: none;
+      margin: -0.5rem 0 0.3rem -0.5rem;
+    }
+  }
 }

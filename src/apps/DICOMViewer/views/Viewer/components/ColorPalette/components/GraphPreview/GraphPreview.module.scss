@@ -1,12 +1,7 @@
 .preview {
+  display: block;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-
-  canvas {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .withActiveComponent {

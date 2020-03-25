@@ -6,7 +6,7 @@
   height: 3.2rem;
   font-size: 2rem;
   display: block;
-  background: $backgroundColor;
+  background: transparentize($backgroundColor, 0.4);
   color: $color;
   outline: none;
   border: 0.1rem solid $color;

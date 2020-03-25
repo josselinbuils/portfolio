@@ -1,18 +1,19 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { ViewportElement } from '~/apps/DICOMViewer/components';
 import {
   MouseTool,
   RendererType,
-  View,
   ViewType,
 } from '~/apps/DICOMViewer/constants';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { getAvailableViewTypes, startTool } from '~/apps/DICOMViewer/utils';
+import { ColorPalette } from '~/apps/DICOMViewer/views';
 import { MouseButton } from '~/platform/constants';
 import { Annotations } from './Annotations';
-import { AnnotationsElement, LeftToolbar, RightToolbar } from './components';
+import { AnnotationsElement, LeftToolbar } from './components';
 
-export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
+export const Viewer: FC<Props> = ({ dataset, onError }) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
     MouseTool.Paging
   );
@@ -20,13 +21,14 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
     MouseTool.Zoom
   );
   const [annotations, setAnnotations] = useState<Annotations>({});
+  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>();
   const [rendererType, setRendererType] = useState<RendererType>(
-    dataset.is3D ? RendererType.JavaScript : RendererType.WebGL
+    RendererType.JavaScript
   );
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportStats, setViewportStats] = useState<object>();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (dataset !== undefined) {
       try {
         const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
@@ -53,7 +55,15 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
     }
   }, [dataset, onError, rendererType]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setViewport((currentViewport) => {
+      if (currentViewport !== undefined) {
+        return currentViewport.clone({ lutComponents });
+      }
+    });
+  }, [lutComponents]);
+
+  useLayoutEffect(() => {
     if (viewport === undefined) {
       return;
     }
@@ -74,7 +84,7 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
     }));
   }, [viewport]);
 
-  useEffect(
+  useLayoutEffect(
     () =>
       setAnnotations((previousAnnotations) => ({
         ...previousAnnotations,
@@ -193,7 +203,9 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
         onStatsUpdate={setViewportStats}
         viewport={viewport}
       />
-      <RightToolbar onClickPalette={() => onViewChange(View.LUTEditor)} />
+      {rendererType === RendererType.JavaScript && (
+        <ColorPalette onLUTComponentsUpdate={setLUTComponents} />
+      )}
       <AnnotationsElement
         annotations={annotations}
         availableViewTypes={getAvailableViewTypes(
@@ -209,6 +221,5 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
 
 interface Props {
   dataset: Dataset;
-  onViewChange(newView: View): void;
   onError(message: string): void;
 }
