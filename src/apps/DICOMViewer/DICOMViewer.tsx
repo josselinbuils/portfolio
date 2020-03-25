@@ -246,7 +246,9 @@ const DICOMViewer: WindowComponent = ({
       }
     }
 
-    setViewport(Viewport.create(dataset, viewType, rendererType));
+    setViewport(
+      Viewport.create(dataset, viewType, rendererType, lutComponents)
+    );
   }
 
   return (

@@ -26,7 +26,8 @@ export class Viewport extends Renderable implements CoordinateSpace {
   static create(
     dataset: Dataset,
     viewType: ViewType,
-    rendererType: RendererType
+    rendererType: RendererType,
+    lutComponents?: LUTComponent[]
   ): Viewport {
     const frame = dataset.frames[Math.floor(dataset.frames.length / 2)];
     const { windowCenter, windowWidth } = frame;
@@ -39,6 +40,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     return new Viewport({
       camera,
       dataset,
+      lutComponents,
       rendererType,
       viewType,
       windowCenter,

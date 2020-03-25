@@ -1,7 +1,7 @@
 import { ViewType } from '~/apps/DICOMViewer/constants';
 import { VOILUT } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport, Volume } from '~/apps/DICOMViewer/models';
-import { changePointSpace } from '~/apps/DICOMViewer/utils';
+import { changePointSpace, loadVOILUT } from '~/apps/DICOMViewer/utils';
 import { V } from '~/apps/DICOMViewer/utils/math';
 import { Renderer } from '../Renderer';
 import {
@@ -143,7 +143,10 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      this.lut = getDefaultVOILUT(windowWidth);
+      this.lut =
+        viewport.lutComponents !== undefined
+          ? loadVOILUT(viewport.lutComponents, windowWidth)
+          : getDefaultVOILUT(windowWidth);
     }
 
     const { boundedViewportSpace, imageSpace } = renderingProperties;
@@ -168,10 +171,32 @@ export class JSVolumeRenderer implements Renderer {
     }
   }
 
-  private getPixelValue(
-    rawValue: number,
+  private createPixelValueGetter(
     leftLimit: number,
     rightLimit: number
+  ): (rawValue: number) => number {
+    return Array.isArray((this.lut as VOILUT).table[0])
+      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
+      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
+  }
+
+  private getColorPixelValue(
+    leftLimit: number,
+    rightLimit: number,
+    rawValue: number
+  ): number {
+    const color = (this.lut as VOILUT).table[
+      Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
+    ] as number[];
+
+    const alpha = rawValue < -(Number.MAX_SAFE_INTEGER - 1) ? 0 : 255;
+    return color[0] | (color[1] << 8) | (color[2] << 16) | (alpha << 24);
+  }
+
+  private getMonochromePixelValue(
+    leftLimit: number,
+    rightLimit: number,
+    rawValue: number
   ): number {
     let intensity = 250;
 
@@ -212,6 +237,7 @@ export class JSVolumeRenderer implements Renderer {
     );
     const [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
+    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
     let dataIndex = 0;
 
     for (let y = displayY0; y <= displayY1; y++) {
@@ -224,11 +250,7 @@ export class JSVolumeRenderer implements Renderer {
           y
         );
         const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
-        imageData32[dataIndex++] = this.getPixelValue(
-          rawValue,
-          leftLimit,
-          rightLimit
-        );
+        imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }
 
@@ -276,6 +298,7 @@ export class JSVolumeRenderer implements Renderer {
     yAxis = V(yAxis).mul(displayHeight / imageHeight);
 
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
+    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
     let dataIndex = 0;
 
     for (let y = imageY0; y <= imageY1; y++) {
@@ -288,11 +311,7 @@ export class JSVolumeRenderer implements Renderer {
           y - viewportSpaceImageY0
         );
         const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
-        imageData32[dataIndex++] = this.getPixelValue(
-          rawValue,
-          leftLimit,
-          rightLimit
-        );
+        imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }
 
