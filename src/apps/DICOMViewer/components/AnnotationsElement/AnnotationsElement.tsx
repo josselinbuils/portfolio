@@ -4,7 +4,7 @@ import React, { FC, RefObject, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
-import { Annotations } from '../../Annotations';
+import { Annotations } from '../../interfaces';
 
 import styles from './AnnotationsElement.module.scss';
 
