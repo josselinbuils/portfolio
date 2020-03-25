@@ -1,11 +1,12 @@
 import { faPauseCircle, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
 import { Music, MusicList } from '~/apps/MP3Player/interfaces';
 import { loadTracks } from '~/apps/MP3Player/utils';
 import { Select, Spinner } from '~/platform/components';
+import { cancelable } from '~/platform/utils';
 import styles from './Musics.module.scss';
 
 const ORDERS = [
@@ -20,26 +21,16 @@ export const Musics: FC<Props> = ({ musicList }) => {
   const [order, setOrder] = useState<string>('popularity_total');
   const [loading, setLoading] = useState(false);
 
-  const loadingPromiseRef = useRef<Promise<any>>(Promise.resolve());
-
   useEffect(() => {
     setLoading(true);
     setMusics([]);
 
-    // TODO use cancelable util
-    const promise = loadTracks(musicList.path, order)
-      .then(newMusics => {
-        if (loadingPromiseRef.current === promise) {
-          setMusics(newMusics);
-        }
-      })
-      .finally(() => {
-        if (loadingPromiseRef.current === promise) {
-          setLoading(false);
-        }
-      });
+    const [tracksPromise, cancelTracksPromise] = cancelable(
+      loadTracks(musicList.path, order)
+    );
+    tracksPromise.then(setMusics).finally(() => setLoading(false));
 
-    loadingPromiseRef.current = promise;
+    return cancelTracksPromise;
   }, [musicList.path, order]);
 
   if (audioController === undefined || audioState === undefined) {
