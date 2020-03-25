@@ -5,5 +5,5 @@ export const RedditDescriptor = {
   appName: 'Reddit',
   factory: () => import('./Reddit'),
   icon: faRedditAlien,
-  iconScale: 1.1
+  iconScale: 1.1,
 } as AppDescriptor;

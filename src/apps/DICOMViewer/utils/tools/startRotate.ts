@@ -50,9 +50,7 @@ function computeRotation(
   previous: number[],
   current: number[]
 ): { angle: number; axis: number[] } {
-  const axis = V(current)
-    .cross(previous)
-    .normalize();
+  const axis = V(current).cross(previous).normalize();
   const angle = V(previous).angle(current);
   return { axis, angle };
 }
@@ -87,9 +85,7 @@ function rotateCamera(camera: Camera, axis: number[], angle: number): void {
     .transpose();
 
   camera.eyePoint = V(camera.lookPoint).sub(V(newCameraBasis[2]).normalize());
-  camera.upVector = V(newCameraBasis[1])
-    .neg()
-    .normalize();
+  camera.upVector = V(newCameraBasis[1]).neg().normalize();
 }
 
 function computeRotationMatrix(axis: number[], angle: number): number[][] {
@@ -100,6 +96,6 @@ function computeRotationMatrix(axis: number[], angle: number): number[][] {
   return [
     [cos + x * x * invCos, x * y * invCos - z * sin, x * z * invCos + y * sin],
     [y * x * invCos + z * sin, cos + y * y * invCos, y * z * invCos - x * sin],
-    [z * x * invCos - y * sin, z * y * invCos + x * sin, cos + z * z * invCos]
+    [z * x * invCos - y * sin, z * y * invCos + x * sin, cos + z * z * invCos],
   ];
 }

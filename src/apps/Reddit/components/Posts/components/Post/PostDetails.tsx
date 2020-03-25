@@ -12,7 +12,7 @@ export const PostDetails: FC<Props> = ({
   onClickSubreddit,
   since,
   stickied,
-  subreddit
+  subreddit,
 }) => (
   <div className={styles.details}>
     {currentSubreddit === 'r/popular' && (

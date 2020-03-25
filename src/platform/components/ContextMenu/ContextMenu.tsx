@@ -10,7 +10,7 @@ export const ContextMenu: FC<Props> = ({
   items,
   onHide,
   position,
-  style
+  style,
 }) => {
   if (position === undefined) {
     return null;
@@ -26,7 +26,7 @@ export const ContextMenu: FC<Props> = ({
         <ContextMenuItem
           key={title}
           icon={icon}
-          onClick={event => {
+          onClick={(event) => {
             onClick(event);
             onHide();
           }}

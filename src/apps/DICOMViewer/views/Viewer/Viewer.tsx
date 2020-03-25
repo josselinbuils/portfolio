@@ -4,7 +4,7 @@ import {
   MouseTool,
   RendererType,
   View,
-  ViewType
+  ViewType,
 } from '~/apps/DICOMViewer/constants';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { getAvailableViewTypes, startTool } from '~/apps/DICOMViewer/utils';
@@ -34,7 +34,7 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
           ? ViewType.Axial
           : ViewType.Native;
 
-        setViewport(previousViewport => {
+        setViewport((previousViewport) => {
           if (
             previousViewport === undefined ||
             previousViewport.dataset !== dataset ||
@@ -65,29 +65,29 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
     const { viewType, windowCenter, windowWidth } = viewport;
     const zoom = viewport.getImageZoom();
 
-    setAnnotations(previousAnnotations => ({
+    setAnnotations((previousAnnotations) => ({
       ...previousAnnotations,
       viewType,
       windowCenter,
       windowWidth,
-      zoom
+      zoom,
     }));
   }, [viewport]);
 
   useEffect(
     () =>
-      setAnnotations(previousAnnotations => ({
+      setAnnotations((previousAnnotations) => ({
         ...previousAnnotations,
-        ...viewportStats
+        ...viewportStats,
       })),
     [viewportStats]
   );
 
   const handleViewportResize = useCallback(() => {
     if (viewport !== undefined) {
-      setAnnotations(previousAnnotations => ({
+      setAnnotations((previousAnnotations) => ({
         ...previousAnnotations,
-        zoom: viewport.getImageZoom()
+        zoom: viewport.getImageZoom(),
       }));
     }
   }, [viewport]);
@@ -121,33 +121,33 @@ export const Viewer: FC<Props> = ({ dataset, onError, onViewChange }) => {
             if (viewport.viewType !== ViewType.Oblique) {
               viewport.viewType = ViewType.Oblique;
 
-              setAnnotations(previousAnnotations => ({
+              setAnnotations((previousAnnotations) => ({
                 ...previousAnnotations,
-                viewType: viewport.viewType
+                viewType: viewport.viewType,
               }));
             }
-            setAnnotations(previousAnnotations => ({
+            setAnnotations((previousAnnotations) => ({
               ...previousAnnotations,
-              zoom: viewport.getImageZoom()
+              zoom: viewport.getImageZoom(),
             }));
             break;
 
           case MouseTool.Windowing:
             const { windowCenter, windowWidth } = additionalArgs[0];
 
-            setAnnotations(previousAnnotations => ({
+            setAnnotations((previousAnnotations) => ({
               ...previousAnnotations,
               windowCenter,
-              windowWidth
+              windowWidth,
             }));
             break;
 
           case MouseTool.Zoom:
             const { zoom } = additionalArgs[0];
 
-            setAnnotations(previousAnnotations => ({
+            setAnnotations((previousAnnotations) => ({
               ...previousAnnotations,
-              zoom
+              zoom,
             }));
         }
       }

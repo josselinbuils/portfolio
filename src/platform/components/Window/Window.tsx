@@ -29,7 +29,7 @@ export class Window extends Component<Props, State> {
       animated: false,
       frozen: false,
       maximized: false,
-      minimized: false
+      minimized: false,
     };
   }
 
@@ -56,7 +56,7 @@ export class Window extends Component<Props, State> {
       keepContentRatio,
       minHeight,
       minWidth,
-      visibleAreaSize
+      visibleAreaSize,
     } = this.props;
 
     this.setSize(minWidth, minHeight);
@@ -79,7 +79,7 @@ export class Window extends Component<Props, State> {
         .ready(() => {
           this.lastDisplayProperties.minimize = {
             ...this.getPosition(),
-            ...this.getSize()
+            ...this.getSize(),
           };
           this.setState({ minimized: true });
           this.setSize(0, 0, true);
@@ -104,7 +104,7 @@ export class Window extends Component<Props, State> {
       title,
       titleBackground,
       titleColor,
-      zIndex
+      zIndex,
     } = this.props;
     const { animated, frozen, maximized, minimized } = this.state;
 
@@ -113,7 +113,7 @@ export class Window extends Component<Props, State> {
       [styles.animated]: animated,
       [styles.frozen]: frozen,
       [styles.maximized]: maximized,
-      [styles.minimized]: minimized
+      [styles.minimized]: minimized,
     });
 
     return (
@@ -137,7 +137,7 @@ export class Window extends Component<Props, State> {
         />
         <main
           className={cn(styles.content, {
-            [styles.frozen]: animated || frozen
+            [styles.frozen]: animated || frozen,
           })}
           ref={this.contentRef}
         >
@@ -159,7 +159,7 @@ export class Window extends Component<Props, State> {
               left,
               top,
               width,
-              height
+              height,
             } = this.lastDisplayProperties.minimize;
 
             this.setState({ minimized: false });
@@ -232,8 +232,9 @@ export class Window extends Component<Props, State> {
       if (isUnmaximazing) {
         this.setStyle(
           'transform',
-          `translate(${(moveEvent.clientX - downEvent.clientX) /
-            10}rem, ${(moveEvent.clientY - downEvent.clientY) / 10}rem)`
+          `translate(${(moveEvent.clientX - downEvent.clientX) / 10}rem, ${
+            (moveEvent.clientY - downEvent.clientY) / 10
+          }rem)`
         );
       } else {
         this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
@@ -307,7 +308,7 @@ export class Window extends Component<Props, State> {
             height,
             left,
             top,
-            width
+            width,
           } = this.lastDisplayProperties.maximize;
 
           this.setState({ maximized: false });
@@ -321,7 +322,7 @@ export class Window extends Component<Props, State> {
         } else {
           this.lastDisplayProperties.maximize = {
             ...this.getPosition(),
-            ...this.getSize()
+            ...this.getSize(),
           };
 
           if (!keepPosition) {
@@ -451,7 +452,7 @@ export class Window extends Component<Props, State> {
       ready: (readyCallback: () => void): WindowAnimation => {
         ready = readyCallback;
         return windowAnimation;
-      }
+      },
     };
 
     this.setState({ animated: true }, () =>

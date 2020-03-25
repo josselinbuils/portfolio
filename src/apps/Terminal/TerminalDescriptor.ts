@@ -5,5 +5,5 @@ export const TerminalDescriptor = {
   appName: 'Terminal',
   factory: () => import('./Terminal'),
   icon: faTerminal,
-  iconScale: 0.8
+  iconScale: 0.8,
 } as AppDescriptor;

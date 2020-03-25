@@ -6,7 +6,7 @@ import { useInjector } from '~/platform/hooks';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
 import {
   WindowInstance,
-  WindowManager
+  WindowManager,
 } from '~/platform/services/WindowManager';
 import { useTaskContextMenu, useTaskRunner } from './hooks';
 
@@ -17,7 +17,7 @@ const LOADER_APPARITION_DELAY_MS = 200;
 export const Task: FC<Props> = ({
   appDescriptor,
   taskBarRef,
-  windowInstance
+  windowInstance,
 }) => {
   const taskRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);

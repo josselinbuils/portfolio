@@ -3,7 +3,7 @@ import {
   faArrowsAlt,
   faArrowsAltV,
   faSearch,
-  faSyncAlt
+  faSyncAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
@@ -18,33 +18,33 @@ const mouseTools = [
   {
     condition: (viewport: Viewport) => viewport.dataset.frames.length > 1,
     icon: faArrowsAltV,
-    tool: MouseTool.Paging
+    tool: MouseTool.Paging,
   },
   {
     condition: (viewport: Viewport) =>
       viewport.dataset.is3D && viewport.viewType !== ViewType.Native,
     icon: faSyncAlt,
-    tool: MouseTool.Rotate
+    tool: MouseTool.Rotate,
   },
   {
     icon: faAdjust,
-    tool: MouseTool.Windowing
+    tool: MouseTool.Windowing,
   },
   {
     icon: faArrowsAlt,
-    tool: MouseTool.Pan
+    tool: MouseTool.Pan,
   },
   {
     icon: faSearch,
-    tool: MouseTool.Zoom
-  }
+    tool: MouseTool.Zoom,
+  },
 ];
 
 export const LeftToolbar: FC<Props> = ({
   activeLeftTool,
   activeRightTool,
   onToolSelected,
-  viewport
+  viewport,
 }) => (
   <div className={styles.toolbar}>
     {mouseTools.map(({ condition, icon, tool }) =>
@@ -52,11 +52,11 @@ export const LeftToolbar: FC<Props> = ({
         <button
           className={cn(styles.mouseTool, {
             [styles.activeLeft]: activeLeftTool === tool,
-            [styles.activeRight]: activeRightTool === tool
+            [styles.activeRight]: activeRightTool === tool,
           })}
           key={tool}
           onClick={() => onToolSelected(tool, MouseButton.Left)}
-          onContextMenu={event => {
+          onContextMenu={(event) => {
             event.preventDefault();
             onToolSelected(tool, MouseButton.Right);
           }}

@@ -1,7 +1,7 @@
 import {
   faGithub,
   faLinkedin,
-  faTwitter
+  faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
@@ -15,7 +15,7 @@ import styles from './About.module.scss';
 const socialLinks = [
   { icon: faLinkedin, url: 'https://linkedin.com/in/josselinbuils' },
   { icon: faGithub, url: 'https://github.com/josselinbuils' },
-  { icon: faTwitter, url: 'https://twitter.com/josselinbuils' }
+  { icon: faTwitter, url: 'https://twitter.com/josselinbuils' },
 ];
 
 export const About: Executor = () => (

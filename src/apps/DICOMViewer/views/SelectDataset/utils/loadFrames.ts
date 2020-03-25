@@ -26,7 +26,7 @@ export async function loadFrames(
     if (/\.tar$/.test(file)) {
       const tarBuffer = await getDicomFile(file, onFileProgress);
       const tarFiles = (await untar(tarBuffer)) as any[];
-      fileBuffers.push(...tarFiles.map(res => res.buffer));
+      fileBuffers.push(...tarFiles.map((res) => res.buffer));
     } else {
       fileBuffers.push(await getDicomFile(file, onFileProgress));
     }
@@ -43,7 +43,7 @@ export async function loadFrames(
       frames.push(...instanceFrames);
     }
 
-    frames = frames.every(frame => frame.sliceLocation !== undefined)
+    frames = frames.every((frame) => frame.sliceLocation !== undefined)
       ? frames.sort((a, b) =>
           (a as any).sliceLocation > (b as any).sliceLocation ? 1 : -1
         )
@@ -72,7 +72,7 @@ function findWindowingInFunctionalGroup(
       ) {
         return {
           windowCenter: dataset.intString('x00281050'),
-          windowWidth: dataset.intString('x00281051')
+          windowWidth: dataset.intString('x00281051'),
         };
       }
     }
@@ -149,7 +149,7 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
       sopInstanceUID: parsedFile.string('x00080018'),
       spacingBetweenSlices: parsedFile.floatString('x00180088'),
       windowCenter: parsedFile.intString('x00281050'),
-      windowWidth: parsedFile.intString('x00281051')
+      windowWidth: parsedFile.intString('x00281051'),
     };
 
     const numberOfFrames = parsedFile.intString('x00280008');

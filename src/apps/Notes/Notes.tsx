@@ -10,7 +10,7 @@ const smileys: { [smiley: string]: string } = {
   ';)': '\uD83D\uDE09',
   ':(': '\uD83D\uDE12',
   ':p': '\uD83D\uDE1B',
-  ';p': '\uD83D\uDE1C'
+  ';p': '\uD83D\uDE1C',
 };
 
 const Notes: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {

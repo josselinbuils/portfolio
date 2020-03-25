@@ -5,5 +5,5 @@ export const NotesDescriptor = {
   appName: 'Notes',
   factory: () => import('./Notes'),
   icon: faStickyNote,
-  iconScale: 1.1
+  iconScale: 1.1,
 } as AppDescriptor;

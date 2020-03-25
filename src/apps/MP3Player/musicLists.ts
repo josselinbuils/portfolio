@@ -11,5 +11,5 @@ export const musicLists = [
   { name: 'Pop', path: '/tracks/pop' },
   { name: 'Reggae', path: '/tracks/reggae' },
   { name: 'Rock', path: '/tracks/rock' },
-  { name: 'Soundtrack', path: '/tracks/soundtrack' }
+  { name: 'Soundtrack', path: '/tracks/soundtrack' },
 ] as MusicList[];

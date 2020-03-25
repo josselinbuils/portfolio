@@ -3,7 +3,7 @@ import { DicomFrame } from '../models';
 import {
   computeFrames,
   computeSharedProperties,
-  computeVolume
+  computeVolume,
 } from '../utils';
 import { V } from '../utils/math';
 import { Frame } from './Frame';
@@ -36,20 +36,18 @@ export class Dataset extends Model implements CoordinateSpace {
   }
 
   destroy(): void {
-    this.frames.forEach(frame => delete frame.pixelData);
+    this.frames.forEach((frame) => delete frame.pixelData);
   }
 
   findClosestFrame(point: number[]): Frame {
     const { imagePosition, imageNormal, spacingBetweenSlices } = this.frames[0];
     const index = Math.round(
-      V(point)
-        .sub(imagePosition)
-        .dot(imageNormal) / spacingBetweenSlices
+      V(point).sub(imagePosition).dot(imageNormal) / spacingBetweenSlices
     );
 
     if (index < 0 || index >= this.frames.length) {
       const formattedPoint = JSON.stringify(
-        point.map(c => Math.round(c * 1000) / 1000)
+        point.map((c) => Math.round(c * 1000) / 1000)
       );
       throw new Error(
         `Unable to find a frame on which the point ${formattedPoint} is`
@@ -63,7 +61,7 @@ export class Dataset extends Model implements CoordinateSpace {
     return [
       [1, 0, 0],
       [0, 1, 0],
-      [0, 0, 1]
+      [0, 0, 1],
     ];
   }
 
@@ -112,12 +110,12 @@ export class Dataset extends Model implements CoordinateSpace {
     return {
       max: {
         point: maxPoint as number[],
-        positionOnAxe: maxPositionOnAxe
+        positionOnAxe: maxPositionOnAxe,
       },
       min: {
         point: minPoint as number[],
-        positionOnAxe: minPositionOnAxe
-      }
+        positionOnAxe: minPositionOnAxe,
+      },
     };
   }
 

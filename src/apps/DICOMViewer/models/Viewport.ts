@@ -42,7 +42,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
       rendererType,
       viewType,
       windowCenter,
-      windowWidth
+      windowWidth,
     });
   }
 
@@ -68,7 +68,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
       viewType,
       width,
       windowCenter,
-      windowWidth
+      windowWidth,
     } = this;
 
     return new Viewport({
@@ -81,7 +81,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
       width,
       windowCenter,
       windowWidth,
-      ...properties
+      ...properties,
     });
   }
 
@@ -93,7 +93,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
       this.basis = [
         V(cameraBasis[0]).div(pixelHeightMm),
         V(cameraBasis[1]).div(pixelHeightMm),
-        cameraBasis[2]
+        cameraBasis[2],
       ];
     }
     return this.basis;

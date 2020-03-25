@@ -9,7 +9,7 @@ import styles from './MenuItem.module.scss';
 export const MenuItem: FC<Props> = ({
   activeSubreddit,
   onClickSubreddit,
-  subreddit
+  subreddit,
 }) => {
   const [overflew, setOverflew] = useState(false);
   const isActiveSubreddit = subreddit === activeSubreddit;

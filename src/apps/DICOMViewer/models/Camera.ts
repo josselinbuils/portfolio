@@ -10,7 +10,7 @@ const MANDATORY_FIELDS = [
   'eyePoint',
   'fieldOfView',
   'lookPoint',
-  'upVector'
+  'upVector',
 ];
 
 export class Camera extends Renderable implements CoordinateSpace {
@@ -39,7 +39,7 @@ export class Camera extends Renderable implements CoordinateSpace {
       eyePoint,
       fieldOfView,
       lookPoint,
-      upVector
+      upVector,
     });
   }
 
@@ -74,7 +74,7 @@ export class Camera extends Renderable implements CoordinateSpace {
       eyePoint,
       fieldOfView,
       lookPoint,
-      upVector
+      upVector,
     });
   }
 
@@ -98,13 +98,9 @@ export class Camera extends Renderable implements CoordinateSpace {
    */
   getWorldBasis(): number[][] {
     if (this.basis === undefined) {
-      const y = V(this.upVector)
-        .neg()
-        .normalize();
+      const y = V(this.upVector).neg().normalize();
       const z = this.getDirection();
-      const x = V(y)
-        .cross(z)
-        .normalize();
+      const x = V(y).cross(z).normalize();
       this.basis = [x, y, z];
     }
     return this.basis;
@@ -112,9 +108,7 @@ export class Camera extends Renderable implements CoordinateSpace {
 
   getDirection(): number[] {
     if (this.direction === undefined) {
-      this.direction = V(this.lookPoint)
-        .sub(this.eyePoint)
-        .normalize();
+      this.direction = V(this.lookPoint).sub(this.eyePoint).normalize();
     }
     return this.direction;
   }

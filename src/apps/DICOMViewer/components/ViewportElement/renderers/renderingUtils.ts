@@ -6,7 +6,7 @@ import {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,
-  ViewportSpaceCoordinates
+  ViewportSpaceCoordinates,
 } from './RenderingProperties';
 
 export function getRenderingProperties(
@@ -18,7 +18,7 @@ export function getRenderingProperties(
     height,
     width,
     windowCenter,
-    windowWidth
+    windowWidth,
   } = viewport;
 
   const leftLimit = Math.floor(windowCenter - windowWidth / 2);
@@ -87,7 +87,7 @@ export function getRenderingProperties(
     imageX1,
     imageY1,
     lastPixelX,
-    lastPixelY
+    lastPixelY,
   } = viewportSpace;
   const isImageInViewport =
     imageY0 <= lastPixelY &&
@@ -109,7 +109,7 @@ export function getRenderingProperties(
     imageSpace,
     leftLimit,
     rightLimit,
-    viewportSpace
+    viewportSpace,
   };
 }
 
@@ -134,9 +134,7 @@ export function validateCamera2D(frame: Frame, camera: Camera): void {
   }
 
   const cameraFrameDistance = Math.abs(
-    V(camera.lookPoint)
-      .sub(frame.imagePosition)
-      .dot(camera.getDirection())
+    V(camera.lookPoint).sub(frame.imagePosition).dot(camera.getDirection())
   );
 
   if (cameraFrameDistance > frame.spacingBetweenSlices) {
@@ -205,7 +203,7 @@ function computeImageSpace(
     displayX1,
     displayY1,
     displayWidth,
-    displayHeight
+    displayHeight,
   };
 }
 
@@ -235,7 +233,7 @@ function computeViewportSpaceCoordinates(
     imageWidth,
     imageHeight,
     lastPixelX,
-    lastPixelY
+    lastPixelY,
   };
 }
 
@@ -261,7 +259,7 @@ function getImageDimensions(
   const plane = [
     viewportOrigin,
     V(viewportOrigin).add(viewportBasis[0]),
-    V(viewportOrigin).add(viewportBasis[1])
+    V(viewportOrigin).add(viewportBasis[1]),
   ];
   const intersections = (dataset.volume as Volume).getIntersections(plane);
 
@@ -269,11 +267,11 @@ function getImageDimensions(
     return undefined;
   }
 
-  const intersectionsCamera = intersections.map(i =>
+  const intersectionsCamera = intersections.map((i) =>
     changePointSpace(i, dataset, camera)
   );
-  const intersectionsCameraHorizontal = intersectionsCamera.map(i => i[0]);
-  const intersectionsCameraVertical = intersectionsCamera.map(i => i[1]);
+  const intersectionsCameraHorizontal = intersectionsCamera.map((i) => i[0]);
+  const intersectionsCameraVertical = intersectionsCamera.map((i) => i[1]);
   const halfSpacing = V(dataset.voxelSpacing).mul(0.5);
   const halfHorizontalSpacing = Math.abs(
     halfSpacing.dot(V(viewportBasis[0]).normalize())
@@ -302,11 +300,11 @@ function getImageDimensions(
     return undefined;
   }
 
-  const intersectionsDisplay = intersections.map(i =>
+  const intersectionsDisplay = intersections.map((i) =>
     changePointSpace(i, dataset, viewport)
   );
-  const intersectionsDisplayHorizontal = intersectionsDisplay.map(i => i[0]);
-  const intersectionsDisplayVertical = intersectionsDisplay.map(i => i[1]);
+  const intersectionsDisplayHorizontal = intersectionsDisplay.map((i) => i[0]);
+  const intersectionsDisplayVertical = intersectionsDisplay.map((i) => i[1]);
   const viewportSpaceImageX0 = Math.min(...intersectionsDisplayHorizontal);
   const viewportSpaceImageY0 = Math.min(...intersectionsDisplayVertical);
   const viewportSpaceImageX1 = Math.max(...intersectionsDisplayHorizontal);
@@ -325,6 +323,6 @@ function getImageDimensions(
     viewportSpaceImageWidth,
     viewportSpaceImageX0,
     viewportSpaceImageY0,
-    width
+    width,
   };
 }

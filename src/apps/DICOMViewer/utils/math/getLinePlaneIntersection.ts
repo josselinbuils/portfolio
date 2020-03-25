@@ -11,14 +11,14 @@ export function getLinePlaneIntersection(
     [1, 1, 1, 1],
     [x1, x2, x3, x4],
     [y1, y2, y3, y4],
-    [z1, z2, z3, z4]
+    [z1, z2, z3, z4],
   ];
 
   const m2 = [
     [1, 1, 1, 0],
     [x1, x2, x3, x5 - x4],
     [y1, y2, y3, y5 - y4],
-    [z1, z2, z3, z5 - z4]
+    [z1, z2, z3, z5 - z4],
   ];
 
   const t = -M4(m1).det() / M4(m2).det();

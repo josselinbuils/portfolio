@@ -32,7 +32,7 @@ export const Icon: FC<Props> = ({ active = true, subreddit }) => {
       ) : (
         <FontAwesomeIcon
           className={cn(styles.defaultIcon, {
-            [styles.active]: active
+            [styles.active]: active,
           })}
           icon={faReddit}
         />

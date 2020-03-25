@@ -41,10 +41,10 @@ export function onFetchProgress(
                 }
                 read();
               })
-              .catch(error => controller.error(error));
+              .catch((error) => controller.error(error));
           }
           read();
-        }
+        },
       })
     );
   };

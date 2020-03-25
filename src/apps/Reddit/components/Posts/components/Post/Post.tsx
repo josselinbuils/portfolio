@@ -7,7 +7,7 @@ import { PostDetails } from './PostDetails';
 import {
   formatNumber,
   getPreviewDisplaySize,
-  getPreviewResolution
+  getPreviewResolution,
 } from './utils';
 
 import styles from './Post.module.scss';
@@ -31,7 +31,7 @@ export const Post: FC<Props> = ({
 
     previewStyle = {
       height: `${height / 10}rem`,
-      width: `${width / 10}rem`
+      width: `${width / 10}rem`,
     };
   }
 

@@ -4,5 +4,5 @@ import { AppDescriptor } from '../AppDescriptor';
 export const DICOMViewerDescriptor = {
   appName: 'DICOMViewer',
   factory: () => import('./DICOMViewer'),
-  icon: faHeartbeat
+  icon: faHeartbeat,
 } as AppDescriptor;

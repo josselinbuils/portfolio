@@ -9,7 +9,7 @@ const MANDATORY_FIELDS = [
   'pixelData',
   'pixelRepresentation',
   'rows',
-  'sopInstanceUID'
+  'sopInstanceUID',
 ];
 
 export class DicomFrame extends Model {

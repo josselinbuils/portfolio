@@ -3,7 +3,7 @@ import { useInjector } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import {
   WindowInstance,
-  WindowManager
+  WindowManager,
 } from '~/platform/services/WindowManager';
 
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {
@@ -24,7 +24,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
           minimizedTopPosition,
           ref,
           windowComponent: WindowComponent,
-          zIndex
+          zIndex,
         }) => (
           <WindowComponent
             active={active}

@@ -8,7 +8,7 @@ import styles from './MenuItem.module.scss';
 export const MenuItem: FC<Props> = ({
   activeMusicList,
   onClickPlaylist,
-  musicList
+  musicList,
 }) => {
   const isActiveMusicList = musicList === activeMusicList;
 

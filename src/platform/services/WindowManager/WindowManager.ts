@@ -14,7 +14,7 @@ export class WindowManager {
 
   closeWindow = (id: number): void => {
     const index = this.windowInstances.findIndex(
-      windowInstance => windowInstance.id === id
+      (windowInstance) => windowInstance.id === id
     );
 
     if (index === -1) {
@@ -52,7 +52,7 @@ export class WindowManager {
       id: ++this.id,
       ref: createRef(),
       windowComponent,
-      zIndex: 0
+      zIndex: 0,
     };
 
     this.windowInstances.push(windowInstance);
@@ -80,9 +80,9 @@ export class WindowManager {
       let i = 0;
 
       this.windowInstances
-        .filter(instance => instance.id !== id)
+        .filter((instance) => instance.id !== id)
         .sort((a, b) => (a.zIndex < b.zIndex ? -1 : 1))
-        .forEach(instance => {
+        .forEach((instance) => {
           instance.active = false;
           instance.zIndex = ++i;
         });
@@ -100,7 +100,7 @@ export class WindowManager {
     );
 
     if (isThereWindowSelected) {
-      this.windowInstances.forEach(windowInstance => {
+      this.windowInstances.forEach((windowInstance) => {
         windowInstance.active = false;
       });
       this.publishWindowInstances();
@@ -118,7 +118,7 @@ export class WindowManager {
 
   private getWindowInstance(id: number): WindowInstance {
     const windowInstance = this.windowInstances.find(
-      instance => instance.id === id
+      (instance) => instance.id === id
     );
 
     if (windowInstance === undefined) {

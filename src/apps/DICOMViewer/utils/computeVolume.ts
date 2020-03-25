@@ -9,7 +9,7 @@ export function computeVolume(
 ): Volume | undefined {
   const isVolume =
     frames.length > 30 &&
-    frames.every(frame => {
+    frames.every((frame) => {
       return (
         frame.imageFormat === NormalizedImageFormat.Int16 &&
         frame.dicom.imageOrientation !== undefined &&
@@ -28,7 +28,7 @@ export function computeVolume(
   const dimensionsVoxels = [columns, rows, frames.length];
   const firstVoxelCenter = frames[0].imagePosition;
   const orientation = [...imageOrientation, imageNormal];
-  const displayRatio = voxelSpacing.map(v => v / voxelSpacing[1]);
+  const displayRatio = voxelSpacing.map((v) => v / voxelSpacing[1]);
   const dimensionsMm = dimensionsVoxels.map((dim, i) => dim * voxelSpacing[i]);
   const orientedDimensionsMm = orientation.map((orient, index) =>
     V(orient).mul(dimensionsMm[index])
@@ -43,15 +43,9 @@ export function computeVolume(
       .add(V(orientedDimensionsMm[1]).mul(y))
       .add(V(orientedDimensionsMm[2]).mul(z))
       .sub([
-        V(voxelSpacing)
-          .mul(x)
-          .dot(orientation[0]),
-        V(voxelSpacing)
-          .mul(y)
-          .dot(orientation[1]),
-        V(voxelSpacing)
-          .mul(z)
-          .dot(orientation[2])
+        V(voxelSpacing).mul(x).dot(orientation[0]),
+        V(voxelSpacing).mul(y).dot(orientation[1]),
+        V(voxelSpacing).mul(z).dot(orientation[2]),
       ]);
   };
 
@@ -63,7 +57,7 @@ export function computeVolume(
     x0y0z1: getCorner(0, 0, 1),
     x1y0z1: getCorner(1, 0, 1),
     x1y1z1: getCorner(1, 1, 1),
-    x0y1z1: getCorner(0, 1, 1)
+    x0y1z1: getCorner(0, 1, 1),
   };
 
   const center = V(firstVoxelCenter)
@@ -82,6 +76,6 @@ export function computeVolume(
     orientation,
     orientedDimensionsMm,
     orientedDimensionsVoxels,
-    voxelSpacing
+    voxelSpacing,
   });
 }

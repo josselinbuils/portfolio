@@ -139,7 +139,7 @@ export class AudioController {
       playlist: this.playlist,
       progress: this.progress,
       random: this.random,
-      repeat: this.repeat
+      repeat: this.repeat,
     };
   }
 

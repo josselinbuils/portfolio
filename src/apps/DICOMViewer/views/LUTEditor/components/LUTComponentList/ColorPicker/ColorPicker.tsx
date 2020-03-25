@@ -5,7 +5,7 @@ import { hexToRGB, rgbToHex } from './utils';
 import styles from './ColorPicker.module.scss';
 
 export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
-  const colorChangeHandler = throttle(value => {
+  const colorChangeHandler = throttle((value) => {
     const rgbColor = hexToRGB(value);
 
     if (rgbColor !== undefined) {
@@ -21,7 +21,7 @@ export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
       <input
         className={styles.colorPicker}
         defaultValue={rgbToHex(color)}
-        onChange={event => colorChangeHandler(event.target.value)}
+        onChange={(event) => colorChangeHandler(event.target.value)}
         type="color"
       />
     </figure>

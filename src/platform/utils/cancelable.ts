@@ -7,12 +7,12 @@ export function cancelable<T>(
   let active = true;
 
   basePromise
-    .then(value => {
+    .then((value) => {
       if (active) {
         resolve(value);
       }
     })
-    .catch(reason => {
+    .catch((reason) => {
       if (active) {
         reject(reason);
       }

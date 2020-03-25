@@ -17,9 +17,7 @@ export function startPaging(
   const { max, min } = viewport.dataset.getLimitsAlongAxe(direction);
 
   const correctLookPoint = (point: number[]) => {
-    const correctionVectorNorm = V(point)
-      .sub(camera.lookPoint)
-      .dot(direction);
+    const correctionVectorNorm = V(point).sub(camera.lookPoint).dot(direction);
     const correctionVector = V(direction).mul(correctionVectorNorm);
     return V(camera.lookPoint).add(correctionVector) as number[];
   };

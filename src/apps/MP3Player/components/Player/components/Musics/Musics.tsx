@@ -13,7 +13,7 @@ import styles from './Musics.module.scss';
 const ORDERS = [
   { name: 'Top All', value: 'popularity_total' },
   { name: 'Top Month', value: 'popularity_month' },
-  { name: 'Top Week', value: 'popularity_week' }
+  { name: 'Top Week', value: 'popularity_week' },
 ];
 
 export const Musics: FC<Props> = ({ musicList }) => {
@@ -84,10 +84,10 @@ export const Musics: FC<Props> = ({ musicList }) => {
       <div className={styles.overflow}>
         <table>
           <tbody>
-            {musics.map(music => (
+            {musics.map((music) => (
               <tr
                 className={cn({
-                  [styles.active]: currentMusic && music.id === currentMusic.id
+                  [styles.active]: currentMusic && music.id === currentMusic.id,
                 })}
                 key={music.id}
                 onDoubleClick={() => play(music)}

@@ -48,7 +48,7 @@ export class WebGLRenderer implements Renderer {
       height,
       width,
       windowCenter,
-      windowWidth
+      windowWidth,
     } = viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { id, imageFormat, rescaleIntercept, rescaleSlope } = frame;
@@ -139,7 +139,7 @@ export class WebGLRenderer implements Renderer {
       0,
       clipX,
       clipY,
-      1
+      1,
     ]);
 
     // Draw the rectangle.

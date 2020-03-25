@@ -8,14 +8,14 @@ import {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,
-  ViewportSpaceCoordinates
+  ViewportSpaceCoordinates,
 } from '../RenderingProperties';
 import { getRenderingProperties } from '../renderingUtils';
 import {
   displayCube,
   drawImageData,
   getCanvasRenderingContexts,
-  getDefaultVOILUT
+  getDefaultVOILUT,
 } from './utils';
 
 export class JSVolumeRenderer implements Renderer {
@@ -36,7 +36,7 @@ export class JSVolumeRenderer implements Renderer {
 
     return [
       V(cameraBasis[0]).mul(horizontalVoxelSpacing),
-      V(cameraBasis[1]).mul(verticalVoxelSpacing)
+      V(cameraBasis[1]).mul(verticalVoxelSpacing),
     ];
   }
 
@@ -56,13 +56,13 @@ export class JSVolumeRenderer implements Renderer {
     const {
       firstVoxelCenter,
       orientation,
-      voxelSpacing
+      voxelSpacing,
     } = dataset.volume as Volume;
 
     const vector = [
       (pointLPS[0] - firstVoxelCenter[0]) / voxelSpacing[0],
       (pointLPS[1] - firstVoxelCenter[1]) / voxelSpacing[1],
-      (pointLPS[2] - firstVoxelCenter[2]) / voxelSpacing[2]
+      (pointLPS[2] - firstVoxelCenter[2]) / voxelSpacing[2],
     ];
 
     const index = Math.round(
@@ -83,13 +83,13 @@ export class JSVolumeRenderer implements Renderer {
       pixelData,
       rescaleIntercept,
       rescaleSlope,
-      rows
+      rows,
     } = frame;
 
     const imagePositionToPoint = [
       (pointLPS[0] - imagePosition[0]) / voxelSpacing[0],
       (pointLPS[1] - imagePosition[1]) / voxelSpacing[1],
-      (pointLPS[2] - imagePosition[2]) / voxelSpacing[2]
+      (pointLPS[2] - imagePosition[2]) / voxelSpacing[2],
     ];
 
     const i =
@@ -119,7 +119,7 @@ export class JSVolumeRenderer implements Renderer {
     return [
       imageWorldOrigin[0] + xAxis[0] * x + yAxis[0] * y,
       imageWorldOrigin[1] + xAxis[1] * x + yAxis[1] * y,
-      imageWorldOrigin[2] + xAxis[2] * x + yAxis[2] * y
+      imageWorldOrigin[2] + xAxis[2] * x + yAxis[2] * y,
     ];
   }
 
@@ -195,7 +195,7 @@ export class JSVolumeRenderer implements Renderer {
       imageSpace,
       leftLimit,
       rightLimit,
-      viewportSpace
+      viewportSpace,
     } = renderingProperties;
     const {
       displayHeight,
@@ -203,7 +203,7 @@ export class JSVolumeRenderer implements Renderer {
       displayX0,
       displayX1,
       displayY0,
-      displayY1
+      displayY1,
     } = imageSpace as ImageSpaceCoordinates;
 
     const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
@@ -252,7 +252,7 @@ export class JSVolumeRenderer implements Renderer {
       imageSpace,
       leftLimit,
       rightLimit,
-      viewportSpace
+      viewportSpace,
     } = renderingProperties;
     const {
       imageHeight,
@@ -260,7 +260,7 @@ export class JSVolumeRenderer implements Renderer {
       imageX0,
       imageX1,
       imageY0,
-      imageY1
+      imageY1,
     } = boundedViewportSpace as BoundedViewportSpaceCoordinates;
     const { displayWidth, displayHeight } = imageSpace as ImageSpaceCoordinates;
 

@@ -6,7 +6,7 @@ export function startWsClient<T>(
 ): WebSocket {
   const wsInstance = new WebSocket(`wss://${PROD_HOSTNAME}/build-manager`);
 
-  wsInstance.onmessage = event => {
+  wsInstance.onmessage = (event) => {
     try {
       const message = JSON.parse(event.data);
       messageHandler(message);

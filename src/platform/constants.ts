@@ -8,5 +8,5 @@ export const BASE_URL =
 export enum MouseButton {
   Left = 0,
   Middle = 1,
-  Right = 2
+  Right = 2,
 }

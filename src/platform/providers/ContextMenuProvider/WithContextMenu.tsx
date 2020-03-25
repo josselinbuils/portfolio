@@ -2,7 +2,7 @@ import React, { Children, cloneElement, FC, ReactElement } from 'react';
 import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
 import {
   ContextMenuContext,
-  ContextMenuDescriptorSetter
+  ContextMenuDescriptorSetter,
 } from './ContextMenuContext';
 
 export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
@@ -19,15 +19,15 @@ export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
 
     showMenu({
       position: position || { x: clientX, y: clientY },
-      ...rest
+      ...rest,
     });
   };
 
   return (
     <ContextMenuContext.Consumer>
-      {showMenu =>
+      {(showMenu) =>
         cloneElement(child, {
-          onContextMenu: contextMenuHandlerFactory(showMenu)
+          onContextMenu: contextMenuHandlerFactory(showMenu),
         })
       }
     </ContextMenuContext.Consumer>

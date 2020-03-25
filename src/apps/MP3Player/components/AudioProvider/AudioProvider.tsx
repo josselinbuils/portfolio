@@ -6,7 +6,7 @@ export const AudioContext = createContext<{
   audioState: AudioState | undefined;
 }>({
   audioController: undefined,
-  audioState: undefined
+  audioState: undefined,
 });
 
 export const AudioProvider: FC = ({ children }) => {

@@ -19,7 +19,7 @@ const PINNED_APPS_DESCRIPTORS = [
   MP3PlayerDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
-  NotesDescriptor
+  NotesDescriptor,
 ];
 
 export const TaskBar: FC<Props> = ({ className }) => {

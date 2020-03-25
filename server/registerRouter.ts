@@ -13,7 +13,7 @@ import {
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   MAX_AGE_DAYS,
-  PUBLIC_DIR
+  PUBLIC_DIR,
 } from './constants';
 import { Logger } from './Logger';
 
@@ -61,7 +61,7 @@ export function registerRouter(app: Express): Express {
 
   const assetsOptions = {
     immutable: true,
-    maxAge: MAX_AGE_DAYS * 24 * 60 * 60 * 1000
+    maxAge: MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
   };
   router.use(ASSETS_DIR, serveStatic(ASSETS_PATH, assetsOptions));
   router.use(serveStatic(CLIENT_PATH));

@@ -6,13 +6,13 @@ import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
-  RenderingProperties
+  RenderingProperties,
 } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import {
   drawImageData,
   getCanvasRenderingContexts,
-  getDefaultVOILUT
+  getDefaultVOILUT,
 } from './utils';
 
 export class JSFrameRenderer implements Renderer {
@@ -115,7 +115,7 @@ export class JSFrameRenderer implements Renderer {
       boundedViewportSpace,
       leftLimit,
       rightLimit,
-      imageSpace
+      imageSpace,
     } = renderingProperties;
     const {
       displayHeight,
@@ -123,7 +123,7 @@ export class JSFrameRenderer implements Renderer {
       displayX0,
       displayX1,
       displayY0,
-      displayY1
+      displayY1,
     } = imageSpace as ImageSpaceCoordinates;
 
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
@@ -191,7 +191,7 @@ export class JSFrameRenderer implements Renderer {
       boundedViewportSpace,
       leftLimit,
       rightLimit,
-      viewportSpace
+      viewportSpace,
     } = renderingProperties;
     const {
       imageHeight,
@@ -199,7 +199,7 @@ export class JSFrameRenderer implements Renderer {
       imageX0,
       imageX1,
       imageY0,
-      imageY1
+      imageY1,
     } = boundedViewportSpace as BoundedViewportSpaceCoordinates;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;

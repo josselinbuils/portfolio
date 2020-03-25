@@ -2,7 +2,7 @@ import cloneDeep from 'lodash.clonedeep';
 import {
   NormalizedImageFormat,
   PhotometricInterpretation,
-  PixelRepresentation
+  PixelRepresentation,
 } from '../constants';
 import { DicomFrame, Frame } from '../models';
 import { V } from './math';
@@ -12,7 +12,7 @@ enum DicomImageFormat {
   Int16 = 'int16',
   RGB = 'rgb',
   UInt8 = 'uint8',
-  UInt16 = 'uint16'
+  UInt16 = 'uint16',
 }
 
 export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
@@ -43,7 +43,7 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
       imageOrientation,
       imagePosition,
       pixelSpacing,
-      sliceLocation
+      sliceLocation,
     } = computeFrameGeometry(frame, frameIndex);
 
     // Removes original pixel data to save space
@@ -62,7 +62,7 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
       pixelData,
       pixelSpacing,
       sliceLocation,
-      spacingBetweenSlices
+      spacingBetweenSlices,
     });
   });
 }
@@ -76,7 +76,7 @@ function computeFrameGeometry(
   if (imageOrientation === undefined) {
     imageOrientation = [
       [1, 0, 0],
-      [0, 1, 0]
+      [0, 1, 0],
     ];
   }
   if (sliceLocation === undefined) {
@@ -108,7 +108,7 @@ function computeFrameGeometry(
     imageOrientation,
     imagePosition,
     pixelSpacing,
-    sliceLocation
+    sliceLocation,
   };
 }
 
@@ -135,7 +135,7 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
   const {
     bitsAllocated,
     photometricInterpretation,
-    pixelRepresentation
+    pixelRepresentation,
   } = frame;
   const dicomImageFormat = getDicomImageFormat(
     bitsAllocated,

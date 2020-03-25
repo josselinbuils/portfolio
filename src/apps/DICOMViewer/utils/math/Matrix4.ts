@@ -112,7 +112,7 @@ export class Matrix4 extends Array<number[]> {
       a * q + b * r + c * s + d * t,
       e * q + f * r + g * s + h * t,
       i * q + j * r + k * s + l * t,
-      m * q + n * r + o * s + p * t
+      m * q + n * r + o * s + p * t,
     ];
   }
 }

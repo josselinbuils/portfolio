@@ -15,6 +15,6 @@ export function formatLogs(logs: Log[], stepClass: string): Log[] {
       ),
     id: ++logId,
     level,
-    time
+    time,
   }));
 }

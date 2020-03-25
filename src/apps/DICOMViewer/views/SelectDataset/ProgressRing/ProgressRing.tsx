@@ -7,7 +7,7 @@ export const ProgressRing: FC<Props> = ({
   color,
   progress,
   radius,
-  thickness
+  thickness,
 }) => {
   const diameter = radius * 2;
   const normalizedRadius = radius - thickness * 2;

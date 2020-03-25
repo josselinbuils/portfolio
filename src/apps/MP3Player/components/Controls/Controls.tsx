@@ -4,7 +4,7 @@ import {
   faRandom,
   faRedoAlt,
   faStepBackward,
-  faStepForward
+  faStepForward,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';

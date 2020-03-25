@@ -23,19 +23,19 @@ export class Matrix3 extends Array<number[]> {
     this[0] = [
       a * j + b * m + c * p,
       a * k + b * n + c * q,
-      a * l + b * o + c * r
+      a * l + b * o + c * r,
     ];
 
     this[1] = [
       d * j + e * m + f * p,
       d * k + e * n + f * q,
-      d * l + e * o + f * r
+      d * l + e * o + f * r,
     ];
 
     this[2] = [
       g * j + h * m + i * p,
       g * k + h * n + i * q,
-      g * l + h * o + i * r
+      g * l + h * o + i * r,
     ];
 
     return this;
@@ -49,7 +49,7 @@ export class Matrix3 extends Array<number[]> {
     return [
       a * j + b * k + c * l,
       d * j + e * k + f * l,
-      g * j + h * k + i * l
+      g * j + h * k + i * l,
     ];
   }
 

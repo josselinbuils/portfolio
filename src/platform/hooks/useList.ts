@@ -5,8 +5,8 @@ export function useList<T>(): [T[], ListManager<T>] {
   const manager = useMemo(
     () => ({
       clear: () => setList([]),
-      push: (...items: T[]) => setList(l => [...l, ...items]),
-      update: () => setList(l => [...l])
+      push: (...items: T[]) => setList((l) => [...l, ...items]),
+      update: () => setList((l) => [...l]),
     }),
     []
   );

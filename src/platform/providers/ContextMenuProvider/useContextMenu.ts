@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import {
   ContextMenuContext,
-  ContextMenuDescriptorSetter
+  ContextMenuDescriptorSetter,
 } from './ContextMenuContext';
 
 export function useContextMenu(): ContextMenuDescriptorSetter {

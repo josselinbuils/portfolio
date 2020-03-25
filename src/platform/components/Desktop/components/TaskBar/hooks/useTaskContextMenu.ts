@@ -3,12 +3,12 @@ import { RefObject } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import {
   ContextMenuDescriptor,
-  ContextMenuItemDescriptor
+  ContextMenuItemDescriptor,
 } from '~/platform/components/ContextMenu';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
-  WindowManager
+  WindowManager,
 } from '~/platform/services/WindowManager';
 
 export function useTaskContextMenu(
@@ -34,15 +34,15 @@ export function useTaskContextMenu(
       {
         icon: appDescriptor.icon,
         title: appDescriptor.appName,
-        onClick: () => windowManager.openWindow(appDescriptor)
-      }
+        onClick: () => windowManager.openWindow(appDescriptor),
+      },
     ];
 
     if (windowInstance !== undefined) {
       items.push({
         icon: faTimes,
         title: 'Close',
-        onClick: () => windowManager.closeWindow(windowInstance.id)
+        onClick: () => windowManager.closeWindow(windowInstance.id),
       });
     }
 
@@ -52,8 +52,8 @@ export function useTaskContextMenu(
       style: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
-        minHeight: taskRef.current.clientHeight
-      }
+        minHeight: taskRef.current.clientHeight,
+      },
     };
   };
 }

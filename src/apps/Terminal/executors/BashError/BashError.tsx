@@ -24,7 +24,7 @@ const COMMANDS = [
   'sudo',
   'touch',
   'whereis',
-  'who'
+  'who',
 ];
 
 export const BashError: Executor = ({ args }) => {

@@ -10,11 +10,11 @@ const filters: RedditFilter[] = ['hot', 'top'];
 
 const labelMap = {
   hot: <FontAwesomeIcon icon={faFireAlt} />,
-  top: <FontAwesomeIcon icon={faChartBar} />
+  top: <FontAwesomeIcon icon={faChartBar} />,
 };
 
 export const FilterButton: FC<Props> = ({ filter, onClick }) => {
-  const otherFilter = filters.find(f => f !== filter) as RedditFilter;
+  const otherFilter = filters.find((f) => f !== filter) as RedditFilter;
 
   return (
     <ButtonLink

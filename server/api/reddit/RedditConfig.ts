@@ -12,7 +12,7 @@ export function isRedditConfig(config: any): config is RedditConfig {
       config.clientId,
       config.clientSecret,
       config.username,
-      config.password
-    ].every(field => typeof field === 'string' && field.length > 0)
+      config.password,
+    ].every((field) => typeof field === 'string' && field.length > 0)
   );
 }

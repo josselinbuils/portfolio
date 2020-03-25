@@ -7,7 +7,7 @@ import styles from './ContextMenuItem.module.scss';
 export const ContextMenuItem: FC<ContextMenuItemDescriptor> = ({
   onClick,
   icon,
-  title
+  title,
 }) => (
   <li className={styles.item} key={title} onClick={onClick}>
     <div className={styles.icon}>{icon && <FontAwesomeIcon icon={icon} />}</div>

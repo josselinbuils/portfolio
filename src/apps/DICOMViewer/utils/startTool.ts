@@ -6,7 +6,7 @@ import {
   startPan,
   startRotate,
   startWindowing,
-  startZoom
+  startZoom,
 } from './tools';
 
 export function startTool(

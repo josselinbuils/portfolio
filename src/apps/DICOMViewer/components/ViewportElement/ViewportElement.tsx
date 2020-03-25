@@ -9,7 +9,7 @@ import {
   JSFrameRenderer,
   JSVolumeRenderer,
   Renderer,
-  WebGLRenderer
+  WebGLRenderer,
 } from './renderers';
 
 import styles from './ViewportElement.module.scss';
@@ -22,7 +22,7 @@ export const ViewportElement: FC<Props> = ({
   onError,
   onResize = () => {},
   onStatsUpdate = () => {},
-  viewport
+  viewport,
 }) => {
   const jsCanvasElementRef = useRef<HTMLCanvasElement>(null);
   const webGLCanvasElementRef = useRef<HTMLCanvasElement>(null);

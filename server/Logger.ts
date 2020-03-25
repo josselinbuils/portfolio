@@ -1,6 +1,6 @@
 enum Level {
   Error = 'ERROR',
-  Info = 'INFO'
+  Info = 'INFO',
 }
 
 export class Logger {

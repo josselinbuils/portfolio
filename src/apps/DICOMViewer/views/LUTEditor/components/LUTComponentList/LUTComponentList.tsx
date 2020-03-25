@@ -1,7 +1,7 @@
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faLongArrowAltRight,
-  faTrashAlt
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
@@ -14,14 +14,14 @@ export const LUTComponentList: FC<Props> = ({
   lutComponents,
   onLUTComponentAdd,
   onLUTComponentColorChange,
-  onLUTComponentDelete
+  onLUTComponentDelete,
 }) => (
   <ul className={styles.container}>
     {lutComponents.map(({ color, id, end, start }) => (
       <li key={id}>
         <ColorPicker
           color={color}
-          onColorChange={newColor => onLUTComponentColorChange(id, newColor)}
+          onColorChange={(newColor) => onLUTComponentColorChange(id, newColor)}
         />
         <span className={styles.colorWindow}>
           {formatNumber(start)} <FontAwesomeIcon icon={faLongArrowAltRight} />{' '}

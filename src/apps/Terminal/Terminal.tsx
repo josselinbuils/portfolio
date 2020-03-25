@@ -13,7 +13,7 @@ import {
   isAsyncExecutor,
   Open,
   Skills,
-  Work
+  Work,
 } from './executors';
 import { TerminalDescriptor } from './TerminalDescriptor';
 
@@ -28,7 +28,7 @@ const executors: { [name: string]: Executor | AsyncExecutor } = {
   help: Help,
   open: Open,
   skills: Skills,
-  work: Work
+  work: Work,
 };
 
 const Terminal: WindowComponent = ({
@@ -81,7 +81,7 @@ const Terminal: WindowComponent = ({
     const execution: Execution = {
       args,
       executor,
-      id: ++executorIdRef.current
+      id: ++executorIdRef.current,
     };
 
     if (isAsyncExecutor(executor)) {
@@ -170,7 +170,7 @@ const Terminal: WindowComponent = ({
           return;
         }
         const command = Object.keys(executors).find(
-          c => c.indexOf(userInput) === 0
+          (c) => c.indexOf(userInput) === 0
         );
 
         if (command !== undefined) {
@@ -223,10 +223,10 @@ const Terminal: WindowComponent = ({
         }
         event.preventDefault();
         setUserInput(
-          input =>
+          (input) =>
             input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
         );
-        setCaretIndex(index => index + 1);
+        setCaretIndex((index) => index + 1);
       } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
         navigate(event);
       }
@@ -243,7 +243,7 @@ const Terminal: WindowComponent = ({
 
     observer.observe(terminal, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     exec('about');
@@ -272,7 +272,7 @@ const Terminal: WindowComponent = ({
             executor: ExecutorComponent,
             id,
             inProgress,
-            releaseHandler
+            releaseHandler,
           }) =>
             isAsyncExecutor(ExecutorComponent) ? (
               <ExecutorComponent

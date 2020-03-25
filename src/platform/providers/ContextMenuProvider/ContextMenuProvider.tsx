@@ -4,11 +4,11 @@ import React, {
   cloneElement,
   FC,
   ReactElement,
-  useState
+  useState,
 } from 'react';
 import {
   ContextMenu,
-  ContextMenuDescriptor
+  ContextMenuDescriptor,
 } from '~/platform/components/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
 
@@ -20,11 +20,11 @@ export const ContextMenuProvider: FC = ({ children }) => {
 
   return (
     <ContextMenuContext.Provider value={setDescriptor}>
-      {Children.map(children as ReactElement[], child =>
+      {Children.map(children as ReactElement[], (child) =>
         cloneElement(child, {
           className: cn(child.props.className, {
-            [styles.eventLess]: descriptor
-          })
+            [styles.eventLess]: descriptor,
+          }),
         })
       )}
       {descriptor && (

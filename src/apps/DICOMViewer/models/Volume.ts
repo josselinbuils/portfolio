@@ -11,7 +11,7 @@ const MANDATORY_FIELDS = [
   'orientation',
   'orientedDimensionsMm',
   'orientedDimensionsVoxels',
-  'voxelSpacing'
+  'voxelSpacing',
 ];
 
 // All vectors are in LPS space
@@ -50,7 +50,7 @@ export class Volume extends Model {
 
   getOrientedDimensionMm(axe: number[]): number {
     return Math.max(
-      ...this.orientedDimensionsMm.map(dimensionVector =>
+      ...this.orientedDimensionsMm.map((dimensionVector) =>
         Math.abs(V(dimensionVector).dot(axe))
       )
     );
@@ -72,7 +72,7 @@ export class Volume extends Model {
       ['x0y0z0', 'x0y0z1'],
       ['x1y0z0', 'x1y0z1'],
       ['x1y1z0', 'x1y1z1'],
-      ['x0y1z0', 'x0y1z1']
+      ['x0y1z0', 'x0y1z1'],
     ];
     const planeNormal = V(plane[1])
       .sub(plane[0])
@@ -82,12 +82,8 @@ export class Volume extends Model {
     for (const [keyA, keyB] of lines) {
       const a = (this.corners as any)[keyA];
       const b = (this.corners as any)[keyB];
-      const viewportToADistance = V(a)
-        .sub(plane[0])
-        .dot(planeNormal);
-      const viewportToBDistance = V(b)
-        .sub(plane[0])
-        .dot(planeNormal);
+      const viewportToADistance = V(a).sub(plane[0]).dot(planeNormal);
+      const viewportToBDistance = V(b).sub(plane[0]).dot(planeNormal);
       const crossesViewport =
         Math.sign(viewportToADistance) !== Math.sign(viewportToBDistance);
 

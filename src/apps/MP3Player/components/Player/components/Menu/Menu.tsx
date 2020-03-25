@@ -5,7 +5,7 @@ import { MenuItem } from './MenuItem';
 
 export const Menu: FC<Props> = ({ activeMusicList, onClickMusicList }) => (
   <nav>
-    {musicLists.map(musicList => (
+    {musicLists.map((musicList) => (
       <MenuItem
         activeMusicList={activeMusicList}
         key={musicList.path}

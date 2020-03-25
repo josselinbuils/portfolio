@@ -7,7 +7,7 @@ const commands = [
   ['bm', 'build manager'],
   ['open', 'open an application'],
   ['skills', 'show my main skills'],
-  ['work', 'show my work experience']
+  ['work', 'show my work experience'],
 ];
 
 export const Help: Executor = () => (

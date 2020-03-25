@@ -27,7 +27,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
     );
     datasetsPromise
       .then(setDatasetDescriptors)
-      .catch(error => {
+      .catch((error) => {
         onError('Unable to retrieve datasets');
         setLoading(false);
         console.error(error);
@@ -47,7 +47,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
       loadFrames(datasetDescriptor, setLoadingProgress)
     );
     framesPromise
-      .then(dicomFrames => {
+      .then((dicomFrames) => {
         // Be sure that 100% will be display on the progress ring
         setTimeout(() => {
           setLoading(false);
@@ -56,7 +56,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
           );
         }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
       })
-      .catch(error => {
+      .catch((error) => {
         setLoading(false);
         onError('Unable to retrieve frames');
         console.error(error);
@@ -83,7 +83,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
     <div className={styles.selectDataset}>
       <h1>Select the dataset</h1>
       <div className={styles.container}>
-        {datasetDescriptors.map(descriptor => (
+        {datasetDescriptors.map((descriptor) => (
           <div
             className={styles.dataset}
             key={descriptor.name}

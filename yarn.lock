@@ -1235,10 +1235,10 @@
   resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-0.1.1.tgz#c003c68874ddc3deea993792f395b7224aa32e64"
   integrity sha512-xU/FBe5FGvtm5ncW5ftG3svsERD/mZZhSZfwoKlPLPtknjrTZc9WAeZzRKRF9nZXn+fEjg34dtZhDNQoAwz8Bw==
 
-"@josselinbuils/tslint@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-5.0.0.tgz#12862f79e69070340597e06604643def7ef7f565"
-  integrity sha512-j4vJNGUiMsNyHqiYMfcsIjMufuyDDePUV0bp0jirnl76RqkOZsv9NfsKUysbBKZkuimAJDLBAm3u9u4/b/U1dw==
+"@josselinbuils/tslint@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-5.1.0.tgz#b16de5dcde90dc2eb8f4eea4b2f1af189739e958"
+  integrity sha512-DGPy89rzCFVt4QFXKM9hSXVKhKLV74TQWbvsH5hw54JiJ54qS0Mz9fA336oNIe4CWxOGHKD4MU9rghgQXeq0xQ==
 
 "@josselinbuils/utils@^0.1.2":
   version "0.1.2"
@@ -9200,10 +9200,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
-prettier@^1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
-  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+prettier@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.2.tgz#1ba8f3eb92231e769b7fcd7cb73ae1b6b74ade08"
+  integrity sha512-5xJQIPT8BraI7ZnaDwSbu5zLrB6vvi8hVV58yHQ+QK64qrY40dULy0HSRlQ2/2IdzeBpjhDkqdcFBnFeDEMVdg==
 
 pretty-bytes@^5.1.0:
   version "5.3.0"

@@ -12,7 +12,7 @@ export const AnnotationsElement: FC<Props> = ({
   annotations,
   availableViewTypes,
   onRendererTypeSwitch,
-  onViewTypeSwitch
+  onViewTypeSwitch,
 }) => {
   const {
     datasetName,
@@ -22,7 +22,7 @@ export const AnnotationsElement: FC<Props> = ({
     viewType,
     windowCenter,
     windowWidth,
-    zoom
+    zoom,
   } = annotations;
   const showMenu = useContextMenu();
   const rendererElementRef = useRef<HTMLSpanElement>(null);
@@ -46,25 +46,25 @@ export const AnnotationsElement: FC<Props> = ({
       items,
       position: {
         x: left,
-        y: bottom + 5
-      }
+        y: bottom + 5,
+      },
     });
   }
 
   function showRendererTypeMenu(): void {
-    const items = [RendererType.JavaScript, RendererType.WebGL].map(type => ({
+    const items = [RendererType.JavaScript, RendererType.WebGL].map((type) => ({
       icon: getMenuItemIcon(type === rendererType),
       title: type,
-      onClick: () => onRendererTypeSwitch(type)
+      onClick: () => onRendererTypeSwitch(type),
     }));
     showContextMenu(rendererElementRef, items);
   }
 
   function showViewTypeMenu(): void {
-    const items = availableViewTypes.map(type => ({
+    const items = availableViewTypes.map((type) => ({
       icon: getMenuItemIcon(type === annotations.viewType),
       title: type,
-      onClick: () => onViewTypeSwitch(type)
+      onClick: () => onViewTypeSwitch(type),
     }));
     showContextMenu(viewTypeElementRef, items);
   }

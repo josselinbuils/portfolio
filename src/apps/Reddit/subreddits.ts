@@ -4,5 +4,5 @@ export const subreddits = [
   'r/CrappyDesign',
   'r/evilbuildings',
   'r/ProgrammerHumor',
-  'r/todayilearned'
+  'r/todayilearned',
 ];

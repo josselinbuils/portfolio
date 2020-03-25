@@ -20,7 +20,7 @@ export const Selection: FC<Props> = ({ visible }) => {
     (moveEvent: MouseEvent) => {
       const position = {
         x: moveEvent.clientX,
-        y: moveEvent.clientY
+        y: moveEvent.clientY,
       };
 
       if (cursorStartPosition === undefined) {
@@ -38,7 +38,7 @@ export const Selection: FC<Props> = ({ visible }) => {
         height: Math.abs(cursorPosition.y - cursorStartPosition.y),
         left: Math.min(cursorStartPosition.x, cursorPosition.x),
         top: Math.min(cursorStartPosition.y, cursorPosition.y),
-        width: Math.abs(cursorPosition.x - cursorStartPosition.x)
+        width: Math.abs(cursorPosition.x - cursorStartPosition.x),
       }}
     />
   ) : null;

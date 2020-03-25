@@ -15,7 +15,7 @@ export const TitleBar: FC<Props> = ({
   onMoveStart,
   onToggleMaximize,
   showMaximizeButton,
-  title
+  title,
 }) => (
   <header
     className={cn(styles.titlebar, { [styles.maximized]: maximized })}

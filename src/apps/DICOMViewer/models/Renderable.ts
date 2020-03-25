@@ -26,7 +26,7 @@ export class Renderable extends Model {
             }
             this.makeDirty();
           }
-        }
+        },
       });
     }
     this.dirty = true;

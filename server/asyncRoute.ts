@@ -6,7 +6,7 @@ export function asyncRoute(handler: AsyncRequestHandler): RequestHandler {
   return (req: Request, res: Response) => {
     handler(req)
       .then(res.json.bind(res))
-      .catch(error => {
+      .catch((error) => {
         Logger.error(error.stack);
         res.status(HTTP_INTERNAL_ERROR).end();
       });

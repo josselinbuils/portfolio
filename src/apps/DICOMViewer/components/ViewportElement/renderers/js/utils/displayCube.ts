@@ -25,7 +25,7 @@ export function displayCube(
     ['x0y0z0', 'x0y0z1'],
     ['x1y0z0', 'x1y0z1'],
     ['x1y1z0', 'x1y1z1'],
-    ['x0y1z0', 'x0y1z1']
+    ['x0y1z0', 'x0y1z1'],
   ];
 
   const cornersDisplay = { ...volume.corners } as { [key: string]: number[] };
@@ -69,7 +69,7 @@ export function displayCube(
         pointInFrontOfViewportDisplay,
         pointInViewportDisplay,
         pointInViewport: info.pointInViewport,
-        pointInFrontOfViewport: info.pointInFrontOfViewport
+        pointInFrontOfViewport: info.pointInFrontOfViewport,
       });
 
       context.beginPath();
@@ -95,7 +95,7 @@ export function displayCube(
 
   for (const {
     pointInFrontOfViewportDisplay,
-    pointInViewportDisplay
+    pointInViewportDisplay,
   } of cross) {
     context.beginPath();
     context.moveTo(pointInViewportDisplay[0], pointInViewportDisplay[1]);
@@ -143,12 +143,8 @@ export function displayCube(
 function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
   const viewportOrigin = viewport.getWorldOrigin();
   const viewportBasis = viewport.getWorldBasis();
-  const viewportToADistance = V(a)
-    .sub(viewportOrigin)
-    .dot(viewportBasis[2]);
-  const viewportToBDistance = V(b)
-    .sub(viewportOrigin)
-    .dot(viewportBasis[2]);
+  const viewportToADistance = V(a).sub(viewportOrigin).dot(viewportBasis[2]);
+  const viewportToBDistance = V(b).sub(viewportOrigin).dot(viewportBasis[2]);
   const crossesViewport =
     Math.sign(viewportToADistance) !== Math.sign(viewportToBDistance);
   const isInFrontOfViewport = !crossesViewport && viewportToADistance < 0;
@@ -156,14 +152,14 @@ function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
   const lineInfo: LineInfo = {
     crossesViewport,
     isInFrontOfViewport,
-    isBehindViewport
+    isBehindViewport,
   };
 
   if (crossesViewport) {
     const plane = [
       viewportOrigin,
       V(viewportOrigin).add(viewportBasis[0]),
-      V(viewportOrigin).add(viewportBasis[1])
+      V(viewportOrigin).add(viewportBasis[1]),
     ];
 
     lineInfo.pointBehindViewport = viewportToADistance > 0 ? a : b;

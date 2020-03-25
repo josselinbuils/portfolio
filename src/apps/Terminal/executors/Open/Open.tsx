@@ -13,7 +13,7 @@ import styles from './Open.module.scss';
 const appDescriptors: { [name: string]: AppDescriptor } = {
   notes: NotesDescriptor,
   reddit: RedditDescriptor,
-  teravia: TeraviaDescriptor
+  teravia: TeraviaDescriptor,
 };
 
 export const Open: Executor = ({ args }) => {
@@ -32,7 +32,7 @@ export const Open: Executor = ({ args }) => {
     <div className={styles.help}>
       <p>Usage: open [application]</p>
       <p>Applications:</p>
-      {appNames.map(name => (
+      {appNames.map((name) => (
         <p className={styles.app} key={name}>
           - {name}
         </p>

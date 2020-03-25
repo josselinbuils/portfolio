@@ -21,16 +21,16 @@ function getDatasetDescriptors(): DatasetDescriptor[] {
 
   try {
     return readdirSync(datasetsPath)
-      .filter(fileName => !fileName.startsWith('.'))
-      .map(fileName => {
+      .filter((fileName) => !fileName.startsWith('.'))
+      .map((fileName) => {
         const files = getFiles(datasetsPath, fileName);
         const name = fileName.replace(/(\.[a-z]+)+$/, '');
-        const preview = readdirSync(previewsPath).find(p => p.includes(name));
+        const preview = readdirSync(previewsPath).find((p) => p.includes(name));
         return { files, name, preview };
       })
       .filter(
         (descriptor, index, descriptors) =>
-          descriptors.findIndex(d => d.name === descriptor.name) === index
+          descriptors.findIndex((d) => d.name === descriptor.name) === index
       );
   } catch (error) {
     Logger.error(`Unable to compute datasets descriptors: ${error.stack}`);
@@ -43,7 +43,7 @@ function getFiles(folderPath: string, name: string): string[] {
 
   return lstatSync(path).isDirectory()
     ? readdirSync(path).map(
-        fileName => `${name}/${fileName.replace('.gz', '')}`
+        (fileName) => `${name}/${fileName.replace('.gz', '')}`
       )
     : [name.replace('.gz', '')];
 }

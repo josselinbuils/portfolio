@@ -9,6 +9,6 @@ export function scaleLUTComponents(
   return lutComponents.map(({ end, start, ...others }) => ({
     ...others,
     end: Math.round((end / BASE_SIZE) * newSize),
-    start: Math.round((start / BASE_SIZE) * newSize)
+    start: Math.round((start / BASE_SIZE) * newSize),
   }));
 }

@@ -17,7 +17,7 @@ export const GraphPreview: FC<Props> = ({
   activeLUTComponentID,
   className,
   lutComponents,
-  onLUTComponentDrag
+  onLUTComponentDrag,
 }) => {
   const [hoveredLUTComponentID, setHoveredLUTComponentID] = useState<string>();
   const canvasElementRef = useRef<HTMLCanvasElement>(null);
@@ -126,7 +126,7 @@ export const GraphPreview: FC<Props> = ({
     hoveredLUTComponentID,
     lutComponents,
     previewHeight,
-    previewWidth
+    previewWidth,
   ]);
 
   function getCloseLUTComponent(
@@ -175,7 +175,7 @@ export const GraphPreview: FC<Props> = ({
       <canvas
         className={cn({
           [styles.withActiveComponent]:
-            hoveredLUTComponentID || activeLUTComponentID
+            hoveredLUTComponentID || activeLUTComponentID,
         })}
         height={canvasHeight}
         onMouseDown={handleMouseDown}

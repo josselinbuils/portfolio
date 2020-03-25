@@ -3,7 +3,7 @@ import { ViewportElement } from '~/apps/DICOMViewer/components';
 import {
   MouseTool,
   RendererType,
-  ViewType
+  ViewType,
 } from '~/apps/DICOMViewer/constants';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
@@ -16,13 +16,13 @@ import styles from './LUTEditor.module.scss';
 const baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },
   { id: '1', start: 45, end: 150, color: [0, 255, 0] },
-  { id: '2', start: 10, end: 135, color: [255, 0, 0] }
+  { id: '2', start: 10, end: 135, color: [255, 0, 0] },
 ] as LUTComponent[];
 
 export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
-    baseLUTComponents.map(component => ({ ...component }))
+    baseLUTComponents.map((component) => ({ ...component }))
   );
   const [viewport, setViewport] = useState<Viewport>();
 
@@ -40,7 +40,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
   }, [dataset, onError]);
 
   useEffect(() => {
-    setViewport(currentViewport => {
+    setViewport((currentViewport) => {
       if (currentViewport !== undefined) {
         return currentViewport.clone({ lutComponents });
       }
@@ -58,14 +58,14 @@ export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
         id: lutComponents.length.toString(),
         color: [255, 255, 255],
         start: 0,
-        end: 85
-      }
+        end: 85,
+      },
     ]);
   }
 
   function deleteLUTComponent(componentId: string): void {
     setLUTComponents(
-      lutComponents.filter(component => component.id !== componentId)
+      lutComponents.filter((component) => component.id !== componentId)
     );
   }
 
@@ -136,7 +136,7 @@ export const LUTEditor: FC<Props> = ({ dataset, onError }) => {
       <div className={styles.leftPan}>
         <ViewportElement
           className={styles.viewport}
-          onCanvasMouseDown={downEvent => {
+          onCanvasMouseDown={(downEvent) => {
             startTool(downEvent, viewport as Viewport, MouseTool.Paging);
           }}
           onError={onError}

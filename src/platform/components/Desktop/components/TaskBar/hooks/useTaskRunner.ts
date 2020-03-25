@@ -2,7 +2,7 @@ import { AppDescriptor } from '~/apps/AppDescriptor';
 import { useInjector } from '~/platform/hooks';
 import {
   WindowInstance,
-  WindowManager
+  WindowManager,
 } from '~/platform/services/WindowManager';
 
 export function useTaskRunner(

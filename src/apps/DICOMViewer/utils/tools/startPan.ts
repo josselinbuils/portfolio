@@ -18,7 +18,7 @@ export function startPan(
       : dataset.frames[0].imageCenter;
     const baseCenterViewport = [
       ...changePointSpace(baseCenter, dataset, viewport).slice(0, 2),
-      0
+      0,
     ];
     const startLookPointViewport = changePointSpace(
       startLookPoint,
@@ -28,7 +28,7 @@ export function startPan(
     const newLookPointViewport = [
       startLookPointViewport[0] + cursorStartPosition[0] - moveEvent.clientX,
       startLookPointViewport[1] + cursorStartPosition[1] - moveEvent.clientY,
-      0
+      0,
     ];
     const isCentered = isImageCentered(
       viewport,

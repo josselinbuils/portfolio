@@ -16,7 +16,7 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
     setLoading(true);
 
     const promise = getPosts(subreddit, filter)
-      .then(result => {
+      .then((result) => {
         if (loadingPromiseRef.current === promise) {
           setCurrentSubreddit(result.subreddit);
           setPosts(result.posts);
@@ -35,7 +35,7 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
     <>
       {loading && <Spinner color="#ff4501" />}
       {currentSubreddit &&
-        posts.map(post => (
+        posts.map((post) => (
           <Post
             {...post}
             currentSubreddit={currentSubreddit}

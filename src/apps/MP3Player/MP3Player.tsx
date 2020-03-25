@@ -6,12 +6,12 @@ import { MP3PlayerDescriptor } from './MP3PlayerDescriptor';
 const size = {
   min: {
     width: 330,
-    height: 150
+    height: 150,
   },
   max: {
     width: 950,
-    height: 530
-  }
+    height: 530,
+  },
 };
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {

@@ -12,11 +12,11 @@ export const MusicPreview: FC<Props> = ({ music, size }) => {
   return (
     <div
       className={cn(styles.musicPreview, {
-        [styles.defaultPreview]: useDefaultPreview
+        [styles.defaultPreview]: useDefaultPreview,
       })}
       style={{
         backgroundImage: music && music.image ? `url(${music.image})` : 'none',
-        fontSize: `${size / 10}rem`
+        fontSize: `${size / 10}rem`,
       }}
     >
       {useDefaultPreview && <FontAwesomeIcon icon={faMusic} />}

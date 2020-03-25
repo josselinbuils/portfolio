@@ -1,7 +1,7 @@
 import {
   NormalizedImageFormat,
   PhotometricInterpretation,
-  PixelRepresentation
+  PixelRepresentation,
 } from '../constants';
 import { DicomFrame } from './DicomFrame';
 import { Model } from './Model';
@@ -25,7 +25,7 @@ const MANDATORY_FIELDS = [
   'rows',
   'sliceLocation',
   'sopInstanceUID',
-  'spacingBetweenSlices'
+  'spacingBetweenSlices',
 ];
 
 export class Frame extends Model {

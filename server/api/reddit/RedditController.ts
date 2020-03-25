@@ -22,7 +22,7 @@ export class RedditController {
       clientId,
       clientSecret,
       username,
-      password
+      password,
     });
   }
 
@@ -40,7 +40,7 @@ export class RedditController {
       .fetch() as any)) as SnoowrapSubreddit;
 
     return {
-      iconSrc: subreddit.icon_img || undefined
+      iconSrc: subreddit.icon_img || undefined,
     };
   };
 

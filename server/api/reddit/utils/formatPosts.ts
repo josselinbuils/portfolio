@@ -7,7 +7,7 @@ dayjs.extend(relativeTime);
 
 export function formatPosts(posts: any[]): RedditPost[] {
   return posts.map(
-    post =>
+    (post) =>
       ({
         author: `u/${post.author.name}`,
         numComments: post.num_comments,
@@ -17,7 +17,7 @@ export function formatPosts(posts: any[]): RedditPost[] {
         since: dayjs(post.created_utc * 1000).fromNow(),
         stickied: post.stickied,
         subreddit: post.subreddit_name_prefixed,
-        title: post.title
+        title: post.title,
       } as RedditPost)
   );
 }

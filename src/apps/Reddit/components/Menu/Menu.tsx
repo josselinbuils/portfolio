@@ -6,7 +6,7 @@ import styles from './Menu.module.scss';
 
 export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
   <nav className={styles.menu}>
-    {subreddits.map(subreddit => (
+    {subreddits.map((subreddit) => (
       <MenuItem
         activeSubreddit={activeSubreddit}
         key={subreddit}

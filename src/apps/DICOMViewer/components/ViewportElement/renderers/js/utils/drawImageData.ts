@@ -1,6 +1,6 @@
 import {
   BoundedViewportSpaceCoordinates,
-  ViewportSpaceCoordinates
+  ViewportSpaceCoordinates,
 } from '../../RenderingProperties';
 
 export function drawImageData(

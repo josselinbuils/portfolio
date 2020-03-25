@@ -10,7 +10,7 @@ export class JamendoController {
     const options: Options = {
       client_id: jamendo.clientId,
       format: 'json',
-      limit: 50
+      limit: 50,
     };
 
     if (tag) {
@@ -41,7 +41,7 @@ async function get(path: string, options: Options): Promise<any[]> {
 
   const { headers, results } = await request({
     json: true,
-    url
+    url,
   }).promise();
 
   if (headers.status === 'success') {

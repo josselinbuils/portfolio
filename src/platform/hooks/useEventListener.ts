@@ -15,7 +15,7 @@ export function useEventListener<EventType extends keyof WindowEventMap>(
 
   useEffect(() => {
     if (active) {
-      const listener: EventHandler<EventType> = event => {
+      const listener: EventHandler<EventType> = (event) => {
         handlerRef.current(event);
       };
       window.addEventListener(eventType, listener);
