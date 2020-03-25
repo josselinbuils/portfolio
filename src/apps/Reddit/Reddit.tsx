@@ -2,8 +2,9 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { Header, Logo, Menu, Posts } from './components';
 import { RedditFilter } from './interfaces';
-import styles from './Reddit.module.scss';
 import { RedditDescriptor } from './RedditDescriptor';
+
+import styles from './Reddit.module.scss';
 
 const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [filter, setFilter] = useState<RedditFilter>('hot');

@@ -15,8 +15,9 @@ import {
   Skills,
   Work
 } from './executors';
-import styles from './Terminal.module.scss';
 import { TerminalDescriptor } from './TerminalDescriptor';
+
+import styles from './Terminal.module.scss';
 
 const DEFAULT_ERROR_MESSAGE = 'an error occurred';
 const USER = 'guest';

@@ -4,6 +4,7 @@ import { AudioContext } from '../AudioProvider';
 import { Controls } from '../Controls';
 import { MusicPreview } from '../MusicPreview';
 import { SeekBar } from '../SeekBar';
+
 import styles from './MiniPlayer.module.scss';
 
 export const MiniPlayer: FC<Props> = ({ min, onClickTogglePlaylist }) => {

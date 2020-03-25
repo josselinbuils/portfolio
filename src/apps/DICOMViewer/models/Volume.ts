@@ -1,5 +1,4 @@
 import { getLinePlaneIntersection, V } from '../utils/math';
-
 import { Model } from './Model';
 
 const MANDATORY_FIELDS = [

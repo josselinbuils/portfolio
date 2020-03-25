@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useEffect, useState } from 'react';
 import { cancelable } from '~/platform/utils';
-import styles from './Icon.module.scss';
 import { getPreloadedIconSrc } from './utils';
+
+import styles from './Icon.module.scss';
 
 export const Icon: FC<Props> = ({ active = true, subreddit }) => {
   const [src, setSrc] = useState<string>();

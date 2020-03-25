@@ -3,6 +3,7 @@ import React, { FC, useLayoutEffect, useState } from 'react';
 import { ButtonLink } from '~/platform/components';
 import { uppercaseFirstLetter } from '../../utils';
 import { Icon } from '../Icon';
+
 import styles from './MenuItem.module.scss';
 
 export const MenuItem: FC<Props> = ({

@@ -9,6 +9,7 @@ import {
   WindowManager
 } from '~/platform/services/WindowManager';
 import { useTaskContextMenu, useTaskRunner } from './hooks';
+
 import styles from './Task.module.scss';
 
 const LOADER_APPARITION_DELAY_MS = 200;

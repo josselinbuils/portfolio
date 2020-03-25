@@ -8,8 +8,9 @@ import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
 import { useTaskDescriptors } from './hooks';
 import { Task } from './Task';
-import styles from './TaskBar.module.scss';
 import { getTaskKey } from './utils';
+
+import styles from './TaskBar.module.scss';
 
 // Has to be in a constant to avoid useless recurrent computations
 const PINNED_APPS_DESCRIPTORS = [

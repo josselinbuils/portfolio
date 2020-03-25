@@ -7,6 +7,7 @@ import { Music, MusicList } from '~/apps/MP3Player/interfaces';
 import { loadTracks } from '~/apps/MP3Player/utils';
 import { Select, Spinner } from '~/platform/components';
 import { cancelable } from '~/platform/utils';
+
 import styles from './Musics.module.scss';
 
 const ORDERS = [

@@ -11,6 +11,7 @@ import React, { FC } from 'react';
 import { MouseTool, ViewType } from '~/apps/DICOMViewer/constants';
 import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
+
 import styles from './LeftToolbar.module.scss';
 
 const mouseTools = [

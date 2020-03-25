@@ -1235,10 +1235,10 @@
   resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-0.1.1.tgz#c003c68874ddc3deea993792f395b7224aa32e64"
   integrity sha512-xU/FBe5FGvtm5ncW5ftG3svsERD/mZZhSZfwoKlPLPtknjrTZc9WAeZzRKRF9nZXn+fEjg34dtZhDNQoAwz8Bw==
 
-"@josselinbuils/tslint@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-4.1.0.tgz#27c50462f074ed6e21e27a8707d851a48283e2ce"
-  integrity sha512-1EQVpL8u3yXDbolFNuxbPkJWNZCPbn7m/t73+FWtzLMvhQvxxJMa7dN1doIvKLPcfn01Cp/XIUEEGDOjOQyW+Q==
+"@josselinbuils/tslint@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/tslint/-/tslint-5.0.0.tgz#12862f79e69070340597e06604643def7ef7f565"
+  integrity sha512-j4vJNGUiMsNyHqiYMfcsIjMufuyDDePUV0bp0jirnl76RqkOZsv9NfsKUysbBKZkuimAJDLBAm3u9u4/b/U1dw==
 
 "@josselinbuils/utils@^0.1.2":
   version "0.1.2"

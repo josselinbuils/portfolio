@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import styles from './JamendoLink.module.scss';
 
 export const JamendoLink: FC = () => (

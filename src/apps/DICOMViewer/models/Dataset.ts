@@ -1,5 +1,3 @@
-import { V } from '../utils/math';
-
 import { CoordinateSpace } from '../interfaces';
 import { DicomFrame } from '../models';
 import {
@@ -7,6 +5,7 @@ import {
   computeSharedProperties,
   computeVolume
 } from '../utils';
+import { V } from '../utils/math';
 import { Frame } from './Frame';
 import { Model } from './Model';
 import { Volume } from './Volume';

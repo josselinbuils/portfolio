@@ -11,6 +11,7 @@ import {
   ContextMenuDescriptor
 } from '~/platform/components/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
+
 import styles from './ContextMenuProvider.module.scss';
 
 export const ContextMenuProvider: FC = ({ children }) => {

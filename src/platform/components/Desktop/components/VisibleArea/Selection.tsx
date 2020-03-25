@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useEventListener } from '~/platform/hooks';
 import { Position } from '~/platform/interfaces';
+
 import styles from './Selection.module.scss';
 
 export const Selection: FC<Props> = ({ visible }) => {

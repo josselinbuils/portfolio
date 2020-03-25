@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { RedditFilter } from '../../interfaces';
 import { Icon } from '../Icon';
 import { FilterButton } from './FilterButton';
+
 import styles from './Header.module.scss';
 
 export const Header: FC<Props> = ({ filter, onClickFilter, subreddit }) => (

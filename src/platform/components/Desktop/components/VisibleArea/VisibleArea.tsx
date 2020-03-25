@@ -4,8 +4,9 @@ import { Size } from '~/platform/interfaces';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { getRefElementSize } from '~/platform/utils';
 import { Selection } from './Selection';
-import styles from './VisibleArea.module.scss';
 import { Windows } from './Windows';
+
+import styles from './VisibleArea.module.scss';
 
 export const VisibleArea: FC = () => {
   const [selectionVisible, setSelectionVisible] = useState(false);

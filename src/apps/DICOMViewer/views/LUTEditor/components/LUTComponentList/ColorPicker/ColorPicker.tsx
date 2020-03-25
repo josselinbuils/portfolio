@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { throttle } from '~/platform/utils';
-import styles from './ColorPicker.module.scss';
 import { hexToRGB, rgbToHex } from './utils';
+
+import styles from './ColorPicker.module.scss';
 
 export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
   const colorChangeHandler = throttle(value => {

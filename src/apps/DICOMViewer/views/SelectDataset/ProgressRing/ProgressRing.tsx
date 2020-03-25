@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import styles from './ProgressRing.module.scss';
 
 export const ProgressRing: FC<Props> = ({

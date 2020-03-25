@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { ColorPicker } from './ColorPicker';
+
 import styles from './LUTComponentList.module.scss';
 
 export const LUTComponentList: FC<Props> = ({

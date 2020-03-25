@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
-import styles from './BuildManager.module.scss';
 import { Log } from './Log';
 import { formatLogs, hasOption, startWsClient, stopWsClient } from './utils';
+
+import styles from './BuildManager.module.scss';
 
 export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
   const [showHelp, setShowHelp] = useState(false);

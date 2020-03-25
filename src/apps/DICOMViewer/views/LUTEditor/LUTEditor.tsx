@@ -10,6 +10,7 @@ import { Dataset, Viewport } from '~/apps/DICOMViewer/models';
 import { startTool } from '~/apps/DICOMViewer/utils';
 import { LUTComponentList } from '~/apps/DICOMViewer/views/LUTEditor/components/LUTComponentList';
 import { BarPreview, GraphPreview } from './components';
+
 import styles from './LUTEditor.module.scss';
 
 const baseLUTComponents = [

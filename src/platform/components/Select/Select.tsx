@@ -2,6 +2,7 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
+
 import styles from './Select.module.scss';
 
 export const Select: FC<Props> = ({ children, className, onChange, value }) => (

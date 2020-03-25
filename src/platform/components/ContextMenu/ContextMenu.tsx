@@ -1,8 +1,9 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import styles from './ContextMenu.module.scss';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import { ContextMenuItem } from './ContextMenuItem';
+
+import styles from './ContextMenu.module.scss';
 
 export const ContextMenu: FC<Props> = ({
   className,

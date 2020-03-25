@@ -5,8 +5,9 @@ import { BASE_URL } from '~/platform/constants';
 import { cancelable } from '~/platform/utils';
 import { DatasetDescriptor } from './DatasetDescriptor';
 import { ProgressRing } from './ProgressRing';
-import styles from './SelectDataset.module.scss';
 import { loadDatasetList, loadFrames } from './utils';
+
+import styles from './SelectDataset.module.scss';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 

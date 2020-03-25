@@ -2,6 +2,7 @@ import { faMinus, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
+
 import styles from './TitleBar.module.scss';
 
 export const TitleBar: FC<Props> = ({

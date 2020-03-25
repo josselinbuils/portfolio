@@ -5,6 +5,7 @@ import { useDragAndDrop } from '~/platform/hooks';
 import { AudioContext } from '../AudioProvider';
 import { Button } from '../Button';
 import { ProgressBar } from './ProgressBar';
+
 import styles from './SeekBar.module.scss';
 
 export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {

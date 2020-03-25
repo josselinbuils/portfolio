@@ -1,8 +1,9 @@
 import cn from 'classnames';
 import React from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import styles from './Teravia.module.scss';
 import { TeraviaDescriptor } from './TeraviaDescriptor';
+
+import styles from './Teravia.module.scss';
 
 const Teravia: WindowComponent = ({
   active,

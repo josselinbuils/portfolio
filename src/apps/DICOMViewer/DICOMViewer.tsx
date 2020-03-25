@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { View } from './constants';
-import styles from './DICOMViewer.module.scss';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { Dataset } from './models';
 import { LUTEditor, SelectDataset, Viewer } from './views';
+
+import styles from './DICOMViewer.module.scss';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,

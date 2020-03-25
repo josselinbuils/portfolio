@@ -1,5 +1,4 @@
 import { Subject } from '@josselinbuils/utils';
-
 import { Model } from './Model';
 
 export class Renderable extends Model {

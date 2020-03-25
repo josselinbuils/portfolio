@@ -11,6 +11,7 @@ import {
   Renderer,
   WebGLRenderer
 } from './renderers';
+
 import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;

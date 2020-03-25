@@ -6,6 +6,7 @@ import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
 import { Executor } from '../Executor';
+
 import styles from './Open.module.scss';
 
 // TODO find a way to retrieve registered apps automatically

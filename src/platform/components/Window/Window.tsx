@@ -3,6 +3,7 @@ import React, { Component, createRef, ReactElement } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces';
 import { TitleBar } from './TitleBar';
+
 import styles from './Window.module.scss';
 
 const ANIMATION_DURATION = 200;

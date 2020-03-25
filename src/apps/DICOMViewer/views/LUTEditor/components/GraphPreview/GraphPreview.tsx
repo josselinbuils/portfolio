@@ -4,6 +4,7 @@ import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
 import { scaleLUTComponents } from '~/apps/DICOMViewer/utils';
 import { applyPolynomialInterpolation } from '~/apps/DICOMViewer/utils/math';
 import { useElementSize } from '~/platform/hooks';
+
 import styles from './GraphPreview.module.scss';
 
 const BOTTOM_OFFSET = 5;

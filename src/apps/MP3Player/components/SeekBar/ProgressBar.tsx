@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+
 import styles from './ProgressBar.module.scss';
 
 export const ProgressBar = forwardRef<HTMLDivElement, Props>(

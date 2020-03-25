@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { subreddits } from '../../subreddits';
-import styles from './Menu.module.scss';
 import { MenuItem } from './MenuItem';
+
+import styles from './Menu.module.scss';
 
 export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
   <nav className={styles.menu}>

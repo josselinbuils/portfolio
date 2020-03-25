@@ -1,8 +1,9 @@
 import React, { FC, useContext } from 'react';
 import { Controls, MusicPreview, SeekBar } from '~/apps/MP3Player/components';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
-import styles from './Footer.module.scss';
 import { MusicInfo } from './MusicInfo';
+
+import styles from './Footer.module.scss';
 
 export const Footer: FC<Props> = ({ onClickTogglePlaylist }) => {
   const { audioState } = useContext(AudioContext);

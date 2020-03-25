@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import styles from './Notes.module.scss';
 import { NotesDescriptor } from './NotesDescriptor';
+
+import styles from './Notes.module.scss';
 
 const smileys: { [smiley: string]: string } = {
   ':D': '\uD83D\uDE00',

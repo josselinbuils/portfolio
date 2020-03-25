@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Picture } from '~/platform/components';
 import { Executor } from '../Executor';
-import styles from './About.module.scss';
 import photoJPG from './josselinbuils.jpg';
 import photoWEBP from './josselinbuils.webp';
+
+import styles from './About.module.scss';
 
 const socialLinks = [
   { icon: faLinkedin, url: 'https://linkedin.com/in/josselinbuils' },

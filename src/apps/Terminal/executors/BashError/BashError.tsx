@@ -1,5 +1,6 @@
 import React from 'react';
 import { Executor } from '../Executor';
+
 import styles from './BashError.module.scss';
 
 const COMMANDS = [
