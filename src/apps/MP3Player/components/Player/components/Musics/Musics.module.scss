@@ -16,41 +16,9 @@
       justify-content: space-between;
 
       .select {
-        $line-height: 2.1rem;
-
-        display: inline-block;
-        width: 13rem;
-        position: relative;
-        margin-left: auto;
-        float: right;
-
-        .selectIcon {
-          position: absolute;
-          top: 0.6rem;
-          right: 1rem;
-          pointer-events: none;
-          line-height: $line-height;
-          margin-top: 0.2rem;
-        }
-
-        select {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          background: transparent;
-          padding: 0.6rem 3rem 0.6rem 1rem;
-          border: 0.1rem solid $secondaryColor;
-          border-radius: 0.5rem;
-          color: $textColor;
-          width: 100%;
-          outline: none;
-          font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-          font-size: 1.3rem;
-          line-height: $line-height;
-
-          option {
-            background: $backgroundColor;
-          }
-        }
+        color: $textColor;
+        border-color: $secondaryColor;
+        font-family: $fontFamily;
       }
 
       h2 {

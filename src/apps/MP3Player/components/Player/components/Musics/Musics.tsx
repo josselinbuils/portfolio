@@ -1,15 +1,11 @@
-import {
-  faArrowDown,
-  faPauseCircle,
-  faPlayCircle
-} from '@fortawesome/free-solid-svg-icons';
+import { faPauseCircle, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
 import { Music, MusicList } from '~/apps/MP3Player/interfaces';
 import { loadTracks } from '~/apps/MP3Player/utils';
-import { Spinner } from '~/platform/components';
+import { Select, Spinner } from '~/platform/components';
 import styles from './Musics.module.scss';
 
 const ORDERS = [
@@ -64,19 +60,13 @@ export const Musics: FC<Props> = ({ musicList }) => {
       <div className={styles.header}>
         <div>
           <h2>{musicList.name}</h2>
-          <div className={styles.select}>
-            <FontAwesomeIcon className={styles.selectIcon} icon={faArrowDown} />
-            <select
-              onChange={event => setOrder(event.target.value)}
-              value={order}
-            >
-              {ORDERS.map(({ name, value }) => (
-                <option key={value} value={value}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select className={styles.select} onChange={setOrder} value={order}>
+            {ORDERS.map(({ name, value }) => (
+              <option key={value} value={value}>
+                {name}
+              </option>
+            ))}
+          </Select>
         </div>
         <table className={styles.header}>
           <thead>
