@@ -68,12 +68,12 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
       let newStart = baseStart + offset;
       let newEnd = baseEnd + offset;
 
-      if (newStart < 0) {
-        newStart = 0;
-        newEnd = lutComponentWidth;
-      } else if (newEnd > 255) {
-        newEnd = 255;
+      if (newEnd < 5) {
+        newEnd = 5;
         newStart = newEnd - lutComponentWidth;
+      } else if (newStart > 250) {
+        newStart = 250;
+        newEnd = newStart + lutComponentWidth;
       }
 
       (targetLUTComponent as LUTComponent).start = newStart;

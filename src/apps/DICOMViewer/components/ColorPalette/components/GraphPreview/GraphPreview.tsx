@@ -63,9 +63,11 @@ export const GraphPreview: FC<Props> = ({
 
       scaleLUTComponents(lutComponents, previewWidth).forEach(
         ({ color, end, id, start }) => {
-          let lastY = 0;
+          const previewStart = Math.max(start, 0);
+          const previewEnd = Math.min(end, previewWidth);
+          let lastY = previewHeight;
 
-          for (let x = start; x <= end; x++) {
+          for (let x = previewStart; x <= previewEnd; x++) {
             const y =
               previewHeight -
               applyPolynomialInterpolation(start, end, previewHeight, x);
