@@ -18,7 +18,7 @@ import {
   getDefaultVOILUT,
 } from './utils';
 
-export class JSVolumeRenderer implements Renderer {
+export class JSMultiPlanarRenderer implements Renderer {
   private background = 0;
   private readonly context: CanvasRenderingContext2D;
   private lut?: { table: number[] | number[][]; windowWidth: number };
@@ -231,25 +231,25 @@ export class JSVolumeRenderer implements Renderer {
       displayY1,
     } = imageSpace as ImageSpaceCoordinates;
 
-    const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
+    const imageWorldOrigin = JSMultiPlanarRenderer.getImageWorldOrigin(
       viewport,
       viewportSpace
     );
-    const [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
+    const [xAxis, yAxis] = JSMultiPlanarRenderer.getImageWorldBasis(viewport);
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
     const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
     let dataIndex = 0;
 
     for (let y = displayY0; y <= displayY1; y++) {
       for (let x = displayX0; x <= displayX1; x++) {
-        const pointLPS = JSVolumeRenderer.getPointLPS(
+        const pointLPS = JSMultiPlanarRenderer.getPointLPS(
           imageWorldOrigin,
           xAxis,
           yAxis,
           x,
           y
         );
-        const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
+        const rawValue = JSMultiPlanarRenderer.getRawValue(dataset, pointLPS);
         imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }
@@ -288,11 +288,11 @@ export class JSVolumeRenderer implements Renderer {
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
-    const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
+    const imageWorldOrigin = JSMultiPlanarRenderer.getImageWorldOrigin(
       viewport,
       viewportSpace
     );
-    let [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
+    let [xAxis, yAxis] = JSMultiPlanarRenderer.getImageWorldBasis(viewport);
 
     xAxis = V(xAxis).mul(displayWidth / imageWidth);
     yAxis = V(yAxis).mul(displayHeight / imageHeight);
@@ -303,14 +303,14 @@ export class JSVolumeRenderer implements Renderer {
 
     for (let y = imageY0; y <= imageY1; y++) {
       for (let x = imageX0; x <= imageX1; x++) {
-        const pointLPS = JSVolumeRenderer.getPointLPS(
+        const pointLPS = JSMultiPlanarRenderer.getPointLPS(
           imageWorldOrigin,
           xAxis,
           yAxis,
           x - viewportSpaceImageX0,
           y - viewportSpaceImageY0
         );
-        const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
+        const rawValue = JSMultiPlanarRenderer.getRawValue(dataset, pointLPS);
         imageData32[dataIndex++] = getPixelValue(rawValue);
       }
     }

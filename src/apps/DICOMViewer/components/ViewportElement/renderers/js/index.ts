@@ -1,2 +1,2 @@
 export * from './JSFrameRenderer';
-export * from './JSVolumeRenderer';
+export * from './JSMultiPlanarRenderer';

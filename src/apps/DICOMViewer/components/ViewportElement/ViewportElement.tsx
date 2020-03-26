@@ -7,7 +7,7 @@ import { useElementSize } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import {
   JSFrameRenderer,
-  JSVolumeRenderer,
+  JSMultiPlanarRenderer,
   Renderer,
   WebGLRenderer,
 } from './renderers';
@@ -49,7 +49,7 @@ export const ViewportElement: FC<Props> = ({
           renderer =
             (viewport as Viewport).viewType === ViewType.Native
               ? new JSFrameRenderer(canvasElement)
-              : new JSVolumeRenderer(canvasElement);
+              : new JSMultiPlanarRenderer(canvasElement);
           break;
 
         case RendererType.WebGL:
