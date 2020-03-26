@@ -132,9 +132,13 @@ export const ViewportElement: FC<Props> = ({
         meanRenderDuration = 0;
       }
 
+      const stats: { fps: number; meanRenderDuration?: number } = { fps };
+
       if (meanRenderDuration !== 0) {
-        onStatsUpdate({ fps, meanRenderDuration });
+        stats.meanRenderDuration = meanRenderDuration;
       }
+
+      onStatsUpdate(stats);
     }, ANNOTATIONS_REFRESH_DELAY);
 
     render();
@@ -186,5 +190,5 @@ interface Props {
   onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;
   onResize?(size: Size): void;
-  onStatsUpdate?(stats: { fps: number; meanRenderDuration: number }): void;
+  onStatsUpdate?(stats: { fps: number; meanRenderDuration?: number }): void;
 }

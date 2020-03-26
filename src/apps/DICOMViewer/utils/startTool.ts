@@ -26,14 +26,13 @@ export function startTool(
     case MouseButton.Left:
       tool = activeLeftTool;
       break;
+
     case MouseButton.Middle:
       tool = activeMiddleTool;
       break;
+
     case MouseButton.Right:
       tool = activeRightTool;
-      break;
-    default:
-      throw new Error('Unknown button');
   }
 
   if (tool === undefined) {
