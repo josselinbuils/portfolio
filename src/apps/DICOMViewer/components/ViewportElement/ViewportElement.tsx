@@ -8,6 +8,7 @@ import { Size } from '~/platform/interfaces';
 import {
   JSFrameRenderer,
   JSMultiPlanarRenderer,
+  JSVolumeRenderer,
   Renderer,
   WebGLRenderer,
 } from './renderers';
@@ -46,10 +47,25 @@ export const ViewportElement: FC<Props> = ({
     try {
       switch (viewport.rendererType) {
         case RendererType.JavaScript:
-          renderer =
-            (viewport as Viewport).viewType === ViewType.Native
-              ? new JSFrameRenderer(canvasElement)
-              : new JSMultiPlanarRenderer(canvasElement);
+          switch ((viewport as Viewport).viewType) {
+            case ViewType.Axial:
+            case ViewType.Coronal:
+            case ViewType.Oblique:
+            case ViewType.Sagittal:
+              renderer = new JSMultiPlanarRenderer(canvasElement);
+              break;
+
+            case ViewType.Native:
+              renderer = new JSFrameRenderer(canvasElement);
+              break;
+
+            case ViewType.Volume:
+              renderer = new JSVolumeRenderer(canvasElement);
+              break;
+
+            default:
+              throw new Error('Unknown view type');
+          }
           break;
 
         case RendererType.WebGL:
@@ -116,7 +132,9 @@ export const ViewportElement: FC<Props> = ({
         meanRenderDuration = 0;
       }
 
-      onStatsUpdate({ fps, meanRenderDuration });
+      if (meanRenderDuration !== 0) {
+        onStatsUpdate({ fps, meanRenderDuration });
+      }
     }, ANNOTATIONS_REFRESH_DELAY);
 
     render();

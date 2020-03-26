@@ -9,7 +9,7 @@ export function getAvailableViewTypes(
 
   if (dataset.is3D && rendererType !== RendererType.WebGL) {
     availableViewTypes.push(
-      ...[ViewType.Axial, ViewType.Coronal, ViewType.Sagittal]
+      ...[ViewType.Axial, ViewType.Coronal, ViewType.Sagittal, ViewType.Volume]
     );
   }
   return availableViewTypes;

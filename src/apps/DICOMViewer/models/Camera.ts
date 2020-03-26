@@ -53,6 +53,7 @@ export class Camera extends Renderable implements CoordinateSpace {
         upVector = [0, -1, 0];
         break;
       case ViewType.Coronal:
+      case ViewType.Volume:
         direction = [0, 1, 0];
         upVector = [0, 0, 1];
         break;
@@ -66,7 +67,17 @@ export class Camera extends Renderable implements CoordinateSpace {
 
     const baseFieldOfView = volume.getOrientedDimensionMm(upVector);
     const fieldOfView = baseFieldOfView;
-    const lookPoint = volume.center;
+    let lookPoint = volume.center;
+
+    if (viewType === ViewType.Volume) {
+      const correctionVectorNorm = V(volume.corners.x0y0z0)
+        .sub(lookPoint)
+        .dot(direction);
+      const correctionVector = V(direction).mul(correctionVectorNorm);
+
+      lookPoint = lookPoint = V(lookPoint).add(correctionVector).smooth();
+    }
+
     const eyePoint = V(lookPoint).sub(direction);
 
     return new Camera({

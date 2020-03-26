@@ -78,6 +78,13 @@ export class Vector extends Array<number> {
     return this.div(this.norm());
   }
 
+  smooth(): Vector {
+    this[0] = Math.round(this[0] * 1e8) / 1e8;
+    this[1] = Math.round(this[1] * 1e8) / 1e8;
+    this[2] = Math.round(this[2] * 1e8) / 1e8;
+    return this;
+  }
+
   sub(vector: number[]): Vector {
     this[0] -= vector[0];
     this[1] -= vector[1];

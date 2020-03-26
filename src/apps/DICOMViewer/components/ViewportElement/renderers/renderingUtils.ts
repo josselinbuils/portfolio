@@ -1,4 +1,4 @@
-import { ViewType } from '~/apps/DICOMViewer/constants';
+import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { Camera, Frame, Viewport, Volume } from '~/apps/DICOMViewer/models';
 import { changePointSpace } from '~/apps/DICOMViewer/utils';
 import { V } from '~/apps/DICOMViewer/utils/math';
@@ -17,6 +17,7 @@ export function getRenderingProperties(
     dataset,
     height,
     width,
+    viewType,
     windowCenter,
     windowWidth,
   } = viewport;
@@ -31,7 +32,7 @@ export function getRenderingProperties(
   let viewportSpaceImageX0: number;
   let viewportSpaceImageY0: number;
 
-  if (viewport.viewType === ViewType.Native) {
+  if (viewType === ViewType.Native) {
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { columns, imageCenter, rows } = frame;
     const lookPointViewport = changePointSpace(
@@ -59,7 +60,19 @@ export function getRenderingProperties(
       frameCenterViewport[1] -
       lookPointViewport[1];
   } else {
-    const imageDimensions = getImageDimensions(viewport);
+    let viewportToUse = viewport;
+
+    if (viewType === ViewType.Volume) {
+      const fakeViewport = Viewport.create(
+        dataset,
+        ViewType.Coronal,
+        RendererType.JavaScript
+      );
+      fakeViewport.width = viewport.width;
+      fakeViewport.height = viewport.height;
+      viewportToUse = fakeViewport;
+    }
+    const imageDimensions = getImageDimensions(viewportToUse);
 
     if (imageDimensions === undefined) {
       return undefined;

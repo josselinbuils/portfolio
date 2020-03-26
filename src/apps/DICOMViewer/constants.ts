@@ -33,4 +33,5 @@ export enum ViewType {
   Native = 'Native',
   Oblique = 'Oblique',
   Sagittal = 'Sagittal',
+  Volume = 'Volume',
 }
