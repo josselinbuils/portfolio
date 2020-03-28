@@ -19,7 +19,7 @@ import {
 } from './utils';
 
 const skinLUTComponents = [
-  { id: '0', start: 10, end: 135, color: [255, 220, 170] },
+  { id: '0', start: 10, end: 135, color: [235, 190, 180] },
 ] as LUTComponent[];
 
 export class JSVolumeRenderer implements Renderer {
