@@ -219,7 +219,7 @@ export class JSVolumeRenderer implements Renderer {
     let intensity = 250;
 
     if (rawValue < leftLimit) {
-      intensity = 0;
+      intensity = this.background;
     } else if (rawValue < rightLimit) {
       intensity = (this.lut as VOILUT).table[rawValue - leftLimit] as number;
     }
