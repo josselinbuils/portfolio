@@ -12,8 +12,7 @@ import { getTaskKey } from './utils';
 
 import styles from './TaskBar.module.scss';
 
-// Has to be in a constant to avoid useless recurrent computations
-const PINNED_APPS_DESCRIPTORS = [
+export const PINNED_APPS_DESCRIPTORS = [
   TerminalDescriptor,
   DICOMViewerDescriptor,
   MP3PlayerDescriptor,

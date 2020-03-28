@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
-import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
-import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
+import { PINNED_APPS_DESCRIPTORS } from '~/platform/components/Desktop/components/TaskBar';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
 import { Executor } from '../Executor';
 
 import styles from './Open.module.scss';
 
-// TODO find a way to retrieve registered apps automatically
-const appDescriptors: { [name: string]: AppDescriptor } = {
-  notes: NotesDescriptor,
-  reddit: RedditDescriptor,
-  teravia: TeraviaDescriptor,
-};
+const appDescriptors = {} as { [name: string]: AppDescriptor };
+
+PINNED_APPS_DESCRIPTORS.sort((a, b) =>
+  a.appName.toLocaleLowerCase() > b.appName.toLowerCase() ? 1 : -1
+).forEach((descriptor) => {
+  appDescriptors[descriptor.appName.toLocaleLowerCase()] = descriptor;
+});
 
 export const Open: Executor = ({ args }) => {
   const windowManager = useInjector(WindowManager);

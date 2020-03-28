@@ -1,1 +1,1 @@
-export { TaskBar } from './TaskBar';
+export * from './TaskBar';
