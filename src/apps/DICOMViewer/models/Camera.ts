@@ -52,15 +52,19 @@ export class Camera extends Renderable implements CoordinateSpace {
         direction = [0, 0, 1];
         upVector = [0, -1, 0];
         break;
+
       case ViewType.Coronal:
-      case ViewType.Volume:
+      case ViewType.VolumeBones:
+      case ViewType.VolumeSkin:
         direction = [0, 1, 0];
         upVector = [0, 0, 1];
         break;
+
       case ViewType.Sagittal:
         direction = [-1, 0, 0];
         upVector = [0, 0, 1];
         break;
+
       default:
         throw new Error(`Unknown view type: ${viewType}`);
     }
@@ -69,7 +73,7 @@ export class Camera extends Renderable implements CoordinateSpace {
     const fieldOfView = baseFieldOfView;
     let lookPoint = volume.center;
 
-    if (viewType === ViewType.Volume) {
+    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
       const correctionVectorNorm = V(volume.corners.x0y0z0)
         .sub(lookPoint)
         .dot(direction);

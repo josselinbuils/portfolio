@@ -62,7 +62,7 @@ export function getRenderingProperties(
   } else {
     let viewportToUse = viewport;
 
-    if (viewType === ViewType.Volume) {
+    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
       const fakeViewport = Viewport.create(
         dataset,
         ViewType.Coronal,

@@ -7,7 +7,6 @@ import { useElementSize } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import {
   JSFrameRenderer,
-  JSMultiPlanarRenderer,
   JSVolumeRenderer,
   Renderer,
   WebGLRenderer,
@@ -47,25 +46,10 @@ export const ViewportElement: FC<Props> = ({
     try {
       switch (viewport.rendererType) {
         case RendererType.JavaScript:
-          switch ((viewport as Viewport).viewType) {
-            case ViewType.Axial:
-            case ViewType.Coronal:
-            case ViewType.Oblique:
-            case ViewType.Sagittal:
-              renderer = new JSMultiPlanarRenderer(canvasElement);
-              break;
-
-            case ViewType.Native:
-              renderer = new JSFrameRenderer(canvasElement);
-              break;
-
-            case ViewType.Volume:
-              renderer = new JSVolumeRenderer(canvasElement);
-              break;
-
-            default:
-              throw new Error('Unknown view type');
-          }
+          renderer =
+            viewport.viewType === ViewType.Native
+              ? new JSFrameRenderer(canvasElement)
+              : new JSVolumeRenderer(canvasElement);
           break;
 
         case RendererType.WebGL:

@@ -1,21 +1,29 @@
-import { VOILUT } from '~/apps/DICOMViewer/interfaces';
+import { ViewType } from '~/apps/DICOMViewer/constants';
+import { LUTComponent, VOILUT } from '~/apps/DICOMViewer/interfaces';
 import { Dataset, Viewport, Volume } from '~/apps/DICOMViewer/models';
 import { changePointSpace, loadVOILUT } from '~/apps/DICOMViewer/utils';
 import { V } from '~/apps/DICOMViewer/utils/math';
 import { Renderer } from '../Renderer';
 import {
+  BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,
   ViewportSpaceCoordinates,
 } from '../RenderingProperties';
 import { getRenderingProperties } from '../renderingUtils';
 import {
+  displayCube,
   drawImageData,
   getCanvasRenderingContexts,
   getDefaultVOILUT,
 } from './utils';
 
+const skinLUTComponents = [
+  { id: '0', start: 10, end: 135, color: [255, 220, 170] },
+] as LUTComponent[];
+
 export class JSVolumeRenderer implements Renderer {
+  private background = 0;
   private readonly context: CanvasRenderingContext2D;
   private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
@@ -139,15 +147,44 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      this.lut =
-        viewport.lutComponents !== undefined
-          ? loadVOILUT(viewport.lutComponents, windowWidth)
-          : getDefaultVOILUT(windowWidth);
+      // tslint:disable-next-line:prefer-conditional-expression
+      if (viewport.lutComponents !== undefined) {
+        this.lut = loadVOILUT(viewport.lutComponents, windowWidth);
+      } else if (viewport.viewType === ViewType.VolumeSkin) {
+        this.lut = loadVOILUT(skinLUTComponents, windowWidth);
+      } else {
+        this.lut = getDefaultVOILUT(windowWidth);
+      }
     }
 
-    this.context.fillStyle = 'black';
-    this.context.fillRect(0, 0, viewport.width, viewport.height);
-    this.renderImagePixels(viewport, renderingProperties);
+    const { boundedViewportSpace, imageSpace } = renderingProperties;
+    const imagePixelsToRender =
+      imageSpace.displayWidth * imageSpace.displayHeight;
+    const viewportPixelsToRender =
+      boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
+    let renderPixels;
+
+    if (
+      [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType)
+    ) {
+      renderPixels = () =>
+        this.render3DImagePixels(viewport, renderingProperties);
+    } else {
+      renderPixels =
+        viewportPixelsToRender < imagePixelsToRender
+          ? () => this.renderMPRViewportPixels(viewport, renderingProperties)
+          : () => this.renderMPRImagePixels(viewport, renderingProperties);
+    }
+
+    if (viewport.viewType === ViewType.Oblique) {
+      this.background = 10;
+      displayCube(viewport, this.canvas, renderPixels);
+    } else {
+      this.background = 0;
+      this.context.fillStyle = 'black';
+      this.context.fillRect(0, 0, viewport.width, viewport.height);
+      renderPixels();
+    }
   }
 
   private createPixelValueGetter(
@@ -191,7 +228,7 @@ export class JSVolumeRenderer implements Renderer {
     return intensity | (intensity << 8) | (intensity << 16) | (alpha << 24);
   }
 
-  private renderImagePixels(
+  private render3DImagePixels(
     viewport: Viewport,
     renderingProperties: RenderingProperties
   ): void {
@@ -224,7 +261,8 @@ export class JSVolumeRenderer implements Renderer {
     const basis = camera.getWorldBasis();
     const direction = basis[2];
     const { dimensionsVoxels } = dataset.volume as Volume;
-    const targetValue = leftLimit + (rightLimit - leftLimit) / 1.1;
+    const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
+    const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
     let pointLPS = JSVolumeRenderer.getPointLPS(
       imageWorldOrigin,
       xAxis,
@@ -278,6 +316,121 @@ export class JSVolumeRenderer implements Renderer {
       this.renderingContext,
       displayWidth,
       displayHeight,
+      boundedViewportSpace
+    );
+  }
+
+  private renderMPRImagePixels(
+    viewport: Viewport,
+    renderingProperties: RenderingProperties
+  ): void {
+    const { dataset } = viewport;
+    const {
+      boundedViewportSpace,
+      imageSpace,
+      leftLimit,
+      rightLimit,
+      viewportSpace,
+    } = renderingProperties;
+    const {
+      displayHeight,
+      displayWidth,
+      displayX0,
+      displayX1,
+      displayY0,
+      displayY1,
+    } = imageSpace as ImageSpaceCoordinates;
+
+    const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
+      viewport,
+      viewportSpace
+    );
+    const [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
+    const imageData32 = new Uint32Array(displayWidth * displayHeight);
+    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
+    let dataIndex = 0;
+
+    for (let y = displayY0; y <= displayY1; y++) {
+      for (let x = displayX0; x <= displayX1; x++) {
+        const pointLPS = JSVolumeRenderer.getPointLPS(
+          imageWorldOrigin,
+          xAxis,
+          yAxis,
+          x,
+          y
+        );
+        const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
+        imageData32[dataIndex++] = getPixelValue(rawValue);
+      }
+    }
+
+    drawImageData(
+      imageData32,
+      this.context,
+      this.renderingContext,
+      displayWidth,
+      displayHeight,
+      boundedViewportSpace
+    );
+  }
+
+  private renderMPRViewportPixels(
+    viewport: Viewport,
+    renderingProperties: RenderingProperties
+  ): void {
+    const { dataset } = viewport;
+    const {
+      boundedViewportSpace,
+      imageSpace,
+      leftLimit,
+      rightLimit,
+      viewportSpace,
+    } = renderingProperties;
+    const {
+      imageHeight,
+      imageWidth,
+      imageX0,
+      imageX1,
+      imageY0,
+      imageY1,
+    } = boundedViewportSpace as BoundedViewportSpaceCoordinates;
+    const { displayWidth, displayHeight } = imageSpace as ImageSpaceCoordinates;
+
+    const viewportSpaceImageX0 = viewportSpace.imageX0;
+    const viewportSpaceImageY0 = viewportSpace.imageY0;
+    const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
+      viewport,
+      viewportSpace
+    );
+    let [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
+
+    xAxis = V(xAxis).mul(displayWidth / imageWidth);
+    yAxis = V(yAxis).mul(displayHeight / imageHeight);
+
+    const imageData32 = new Uint32Array(imageWidth * imageHeight);
+    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
+    let dataIndex = 0;
+
+    for (let y = imageY0; y <= imageY1; y++) {
+      for (let x = imageX0; x <= imageX1; x++) {
+        const pointLPS = JSVolumeRenderer.getPointLPS(
+          imageWorldOrigin,
+          xAxis,
+          yAxis,
+          x - viewportSpaceImageX0,
+          y - viewportSpaceImageY0
+        );
+        const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
+        imageData32[dataIndex++] = getPixelValue(rawValue);
+      }
+    }
+
+    drawImageData(
+      imageData32,
+      this.context,
+      this.renderingContext,
+      imageWidth,
+      imageHeight,
       boundedViewportSpace
     );
   }

@@ -21,6 +21,8 @@ import { getAvailableViewTypes, startTool } from './utils';
 
 import styles from './DICOMViewer.module.scss';
 
+const DEFAULT_RENDERER_TYPE = RendererType.JavaScript;
+
 const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
@@ -36,7 +38,7 @@ const DICOMViewer: WindowComponent = ({
   const [errorMessage, setErrorMessage] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>();
   const [rendererType, setRendererType] = useState<RendererType>(
-    RendererType.JavaScript
+    DEFAULT_RENDERER_TYPE
   );
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportStats, setViewportStats] = useState<object>();
@@ -120,7 +122,12 @@ const DICOMViewer: WindowComponent = ({
 
     if (dataset) {
       dataset.destroy();
+      setAnnotations({});
       setDataset(undefined);
+      setLUTComponents(undefined);
+      setRendererType(DEFAULT_RENDERER_TYPE);
+      setViewport(undefined);
+      setViewportStats(undefined);
     }
   }
 
