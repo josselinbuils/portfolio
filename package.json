@@ -56,6 +56,7 @@
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
+    "react-snap": "^1.23.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "rimraf": "^3.0.2",
@@ -72,7 +73,6 @@
     "husky": "^3.1.0",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2",
-    "react-snap": "^1.23.0",
     "source-map-explorer": "^2.4.1",
     "tslint": "^6.1.0"
   },
