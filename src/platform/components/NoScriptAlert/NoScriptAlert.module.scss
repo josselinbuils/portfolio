@@ -1,0 +1,13 @@
+@import '../../constants';
+
+.noScriptAlert {
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  position: fixed;
+  top: 1rem;
+  left: 7rem;
+  padding: 0.8rem;
+  color: $textColor;
+  border-radius: 0.4rem;
+  background: $backgroundColor;
+}

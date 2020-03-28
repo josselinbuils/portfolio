@@ -52,20 +52,11 @@ export class Window extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const {
-      keepContentRatio,
-      minHeight,
-      minWidth,
-      visibleAreaSize,
-    } = this.props;
+    const { keepContentRatio, minHeight, minWidth } = this.props;
 
     this.setSize(minWidth, minHeight);
-
-    const size = this.getSize();
-    const x = Math.round((visibleAreaSize.width - size.width) * 0.5);
-    const y = Math.round((visibleAreaSize.height - size.height) * 0.2);
-
-    this.setPosition(x, y);
+    this.setStyle('left', `calc(50% - ${minWidth / 20}rem)`);
+    this.setStyle('top', `15%`);
 
     if (keepContentRatio) {
       const contentSize = this.getContentSize();
@@ -376,14 +367,19 @@ export class Window extends Component<Props, State> {
   }
 
   private setMaxSize(): void {
-    const { height, width } = this.props.visibleAreaSize;
-    this.setSize(width, height, true);
+    const { visibleAreaSize } = this.props;
+
+    if (visibleAreaSize !== undefined) {
+      const { height, width } = visibleAreaSize;
+      this.setSize(width, height, true);
+    }
   }
 
   private setPosition(x: number, y: number, force: boolean = false): void {
-    if (!force) {
+    const { visibleAreaSize } = this.props;
+
+    if (!force && visibleAreaSize !== undefined) {
       // This cannot be done when showing again a minimized window because its dimensions are null
-      const { visibleAreaSize } = this.props;
       const xMin = -this.getSize().width + MIN_USABLE_SIZE;
       const yMin = 0;
       const xMax = visibleAreaSize.width - BUTTONS_WIDTH - MIN_USABLE_SIZE;
@@ -489,7 +485,7 @@ interface Props {
   title: string;
   titleBackground?: string;
   titleColor: string;
-  visibleAreaSize: Size;
+  visibleAreaSize: Size | undefined;
   zIndex: number;
   onClose(id: number): void;
   onMinimise(id: number): void;

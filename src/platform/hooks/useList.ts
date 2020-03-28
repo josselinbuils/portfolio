@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
-export function useList<T>(): [T[], ListManager<T>] {
-  const [list, setList] = useState<T[]>([]);
+export function useList<T>(initialValues: T[] = []): [T[], ListManager<T>] {
+  const [list, setList] = useState<T[]>(initialValues);
   const manager = useMemo(
     () => ({
       clear: () => setList([]),

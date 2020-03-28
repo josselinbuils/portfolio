@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import { useInjector } from '~/platform/hooks';
 import {
@@ -10,12 +10,12 @@ import { TaskDescriptor } from '../TaskDescriptor';
 export function useTaskDescriptors(
   pinnedAppDescriptors: AppDescriptor[]
 ): TaskDescriptor[] {
-  const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
-    getTaskDescriptors(pinnedAppDescriptors)
-  );
   const windowManager = useInjector(WindowManager);
+  const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
+    getTaskDescriptors(pinnedAppDescriptors, windowManager.getWindowInstances())
+  );
 
-  useEffect(
+  useLayoutEffect(
     () =>
       windowManager.windowInstancesSubject.subscribe((windowInstances) =>
         setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances))

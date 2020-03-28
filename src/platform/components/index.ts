@@ -3,6 +3,7 @@
 export { ButtonLink } from './ButtonLink';
 export { ContextMenu } from './ContextMenu';
 export { Desktop } from './Desktop';
+export { NoScriptAlert } from './NoScriptAlert';
 export { Picture } from './Picture';
 export { Select } from './Select';
 export { Spinner } from './Spinner';

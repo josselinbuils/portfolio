@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useLayoutEffect, useState } from 'react';
 import { useInjector } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import {
@@ -8,9 +8,11 @@ import {
 
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const windowManager = useInjector(WindowManager);
-  const [windowInstances, setWindowInstances] = useState<WindowInstance[]>([]);
+  const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
+    windowManager.getWindowInstances()
+  );
 
-  useEffect(
+  useLayoutEffect(
     () => windowManager.windowInstancesSubject.subscribe(setWindowInstances),
     [windowManager]
   );
@@ -45,5 +47,5 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
 };
 
 interface Props {
-  visibleAreaSize: Size;
+  visibleAreaSize: Size | undefined;
 }

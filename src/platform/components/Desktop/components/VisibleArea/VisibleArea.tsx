@@ -1,4 +1,10 @@
-import React, { FC, MouseEvent, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  MouseEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useEventListener, useInjector } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
 import { WindowManager } from '~/platform/services/WindowManager';
@@ -14,7 +20,10 @@ export const VisibleArea: FC = () => {
   const visibleAreaRef = useRef<HTMLDivElement>(null);
   const windowManager = useInjector(WindowManager);
 
-  useEffect(() => setVisibleAreaSize(getRefElementSize(visibleAreaRef)), []);
+  useLayoutEffect(
+    () => setVisibleAreaSize(getRefElementSize(visibleAreaRef)),
+    []
+  );
 
   useEventListener(
     'mouseup',
@@ -42,7 +51,7 @@ export const VisibleArea: FC = () => {
       onMouseDown={mouseDownHandler}
       ref={visibleAreaRef}
     >
-      {visibleAreaSize && <Windows visibleAreaSize={visibleAreaSize} />}
+      <Windows visibleAreaSize={visibleAreaSize} />
       <Selection visible={selectionVisible} />
     </div>
   );

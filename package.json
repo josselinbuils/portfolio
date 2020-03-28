@@ -7,7 +7,7 @@
     "add:staged": "exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
     "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
     "build": "yarn build:server && yarn build:client",
-    "build:client": "react-app-rewired build && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
+    "build:client": "react-app-rewired build && react-snap && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
     "csscomb:staged": "exec-staged 'csscomb -v' '.*\\.scss$'",
@@ -72,6 +72,7 @@
     "husky": "^3.1.0",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2",
+    "react-snap": "^1.23.0",
     "source-map-explorer": "^2.4.1",
     "tslint": "^6.1.0"
   },
@@ -97,5 +98,8 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "reactSnap": {
+    "inlineCss": true
   }
 }

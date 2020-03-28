@@ -1,6 +1,7 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
 import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
+import Terminal from '~/apps/Terminal';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
 
@@ -11,6 +12,10 @@ export class WindowManager {
 
   private readonly windowInstances: WindowInstance[] = [];
   private id = -1;
+
+  constructor() {
+    this.openWindow(Terminal);
+  }
 
   closeWindow = (id: number): void => {
     const index = this.windowInstances.findIndex(
@@ -32,6 +37,10 @@ export class WindowManager {
       this.unselectWindow(id);
     }
   };
+
+  getWindowInstances(): WindowInstance[] {
+    return this.windowInstances;
+  }
 
   isWindowSelected(id: number): boolean {
     return this.getWindowInstance(id).active;

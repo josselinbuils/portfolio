@@ -1,5 +1,5 @@
 import { Deferred } from '@josselinbuils/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener, useList } from '~/platform/hooks';
 import {
@@ -31,17 +31,32 @@ const executors: { [name: string]: Executor | AsyncExecutor } = {
   work: Work,
 };
 
+const initialExecutions: Execution[] = [
+  {
+    args: [USER, 'about'],
+    executor: Command,
+    id: 0,
+  },
+  {
+    args: [],
+    executor: executors.about,
+    id: 1,
+  },
+];
+
 const Terminal: WindowComponent = ({
   active,
   windowRef,
   ...injectedWindowProps
 }) => {
   const [caretIndex, setCaretIndex] = useState(0);
-  const [commands, commandManager] = useList<string>();
-  const [commandIndex, setCommandIndex] = useState(0);
-  const [executions, executionManager] = useList<Execution>();
+  const [commands, commandManager] = useList<string>(
+    initialExecutions[0].args.slice(1)
+  );
+  const [commandIndex, setCommandIndex] = useState(1);
+  const [executions, executionManager] = useList<Execution>(initialExecutions);
   const [userInput, setUserInput] = useState('');
-  const executorIdRef = useRef(-1);
+  const executorIdRef = useRef(initialExecutions.length - 1);
   const terminalRef = useRef<HTMLDivElement>(null);
   const lastExec = executions[executions.length - 1];
   const waiting = lastExec !== undefined && lastExec.inProgress === true;
@@ -234,7 +249,7 @@ const Terminal: WindowComponent = ({
     active
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const terminal = terminalRef.current as HTMLElement;
 
     const observer = new MutationObserver(
@@ -246,11 +261,7 @@ const Terminal: WindowComponent = ({
       subtree: true,
     });
 
-    exec('about');
-
     return () => observer.disconnect();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -11,7 +11,7 @@ interface InjectedWindowProps {
   active: boolean;
   id: number;
   minimizedTopPosition?: number;
-  visibleAreaSize: Size;
+  visibleAreaSize: Size | undefined;
   windowRef: RefObject<Window>;
   zIndex: number;
   onClose(id: number): void;
