@@ -141,22 +141,28 @@ const DICOMViewer: WindowComponent = ({
       );
     }
     if (viewport) {
+      const showTools = ![ViewType.VolumeBones, ViewType.VolumeSkin].includes(
+        viewport.viewType
+      );
+
       return (
         <>
-          <LeftToolbar
-            activeLeftTool={activeLeftTool}
-            activeRightTool={activeRightTool}
-            viewport={viewport}
-            onToolSelected={selectActiveTool}
-          />
+          {showTools && (
+            <LeftToolbar
+              activeLeftTool={activeLeftTool}
+              activeRightTool={activeRightTool}
+              viewport={viewport}
+              onToolSelected={selectActiveTool}
+            />
+          )}
           <ViewportElement
-            onCanvasMouseDown={startActiveTool}
+            onCanvasMouseDown={showTools ? startActiveTool : undefined}
             onError={setErrorMessage}
             onResize={handleViewportResize}
             onStatsUpdate={setViewportStats}
             viewport={viewport}
           />
-          {rendererType === RendererType.JavaScript && (
+          {showTools && rendererType === RendererType.JavaScript && (
             <ColorPalette onLUTComponentsUpdate={setLUTComponents} />
           )}
           <AnnotationsElement
