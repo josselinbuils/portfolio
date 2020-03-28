@@ -36,11 +36,13 @@ export const Open: Executor = ({ args }) => {
 function getAppDescriptors(): { [name: string]: AppDescriptor } {
   const descriptors = {} as { [name: string]: AppDescriptor };
 
-  PINNED_APPS_DESCRIPTORS.sort((a, b) =>
-    a.appName.toLocaleLowerCase() > b.appName.toLowerCase() ? 1 : -1
-  ).forEach((descriptor) => {
-    descriptors[descriptor.appName.toLocaleLowerCase()] = descriptor;
-  });
+  PINNED_APPS_DESCRIPTORS.slice()
+    .sort((a, b) =>
+      a.appName.toLocaleLowerCase() > b.appName.toLowerCase() ? 1 : -1
+    )
+    .forEach((descriptor) => {
+      descriptors[descriptor.appName.toLocaleLowerCase()] = descriptor;
+    });
 
   return descriptors;
 }
