@@ -9,9 +9,9 @@ export const Skills: Executor = () => (
     <span> skills = [</span>
     <span className={styles.green}>'JavaScript'</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'Web Applications'</span>
-    <span className={styles.orange}>, </span>
     <span className={styles.green}>'TypeScript'</span>
+    <span className={styles.orange}>, </span>
+    <span className={styles.green}>'React'</span>
     <span className={styles.orange}>, </span>
     <span className={styles.green}>'Node.js'</span>
     <span className={styles.orange}>, </span>
