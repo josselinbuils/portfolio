@@ -5,9 +5,10 @@ import styles from './Help.module.scss';
 
 const commands = [
   ['bm', 'build manager'],
+  ['clear', 'clear the terminal'],
   ['open', 'open an application'],
-  ['skills', 'show my main skills'],
-  ['work', 'show my work experience'],
+  ['skills', 'display my main skills'],
+  ['work', 'display my work experience'],
 ];
 
 export const Help: Executor = () => (
