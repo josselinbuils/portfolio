@@ -4,7 +4,7 @@ import { Log } from '../Log';
 let logId = -1;
 
 export function formatLogs(logs: Log[], stepClass: string): Log[] {
-  const ansiUp = new (AnsiUp as any)();
+  const ansiUp = new AnsiUp();
 
   return logs.map(({ data, level, time }) => ({
     data: ansiUp

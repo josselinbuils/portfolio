@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import AnsiUp from 'ansi_up';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { BuildManagerClient, MessageType } from './BuildManagerClient';
@@ -21,11 +22,14 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
   const [showHelp, setShowHelp] = useState(false);
   const [bmClient, setBMClient] = useState<BuildManagerClient>();
   const [logs, logManager] = useList<Log>();
+  const ansiUp = useMemo(() => new AnsiUp(), []);
   const command = args[0];
 
   useEffect(() => {
     const errorHandler = (message?: string) => {
-      setErrorMessage(message || DEFAULT_ERROR_MESSAGE);
+      setErrorMessage(
+        message ? ansiUp.ansi_to_html(message) : DEFAULT_ERROR_MESSAGE
+      );
       onRelease();
     };
 
@@ -61,7 +65,7 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
           .onClose(onRelease)
           .onMessage(({ type, value }) => {
             if (type === MessageType.Info) {
-              setInfoMessage(value);
+              setInfoMessage(ansiUp.ansi_to_html(value));
               onRelease();
             }
           })
@@ -105,7 +109,7 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
         setShowHelp(true);
         onRelease();
     }
-  }, [args, command, logManager, onRelease]);
+  }, [ansiUp, args, command, logManager, onRelease]);
 
   useEffect(() => {
     if (!alive) {
@@ -114,11 +118,11 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
   }, [alive, bmClient]);
 
   if (errorMessage) {
-    return <p className={styles.error}>{errorMessage}</p>;
+    return <p dangerouslySetInnerHTML={{ __html: errorMessage }} />;
   }
 
   if (infoMessage) {
-    return <p>{infoMessage}</p>;
+    return <p dangerouslySetInnerHTML={{ __html: infoMessage }} />;
   }
 
   if (showHelp) {
