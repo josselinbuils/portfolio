@@ -13,6 +13,7 @@ import {
   isAsyncExecutor,
   Open,
   Skills,
+  UserQuery,
   Work,
 } from './executors';
 import { TerminalDescriptor } from './TerminalDescriptor';
@@ -60,7 +61,91 @@ const Terminal: WindowComponent = ({
   const lastExec = executions[executions.length - 1];
   const waiting = lastExec !== undefined && lastExec.inProgress === true;
 
+  useEventListener(
+    'keydown',
+    (event: KeyboardEvent) => {
+      if (
+        !event.altKey &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === 'c'
+      ) {
+        event.preventDefault();
+
+        if (waiting) {
+          lastExec.inProgress = false;
+          executionManager.update();
+        } else {
+          loadExecutor(Command, [USER, userInput]);
+          setUserInput('');
+        }
+      }
+
+      if (waiting && !lastExec.query) {
+        return;
+      }
+
+      if (
+        !event.altKey &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === 'k'
+      ) {
+        event.preventDefault();
+        executionManager.clear();
+      } else if (event.key.length === 1) {
+        if (
+          /[a-z]/i.test(event.key) &&
+          (event.altKey || event.metaKey || event.ctrlKey)
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setUserInput(
+          (input) =>
+            input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
+        );
+        setCaretIndex((index) => index + 1);
+      } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
+        navigate(event);
+      }
+    },
+    active
+  );
+
+  useLayoutEffect(() => {
+    const terminal = terminalRef.current as HTMLElement;
+
+    const observer = new MutationObserver(
+      () => (terminal.scrollTop = terminal.scrollHeight)
+    );
+
+    observer.observe(terminal, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   async function exec(str: string): Promise<void> {
+    if (lastExec?.query) {
+      const { query } = lastExec;
+
+      await loadExecutor(UserQuery, [
+        query.str,
+        formatAnswer(str, query.hideAnswer),
+      ]);
+      delete lastExec.query;
+
+      executionManager.set((execs) => {
+        const userQuery = execs.pop() as Execution;
+        const currentExec = execs.pop() as Execution;
+        return [...execs, userQuery, currentExec];
+      });
+
+      query.callback(str);
+      return;
+    }
+
     const command = str.trim().split(' ')[0];
 
     await loadExecutor(Command, [USER, str]);
@@ -83,6 +168,20 @@ const Terminal: WindowComponent = ({
     }
   }
 
+  function formatAnswer(str: string, hide: boolean): string {
+    return hide ? userInput.replace(/./g, '*') : userInput;
+  }
+
+  function getCaretOffset(): number {
+    if (!waiting) {
+      return USER.length + caretIndex + 2;
+    }
+    if (lastExec.query) {
+      return lastExec.query.str.length + caretIndex + 1;
+    }
+    return 0;
+  }
+
   async function loadExecutor(
     executor: Executor | AsyncExecutor,
     args: string[]
@@ -98,6 +197,18 @@ const Terminal: WindowComponent = ({
 
       execution.inProgress = true;
       execution.releaseHandler = deferred.resolve;
+      execution.queryUserHandler = (
+        query: string,
+        callback: (userInput: string) => void,
+        hideAnswer: boolean = false
+      ) => {
+        execution.query = {
+          callback,
+          hideAnswer,
+          str: query,
+        };
+        executionManager.update();
+      };
       executionManager.push(execution);
 
       await deferred.promise;
@@ -189,71 +300,6 @@ const Terminal: WindowComponent = ({
     }
   }
 
-  useEventListener(
-    'keydown',
-    (event: KeyboardEvent) => {
-      if (
-        !event.altKey &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === 'c'
-      ) {
-        event.preventDefault();
-
-        if (waiting) {
-          executions[executions.length - 1].inProgress = false;
-          executionManager.update();
-        } else {
-          loadExecutor(Command, [USER, userInput]);
-          setUserInput('');
-        }
-      }
-
-      if (waiting) {
-        return;
-      }
-
-      if (
-        !event.altKey &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === 'k'
-      ) {
-        event.preventDefault();
-        executionManager.clear();
-      } else if (event.key.length === 1) {
-        if (
-          /[a-z]/i.test(event.key) &&
-          (event.altKey || event.metaKey || event.ctrlKey)
-        ) {
-          return;
-        }
-        event.preventDefault();
-        setUserInput(
-          (input) =>
-            input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
-        );
-        setCaretIndex((index) => index + 1);
-      } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
-        navigate(event);
-      }
-    },
-    active
-  );
-
-  useLayoutEffect(() => {
-    const terminal = terminalRef.current as HTMLElement;
-
-    const observer = new MutationObserver(
-      () => (terminal.scrollTop = terminal.scrollHeight)
-    );
-
-    observer.observe(terminal, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <Window
       {...injectedWindowProps}
@@ -273,6 +319,7 @@ const Terminal: WindowComponent = ({
             executor: ExecutorComponent,
             id,
             inProgress,
+            queryUserHandler,
             releaseHandler,
           }) =>
             isAsyncExecutor(ExecutorComponent) ? (
@@ -280,7 +327,9 @@ const Terminal: WindowComponent = ({
                 alive={inProgress as boolean}
                 args={args}
                 key={id}
+                onQueryUser={queryUserHandler as () => void}
                 onRelease={releaseHandler as () => void}
+                userInput={userInput}
               />
             ) : (
               <ExecutorComponent args={args} key={id} />
@@ -288,9 +337,19 @@ const Terminal: WindowComponent = ({
         )}
         <div className={styles.userInput}>
           {!waiting && <Command args={[USER, userInput]} />}
+          {lastExec.query && (
+            <UserQuery
+              args={[
+                lastExec.query.str,
+                formatAnswer(userInput, lastExec.query.hideAnswer),
+              ]}
+            />
+          )}
           <span
             className={styles.caret}
-            style={{ left: !waiting ? `${USER.length + caretIndex + 2}ch` : 0 }}
+            style={{
+              left: `${getCaretOffset()}ch`,
+            }}
           >
             {userInput.substr(caretIndex, 1)}
           </span>
@@ -309,5 +368,15 @@ interface Execution {
   executor: Executor | AsyncExecutor;
   id: number;
   inProgress?: boolean;
+  query?: {
+    hideAnswer: boolean;
+    str: string;
+    callback(userInput: string): void;
+  };
+  queryUserHandler?(
+    query: string,
+    callback: (userInput: string) => void,
+    hideAnswer?: boolean
+  ): void;
   releaseHandler?(): void;
 }

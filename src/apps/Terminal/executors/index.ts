@@ -7,4 +7,5 @@ export * from './Executor';
 export * from './Help';
 export * from './Open';
 export * from './Skills';
+export * from './UserQuery';
 export * from './Work';

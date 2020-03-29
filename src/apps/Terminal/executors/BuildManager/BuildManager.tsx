@@ -16,7 +16,12 @@ enum Command {
   Logs = 'logs',
 }
 
-export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
+export const BuildManager: AsyncExecutor = ({
+  alive,
+  args,
+  onQueryUser,
+  onRelease,
+}) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [infoMessage, setInfoMessage] = useState<string>();
   const [showHelp, setShowHelp] = useState(false);
@@ -58,26 +63,32 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
       }
 
       case Command.Login: {
-        const client = new BuildManagerClient();
+        onQueryUser(
+          'password:',
+          (password) => {
+            const client = new BuildManagerClient();
 
-        client
-          .onError(errorHandler)
-          .onClose(onRelease)
-          .onMessage(({ type, value }) => {
-            if (type === MessageType.Info) {
-              setInfoMessage(ansiUp.ansi_to_html(value));
-              onRelease();
-            }
-          })
-          .waitUntilReady()
-          .then(() =>
-            client.send(MessageType.Command, {
-              command: Command.Login,
-              args: args.slice(1),
-            })
-          );
+            client
+              .onError(errorHandler)
+              .onClose(onRelease)
+              .onMessage(({ type, value }) => {
+                if (type === MessageType.Info) {
+                  setInfoMessage(ansiUp.ansi_to_html(value));
+                  onRelease();
+                }
+              })
+              .waitUntilReady()
+              .then(() =>
+                client.send(MessageType.Command, {
+                  command: Command.Login,
+                  args: [password],
+                })
+              );
 
-        setBMClient(client);
+            setBMClient(client);
+          },
+          true
+        );
         break;
       }
 
@@ -109,7 +120,7 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
         setShowHelp(true);
         onRelease();
     }
-  }, [ansiUp, args, command, logManager, onRelease]);
+  }, [ansiUp, args, command, logManager, onQueryUser, onRelease]);
 
   useEffect(() => {
     if (!alive) {
@@ -131,7 +142,7 @@ export const BuildManager: AsyncExecutor = ({ alive, args, onRelease }) => {
         <p>Usage: bm command [args]</p>
         <p>Commands:</p>
         <p className={styles.command}>- build repository</p>
-        <p className={styles.command}>- login password</p>
+        <p className={styles.command}>- login</p>
         <p className={styles.command}>- logs [-f, --follow]</p>
       </div>
     );

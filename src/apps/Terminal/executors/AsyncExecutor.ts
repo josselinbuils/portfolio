@@ -13,5 +13,11 @@ export function isAsyncExecutor(
 
 interface AsyncExecutorProps {
   alive: boolean;
+  userInput: string | undefined;
   onRelease(): void;
+  onQueryUser(
+    query: string,
+    callback: (userInput: string) => void,
+    hideAnswer?: boolean
+  ): void;
 }

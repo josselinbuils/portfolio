@@ -6,6 +6,7 @@ export function useList<T>(initialValues: T[] = []): [T[], ListManager<T>] {
     () => ({
       clear: () => setList([]),
       push: (...items: T[]) => setList((l) => [...l, ...items]),
+      set: setList,
       update: () => setList((l) => [...l]),
     }),
     []
@@ -16,5 +17,6 @@ export function useList<T>(initialValues: T[] = []): [T[], ListManager<T>] {
 interface ListManager<T> {
   clear(): void;
   push(...items: T[]): void;
+  set(items: T[] | ((currentItems: T[]) => T[])): void;
   update(): void;
 }
