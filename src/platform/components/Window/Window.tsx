@@ -56,7 +56,7 @@ export class Window extends Component<Props, State> {
 
     this.setSize(minWidth, minHeight);
     this.setStyle('left', `calc(50% - ${minWidth / 20}rem)`);
-    this.setStyle('top', `15%`);
+    this.setStyle('top', `calc((100% - ${minHeight / 20}rem) * 0.2)`);
 
     if (keepContentRatio) {
       const contentSize = this.getContentSize();
