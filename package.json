@@ -4,25 +4,25 @@
   "homepage": "https://josselinbuils.me",
   "private": true,
   "scripts": {
-    "add:staged": "exec-staged 'git add' '.*\\.(js|tsx?|scss)$'",
+    "add:staged": "exec-staged 'git add' '\\.(js|tsx?|scss)$'",
     "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
     "build": "yarn build:server && yarn build:client",
     "build:client": "react-app-rewired build && react-snap && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
-    "csscomb:staged": "exec-staged 'csscomb -v' '.*\\.scss$'",
+    "csscomb:staged": "exec-staged 'csscomb -v' '\\.scss$'",
     "dev:client": "react-app-rewired start",
     "dev:server": "concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
     "lint": "yarn lint:client && yarn lint:server",
     "lint:client": "tslint -p tsconfig.json",
     "lint:server": "tslint -p server/tsconfig.json",
-    "lint:staged": "exec-staged 'npm run lint:client' '^src.*\\.tsx?$' 'npm run lint:server' '^server.*\\.ts$'",
-    "prettier:staged": "exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
+    "lint:staged": "exec-staged 'yarn lint:client' '^src.*\\.tsx?$' 'yarn lint:server' '^server.*\\.ts$'",
+    "prettier:staged": "exec-staged 'prettier --write' '\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:staged && npm run prettier:staged && npm run csscomb:staged && npm run add:staged"
+      "pre-commit": "yarn lint:staged && yarn prettier:staged && yarn csscomb:staged && yarn add:staged"
     }
   },
   "dependencies": {
@@ -70,7 +70,7 @@
     "@josselinbuils/tslint": "^5.1.0",
     "concurrently": "^5.1.0",
     "csscomb": "^4.3.0",
-    "husky": "^3.1.0",
+    "husky": "^4.2.3",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2",
     "source-map-explorer": "^2.4.1",
