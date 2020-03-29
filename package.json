@@ -14,8 +14,8 @@
     "dev:client": "react-app-rewired start",
     "dev:server": "concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
     "lint": "yarn lint:client && yarn lint:server",
-    "lint:client": "tslint -p tsconfig.json --fix",
-    "lint:server": "tslint -p server/tsconfig.json --fix",
+    "lint:client": "tslint -p tsconfig.json",
+    "lint:server": "tslint -p server/tsconfig.json",
     "lint:staged": "exec-staged 'npm run lint:client' '^src.*\\.tsx?$' 'npm run lint:server' '^server.*\\.ts$'",
     "prettier:staged": "exec-staged 'prettier --write' '.*\\.(js|tsx?|scss)$'",
     "start": "node dist/server/server.js"
