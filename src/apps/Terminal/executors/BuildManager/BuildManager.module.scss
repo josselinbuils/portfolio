@@ -3,8 +3,20 @@ p {
   white-space: pre-wrap;
 }
 
+.error {
+  color: red;
+}
+
 .help p {
   margin: 1ch;
+
+  &.command {
+    margin: 0 0 0 2ch;
+
+    &:last-child {
+      margin-bottom: 1ch;
+    }
+  }
 }
 
 .stepNumber {

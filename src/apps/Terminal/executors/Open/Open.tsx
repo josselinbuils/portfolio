@@ -22,7 +22,7 @@ export const Open: Executor = ({ args }) => {
 
   return exists ? null : (
     <div className={styles.help}>
-      <p>Usage: open [application]</p>
+      <p>Usage: open application</p>
       <p>Applications:</p>
       {appNames.map((name) => (
         <p className={styles.app} key={name}>

@@ -19,7 +19,6 @@ import { TerminalDescriptor } from './TerminalDescriptor';
 
 import styles from './Terminal.module.scss';
 
-const DEFAULT_ERROR_MESSAGE = 'an error occurred';
 const USER = 'guest';
 
 const executors: { [name: string]: Executor | AsyncExecutor } = {
@@ -77,12 +76,7 @@ const Terminal: WindowComponent = ({
       if (command === 'clear') {
         executionManager.clear();
       } else if (executors[command] !== undefined) {
-        try {
-          await loadExecutor(executors[command], str.split(' ').slice(1));
-        } catch (error) {
-          const errorMessage = error.message || DEFAULT_ERROR_MESSAGE;
-          await loadExecutor(BashError, [command, errorMessage]);
-        }
+        await loadExecutor(executors[command], str.split(' ').slice(1));
       } else {
         await loadExecutor(BashError, [command]);
       }
@@ -106,13 +100,9 @@ const Terminal: WindowComponent = ({
       execution.releaseHandler = deferred.resolve;
       executionManager.push(execution);
 
-      const error = await deferred.promise;
+      await deferred.promise;
       execution.inProgress = false;
       executionManager.update();
-
-      if (error) {
-        throw error;
-      }
     } else {
       executionManager.push(execution);
     }
@@ -319,5 +309,5 @@ interface Execution {
   executor: Executor | AsyncExecutor;
   id: number;
   inProgress?: boolean;
-  releaseHandler?(error?: Error): void;
+  releaseHandler?(): void;
 }

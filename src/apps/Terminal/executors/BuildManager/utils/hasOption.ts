@@ -1,3 +1,8 @@
 export function hasOption(args: string[], option: string): boolean {
-  return args.slice(1).includes(`-${option}`);
+  const commandArgs = args.slice(1);
+
+  return (
+    commandArgs.includes(`--${option}`) ||
+    commandArgs.includes(`-${option.slice(0, 1)}`)
+  );
 }
