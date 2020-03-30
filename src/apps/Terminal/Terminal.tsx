@@ -235,7 +235,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowDown':
       case 'Down':
         event.preventDefault();
-        if (commandIndex < commands.length) {
+        if (!lastExec.query && commandIndex < commands.length) {
           const newIndex = commandIndex + 1;
           const newCommand =
             newIndex < commands.length ? commands[newIndex] : '';
@@ -264,7 +264,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowUp':
       case 'Up':
         event.preventDefault();
-        if (commandIndex > 0) {
+        if (!lastExec.query && commandIndex > 0) {
           const newIndex = commandIndex - 1;
           const newCommand = commands[newIndex];
           setCommandIndex(newIndex);
@@ -293,7 +293,7 @@ const Terminal: WindowComponent = ({
       case 'Tab':
         event.preventDefault();
 
-        if (userInput.length === 0) {
+        if (!lastExec.query || userInput.length === 0) {
           return;
         }
         const command = Object.keys(executors).find(

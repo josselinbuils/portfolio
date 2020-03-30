@@ -3,16 +3,17 @@ import { PROD_HOSTNAME } from '~/platform/constants';
 import { noop } from '~/platform/utils';
 
 export enum MessageType {
+  AuthToken = 'authToken',
   Command = 'command',
   Error = 'error',
-  Info = 'info',
   Logs = 'logs',
+  Success = 'success',
 }
 
 export class BuildManagerClient {
   private closeHandler = noop as () => void;
-  private errorHandler = noop as (errorMessage?: string) => void;
-  private messageHandler = noop as (message: Message) => void;
+  private errorHandler = noop as (error?: BMError) => void;
+  private messageHandler = noop as (message: BMMessage) => void;
   private readonly readyDeferred = new Deferred<BuildManagerClient>();
   private readonly ws: WebSocket;
 
@@ -28,7 +29,7 @@ export class BuildManagerClient {
 
     ws.onmessage = (event) => {
       try {
-        const message = JSON.parse(event.data) as Message;
+        const message = JSON.parse(event.data) as BMMessage;
 
         if (message.type === MessageType.Error) {
           this.errorHandler(message.value);
@@ -50,12 +51,12 @@ export class BuildManagerClient {
     return this;
   }
 
-  onError(errorHandler: (errorMessage?: string) => void): BuildManagerClient {
+  onError(errorHandler: (error?: BMError) => void): BuildManagerClient {
     this.errorHandler = errorHandler;
     return this;
   }
 
-  onMessage(messageHandler: (message: Message) => void): BuildManagerClient {
+  onMessage(messageHandler: (message: BMMessage) => void): BuildManagerClient {
     this.messageHandler = messageHandler;
     return this;
   }
@@ -78,7 +79,12 @@ export class BuildManagerClient {
   }
 }
 
-interface Message {
+export interface BMError {
+  code: number;
+  message: string;
+}
+
+export interface BMMessage {
   type: MessageType;
   value: any;
 }

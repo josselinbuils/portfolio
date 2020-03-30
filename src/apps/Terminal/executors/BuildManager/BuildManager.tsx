@@ -1,13 +1,13 @@
-import AnsiUp from 'ansi_up';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { MutableRefObject, useEffect, useState } from 'react';
 import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
-import { BuildManagerClient, MessageType } from './BuildManagerClient';
+import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';
 import { Log } from './Log';
 import { formatLogs, hasOption } from './utils';
 
 import styles from './BuildManager.module.scss';
 
+const CODE_UNAUTHORIZED = 401;
 const DEFAULT_ERROR_MESSAGE = 'An error occurred';
 
 enum Command {
@@ -16,6 +16,10 @@ enum Command {
   Logs = 'logs',
 }
 
+const authTokenRef = { current: undefined } as MutableRefObject<
+  string | undefined
+>;
+
 export const BuildManager: AsyncExecutor = ({
   alive,
   args,
@@ -23,18 +27,19 @@ export const BuildManager: AsyncExecutor = ({
   onRelease,
 }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [infoMessage, setInfoMessage] = useState<string>();
+  const [successMessage, setSuccessMessage] = useState<string>();
   const [showHelp, setShowHelp] = useState(false);
   const [bmClient, setBMClient] = useState<BuildManagerClient>();
   const [logs, logManager] = useList<Log>();
-  const ansiUp = useMemo(() => new AnsiUp(), []);
   const command = args[0];
 
   useEffect(() => {
-    const errorHandler = (message?: string) => {
-      setErrorMessage(
-        message ? ansiUp.ansi_to_html(message) : DEFAULT_ERROR_MESSAGE
-      );
+    const errorHandler = (error?: BMError) => {
+      if (error?.code === CODE_UNAUTHORIZED) {
+        authTokenRef.current = undefined;
+      }
+
+      setErrorMessage(error?.message || DEFAULT_ERROR_MESSAGE);
       onRelease();
     };
 
@@ -53,8 +58,9 @@ export const BuildManager: AsyncExecutor = ({
           .waitUntilReady()
           .then(() =>
             client.send(MessageType.Command, {
-              command: Command.Build,
+              authToken: authTokenRef.current,
               args: args.slice(1),
+              command: Command.Build,
             })
           );
 
@@ -72,8 +78,10 @@ export const BuildManager: AsyncExecutor = ({
               .onError(errorHandler)
               .onClose(onRelease)
               .onMessage(({ type, value }) => {
-                if (type === MessageType.Info) {
-                  setInfoMessage(ansiUp.ansi_to_html(value));
+                if (type === MessageType.AuthToken) {
+                  authTokenRef.current = value;
+                } else if (type === MessageType.Success) {
+                  setSuccessMessage(value);
                   onRelease();
                 }
               })
@@ -120,7 +128,7 @@ export const BuildManager: AsyncExecutor = ({
         setShowHelp(true);
         onRelease();
     }
-  }, [ansiUp, args, command, logManager, onQueryUser, onRelease]);
+  }, [args, command, logManager, onQueryUser, onRelease]);
 
   useEffect(() => {
     if (!alive) {
@@ -129,11 +137,11 @@ export const BuildManager: AsyncExecutor = ({
   }, [alive, bmClient]);
 
   if (errorMessage) {
-    return <p dangerouslySetInnerHTML={{ __html: errorMessage }} />;
+    return <p className={styles.error}>✘ {errorMessage}</p>;
   }
 
-  if (infoMessage) {
-    return <p dangerouslySetInnerHTML={{ __html: infoMessage }} />;
+  if (successMessage) {
+    return <p className={styles.success}>✔ {successMessage}</p>;
   }
 
   if (showHelp) {

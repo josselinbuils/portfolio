@@ -3,6 +3,10 @@ p {
   white-space: pre-wrap;
 }
 
+.error {
+  color: red;
+}
+
 .help p {
   margin: 1ch;
 
@@ -21,4 +25,8 @@ p {
   padding: 0.2rem 0.5rem 0.2rem 0.5rem;
   border: 0.1rem solid black;
   background: #007ad8;
+}
+
+.success {
+  color: green;
 }
