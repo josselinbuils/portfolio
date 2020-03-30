@@ -63,7 +63,7 @@ const Terminal: WindowComponent = ({
 
   useEventListener(
     'keydown',
-    (event: KeyboardEvent) => {
+    async (event: KeyboardEvent) => {
       if (
         !event.altKey &&
         (event.metaKey || event.ctrlKey) &&
@@ -73,10 +73,24 @@ const Terminal: WindowComponent = ({
 
         if (waiting) {
           lastExec.inProgress = false;
+
+          if (lastExec.query) {
+            const { hideAnswer, str } = lastExec.query;
+
+            await loadExecutor(UserQuery, [
+              str,
+              formatAnswer(userInput, hideAnswer),
+            ]);
+            delete lastExec.query;
+
+            setUserInput('');
+            setCaretIndex(0);
+          }
           executionManager.update();
         } else {
           loadExecutor(Command, [USER, userInput]);
           setUserInput('');
+          setCaretIndex(0);
         }
       }
 
@@ -92,10 +106,7 @@ const Terminal: WindowComponent = ({
         event.preventDefault();
         executionManager.clear();
       } else if (event.key.length === 1) {
-        if (
-          /[a-z]/i.test(event.key) &&
-          (event.altKey || event.metaKey || event.ctrlKey)
-        ) {
+        if (event.altKey || event.metaKey || event.ctrlKey) {
           return;
         }
         event.preventDefault();
