@@ -59,7 +59,8 @@ const Terminal: WindowComponent = ({
   const executorIdRef = useRef(initialExecutions.length - 1);
   const terminalRef = useRef<HTMLDivElement>(null);
   const lastExec = executions[executions.length - 1];
-  const waiting = lastExec !== undefined && lastExec.inProgress === true;
+  const query = lastExec?.query;
+  const waiting = lastExec?.inProgress === true;
 
   useEventListener(
     'keydown',
@@ -74,8 +75,8 @@ const Terminal: WindowComponent = ({
         if (waiting) {
           lastExec.inProgress = false;
 
-          if (lastExec.query) {
-            const { hideAnswer, str } = lastExec.query;
+          if (query) {
+            const { hideAnswer, str } = query;
 
             await loadExecutor(UserQuery, [
               str,
@@ -94,7 +95,7 @@ const Terminal: WindowComponent = ({
         }
       }
 
-      if (waiting && !lastExec.query) {
+      if (waiting && !query) {
         return;
       }
 
@@ -138,9 +139,7 @@ const Terminal: WindowComponent = ({
   }, []);
 
   async function exec(str: string): Promise<void> {
-    if (lastExec?.query) {
-      const { query } = lastExec;
-
+    if (query) {
       await loadExecutor(UserQuery, [
         query.str,
         formatAnswer(str, query.hideAnswer),
@@ -187,8 +186,8 @@ const Terminal: WindowComponent = ({
     if (!waiting) {
       return USER.length + caretIndex + 2;
     }
-    if (lastExec.query) {
-      return lastExec.query.str.length + caretIndex + 1;
+    if (query) {
+      return query.str.length + caretIndex + 1;
     }
     return 0;
   }
@@ -209,15 +208,11 @@ const Terminal: WindowComponent = ({
       execution.inProgress = true;
       execution.releaseHandler = deferred.resolve;
       execution.queryUserHandler = (
-        query: string,
+        str: string,
         callback: (userInput: string) => void,
         hideAnswer: boolean = false
       ) => {
-        execution.query = {
-          callback,
-          hideAnswer,
-          str: query,
-        };
+        execution.query = { callback, hideAnswer, str };
         executionManager.update();
       };
       executionManager.push(execution);
@@ -235,7 +230,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowDown':
       case 'Down':
         event.preventDefault();
-        if (!lastExec.query && commandIndex < commands.length) {
+        if (!query && commandIndex < commands.length) {
           const newIndex = commandIndex + 1;
           const newCommand =
             newIndex < commands.length ? commands[newIndex] : '';
@@ -264,7 +259,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowUp':
       case 'Up':
         event.preventDefault();
-        if (!lastExec.query && commandIndex > 0) {
+        if (!query && commandIndex > 0) {
           const newIndex = commandIndex - 1;
           const newCommand = commands[newIndex];
           setCommandIndex(newIndex);
@@ -293,7 +288,7 @@ const Terminal: WindowComponent = ({
       case 'Tab':
         event.preventDefault();
 
-        if (!lastExec.query || userInput.length === 0) {
+        if (!query || userInput.length === 0) {
           return;
         }
         const command = Object.keys(executors).find(
@@ -348,12 +343,9 @@ const Terminal: WindowComponent = ({
         )}
         <div className={styles.userInput}>
           {!waiting && <Command args={[USER, userInput]} />}
-          {lastExec.query && (
+          {query && (
             <UserQuery
-              args={[
-                lastExec.query.str,
-                formatAnswer(userInput, lastExec.query.hideAnswer),
-              ]}
+              args={[query.str, formatAnswer(userInput, query.hideAnswer)]}
             />
           )}
           <span
