@@ -171,7 +171,7 @@ export const BuildManager: AsyncExecutor = ({
                 values: [
                   {
                     value: '-c, --clean',
-                    description: 'rebuild the docker image',
+                    description: 'recreate the docker image',
                   },
                 ],
               },
