@@ -1,4 +1,5 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
+import { CommandHelp } from '~/apps/Terminal/components';
 import { useList } from '~/platform/hooks';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';
@@ -34,6 +35,12 @@ export const BuildManager: AsyncExecutor = ({
   const command = args[0];
 
   useEffect(() => {
+    if (hasOption(args, 'help')) {
+      setShowHelp(true);
+      onRelease();
+      return;
+    }
+
     const errorHandler = (error?: BMError) => {
       if (error?.code === CODE_UNAUTHORIZED) {
         authTokenRef.current = undefined;
@@ -45,6 +52,12 @@ export const BuildManager: AsyncExecutor = ({
 
     switch (command) {
       case Command.Build: {
+        if (args.length === 1) {
+          setShowHelp(true);
+          onRelease();
+          return;
+        }
+
         const client = new BuildManagerClient();
 
         client
@@ -145,15 +158,70 @@ export const BuildManager: AsyncExecutor = ({
   }
 
   if (showHelp) {
-    return (
-      <div className={styles.help}>
-        <p>Usage: bm command [args]</p>
-        <p>Commands:</p>
-        <p className={styles.command}>- build &lt;repository&gt;</p>
-        <p className={styles.command}>- login</p>
-        <p className={styles.command}>- logs [-f, --follow]</p>
-      </div>
-    );
+    switch (command) {
+      case Command.Build:
+        return (
+          <CommandHelp
+            command="bm build"
+            description="Build an application"
+            parameters={[
+              {
+                name: 'options',
+                optional: true,
+                values: [
+                  {
+                    value: '-c, --clean',
+                    description: 'rebuild the docker image',
+                  },
+                ],
+              },
+              { name: 'repository' },
+            ]}
+          />
+        );
+
+      case Command.Logs:
+        return (
+          <CommandHelp
+            command="bm logs"
+            description="Display build logs"
+            parameters={[
+              {
+                name: 'options',
+                optional: true,
+                values: [
+                  {
+                    value: '-f, --follow',
+                    description: 'follow the output',
+                  },
+                ],
+              },
+              { name: 'repository' },
+            ]}
+          />
+        );
+
+      default:
+        return (
+          <CommandHelp
+            command="bm"
+            description="Build manager."
+            parameters={[
+              {
+                name: 'command',
+                values: [
+                  { value: 'build', description: 'build an application' },
+                  {
+                    value: 'login',
+                    description: 'gain access to restricted commands',
+                  },
+                  { value: 'logs', description: 'display build logs' },
+                ],
+              },
+            ]}
+          />
+        );
+    }
   }
 
   if (logs.length > 0) {

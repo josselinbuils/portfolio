@@ -139,6 +139,9 @@ const Terminal: WindowComponent = ({
   }, []);
 
   async function exec(str: string): Promise<void> {
+    // Removes unnecessary spaces
+    const cleanStr = str.split(' ').filter(Boolean).join(' ');
+
     if (query) {
       await loadExecutor(UserQuery, [
         query.str,
@@ -152,11 +155,12 @@ const Terminal: WindowComponent = ({
         return [...execs, userQuery, currentExec];
       });
 
-      query.callback(str);
+      query.callback(cleanStr);
       return;
     }
 
-    const command = str.trim().split(' ')[0];
+    const args = cleanStr.split(' ');
+    const command = args[0];
 
     await loadExecutor(Command, [USER, str]);
 
@@ -171,7 +175,7 @@ const Terminal: WindowComponent = ({
       if (command === 'clear') {
         executionManager.clear();
       } else if (executors[command] !== undefined) {
-        await loadExecutor(executors[command], str.split(' ').slice(1));
+        await loadExecutor(executors[command], args.slice(1));
       } else {
         await loadExecutor(BashError, [command]);
       }
@@ -282,6 +286,7 @@ const Terminal: WindowComponent = ({
         event.preventDefault();
         setUserInput('');
         setCaretIndex(0);
+
         exec(userInput);
         break;
 

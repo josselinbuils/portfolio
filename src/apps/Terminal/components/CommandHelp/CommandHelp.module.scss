@@ -1,0 +1,24 @@
+@import '../../constants';
+
+.description {
+  color: $secondaryColor;
+}
+
+.descriptions .description {
+  margin: 0 0 0 3ch;
+}
+
+.descriptions,
+.values {
+  display: inline-block;
+  margin-bottom: 1ch;
+}
+
+.help p {
+  margin: 1ch;
+  white-space: pre-wrap;
+}
+
+.values .value {
+  margin: 0 0 0 2ch;
+}

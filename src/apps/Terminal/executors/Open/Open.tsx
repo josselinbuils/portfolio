@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
+import { CommandHelp } from '~/apps/Terminal/components';
 import { PINNED_APPS_DESCRIPTORS } from '~/platform/components/Desktop/components/TaskBar';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
 import { Executor } from '../Executor';
-
-import styles from './Open.module.scss';
 
 export const Open: Executor = ({ args }) => {
   const windowManager = useInjector(WindowManager);
@@ -21,15 +20,16 @@ export const Open: Executor = ({ args }) => {
   }, [appDescriptor, exists, windowManager]);
 
   return exists ? null : (
-    <div className={styles.help}>
-      <p>Usage: open application</p>
-      <p>Applications:</p>
-      {appNames.map((name) => (
-        <p className={styles.app} key={name}>
-          - {name}
-        </p>
-      ))}
-    </div>
+    <CommandHelp
+      command="open"
+      description="Open an application"
+      parameters={[
+        {
+          name: 'application',
+          values: appNames.map((name) => ({ value: name })),
+        },
+      ]}
+    />
   );
 };
 
