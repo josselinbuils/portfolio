@@ -1,8 +1,6 @@
-import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
-import {
-  faLongArrowAltRight,
-  faTrashAlt,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons/faPlusSquare';
+import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces';

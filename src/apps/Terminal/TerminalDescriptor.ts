@@ -1,4 +1,4 @@
-import { faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal } from '@fortawesome/free-solid-svg-icons/faTerminal';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const TerminalDescriptor = {

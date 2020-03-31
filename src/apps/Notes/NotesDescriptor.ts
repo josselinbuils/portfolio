@@ -1,4 +1,4 @@
-import { faStickyNote } from '@fortawesome/free-solid-svg-icons';
+import { faStickyNote } from '@fortawesome/free-solid-svg-icons/faStickyNote';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const NotesDescriptor = {

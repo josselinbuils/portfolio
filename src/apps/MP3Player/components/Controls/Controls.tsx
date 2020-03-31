@@ -1,11 +1,9 @@
-import {
-  faPauseCircle,
-  faPlayCircle,
-  faRandom,
-  faRedoAlt,
-  faStepBackward,
-  faStepForward,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
+import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
+import { faRandom } from '@fortawesome/free-solid-svg-icons/faRandom';
+import { faRedoAlt } from '@fortawesome/free-solid-svg-icons/faRedoAlt';
+import { faStepBackward } from '@fortawesome/free-solid-svg-icons/faStepBackward';
+import { faStepForward } from '@fortawesome/free-solid-svg-icons/faStepForward';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext } from 'react';

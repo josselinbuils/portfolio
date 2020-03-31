@@ -1,4 +1,4 @@
-import { faAnchor } from '@fortawesome/free-solid-svg-icons';
+import { faAnchor } from '@fortawesome/free-solid-svg-icons/faAnchor';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 import { ButtonLink } from '~/platform/components';

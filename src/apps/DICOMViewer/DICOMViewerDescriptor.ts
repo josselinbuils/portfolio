@@ -1,4 +1,4 @@
-import { faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const DICOMViewerDescriptor = {

@@ -1,4 +1,4 @@
-import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
+import { faHeadphones } from '@fortawesome/free-solid-svg-icons/faHeadphones';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 

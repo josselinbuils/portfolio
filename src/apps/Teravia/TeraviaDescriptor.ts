@@ -1,4 +1,4 @@
-import { faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad } from '@fortawesome/free-solid-svg-icons/faGamepad';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const TeraviaDescriptor = {

@@ -1,4 +1,5 @@
-import { faPauseCircle, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
+import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext, useEffect, useState } from 'react';

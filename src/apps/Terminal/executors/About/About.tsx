@@ -1,8 +1,6 @@
-import {
-  faGithub,
-  faLinkedin,
-  faTwitter,
-} from '@fortawesome/free-brands-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Executor } from '../Executor';

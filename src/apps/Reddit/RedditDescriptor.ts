@@ -1,4 +1,4 @@
-import { faRedditAlien } from '@fortawesome/free-brands-svg-icons';
+import { faRedditAlien } from '@fortawesome/free-brands-svg-icons/faRedditAlien';
 import { AppDescriptor } from '../AppDescriptor';
 
 export const RedditDescriptor = {

@@ -1,4 +1,4 @@
-import { faReddit } from '@fortawesome/free-brands-svg-icons';
+import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useEffect, useState } from 'react';

@@ -1,10 +1,8 @@
-import {
-  faAdjust,
-  faArrowsAlt,
-  faArrowsAltV,
-  faSearch,
-  faSyncAlt,
-} from '@fortawesome/free-solid-svg-icons';
+import { faAdjust } from '@fortawesome/free-solid-svg-icons/faAdjust';
+import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons/faArrowsAlt';
+import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons/faArrowsAltV';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC } from 'react';
