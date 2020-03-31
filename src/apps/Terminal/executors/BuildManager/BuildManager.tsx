@@ -205,7 +205,7 @@ export const BuildManager: AsyncExecutor = ({
         return (
           <CommandHelp
             command="bm"
-            description="Build manager."
+            description="Build manager"
             parameters={[
               {
                 name: 'command',
