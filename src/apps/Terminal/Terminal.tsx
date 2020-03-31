@@ -234,6 +234,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowDown':
       case 'Down':
         event.preventDefault();
+
         if (!query && commandIndex < commands.length) {
           const newIndex = commandIndex + 1;
           const newCommand =
@@ -247,6 +248,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowLeft':
       case 'Left':
         event.preventDefault();
+
         if (caretIndex > 0) {
           setCaretIndex(caretIndex - 1);
         }
@@ -255,6 +257,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowRight':
       case 'Right':
         event.preventDefault();
+
         if (caretIndex < userInput.length) {
           setCaretIndex(caretIndex + 1);
         }
@@ -263,6 +266,7 @@ const Terminal: WindowComponent = ({
       case 'ArrowUp':
       case 'Up':
         event.preventDefault();
+
         if (!query && commandIndex > 0) {
           const newIndex = commandIndex - 1;
           const newCommand = commands[newIndex];
@@ -274,6 +278,7 @@ const Terminal: WindowComponent = ({
 
       case 'Backspace':
         event.preventDefault();
+
         if (caretIndex > 0) {
           setUserInput(
             userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex)
@@ -293,16 +298,15 @@ const Terminal: WindowComponent = ({
       case 'Tab':
         event.preventDefault();
 
-        if (!query || userInput.length === 0) {
-          return;
-        }
-        const command = Object.keys(executors).find(
-          (c) => c.indexOf(userInput) === 0
-        );
+        if (!query && userInput.length > 0) {
+          const command = Object.keys(executors).find(
+            (c) => c.indexOf(userInput) === 0
+          );
 
-        if (command !== undefined) {
-          setUserInput(command);
-          setCaretIndex(command.length);
+          if (command !== undefined) {
+            setUserInput(command);
+            setCaretIndex(command.length);
+          }
         }
         break;
 
