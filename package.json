@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "add:staged": "exec-staged 'git add' '\\.(js|tsx?|scss)$'",
-    "analyze": "yarn build:client && source-map-explorer 'dist/client/static/js/*.js'",
+    "analyze": "ANALYZE=true yarn build:client",
     "build": "yarn build:server && yarn build:client",
     "build:client": "react-app-rewired build && react-snap && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
@@ -73,8 +73,8 @@
     "husky": "^4.2.3",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2",
-    "source-map-explorer": "^2.4.1",
-    "tslint": "^6.1.0"
+    "tslint": "^6.1.0",
+    "webpack-bundle-analyzer": "^3.6.1"
   },
   "browserslist": [
     ">0.2%",
@@ -101,6 +101,8 @@
   },
   "reactSnap": {
     "inlineCss": true,
-    "puppeteerArgs": ["--no-sandbox"]
+    "puppeteerArgs": [
+      "--no-sandbox"
+    ]
   }
 }
