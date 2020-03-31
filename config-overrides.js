@@ -1,5 +1,3 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-
 const path = require('path');
 
 module.exports = (config) => {
@@ -11,6 +9,8 @@ module.exports = (config) => {
   };
 
   if (process.env.ANALYZE) {
+    // Needs to be there to avoid the CI build to crash
+    const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
     config.plugins.push(new BundleAnalyzerPlugin());
   }
 
