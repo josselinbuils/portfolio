@@ -149,7 +149,7 @@ export const BuildManager: AsyncExecutor = ({
       <div className={styles.help}>
         <p>Usage: bm command [args]</p>
         <p>Commands:</p>
-        <p className={styles.command}>- build repository</p>
+        <p className={styles.command}>- build &lt;repository&gt;</p>
         <p className={styles.command}>- login</p>
         <p className={styles.command}>- logs [-f, --follow]</p>
       </div>
