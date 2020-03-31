@@ -308,10 +308,6 @@ const Terminal: WindowComponent = ({
             setCaretIndex(command.length);
           }
         }
-        break;
-
-      default:
-      // Does nothing
     }
   }
 
