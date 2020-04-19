@@ -1,3 +1,5 @@
+import parserBabel from 'prettier/parser-babel';
+import prettier from 'prettier/standalone';
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener } from '~/platform/hooks';
@@ -29,6 +31,18 @@ const CodeEditor: WindowComponent = ({
     active
   );
 
+  function format(): void {
+    try {
+      setCode(
+        prettier.format(code, {
+          parser: 'babel',
+          plugins: [parserBabel],
+          singleQuote: true,
+        })
+      );
+    } catch (error) {}
+  }
+
   return (
     <Window
       active={active}
@@ -43,7 +57,10 @@ const CodeEditor: WindowComponent = ({
     >
       <div className={styles.codeEditor}>
         <Editor code={code} onChange={setCode} />
-        <Toolbar onClickPlay={() => setCodeToExec(code)} />
+        <Toolbar
+          onClickFormat={format}
+          onClickPlay={() => setCodeToExec(code)}
+        />
         <Console codeToExec={codeToExec} />
       </div>
     </Window>

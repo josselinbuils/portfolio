@@ -19,12 +19,13 @@
   }
 
   &:not(:disabled) {
+    &:focus,
     &:hover {
       background: lighten($backgroundPrimaryColor, 10%);
     }
 
     &:active {
-      color: lighten($color, 10%);
+      color: #cc7832;
     }
   }
 }
