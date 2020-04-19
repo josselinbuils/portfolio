@@ -8,6 +8,7 @@ a:active {
 body {
   margin: 0;
   font-size: 1.6rem;
+  line-height: 1.2;
 }
 
 html {
@@ -17,8 +18,4 @@ html {
 img {
   user-select: none;
   -webkit-user-drag: none;
-}
-
-@function rem($size) {
-  @return #{$size / 1.6rem}rem;
 }

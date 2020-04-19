@@ -64,7 +64,7 @@ const Terminal: WindowComponent = ({
 
   useEventListener(
     'keydown',
-    async (event: KeyboardEvent) => {
+    async (event) => {
       if (
         !event.altKey &&
         (event.metaKey || event.ctrlKey) &&

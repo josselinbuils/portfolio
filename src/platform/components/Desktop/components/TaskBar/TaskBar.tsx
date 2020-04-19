@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React, { FC, useRef } from 'react';
+import { CodeEditorDescriptor } from '~/apps/CodeEditor/CodeEditorDescriptor';
 import { DICOMViewerDescriptor } from '~/apps/DICOMViewer/DICOMViewerDescriptor';
 import { MP3PlayerDescriptor } from '~/apps/MP3Player/MP3PlayerDescriptor';
 import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
@@ -18,6 +19,7 @@ export const PINNED_APPS_DESCRIPTORS = [
   MP3PlayerDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
+  CodeEditorDescriptor,
   NotesDescriptor,
 ];
 

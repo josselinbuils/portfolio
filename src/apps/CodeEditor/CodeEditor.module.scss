@@ -1,0 +1,19 @@
+.codeEditor {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
+
+  & > * {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 0;
+    box-sizing: border-box;
+
+    &:last-child {
+      margin-left: 1rem;
+    }
+  }
+}
