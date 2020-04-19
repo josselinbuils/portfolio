@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useEventListener } from '~/platform/hooks';
 import { CodeEditorDescriptor } from './CodeEditorDescriptor';
-import { Console, Editor } from './components';
+import { Console, Editor, Toolbar } from './components';
 
 import styles from './CodeEditor.module.scss';
 
@@ -43,6 +43,7 @@ const CodeEditor: WindowComponent = ({
     >
       <div className={styles.codeEditor}>
         <Editor code={code} onChange={setCode} />
+        <Toolbar onClickPlay={() => setCodeToExec(code)} />
         <Console codeToExec={codeToExec} />
       </div>
     </Window>

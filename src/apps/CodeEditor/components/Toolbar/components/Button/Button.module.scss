@@ -1,0 +1,30 @@
+@import '../../../../constants';
+
+.button {
+  $color: #b8babc;
+
+  font-size: inherit;
+  display: inline-block;
+  padding: 0;
+  vertical-align: middle;
+  color: $color;
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  height: 3rem;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &:not(:disabled) {
+    &:hover {
+      background: lighten($backgroundPrimaryColor, 10%);
+    }
+
+    &:active {
+      color: lighten($color, 10%);
+    }
+  }
+}
