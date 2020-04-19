@@ -19,13 +19,14 @@ const CodeEditor: WindowComponent = ({
   useEventListener(
     'keydown',
     (event) => {
-      if (
-        !event.altKey &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === 'e'
-      ) {
-        event.preventDefault();
-        setCodeToExec(code);
+      if (!event.altKey && (event.metaKey || event.ctrlKey)) {
+        if (event.key.toLowerCase() === 'e') {
+          event.preventDefault();
+          setCodeToExec(code);
+        } else if (event.key.toLowerCase() === 's') {
+          event.preventDefault();
+          format();
+        }
       }
     },
     active
