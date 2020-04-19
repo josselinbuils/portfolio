@@ -8,6 +8,7 @@ import { Console, Editor, Toolbar } from './components';
 
 import styles from './CodeEditor.module.scss';
 
+// TODO be able to execute several times the same code (ex: alert)
 const CodeEditor: WindowComponent = ({
   active,
   windowRef,
