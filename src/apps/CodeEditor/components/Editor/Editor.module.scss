@@ -1,14 +1,11 @@
-.code {
-  pointer-events: none;
-}
+@import '../../constants';
 
 .code,
 .lineNumbers,
 .textarea {
-  font-family: Source Code Pro, PT Mono, Consolas, Monaco, Andale Mono,
-    Ubuntu Mono, monospace;
-  font-size: 1.2rem;
-  line-height: 1.2;
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  line-height: $linHeight;
   white-space: pre-wrap;
   height: 100%;
   position: absolute;
@@ -19,6 +16,8 @@
 
 .code,
 .textarea {
+  @include scrollbar;
+
   padding: 0.5rem 0.7rem 0.5rem 5rem;
   outline: none;
   overflow-wrap: break-word;
@@ -27,18 +26,9 @@
   overflow-y: auto;
 }
 
-.lineNumbers {
-  padding: 0.5rem 0.7rem;
-  width: 4rem;
-  background: #383a3d;
-  color: #70808c;
-  overflow: hidden;
-  text-align: right;
-}
-
 .editor {
-  background: #2b2b2b;
-  color: #a3b7c6;
+  background: $backgroundSecondaryColor;
+  color: $textSecondaryColor;
   position: relative;
 }
 
