@@ -26,7 +26,7 @@ const CodeEditor: WindowComponent = ({
     >
       <div className={styles.codeEditor}>
         <Editor code={code} onChange={setCode} />
-        <Console codeToExec={code} />
+        <Console codeToExec={code} listenKeyboard={active} />
       </div>
     </Window>
   );

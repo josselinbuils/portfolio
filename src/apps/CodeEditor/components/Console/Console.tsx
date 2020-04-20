@@ -9,8 +9,7 @@ import { useKeyMap } from '~/platform/hooks';
 
 import styles from './Console.module.scss';
 
-export const Console: FC<Props> = ({ codeToExec }) => {
-  const [active, setActive] = useState(false);
+export const Console: FC<Props> = ({ codeToExec, listenKeyboard }) => {
   const [error, setError] = useState('');
   const [result, setResult] = useState('');
 
@@ -18,7 +17,7 @@ export const Console: FC<Props> = ({ codeToExec }) => {
     {
       'Control+E,Meta+E': exec,
     },
-    active
+    listenKeyboard
   );
 
   function exec(): void {
@@ -27,7 +26,7 @@ export const Console: FC<Props> = ({ codeToExec }) => {
 
     if (codeToExec) {
       try {
-        setResult(eval(codeToExec));
+        setResult(eval(codeToExec) || 'undefined');
       } catch (error) {
         const position = error.stack.match(/(\d+:\d+)[^:]*$/m)[1];
         setError(`${error.stack.split('\n')[0]}\n    at ${position}`);
@@ -38,12 +37,7 @@ export const Console: FC<Props> = ({ codeToExec }) => {
   }
 
   return (
-    <div
-      className={styles.console}
-      onBlur={() => setActive(false)}
-      onFocus={() => setActive(true)}
-      tabIndex={0}
-    >
+    <div className={styles.console}>
       <div className={styles.header}>Console</div>
       <Toolbar className={styles.toolbar}>
         <ToolButton icon={faPlay} onClick={exec} title="Execute" />
@@ -69,4 +63,5 @@ export const Console: FC<Props> = ({ codeToExec }) => {
 
 interface Props {
   codeToExec: string | undefined;
+  listenKeyboard: boolean;
 }
