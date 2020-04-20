@@ -18,6 +18,14 @@ import { LineNumbers } from './components';
 import 'prismjs-darcula-theme/darcula.scss';
 import styles from './Editor.module.scss';
 
+const AUTO_CLOSE_MAP = {
+  '{': '}',
+  '(': ')',
+  '[': ']',
+  '"': '"',
+  "'": "'",
+  '`': '`',
+} as { [char: string]: string };
 const AUTO_COMPLETION_KEYS = [
   'const ',
   'false',
@@ -26,11 +34,6 @@ const AUTO_COMPLETION_KEYS = [
   'return ',
   'true',
 ];
-const BRACKET_MAP = {
-  '{': '}',
-  '(': ')',
-  '[': ']',
-} as { [char: string]: string };
 const INDENT_SPACES = '  ';
 
 export const Editor: FC<Props> = ({ className, code, onChange }) => {
@@ -47,7 +50,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       Backspace: () => {
         if (
           code.charAt(cursorPosition) ===
-          BRACKET_MAP[code.charAt(cursorPosition - 1)]
+          AUTO_CLOSE_MAP[code.charAt(cursorPosition - 1)]
         ) {
           document.execCommand('forwardDelete', false);
         }
@@ -59,8 +62,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         const indent = code.split('\n')[line].match(/^ */)?.[0].length || 0;
         const isBetweenBrackets =
           code[cursorPosition] &&
-          code[cursorPosition] === BRACKET_MAP[code[cursorPosition - 1]];
-        const shouldIncreaseIndent = !!BRACKET_MAP[code[cursorPosition - 1]];
+          code[cursorPosition] === AUTO_CLOSE_MAP[code[cursorPosition - 1]];
+        const shouldIncreaseIndent = !!AUTO_CLOSE_MAP[code[cursorPosition - 1]];
         const indentSpaces = ' '.repeat(indent);
         const additionalSpaces = shouldIncreaseIndent ? INDENT_SPACES : '';
 
@@ -147,8 +150,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         .replace(code.slice(0, cursorPosition), '')
         .replace(code.slice(cursorPosition), '');
 
-      if (BRACKET_MAP[diff] !== undefined) {
-        insertText(BRACKET_MAP[diff]);
+      if (AUTO_CLOSE_MAP[diff] !== undefined) {
+        insertText(AUTO_CLOSE_MAP[diff]);
         setCursorPosition(cursorPosition + 1);
       }
     }
