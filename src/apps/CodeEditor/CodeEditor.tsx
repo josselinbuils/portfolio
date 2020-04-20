@@ -2,7 +2,7 @@ import parserBabel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useEventListener } from '~/platform/hooks';
+import { useKeyMap } from '~/platform/hooks';
 import { CodeEditorDescriptor } from './CodeEditorDescriptor';
 import { Console, Editor, Toolbar } from './components';
 
@@ -17,18 +17,10 @@ const CodeEditor: WindowComponent = ({
   const [code, setCode] = useState('');
   const [codeToExec, setCodeToExec] = useState<string>();
 
-  useEventListener(
-    'keydown',
-    (event) => {
-      if (!event.altKey && (event.metaKey || event.ctrlKey)) {
-        if (event.key.toLowerCase() === 'e') {
-          event.preventDefault();
-          setCodeToExec(code);
-        } else if (event.key.toLowerCase() === 's') {
-          event.preventDefault();
-          format();
-        }
-      }
+  useKeyMap(
+    {
+      'ctrl+e': () => setCodeToExec(code),
+      'ctrl+s': format,
     },
     active
   );
