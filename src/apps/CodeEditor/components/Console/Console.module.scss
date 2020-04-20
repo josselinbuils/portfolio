@@ -44,8 +44,6 @@
   padding: 0.5rem 0.7rem;
   white-space: pre-wrap;
   color: $textSecondaryColor;
-  border-top: 0.1rem solid $borderColorPrimary;
-  border-left: 0.1rem solid $borderColorPrimary;
   background: $backgroundSecondaryColor;
 
   overflow-wrap: break-word;
@@ -56,4 +54,6 @@
   top: 2.5rem;
   bottom: 0;
   left: 0;
+  border-right: 0.1rem solid $borderColorPrimary;
+  box-sizing: border-box;
 }

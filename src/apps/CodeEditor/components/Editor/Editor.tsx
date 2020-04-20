@@ -4,13 +4,34 @@ import parserBabel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript.min';
-import React, { FC, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
 import { useKeyMap } from '~/platform/hooks';
 import { LineNumbers } from './components';
 
 import 'prismjs-darcula-theme/darcula.scss';
 import styles from './Editor.module.scss';
+
+const AUTO_COMPLETION_KEYS = [
+  'const ',
+  'false',
+  'function ',
+  'let ',
+  'return ',
+  'true',
+];
+const BRACKET_MAP = {
+  '{': '}',
+  '(': ')',
+  '[': ']',
+} as { [char: string]: string };
+const INDENT_SPACES = '  ';
 
 export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
@@ -23,28 +44,43 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   useKeyMap(
     {
+      Backspace: () => {
+        if (
+          code.charAt(cursorPosition) ===
+          BRACKET_MAP[code.charAt(cursorPosition - 1)]
+        ) {
+          document.execCommand('forwardDelete', false);
+        }
+        return false;
+      },
       'Control+S,Meta+S': format,
       Enter: () => {
         const line = code.slice(0, cursorPosition).match(/\n/g)?.length || 0;
         const indent = code.split('\n')[line].match(/^ */)?.[0].length || 0;
-        const spaces = ' '.repeat(indent);
-        const insertBracket =
-          code[cursorPosition - 1] === '{' &&
-          !new RegExp(`^\\s*\\n {${indent}}}`).test(code.slice(cursorPosition));
+        const isBetweenBrackets =
+          code[cursorPosition] &&
+          code[cursorPosition] === BRACKET_MAP[code[cursorPosition - 1]];
+        const shouldIncreaseIndent = !!BRACKET_MAP[code[cursorPosition - 1]];
+        const indentSpaces = ' '.repeat(indent);
+        const additionalSpaces = shouldIncreaseIndent ? INDENT_SPACES : '';
 
-        if (insertBracket) {
-          document.execCommand(
-            'insertText',
-            false,
-            `\n${spaces}  \n${spaces}}`
-          );
+        if (isBetweenBrackets) {
+          insertText(`\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`);
           setCursorPosition(cursorPosition + indent + 3);
         } else {
-          document.execCommand('insertText', false, `\n${spaces}`);
+          insertText(`\n${indentSpaces}${additionalSpaces}`);
         }
       },
       Tab: () => {
-        document.execCommand('insertText', false, '  ');
+        const partial = code.slice(0, cursorPosition).split(' ').slice(-1)[0];
+        const keyword =
+          partial.length > 1
+            ? AUTO_COMPLETION_KEYS.find((key) => key.startsWith(partial))
+            : undefined;
+
+        insertText(
+          keyword !== undefined ? keyword.slice(partial.length) : INDENT_SPACES
+        );
       },
     },
     active
@@ -87,14 +123,39 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function format(): void {
     try {
-      onChange(
-        prettier.format(code, {
-          parser: 'babel',
-          plugins: [parserBabel],
-          singleQuote: true,
-        })
-      );
-    } catch (error) {}
+      const { formatted, cursorOffset } = prettier.formatWithCursor(code, {
+        cursorOffset: cursorPosition,
+        parser: 'babel',
+        plugins: [parserBabel],
+        singleQuote: true,
+      });
+
+      onChange(formatted);
+      setCursorPosition(cursorOffset);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleChange(event: ChangeEvent): void {
+    const { value } = event.target as HTMLTextAreaElement;
+
+    onChange(value);
+
+    if (value.length > code.length) {
+      const diff = value
+        .replace(code.slice(0, cursorPosition), '')
+        .replace(code.slice(cursorPosition), '');
+
+      if (BRACKET_MAP[diff] !== undefined) {
+        insertText(BRACKET_MAP[diff]);
+        setCursorPosition(cursorPosition + 1);
+      }
+    }
+  }
+
+  function insertText(str: string): void {
+    document.execCommand('insertText', false, str);
   }
 
   return (
@@ -112,7 +173,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       <textarea
         className={styles.textarea}
         onBlur={() => setActive(false)}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={handleChange}
         onFocus={() => setActive(true)}
         onScroll={({ target }) =>
           setScrollTop((target as HTMLTextAreaElement).scrollTop)
