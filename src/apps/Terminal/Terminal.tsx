@@ -1,7 +1,7 @@
 import { Deferred } from '@josselinbuils/utils';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useEventListener, useList } from '~/platform/hooks';
+import { useKeyMap, useList } from '~/platform/hooks';
 import {
   About,
   AsyncExecutor,
@@ -62,63 +62,35 @@ const Terminal: WindowComponent = ({
   const query = lastExec?.query;
   const waiting = lastExec?.inProgress === true;
 
-  useEventListener(
-    'keydown',
-    async (event) => {
-      if (
-        !event.altKey &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === 'c'
-      ) {
-        event.preventDefault();
-
-        if (waiting) {
-          lastExec.inProgress = false;
-
-          if (query) {
-            const { hideAnswer, str } = query;
-
-            await loadExecutor(UserQuery, [
-              str,
-              formatAnswer(userInput, hideAnswer),
-            ]);
-            delete lastExec.query;
-
-            setUserInput('');
-            setCaretIndex(0);
-          }
-          executionManager.update();
-        } else {
-          loadExecutor(Command, [USER, userInput]);
-          setUserInput('');
-          setCaretIndex(0);
+  useKeyMap(
+    {
+      'Control+C': cancel,
+      'Control+K,Meta+K': () => {
+        if (waiting && !query) {
+          return false;
         }
-      }
-
-      if (waiting && !query) {
-        return;
-      }
-
-      if (
-        !event.altKey &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key.toLowerCase() === 'k'
-      ) {
-        event.preventDefault();
         executionManager.clear();
-      } else if (event.key.length === 1) {
-        if (event.altKey || event.metaKey || event.ctrlKey) {
-          return;
+      },
+      '*': (event) => {
+        if (waiting && !query) {
+          return false;
         }
-        event.preventDefault();
-        setUserInput(
-          (input) =>
-            input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
-        );
-        setCaretIndex((index) => index + 1);
-      } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
-        navigate(event);
-      }
+
+        if (event.key.length === 1) {
+          if (event.altKey || event.metaKey || event.ctrlKey) {
+            return false;
+          }
+          setUserInput(
+            (input) =>
+              input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
+          );
+          setCaretIndex((index) => index + 1);
+        } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
+          navigate(event);
+        } else {
+          return false;
+        }
+      },
     },
     active
   );
@@ -137,6 +109,30 @@ const Terminal: WindowComponent = ({
 
     return () => observer.disconnect();
   }, []);
+
+  async function cancel(): Promise<void> {
+    if (waiting) {
+      lastExec.inProgress = false;
+
+      if (query) {
+        const { hideAnswer, str } = query;
+
+        await loadExecutor(UserQuery, [
+          str,
+          formatAnswer(userInput, hideAnswer),
+        ]);
+        delete lastExec.query;
+
+        setUserInput('');
+        setCaretIndex(0);
+      }
+      executionManager.update();
+    } else {
+      loadExecutor(Command, [USER, userInput]);
+      setUserInput('');
+      setCaretIndex(0);
+    }
+  }
 
   async function exec(str: string): Promise<void> {
     // Removes unnecessary spaces

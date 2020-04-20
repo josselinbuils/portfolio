@@ -19,8 +19,8 @@ const CodeEditor: WindowComponent = ({
 
   useKeyMap(
     {
-      'ctrl+e': () => setCodeToExec(code),
-      'ctrl+s': format,
+      'Control+E,Meta+E': () => setCodeToExec(code),
+      'Control+S,Meta+S': format,
     },
     active
   );
