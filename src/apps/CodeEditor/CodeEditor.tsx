@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { CodeEditorDescriptor } from './CodeEditorDescriptor';
-import { Console, Editor } from './components';
+import { Console, Editor, StatusBar } from './components';
 
 import styles from './CodeEditor.module.scss';
 
@@ -25,8 +25,13 @@ const CodeEditor: WindowComponent = ({
       titleColor="#2f2f2f"
     >
       <div className={styles.codeEditor}>
-        <Editor code={code} onChange={setCode} />
-        <Console codeToExec={code} listenKeyboard={active} />
+        <Editor className={styles.editor} code={code} onChange={setCode} />
+        <Console
+          className={styles.console}
+          codeToExec={code}
+          listenKeyboard={active}
+        />
+        <StatusBar className={styles.statusBar} />
       </div>
     </Window>
   );

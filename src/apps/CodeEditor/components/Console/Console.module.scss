@@ -25,7 +25,8 @@
   height: 2.5rem;
   padding-left: 2.5rem;
   color: $textPrimaryColor;
-  border-top: 1px solid #2e2f31;
+  border-top: 0.1rem solid $borderColorPrimary;
+  border-bottom: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
 }
 

@@ -1,4 +1,5 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
+import cn from 'classnames';
 import parserBabel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import Prism from 'prismjs';
@@ -6,12 +7,12 @@ import 'prismjs/components/prism-javascript.min';
 import React, { FC, useLayoutEffect, useRef, useState } from 'react';
 import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
 import { useKeyMap } from '~/platform/hooks';
-import { LineNumbers, StatusBar } from './components';
+import { LineNumbers } from './components';
 
 import 'prismjs-darcula-theme/darcula.scss';
 import styles from './Editor.module.scss';
 
-export const Editor: FC<Props> = ({ code, onChange }) => {
+export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [highlightedCode, setHighlightedCode] = useState('');
@@ -97,7 +98,7 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
   }
 
   return (
-    <div className={styles.editor}>
+    <div className={cn(styles.editor, className)}>
       <LineNumbers
         className={styles.lineNumbers}
         lineCount={lineCount}
@@ -127,12 +128,12 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
         {/*<ToolButton icon={faPlay} onClick={onClickPlay} title="Execute" />*/}
         <ToolButton icon={faStream} onClick={format} title="Format" />
       </Toolbar>
-      <StatusBar className={styles.statusBar} />
     </div>
   );
 };
 
 interface Props {
+  className?: string;
   code: string;
   onChange(code: string): void;
 }

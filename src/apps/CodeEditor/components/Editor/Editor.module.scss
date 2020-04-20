@@ -9,7 +9,7 @@
   line-height: $lineHeight;
   position: absolute;
   top: 0;
-  bottom: 2rem;
+  bottom: 0;
   left: 4rem;
   overflow-y: auto;
   box-sizing: border-box;
@@ -31,13 +31,6 @@
 .lineNumbers {
   position: absolute;
   top: 0;
-  bottom: 2rem;
-  left: 0;
-}
-
-.statusBar {
-  position: absolute;
-  right: 0;
   bottom: 0;
   left: 0;
 }
@@ -46,7 +39,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  bottom: 2rem;
+  bottom: 0;
+  border-left: 0.1rem solid $borderColorPrimary;
 }
 
 .textarea {

@@ -3,13 +3,18 @@
 import { faBomb } from '@fortawesome/free-solid-svg-icons/faBomb';
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import cn from 'classnames';
 import React, { FC, useState } from 'react';
 import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
 import { useKeyMap } from '~/platform/hooks';
 
 import styles from './Console.module.scss';
 
-export const Console: FC<Props> = ({ codeToExec, listenKeyboard }) => {
+export const Console: FC<Props> = ({
+  className,
+  codeToExec,
+  listenKeyboard,
+}) => {
   const [error, setError] = useState('');
   const [result, setResult] = useState('');
 
@@ -37,7 +42,7 @@ export const Console: FC<Props> = ({ codeToExec, listenKeyboard }) => {
   }
 
   return (
-    <div className={styles.console}>
+    <div className={cn(styles.console, className)}>
       <div className={styles.header}>Console</div>
       <Toolbar className={styles.toolbar}>
         <ToolButton icon={faPlay} onClick={exec} title="Execute" />
@@ -62,6 +67,7 @@ export const Console: FC<Props> = ({ codeToExec, listenKeyboard }) => {
 };
 
 interface Props {
+  className?: string;
   codeToExec: string | undefined;
   listenKeyboard: boolean;
 }
