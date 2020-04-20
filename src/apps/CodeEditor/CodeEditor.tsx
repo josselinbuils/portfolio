@@ -1,49 +1,24 @@
-import parserBabel from 'prettier/parser-babel';
-import prettier from 'prettier/standalone';
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useKeyMap } from '~/platform/hooks';
 import { CodeEditorDescriptor } from './CodeEditorDescriptor';
-import { Console, Editor, Toolbar } from './components';
+import { Console, Editor } from './components';
 
 import styles from './CodeEditor.module.scss';
 
-// TODO be able to execute several times the same code (ex: alert)
 const CodeEditor: WindowComponent = ({
   active,
   windowRef,
   ...injectedWindowProps
 }) => {
   const [code, setCode] = useState('');
-  const [codeToExec, setCodeToExec] = useState<string>();
-
-  useKeyMap(
-    {
-      'Control+E,Meta+E': () => setCodeToExec(code),
-      'Control+S,Meta+S': format,
-    },
-    active
-  );
-
-  function format(): void {
-    try {
-      setCode(
-        prettier.format(code, {
-          parser: 'babel',
-          plugins: [parserBabel],
-          singleQuote: true,
-        })
-      );
-    } catch (error) {}
-  }
 
   return (
     <Window
       active={active}
       {...injectedWindowProps}
       background="#45484a"
-      minHeight={450}
-      minWidth={900}
+      minHeight={500}
+      minWidth={800}
       ref={windowRef}
       title={CodeEditorDescriptor.appName}
       titleBackground="#f0f0f0"
@@ -51,11 +26,7 @@ const CodeEditor: WindowComponent = ({
     >
       <div className={styles.codeEditor}>
         <Editor code={code} onChange={setCode} />
-        <Toolbar
-          onClickFormat={format}
-          onClickPlay={() => setCodeToExec(code)}
-        />
-        <Console codeToExec={codeToExec} />
+        <Console codeToExec={code} />
       </div>
     </Window>
   );

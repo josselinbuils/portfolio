@@ -3,10 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, HTMLAttributes } from 'react';
 
-import styles from './Button.module.scss';
+import styles from './ToolButton.module.scss';
 
-export const Button: FC<Props> = ({ className, icon, ...forwardedProps }) => (
-  <button className={cn(styles.button, className)} {...forwardedProps}>
+export const ToolButton: FC<Props> = ({
+  className,
+  icon,
+  ...forwardedProps
+}) => (
+  <button className={cn(styles.toolButton, className)} {...forwardedProps}>
     <FontAwesomeIcon icon={icon} />
   </button>
 );

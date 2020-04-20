@@ -1,13 +1,13 @@
 @import '../../../../constants';
 
 .musicInfo {
-  height: 6.2rem;
   line-height: 2rem;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
   overflow: hidden;
   flex: 0 0 20ch;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 6.2rem;
   white-space: nowrap;
   text-overflow: ellipsis;
 

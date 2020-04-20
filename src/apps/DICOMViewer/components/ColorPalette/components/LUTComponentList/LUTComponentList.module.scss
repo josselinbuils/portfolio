@@ -3,9 +3,9 @@
 }
 
 .container {
-  list-style: none;
-  padding-left: 0.3rem;
   margin: 0;
+  padding-left: 0.3rem;
+  list-style: none;
 
   li {
     display: flex;
@@ -15,11 +15,11 @@
 }
 
 .addIcon {
-  cursor: pointer;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .trashIcon {
-  cursor: pointer;
   font-size: 1.1rem;
+  cursor: pointer;
 }

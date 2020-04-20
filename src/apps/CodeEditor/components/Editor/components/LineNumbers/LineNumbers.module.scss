@@ -1,8 +1,16 @@
+@import '../../../../constants';
+
 .lineNumbers {
-  padding: 0.5rem 0.7rem;
-  width: 4rem;
-  background: #383a3d;
-  color: #70808c;
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  line-height: $lineHeight;
   overflow: hidden;
+  box-sizing: border-box;
+  width: 4rem;
+  padding: 0.5rem 0.7rem;
   text-align: right;
+  white-space: pre-wrap;
+  color: $textTertiaryColor;
+  border-right: 0.1rem solid $borderColorTertiary;
+  background: $backgroundTertiaryColor;
 }

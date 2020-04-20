@@ -3,8 +3,8 @@
 .content {
   overflow: hidden;
   flex-grow: 1;
-  user-select: none;
   height: 100%;
+  user-select: none;
 
   &.frozen {
     display: none;
@@ -53,9 +53,9 @@
 }
 
 .animated {
+  transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   transition-property: height, left, opacity, top, width;
-  transition-timing-function: ease-in-out;
 }
 
 .minimized {

@@ -1,0 +1,11 @@
+@import '../../../../constants';
+
+.statusBar {
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 2rem;
+  text-align: right;
+  color: $textTertiaryColor;
+  border-top: 0.1rem solid $borderColorPrimary;
+  background: $backgroundTertiaryColor;
+}

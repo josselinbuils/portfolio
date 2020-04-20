@@ -3,12 +3,13 @@
 $overlay-margin: 1rem;
 
 .annotation {
-  text-shadow: #000 0 0 0.1rem;
+  overflow: hidden;
+  max-width: 22ch;
   margin: 0;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 22ch;
+  text-shadow: #000 0 0 0.1rem;
+
   filter: drop-shadow(0 0 0.1rem #000);
 
   & + p {
@@ -19,8 +20,8 @@ $overlay-margin: 1rem;
 .contextMenu {
   font-family: $fontFamily;
   color: $color;
-  background-color: $backgroundColor;
   border: 0.1rem solid white;
+  background-color: $backgroundColor;
 }
 
 .overlayBottomLeft {
@@ -31,8 +32,8 @@ $overlay-margin: 1rem;
 
 .overlayBottomRight {
   position: absolute;
-  bottom: $overlay-margin;
   right: $overlay-margin;
+  bottom: $overlay-margin;
   text-align: right;
 }
 

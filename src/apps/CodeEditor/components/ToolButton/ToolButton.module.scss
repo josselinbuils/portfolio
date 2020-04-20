@@ -1,25 +1,24 @@
-@import '../../../../constants';
+@import '../../constants';
 
-.button {
+.toolButton {
   $color: #b8babc;
 
-  font-size: inherit;
+  font-size: 1.3rem;
   display: inline-block;
+  width: 100%;
+  height: 2.5rem;
   padding: 0;
   vertical-align: middle;
   color: $color;
   border: none;
   outline: none;
   background: none;
-  width: 100%;
-  height: 3rem;
 
   &:disabled {
     opacity: 0.5;
   }
 
   &:not(:disabled) {
-    &:focus,
     &:hover {
       background: lighten($backgroundPrimaryColor, 10%);
     }

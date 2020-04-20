@@ -2,10 +2,10 @@
 @import '../../constants';
 
 .musicList {
-  width: calc(100% - #{$sidebarWidth});
-  margin: 0.5rem 1.5rem 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
+  width: calc(100% - #{$sidebarWidth});
+  margin: 0.5rem 1.5rem 1.5rem 1.5rem;
 
   .header {
     flex: 0 0 auto;
@@ -16,9 +16,9 @@
       justify-content: space-between;
 
       .select {
+        font-family: $fontFamily;
         color: $textColor;
         border-color: $secondaryColor;
-        font-family: $fontFamily;
       }
 
       h2 {
@@ -38,8 +38,8 @@
   }
 
   .overflow {
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: auto;
     flex-grow: 1;
 
     &::-webkit-scrollbar {
@@ -47,8 +47,8 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $secondaryColor;
       border-radius: 0.5rem;
+      background: $secondaryColor;
     }
 
     &::-webkit-scrollbar-track {
@@ -58,28 +58,28 @@
 
   table {
     width: calc(100% - 1rem);
-    border-collapse: collapse;
     table-layout: fixed;
+    border-collapse: collapse;
 
     td {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
       height: 4.6rem;
-      user-select: text;
       padding-right: 1.5rem;
+      user-select: text;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     td:last-child,
     th:last-child {
-      text-align: right;
       padding-right: 0;
+      text-align: right;
     }
 
     tr {
-      border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
       color: $textColor;
+      border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
 
       .colAlbum {
         width: 20%;
@@ -148,14 +148,14 @@
       .inlineMusicPreview {
         width: 3.2rem;
         height: 3.2rem;
-        background-size: 3.2rem;
-        background-repeat: no-repeat;
         text-align: center;
+        background-repeat: no-repeat;
+        background-size: 3.2rem;
 
         .previewIcon {
-          display: none;
-          line-height: 3.2rem;
           font-size: 3.2rem;
+          line-height: 3.2rem;
+          display: none;
         }
       }
     }

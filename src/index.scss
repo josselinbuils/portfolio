@@ -6,9 +6,9 @@ a:active {
 }
 
 body {
-  margin: 0;
   font-size: 1.6rem;
   line-height: 1.2;
+  margin: 0;
 }
 
 html {
@@ -17,5 +17,6 @@ html {
 
 img {
   user-select: none;
+
   -webkit-user-drag: none;
 }

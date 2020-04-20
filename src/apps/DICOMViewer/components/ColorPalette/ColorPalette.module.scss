@@ -1,21 +1,21 @@
 @import '../../constants';
 
 .barPreview {
-  height: 15px;
   width: 148px;
+  height: 15px;
   margin-bottom: 1rem;
 }
 
 .button {
-  padding: 0.3rem 0.5rem;
-  width: 3.2rem;
-  height: 3.2rem;
   font-size: 2rem;
   display: block;
-  border-radius: $radius;
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0.3rem 0.5rem;
   color: $color;
-  outline: none;
   border: 0.1rem solid $color;
+  border-radius: $radius;
+  outline: none;
   background: transparent;
 
   &:active:hover {
@@ -41,13 +41,13 @@
   background: transparentize($backgroundColor, 0.4);
 
   &.open {
-    border-radius: 0.4rem;
-    border: 0.1rem solid $color;
     padding: 0.5rem;
+    border: 0.1rem solid $color;
+    border-radius: 0.4rem;
 
     .button {
-      border: none;
       margin: -0.5rem 0 0.3rem -0.5rem;
+      border: none;
     }
   }
 }

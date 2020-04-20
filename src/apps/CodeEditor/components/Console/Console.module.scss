@@ -1,18 +1,8 @@
 @import '../../constants';
 
 .console {
-  @include scrollbar();
-
-  background: #2b2b2b;
-  color: #a3b7c6;
-  font-family: Source Code Pro, PT Mono, Consolas, Monaco, Andale Mono,
-    Ubuntu Mono, monospace;
-  font-size: 1.2rem;
-  line-height: 1.2;
-  padding: 0.5rem 0.7rem;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  overflow-y: auto;
+  position: relative;
+  outline: none;
 }
 
 .errorMessage,
@@ -22,4 +12,47 @@
 
 .errorStack {
   opacity: 0.8;
+}
+
+.header {
+  font-size: 1.4rem;
+  line-height: 2.5rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-sizing: border-box;
+  height: 2.5rem;
+  padding-left: 2.5rem;
+  color: $textPrimaryColor;
+  border-top: 1px solid #2e2f31;
+  background: $backgroundPrimaryColor;
+}
+
+.logs {
+  @include scrollbar();
+
+  font-size: 1.2rem;
+  position: absolute;
+  top: 2.5rem;
+  right: 0;
+  bottom: 0;
+  left: 2.5rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 0.7rem;
+  white-space: pre-wrap;
+  color: $textSecondaryColor;
+  border-top: 0.1rem solid $borderColorPrimary;
+  border-left: 0.1rem solid $borderColorPrimary;
+  background: $backgroundSecondaryColor;
+
+  overflow-wrap: break-word;
+}
+
+.toolbar {
+  position: absolute;
+  top: 2.5rem;
+  bottom: 0;
+  left: 0;
 }

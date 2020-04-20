@@ -1,22 +1,22 @@
 .colorPicker {
+  position: relative;
   display: inline-block;
   width: 1.3rem;
   height: 1.3rem;
-  position: relative;
   margin: 0;
 
   input {
-    margin: 0;
-    border: none;
-    padding: 0;
-    opacity: 0;
-    outline: none;
     position: absolute;
-    left: 0;
+    z-index: 1;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    margin: 0;
+    padding: 0;
     cursor: pointer;
+    opacity: 0;
+    border: none;
+    outline: none;
   }
 }

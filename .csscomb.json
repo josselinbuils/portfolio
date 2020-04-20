@@ -1,6 +1,8 @@
 {
   "exclude": [".git/**", "node_modules/**"],
   "sort-order": [
+    ["$include"],
+    ["$variable"],
     [
       "font",
       "font-family",

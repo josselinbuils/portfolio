@@ -1,8 +1,12 @@
+import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
+import parserBabel from 'prettier/parser-babel';
+import prettier from 'prettier/standalone';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript.min';
 import React, { FC, useLayoutEffect, useRef, useState } from 'react';
-import { useEventListener } from '~/platform/hooks';
-import { LineNumbers } from './components';
+import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
+import { useKeyMap } from '~/platform/hooks';
+import { LineNumbers, StatusBar } from './components';
 
 import 'prismjs-darcula-theme/darcula.scss';
 import styles from './Editor.module.scss';
@@ -16,12 +20,10 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
 
-  useEventListener(
-    'keydown',
-    (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-
+  useKeyMap(
+    {
+      'Control+S,Meta+S': format,
+      Enter: () => {
         const line = code.slice(0, cursorPosition).match(/\n/g)?.length || 0;
         const indent = code.split('\n')[line].match(/^ */)?.[0].length || 0;
         const spaces = ' '.repeat(indent);
@@ -30,8 +32,6 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
           !new RegExp(`^\\s*\\n {${indent}}}`).test(code.slice(cursorPosition));
 
         if (insertBracket) {
-          event.preventDefault();
-
           document.execCommand(
             'insertText',
             false,
@@ -41,10 +41,10 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
         } else {
           document.execCommand('insertText', false, `\n${spaces}`);
         }
-      } else if (event.key === 'Tab') {
-        event.preventDefault();
+      },
+      Tab: () => {
         document.execCommand('insertText', false, '  ');
-      }
+      },
     },
     active
   );
@@ -84,6 +84,18 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
     }
   }, [scrollTop]);
 
+  function format(): void {
+    try {
+      onChange(
+        prettier.format(code, {
+          parser: 'babel',
+          plugins: [parserBabel],
+          singleQuote: true,
+        })
+      );
+    } catch (error) {}
+  }
+
   return (
     <div className={styles.editor}>
       <LineNumbers
@@ -111,6 +123,11 @@ export const Editor: FC<Props> = ({ code, onChange }) => {
         spellCheck={false}
         value={code}
       />
+      <Toolbar className={styles.toolbar}>
+        {/*<ToolButton icon={faPlay} onClick={onClickPlay} title="Execute" />*/}
+        <ToolButton icon={faStream} onClick={format} title="Format" />
+      </Toolbar>
+      <StatusBar className={styles.statusBar} />
     </div>
   );
 };

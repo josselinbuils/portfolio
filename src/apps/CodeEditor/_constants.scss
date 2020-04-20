@@ -1,11 +1,15 @@
 $backgroundPrimaryColor: #45484a;
 $backgroundSecondaryColor: #2b2b2b;
 $backgroundTertiaryColor: #383a3d;
+$borderColorPrimary: #414245;
+$borderColorTertiary: #606060;
 $fontFamily: Source Code Pro, PT Mono, Consolas, Monaco, Andale Mono,
   Ubuntu Mono, monospace;
 $fontSize: 1.2rem;
-$linHeight: 1.2;
+$lineHeight: 1.2;
+$textPrimaryColor: #c3c3c3;
 $textSecondaryColor: #a3b7c6;
+$textTertiaryColor: #70808c;
 
 @mixin scrollbar {
   &::-webkit-scrollbar {
@@ -13,8 +17,8 @@ $textSecondaryColor: #a3b7c6;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $backgroundTertiaryColor;
     border-radius: 0.5rem;
+    background-color: $backgroundTertiaryColor;
 
     &:hover {
       background-color: #646464;
