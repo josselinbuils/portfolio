@@ -15,11 +15,11 @@ import styles from './TaskBar.module.scss';
 
 export const PINNED_APPS_DESCRIPTORS = [
   TerminalDescriptor,
+  CodeEditorDescriptor,
   DICOMViewerDescriptor,
   MP3PlayerDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
-  CodeEditorDescriptor,
   NotesDescriptor,
 ];
 
