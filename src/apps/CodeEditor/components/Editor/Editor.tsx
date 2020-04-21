@@ -14,27 +14,19 @@ import React, {
 import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
 import { useKeyMap } from '~/platform/hooks';
 import { LineNumbers } from './components';
+import { AUTO_COMPLETION_KEYS, INDENT_SPACES } from './constants';
+import {
+  docExec,
+  getAutoCloseChar,
+  getLineIndent,
+  isAutoCloseChar,
+  isIntoAutoCloseGroup,
+  isIntoBrackets,
+  isOpenBracket,
+} from './utils';
 
 import 'prismjs-darcula-theme/darcula.scss';
 import styles from './Editor.module.scss';
-
-const AUTO_CLOSE_MAP = {
-  '{': '}',
-  '(': ')',
-  '[': ']',
-  '"': '"',
-  "'": "'",
-  '`': '`',
-} as { [char: string]: string };
-const AUTO_COMPLETION_KEYS = [
-  'const ',
-  'false',
-  'function ',
-  'let ',
-  'return ',
-  'true',
-];
-const INDENT_SPACES = '  ';
 
 export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
@@ -48,30 +40,26 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   useKeyMap(
     {
       Backspace: () => {
-        if (
-          code.charAt(cursorPosition) ===
-          AUTO_CLOSE_MAP[code.charAt(cursorPosition - 1)]
-        ) {
-          document.execCommand('forwardDelete', false);
+        if (isIntoAutoCloseGroup(code, cursorPosition)) {
+          docExec.forwardDelete();
         }
         return false;
       },
       'Control+S,Meta+S': format,
       Enter: () => {
-        const line = code.slice(0, cursorPosition).match(/\n/g)?.length || 0;
-        const indent = code.split('\n')[line].match(/^ */)?.[0].length || 0;
-        const isBetweenBrackets =
-          code[cursorPosition] &&
-          code[cursorPosition] === AUTO_CLOSE_MAP[code[cursorPosition - 1]];
-        const shouldIncreaseIndent = !!AUTO_CLOSE_MAP[code[cursorPosition - 1]];
+        const indent = getLineIndent(code, cursorPosition);
         const indentSpaces = ' '.repeat(indent);
-        const additionalSpaces = shouldIncreaseIndent ? INDENT_SPACES : '';
+        const additionalSpaces = isOpenBracket(code[cursorPosition - 1])
+          ? INDENT_SPACES
+          : '';
 
-        if (isBetweenBrackets) {
-          insertText(`\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`);
+        if (isIntoBrackets(code, cursorPosition)) {
+          docExec.insertText(
+            `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`
+          );
           setCursorPosition(cursorPosition + indent + 3);
         } else {
-          insertText(`\n${indentSpaces}${additionalSpaces}`);
+          docExec.insertText(`\n${indentSpaces}${additionalSpaces}`);
         }
       },
       Tab: () => {
@@ -81,7 +69,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
             ? AUTO_COMPLETION_KEYS.find((key) => key.startsWith(partial))
             : undefined;
 
-        insertText(
+        docExec.insertText(
           keyword !== undefined ? keyword.slice(partial.length) : INDENT_SPACES
         );
       },
@@ -136,6 +124,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       onChange(formatted);
       setCursorPosition(cursorOffset);
     } catch (error) {
+      // TODO put this in the console
       console.error(error);
     }
   }
@@ -149,16 +138,18 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       const diff = value
         .replace(code.slice(0, cursorPosition), '')
         .replace(code.slice(cursorPosition), '');
+      const autoCloseChar = getAutoCloseChar(diff);
 
-      if (AUTO_CLOSE_MAP[diff] !== undefined) {
-        insertText(AUTO_CLOSE_MAP[diff]);
+      if (autoCloseChar !== undefined) {
+        docExec.insertText(autoCloseChar);
         setCursorPosition(cursorPosition + 1);
+      } else if (
+        isIntoAutoCloseGroup(code, cursorPosition) &&
+        isAutoCloseChar(diff)
+      ) {
+        docExec.forwardDelete();
       }
     }
-  }
-
-  function insertText(str: string): void {
-    document.execCommand('insertText', false, str);
   }
 
   return (
