@@ -87,6 +87,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       highlighted.slice(-1) === '\n' ? `${highlighted} ` : highlighted
     );
     setLineCount((code.match(/\n/g)?.length || 0) + 1);
+    (textAreaElementRef.current as HTMLTextAreaElement).scrollTop = 1e10;
   }, [code]);
 
   useLayoutEffect(() => {
