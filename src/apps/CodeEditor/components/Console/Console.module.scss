@@ -5,15 +5,6 @@
   outline: none;
 }
 
-.errorMessage,
-.errorStack {
-  color: #ea4848;
-}
-
-.errorStack {
-  opacity: 0.8;
-}
-
 .header {
   font-size: 1.4rem;
   line-height: 2.5rem;
@@ -28,25 +19,6 @@
   border-top: 0.1rem solid $borderColorPrimary;
   border-bottom: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
-}
-
-.logs {
-  @include scrollbar();
-
-  font-size: 1.2rem;
-  position: absolute;
-  top: 2.5rem;
-  right: 0;
-  bottom: 0;
-  left: 2.5rem;
-  overflow-y: auto;
-  box-sizing: border-box;
-  padding: 0.5rem 0.7rem;
-  white-space: pre-wrap;
-  color: $textSecondaryColor;
-  background: $backgroundSecondaryColor;
-
-  overflow-wrap: break-word;
 }
 
 .toolbar {

@@ -1,0 +1,40 @@
+@import '../../../../constants';
+
+.error {
+  $color: #ea4848;
+
+  color: $color;
+  background: transparentize($color, 0.95);
+  border-top: 0.1rem solid darken($color, 30%);
+  border-bottom: 0.1rem solid darken($color, 30%);
+
+  & + & {
+    margin-top: -0.1rem;
+  }
+}
+
+.errorStack {
+  opacity: 0.8;
+}
+
+.log {
+  padding: 0.5rem 0.7rem;
+}
+
+.logs {
+  @include scrollbar();
+
+  font-size: 1.2rem;
+  position: absolute;
+  top: 2.5rem;
+  right: 0;
+  bottom: 0;
+  left: 2.5rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  color: $textSecondaryColor;
+  background: $backgroundSecondaryColor;
+
+  overflow-wrap: break-word;
+}

@@ -1,5 +1,6 @@
 export * from './createAutoCloseMap';
 export * from './docExec';
+export * from './formatCode';
 export * from './getAutoCloseChar';
 export * from './getLineIndent';
 export * from './isAutoCloseChar';

@@ -1,7 +1,5 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import cn from 'classnames';
-import parserBabel from 'prettier/parser-babel';
-import prettier from 'prettier/standalone';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript.min';
 import React, {
@@ -17,6 +15,7 @@ import { LineNumbers } from './components';
 import { AUTO_COMPLETION_KEYS, INDENT_SPACES } from './constants';
 import {
   docExec,
+  formatCode,
   getAutoCloseChar,
   getLineIndent,
   isAutoCloseChar,
@@ -114,17 +113,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function format(): void {
     try {
-      const { formatted, cursorOffset } = prettier.formatWithCursor(code, {
-        cursorOffset: cursorPosition,
-        parser: 'babel',
-        plugins: [parserBabel],
-        singleQuote: true,
-      });
-
-      onChange(formatted);
-      setCursorPosition(cursorOffset);
+      const formatted = formatCode(code, cursorPosition);
+      onChange(formatted.code);
+      setCursorPosition(formatted.cursorPosition);
     } catch (error) {
-      // TODO put this in the console
       console.error(error);
     }
   }
@@ -180,7 +172,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         value={code}
       />
       <Toolbar className={styles.toolbar}>
-        {/*<ToolButton icon={faPlay} onClick={onClickPlay} title="Execute" />*/}
         <ToolButton icon={faStream} onClick={format} title="Format" />
       </Toolbar>
     </div>

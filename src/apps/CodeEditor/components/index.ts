@@ -1,4 +1,4 @@
-export * from './Console';
+export { Console } from './Console';
 export * from './Editor';
 export * from './StatusBar';
 export * from './Toolbar';

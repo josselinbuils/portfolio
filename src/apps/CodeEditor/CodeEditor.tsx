@@ -26,11 +26,7 @@ const CodeEditor: WindowComponent = ({
     >
       <div className={styles.codeEditor}>
         <Editor className={styles.editor} code={code} onChange={setCode} />
-        <Console
-          className={styles.console}
-          codeToExec={code}
-          listenKeyboard={active}
-        />
+        <Console active={active} className={styles.console} codeToExec={code} />
         <StatusBar className={styles.statusBar} />
       </div>
     </Window>

@@ -14,7 +14,7 @@ export function useList<T>(initialValues: T[] = []): [T[], ListManager<T>] {
   return [list, manager];
 }
 
-interface ListManager<T> {
+export interface ListManager<T> {
   clear(): void;
   push(...items: T[]): void;
   set(items: T[] | ((currentItems: T[]) => T[])): void;

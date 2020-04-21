@@ -1,73 +1,63 @@
-/* eslint-disable no-eval */
-/* tslint:disable:no-eval */
-import { faBomb } from '@fortawesome/free-solid-svg-icons/faBomb';
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import cn from 'classnames';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
-import { useKeyMap } from '~/platform/hooks';
+import { Logs } from '~/apps/CodeEditor/components/Console/components';
+import { useKeyMap, useList } from '~/platform/hooks';
+import { Log } from './Log';
+import { decorateConsole, execCode, observeMutations } from './utils';
 
 import styles from './Console.module.scss';
 
-export const Console: FC<Props> = ({
-  className,
-  codeToExec,
-  listenKeyboard,
-}) => {
-  const [error, setError] = useState('');
-  const [result, setResult] = useState('');
+export const Console: FC<Props> = ({ active, className, codeToExec }) => {
+  const [logs, logManager] = useList<Log>([]);
+  const logsElementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (active) {
+      return decorateConsole(logManager);
+    }
+  }, [active, logManager]);
+
+  useLayoutEffect(() => {
+    const logsElement = logsElementRef.current as HTMLElement;
+
+    return observeMutations(
+      logsElement,
+      () => (logsElement.scrollTop = logsElement.scrollHeight)
+    );
+  }, []);
 
   useKeyMap(
     {
-      'Control+E,Meta+E': exec,
+      'Control+E,Meta+E': () => execCode(codeToExec),
     },
-    listenKeyboard
+    active
   );
-
-  function exec(): void {
-    setError('');
-    setResult('');
-
-    if (codeToExec) {
-      try {
-        setResult(eval(codeToExec) || 'undefined');
-      } catch (error) {
-        const position = error.stack.match(/(\d+:\d+)[^:]*$/m)[1];
-        setError(`${error.stack.split('\n')[0]}\n    at ${position}`);
-      }
-    } else {
-      setResult('No code to execute');
-    }
-  }
 
   return (
     <div className={cn(styles.console, className)}>
       <div className={styles.header}>Console</div>
       <Toolbar className={styles.toolbar}>
-        <ToolButton icon={faPlay} onClick={exec} title="Execute" />
+        <ToolButton
+          icon={faPlay}
+          onClick={() => execCode(codeToExec)}
+          title="Execute"
+        />
+        <ToolButton
+          icon={faTrash}
+          onClick={() => logManager.clear()}
+          title="Clear"
+        />
       </Toolbar>
-      <div className={styles.logs}>
-        {error ? (
-          <>
-            <span className={styles.errorMessage}>
-              <FontAwesomeIcon icon={faBomb} /> {error.split('\n')[0]}
-              {'\n'}
-            </span>
-            <span className={styles.errorStack}>
-              {error.split('\n').slice(1).join('')}
-            </span>
-          </>
-        ) : (
-          result
-        )}
-      </div>
+      <Logs logs={logs} ref={logsElementRef} />
     </div>
   );
 };
 
 interface Props {
+  active: boolean;
   className?: string;
   codeToExec: string | undefined;
-  listenKeyboard: boolean;
 }
