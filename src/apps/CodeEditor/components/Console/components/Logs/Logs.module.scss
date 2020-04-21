@@ -17,6 +17,14 @@
   opacity: 0.8;
 }
 
+.info {
+  color: $textSecondaryColor;
+
+  & + & {
+    border-top: 0.1rem solid darken($textSecondaryColor, 40%);
+  }
+}
+
 .log {
   padding: 0.5rem 0.7rem;
 }
@@ -33,7 +41,6 @@
   overflow-y: auto;
   box-sizing: border-box;
   white-space: pre-wrap;
-  color: $textSecondaryColor;
   background: $backgroundSecondaryColor;
 
   overflow-wrap: break-word;
