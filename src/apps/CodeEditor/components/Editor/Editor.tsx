@@ -173,7 +173,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         value={code}
       />
       <Toolbar className={styles.toolbar}>
-        <ToolButton icon={faStream} onClick={format} title="Format" />
+        <ToolButton icon={faStream} onClick={format} title="Format (Ctrl+S)" />
       </Toolbar>
     </div>
   );

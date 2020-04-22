@@ -43,7 +43,7 @@ export const Console: FC<Props> = ({ active, className, codeToExec }) => {
         <ToolButton
           icon={faPlay}
           onClick={() => execCode(codeToExec)}
-          title="Execute"
+          title="Execute (Ctrl+E)"
         />
         <ToolButton
           icon={faTrash}
