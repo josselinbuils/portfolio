@@ -10,7 +10,7 @@
     "build:client": "react-app-rewired build && react-snap && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
     "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
-    "csscomb:staged": "exec-staged 'csscomb -v' '\\.scss$'",
+    "csscomb:staged": "exec-staged 'csscomb -tv' '\\.scss$'",
     "dev:client": "react-app-rewired start",
     "dev:server": "concurrently --kill-others 'yarn build:server:dev -w' 'nodemon dist/server/server.js'",
     "lint": "yarn lint:client && yarn lint:server",
