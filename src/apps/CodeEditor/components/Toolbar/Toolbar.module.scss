@@ -1,7 +1,7 @@
 @import '../../constants';
 
 .toolbar {
+  box-sizing: border-box;
   width: 2.5rem;
   background: $backgroundPrimaryColor;
-  box-sizing: border-box;
 }

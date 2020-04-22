@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
+import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import { ContextMenuItem } from './ContextMenuItem';
 
@@ -20,7 +21,11 @@ export const ContextMenu: FC<Props> = ({
   return (
     <ul
       className={cn(styles.contextMenu, className)}
-      style={{ ...style, left: `${x / 10}rem`, top: `${y / 10}rem` }}
+      style={{
+        ...style,
+        left: `${x / ROOT_FONT_SIZE_PX}rem`,
+        top: `${y / ROOT_FONT_SIZE_PX}rem`,
+      }}
     >
       {items.map(({ onClick, icon, title }) => (
         <ContextMenuItem

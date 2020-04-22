@@ -7,4 +7,5 @@ export { NoScriptAlert } from './NoScriptAlert';
 export { Picture } from './Picture';
 export { Select } from './Select';
 export { Spinner } from './Spinner';
+export { Tooltip } from './Tooltip';
 export { Window } from './Window';

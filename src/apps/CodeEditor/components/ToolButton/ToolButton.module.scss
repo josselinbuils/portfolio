@@ -28,3 +28,34 @@
     }
   }
 }
+
+.tooltip {
+  line-height: 2.5rem;
+  box-sizing: border-box;
+  height: 2.5rem;
+  padding: 0 0.5rem;
+  color: #b8babc;
+  border: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background: lighten($backgroundPrimaryColor, 10%);
+}
+
+kbd {
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: 1.3rem;
+  margin: 0.5rem 0.2rem;
+  padding: 0.1rem 0.3rem;
+  white-space: nowrap;
+  color: lighten($backgroundPrimaryColor, 10%);
+  border-radius: 0.3rem;
+  background-color: #b8babc;
+  display: inline-block;
+  height: 1.5rem;
+  box-sizing: border-box;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

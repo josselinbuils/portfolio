@@ -4,9 +4,9 @@
   $color: #ea4848;
 
   color: $color;
-  background: transparentize($color, 0.95);
   border-top: 0.1rem solid darken($color, 30%);
   border-bottom: 0.1rem solid darken($color, 30%);
+  background: transparentize($color, 0.95);
 
   & + & {
     margin-top: -0.1rem;

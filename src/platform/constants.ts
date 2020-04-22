@@ -10,3 +10,5 @@ export enum MouseButton {
   Middle = 1,
   Right = 2,
 }
+
+export const ROOT_FONT_SIZE_PX = 10;
