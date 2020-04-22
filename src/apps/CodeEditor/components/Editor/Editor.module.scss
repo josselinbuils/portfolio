@@ -10,7 +10,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 4rem;
+  left: 6.5rem;
   overflow-y: auto;
   box-sizing: border-box;
   width: calc(100% - 6.5rem);
@@ -32,15 +32,15 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 2.5rem;
 }
 
 .toolbar {
   position: absolute;
   top: 0;
-  right: 0;
   bottom: 0;
-  border-left: 0.1rem solid $borderColorPrimary;
+  left: 0;
+  border-right: 0.1rem solid $borderColorPrimary;
 }
 
 .textarea {
