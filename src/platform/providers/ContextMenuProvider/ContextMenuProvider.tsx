@@ -4,6 +4,7 @@ import React, {
   cloneElement,
   FC,
   ReactElement,
+  useCallback,
   useState,
 } from 'react';
 import {
@@ -16,10 +17,14 @@ import styles from './ContextMenuProvider.module.scss';
 
 export const ContextMenuProvider: FC = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
-  const hide = () => setDescriptor(undefined);
+  const hideContextMenu = useCallback(() => setDescriptor(undefined), []);
+  const isContextMenuDisplayed = descriptor !== undefined;
+  const showContextMenu = setDescriptor;
 
   return (
-    <ContextMenuContext.Provider value={setDescriptor}>
+    <ContextMenuContext.Provider
+      value={{ hideContextMenu, isContextMenuDisplayed, showContextMenu }}
+    >
       {Children.map(children as ReactElement[], (child) =>
         cloneElement(child, {
           className: cn(child.props.className, {
@@ -29,8 +34,8 @@ export const ContextMenuProvider: FC = ({ children }) => {
       )}
       {descriptor && (
         <>
-          <div className={styles.overlay} onMouseDown={hide} />
-          <ContextMenu {...descriptor} onHide={hide} />
+          <div className={styles.overlay} onMouseDown={hideContextMenu} />
+          <ContextMenu {...descriptor} onHide={hideContextMenu} />
         </>
       )}
     </ContextMenuContext.Provider>

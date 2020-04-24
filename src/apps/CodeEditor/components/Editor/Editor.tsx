@@ -5,14 +5,16 @@ import 'prismjs/components/prism-javascript.min';
 import React, {
   ChangeEvent,
   FC,
+  SyntheticEvent,
   useLayoutEffect,
   useRef,
   useState,
 } from 'react';
-import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
 import { useKeyMap } from '~/platform/hooks';
+import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers } from './components';
-import { AUTO_COMPLETION_KEYS, INDENT_SPACES } from './constants';
+import { END_WORD_CHARS, INDENT_SPACES } from './constants';
+import { useAutoCompletion } from './hooks';
 import {
   docExec,
   formatCode,
@@ -29,48 +31,55 @@ import styles from './Editor.module.scss';
 
 export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState(0);
+  const [autoCompleteActive, setAutoCompleteActive] = useState(false);
+  const [cursorOffset, setCursorOffset] = useState(0);
   const [highlightedCode, setHighlightedCode] = useState('');
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
+  const hasCompletionItems = useAutoCompletion({
+    cursorOffset,
+    menuClassName: styles.autoCompletionMenu,
+    onCompletion: docExec.insertText,
+    partialKeyword: autoCompleteActive
+      ? code.slice(0, cursorOffset).split(' ').slice(-1)[0]
+      : '',
+    textAreaElement: textAreaElementRef.current,
+  });
 
   useKeyMap(
     {
       Backspace: () => {
-        if (isIntoAutoCloseGroup(code, cursorPosition)) {
+        if (isIntoAutoCloseGroup(code, cursorOffset)) {
           docExec.forwardDelete();
         }
         return false;
       },
       'Control+S,Meta+S': format,
       Enter: () => {
-        const indent = getLineIndent(code, cursorPosition);
+        if (hasCompletionItems) {
+          return;
+        }
+        const indent = getLineIndent(code, cursorOffset);
         const indentSpaces = ' '.repeat(indent);
-        const additionalSpaces = isOpenBracket(code[cursorPosition - 1])
+        const additionalSpaces = isOpenBracket(code[cursorOffset - 1])
           ? INDENT_SPACES
           : '';
 
-        if (isIntoBrackets(code, cursorPosition)) {
+        if (isIntoBrackets(code, cursorOffset)) {
           docExec.insertText(
             `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`
           );
-          setCursorPosition(cursorPosition + indent + 3);
+          setCursorOffset(cursorOffset + indent + 3);
         } else {
           docExec.insertText(`\n${indentSpaces}${additionalSpaces}`);
         }
       },
       Tab: () => {
-        const partial = code.slice(0, cursorPosition).split(' ').slice(-1)[0];
-        const keyword =
-          partial.length > 1
-            ? AUTO_COMPLETION_KEYS.find((key) => key.startsWith(partial))
-            : undefined;
-
-        docExec.insertText(
-          keyword !== undefined ? keyword.slice(partial.length) : INDENT_SPACES
-        );
+        if (!hasCompletionItems) {
+          docExec.insertText(INDENT_SPACES);
+        }
       },
     },
     active
@@ -96,15 +105,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     if (textAreaElement !== null) {
       const { selectionEnd, selectionStart } = textAreaElement;
 
-      if (
-        selectionEnd === selectionStart &&
-        selectionStart !== cursorPosition
-      ) {
-        textAreaElement.selectionStart = cursorPosition;
-        textAreaElement.selectionEnd = cursorPosition;
+      if (selectionEnd === selectionStart && selectionStart !== cursorOffset) {
+        textAreaElement.selectionStart = cursorOffset;
+        textAreaElement.selectionEnd = cursorOffset;
       }
     }
-  }, [cursorPosition]);
+  }, [cursorOffset]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -114,9 +120,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function format(): void {
     try {
-      const formatted = formatCode(code, cursorPosition);
+      const formatted = formatCode(code, cursorOffset);
       onChange(formatted.code);
-      setCursorPosition(formatted.cursorPosition);
+      setCursorOffset(formatted.cursorOffset);
     } catch (error) {
       console.error(error);
     }
@@ -129,20 +135,35 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
     if (value.length > code.length) {
       const diff = value
-        .replace(code.slice(0, cursorPosition), '')
-        .replace(code.slice(cursorPosition), '');
+        .replace(code.slice(0, cursorOffset), '')
+        .replace(code.slice(cursorOffset), '');
       const autoCloseChar = getAutoCloseChar(diff);
 
       if (autoCloseChar !== undefined) {
         docExec.insertText(autoCloseChar);
-        setCursorPosition(cursorPosition + 1);
+        setCursorOffset(cursorOffset + 1);
       } else if (
-        isIntoAutoCloseGroup(code, cursorPosition) &&
+        isIntoAutoCloseGroup(code, cursorOffset) &&
         isAutoCloseChar(diff)
       ) {
         docExec.forwardDelete();
       }
+
+      if (END_WORD_CHARS.includes(value[cursorOffset + 1])) {
+        setAutoCompleteActive(true);
+      }
+    } else if (autoCompleteActive) {
+      setAutoCompleteActive(false);
     }
+  }
+
+  function handleSelect({ target }: SyntheticEvent): void {
+    const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
+
+    if (!END_WORD_CHARS.includes(code[newCursorOffset])) {
+      setAutoCompleteActive(false);
+    }
+    setCursorOffset(newCursorOffset);
   }
 
   return (
@@ -165,9 +186,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         onScroll={({ target }) =>
           setScrollTop((target as HTMLTextAreaElement).scrollTop)
         }
-        onSelect={({ target }) => {
-          setCursorPosition((target as HTMLTextAreaElement).selectionStart);
-        }}
+        onSelect={handleSelect}
         ref={textAreaElementRef}
         spellCheck={false}
         value={code}

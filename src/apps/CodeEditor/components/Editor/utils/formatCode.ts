@@ -3,17 +3,17 @@ import prettier from 'prettier/standalone';
 
 export function formatCode(
   code: string,
-  cursorPosition: number
-): { code: string; cursorPosition: number } {
-  const { formatted, cursorOffset } = prettier.formatWithCursor(code, {
-    cursorOffset: cursorPosition,
+  cursorOffset: number
+): { code: string; cursorOffset: number } {
+  const result = prettier.formatWithCursor(code, {
+    cursorOffset,
     parser: 'babel',
     plugins: [parserBabel],
     singleQuote: true,
   });
 
   return {
-    code: formatted,
-    cursorPosition: cursorOffset,
+    code: result.formatted,
+    cursorOffset: result.cursorOffset,
   };
 }

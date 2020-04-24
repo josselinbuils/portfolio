@@ -1,12 +1,18 @@
 import { createContext } from 'react';
 import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
 
-export const ContextMenuContext = createContext<ContextMenuDescriptorSetter>(
-  () => {
-    throw new Error('ContextMenuContext not initialized');
-  }
-);
+export const ContextMenuContext = createContext<ContextMenuManager>({
+  isContextMenuDisplayed: false,
+  hideContextMenu: throwNotInitializedError,
+  showContextMenu: throwNotInitializedError,
+});
 
-export type ContextMenuDescriptorSetter = (
-  descriptor: ContextMenuDescriptor
-) => void;
+export interface ContextMenuManager {
+  isContextMenuDisplayed: boolean;
+  hideContextMenu(): void;
+  showContextMenu(descriptor: ContextMenuDescriptor): void;
+}
+
+function throwNotInitializedError(): void {
+  throw new Error('ContextMenuContext not initialized');
+}

@@ -15,7 +15,8 @@
     margin-top: 0.4rem;
   }
 
-  &:hover {
+  &:hover,
+  &[aria-current='true'] {
     background: lighten($backgroundColor, 15%);
   }
 

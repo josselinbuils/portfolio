@@ -6,7 +6,7 @@ export function useKeyMap(
       event: KeyboardEvent
     ) => void | false | Promise<void | false>;
   },
-  active: boolean
+  active: boolean = true
 ): void {
   useEventListener(
     'keydown',

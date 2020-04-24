@@ -1,5 +1,31 @@
 @import '../../constants';
 
+.autoCompletionMenu {
+  margin-top: 1.7rem;
+  margin-left: -0.7rem;
+  border: 0.1rem solid $borderColorPrimary;
+  border-radius: 0.1rem;
+  background: $backgroundPrimaryColor;
+
+  li {
+    font-family: $fontFamily;
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+    height: 1.4rem;
+    padding: 0.3rem 0.6rem;
+    color: #b8babc;
+
+    &:first-child,
+    &:last-child {
+      margin: 0;
+    }
+
+    > div:first-child {
+      display: none;
+    }
+  }
+}
+
 .code,
 .textarea {
   @include scrollbar;

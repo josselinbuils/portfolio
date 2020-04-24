@@ -24,11 +24,11 @@ export function startRotate(
   );
 
   return (moveEvent: MouseEvent) => {
-    const cursorPosition = [moveEvent.clientX - left, moveEvent.clientY - top];
+    const cursorOffset = [moveEvent.clientX - left, moveEvent.clientY - top];
     const currentVector = computeTrackball(
       trackballCenter,
       trackballRadius,
-      cursorPosition
+      cursorOffset
     );
 
     if (V(currentVector).equals(previousVector)) {
@@ -58,9 +58,9 @@ function computeRotation(
 function computeTrackball(
   center: number[],
   radius: number,
-  cursorPosition: number[]
+  cursorOffset: number[]
 ): number[] {
-  const fromCenter = V([...cursorPosition, 0]).sub([...center, 0]);
+  const fromCenter = V([...cursorOffset, 0]).sub([...center, 0]);
   const fromCenterNorm = V(fromCenter).norm();
 
   // fromCenter cannot be longer than the trackball radius

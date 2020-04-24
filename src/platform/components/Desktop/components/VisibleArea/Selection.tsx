@@ -5,8 +5,10 @@ import { Position } from '~/platform/interfaces';
 import styles from './Selection.module.scss';
 
 export const Selection: FC<Props> = ({ visible }) => {
-  const [cursorPosition, setCursorPosition] = useState<Position>();
-  const [cursorStartPosition, setCursorStartPosition] = useState<Position>();
+  const [cursorPosition, setCursorPosition] = useState<Position<number>>();
+  const [cursorStartPosition, setCursorStartPosition] = useState<
+    Position<number>
+  >();
 
   useEffect(() => {
     if (!visible) {

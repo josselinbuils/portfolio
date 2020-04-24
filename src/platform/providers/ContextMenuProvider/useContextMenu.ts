@@ -1,9 +1,6 @@
 import { useContext } from 'react';
-import {
-  ContextMenuContext,
-  ContextMenuDescriptorSetter,
-} from './ContextMenuContext';
+import { ContextMenuContext, ContextMenuManager } from './ContextMenuContext';
 
-export function useContextMenu(): ContextMenuDescriptorSetter {
+export function useContextMenu(): ContextMenuManager {
   return useContext(ContextMenuContext);
 }

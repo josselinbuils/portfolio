@@ -3,8 +3,6 @@ import dayjs from 'dayjs';
 import { Music } from '../../interfaces';
 
 export class AudioController {
-  static injectionId = 'AudioController';
-
   audioStateSubject: Subject<AudioState>;
 
   private readonly audioElement = new Audio();

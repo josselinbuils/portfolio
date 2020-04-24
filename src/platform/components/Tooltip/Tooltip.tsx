@@ -21,8 +21,8 @@ export const Tooltip: FC<TooltipDescriptor> = ({
       className={cn(styles.tooltip, className)}
       style={{
         ...style,
-        left: `${x / ROOT_FONT_SIZE_PX}rem`,
-        top: `${y / ROOT_FONT_SIZE_PX}rem`,
+        left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
+        top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
       }}
     >
       {title}

@@ -3,7 +3,7 @@ import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
 import { useContextMenu } from './useContextMenu';
 
 export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
-  const showMenu = useContextMenu();
+  const { showContextMenu } = useContextMenu();
   const child = Children.only(children) as ReactElement;
 
   const onContextMenu = (event: MouseEvent) => {
@@ -13,7 +13,7 @@ export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
 
     event.preventDefault();
 
-    showMenu({
+    showContextMenu({
       position: position || { x: clientX, y: clientY },
       ...rest,
     });

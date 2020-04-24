@@ -1,7 +1,7 @@
 import { BRACKET_GROUPS } from '../constants';
 
-export function isIntoBrackets(code: string, cursorPosition: number): boolean {
+export function isIntoBrackets(code: string, cursorOffset: number): boolean {
   return BRACKET_GROUPS.includes(
-    code.slice(cursorPosition - 1, cursorPosition + 1)
+    code.slice(cursorOffset - 1, cursorOffset + 1)
   );
 }

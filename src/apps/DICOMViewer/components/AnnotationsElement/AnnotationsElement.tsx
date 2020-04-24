@@ -24,7 +24,7 @@ export const AnnotationsElement: FC<Props> = ({
     windowWidth,
     zoom,
   } = annotations;
-  const showMenu = useContextMenu();
+  const { showContextMenu } = useContextMenu();
   const rendererElementRef = useRef<HTMLSpanElement>(null);
   const viewTypeElementRef = useRef<HTMLParagraphElement>(null);
 
@@ -32,7 +32,7 @@ export const AnnotationsElement: FC<Props> = ({
     return isItemActive ? faCheck : undefined;
   }
 
-  function showContextMenu(
+  function showMenu(
     elementRef: RefObject<HTMLElement>,
     items: ContextMenuItemDescriptor[]
   ): void {
@@ -41,7 +41,7 @@ export const AnnotationsElement: FC<Props> = ({
     }
     const { bottom, left } = elementRef.current.getBoundingClientRect();
 
-    showMenu({
+    showContextMenu({
       className: styles.contextMenu,
       items,
       position: {
@@ -57,7 +57,7 @@ export const AnnotationsElement: FC<Props> = ({
       title: type,
       onClick: () => onRendererTypeSwitch(type),
     }));
-    showContextMenu(rendererElementRef, items);
+    showMenu(rendererElementRef, items);
   }
 
   function showViewTypeMenu(): void {
@@ -66,7 +66,7 @@ export const AnnotationsElement: FC<Props> = ({
       title: type,
       onClick: () => onViewTypeSwitch(type),
     }));
-    showContextMenu(viewTypeElementRef, items);
+    showMenu(viewTypeElementRef, items);
   }
 
   return (
