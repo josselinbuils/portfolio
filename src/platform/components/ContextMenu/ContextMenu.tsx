@@ -11,10 +11,12 @@ export const ContextMenu: FC<Props> = ({
   className,
   items,
   onHide,
+  makeFirstItemActive = false,
   position,
   style,
 }) => {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const defaultActiveIndex = makeFirstItemActive ? 0 : -1;
+  const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
 
   useKeyMap({
     ArrowDown: () =>
@@ -28,8 +30,8 @@ export const ContextMenu: FC<Props> = ({
   });
 
   if (position === undefined) {
-    if (activeIndex !== -1) {
-      setActiveIndex(-1);
+    if (activeIndex !== defaultActiveIndex) {
+      setActiveIndex(defaultActiveIndex);
     }
     return null;
   }
@@ -47,7 +49,7 @@ export const ContextMenu: FC<Props> = ({
       {items.map(({ onClick, icon, title }, index) => (
         <ContextMenuItem
           active={index === activeIndex}
-          key={title}
+          key={index}
           icon={icon}
           onClick={() => {
             onClick();

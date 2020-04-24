@@ -6,6 +6,7 @@ import React, {
   ChangeEvent,
   FC,
   SyntheticEvent,
+  useCallback,
   useLayoutEffect,
   useRef,
   useState,
@@ -38,10 +39,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
-  const hasCompletionItems = useAutoCompletion({
+  const { complete, hasCompletionItems } = useAutoCompletion({
     cursorOffset,
+    lineIndent: getLineIndent(code, cursorOffset),
     menuClassName: styles.autoCompletionMenu,
-    onCompletion: docExec.insertText,
+    onCompletion: useCallback(({ completion, newCursorOffset }) => {
+      docExec.insertText(completion);
+      setCursorOffset(newCursorOffset);
+    }, []),
     partialKeyword: autoCompleteActive
       ? code.slice(0, cursorOffset).split(' ').slice(-1)[0]
       : '',
@@ -77,7 +82,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         }
       },
       Tab: () => {
-        if (!hasCompletionItems) {
+        if (hasCompletionItems) {
+          complete();
+        } else {
           docExec.insertText(INDENT_SPACES);
         }
       },

@@ -3,9 +3,9 @@
 .autoCompletionMenu {
   margin-top: 1.7rem;
   margin-left: -0.7rem;
-  border: 0.1rem solid $borderColorPrimary;
+  border: 0.1rem solid #2e2e2e;
   border-radius: 0.1rem;
-  background: $backgroundPrimaryColor;
+  background: #505254;
 
   li {
     font-family: $fontFamily;
@@ -20,8 +20,18 @@
       margin: 0;
     }
 
+    &:hover,
+    &[aria-current='true'] {
+      background: #5b5d61;
+    }
+
     > div:first-child {
       display: none;
+    }
+
+    mark {
+      color: $primaryColor;
+      background: transparent;
     }
   }
 }
