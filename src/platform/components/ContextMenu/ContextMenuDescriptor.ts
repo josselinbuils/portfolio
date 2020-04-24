@@ -8,4 +8,5 @@ export interface ContextMenuDescriptor {
   makeFirstItemActive?: boolean;
   position?: Position;
   style?: CSSProperties;
+  onActivate?(index: number): void;
 }

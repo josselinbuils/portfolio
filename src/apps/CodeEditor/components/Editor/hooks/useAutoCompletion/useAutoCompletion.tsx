@@ -1,18 +1,12 @@
-import React, { useCallback, useLayoutEffect } from 'react';
-import { getCursorPosition } from '~/apps/CodeEditor/components/Editor/utils';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
-
-const CURSOR = '[CURSOR]';
-export const AUTO_COMPLETION_ITEMS = [
-  { keyword: 'const', template: 'const ' },
-  { keyword: 'else', template: 'else ' },
-  { keyword: 'false', template: 'false' },
-  { keyword: 'function', template: `function ${CURSOR}() {\n  \n}` },
-  { keyword: 'if', template: `if (${CURSOR})` },
-  { keyword: 'let', template: 'let ' },
-  { keyword: 'return', template: 'return ' },
-  { keyword: 'true', template: 'true' },
-] as CompletionItem[];
+import { getCursorPosition } from '../../utils';
+import { CompletionItem } from './CompletionItem';
+import {
+  CURSOR,
+  GLOBAL_COMPLETION_ITEMS,
+  OBJECTS_COMPLETION_MAP,
+} from './dictionary';
 
 export function useAutoCompletion({
   cursorOffset,
@@ -29,6 +23,7 @@ export function useAutoCompletion({
   textAreaElement: HTMLTextAreaElement | null;
   onCompletion(completion: Completion): void;
 }): { hasCompletionItems: boolean; complete(): void } {
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
   const {
     hideContextMenu,
     isContextMenuDisplayed,
@@ -37,12 +32,9 @@ export function useAutoCompletion({
 
   useLayoutEffect(() => {
     if (textAreaElement) {
-      const completionItems =
-        partialKeyword.length > 1
-          ? AUTO_COMPLETION_ITEMS.filter(({ keyword }) =>
-              keyword.startsWith(partialKeyword)
-            )
-          : [];
+      const { completionItems, correctedPartialKeyword } = getCompletionItems(
+        partialKeyword
+      );
 
       if (completionItems.length > 0) {
         showContextMenu({
@@ -53,21 +45,22 @@ export function useAutoCompletion({
                 getCompletion(
                   template,
                   cursorOffset,
-                  partialKeyword,
+                  correctedPartialKeyword,
                   lineIndent
                 )
               ),
             title: (
               <>
-                <mark>{partialKeyword}</mark>
-                {keyword.slice(partialKeyword.length)}
+                <mark>{correctedPartialKeyword}</mark>
+                {keyword.slice(correctedPartialKeyword.length)}
               </>
             ),
           })),
           makeFirstItemActive: true,
+          onActivate: setActiveIndex,
           position: getCursorPosition(
             textAreaElement,
-            cursorOffset - partialKeyword.length
+            cursorOffset - correctedPartialKeyword.length
           ),
         });
 
@@ -88,24 +81,25 @@ export function useAutoCompletion({
   return {
     hasCompletionItems: isContextMenuDisplayed,
     complete: useCallback(() => {
-      const completionItem = AUTO_COMPLETION_ITEMS.find(({ keyword }) =>
-        keyword.startsWith(partialKeyword)
+      const { completionItems, correctedPartialKeyword } = getCompletionItems(
+        partialKeyword
       );
+      const completionItem = completionItems[activeIndex];
 
       if (completionItem !== undefined) {
         const { template } = completionItem;
 
         onCompletion(
-          getCompletion(template, cursorOffset, partialKeyword, lineIndent)
+          getCompletion(
+            template,
+            cursorOffset,
+            correctedPartialKeyword,
+            lineIndent
+          )
         );
       }
-    }, [cursorOffset, lineIndent, onCompletion, partialKeyword]),
+    }, [activeIndex, cursorOffset, lineIndent, onCompletion, partialKeyword]),
   };
-}
-
-interface CompletionItem {
-  keyword: string;
-  template: string;
 }
 
 function getCompletion(
@@ -127,6 +121,37 @@ function getCompletion(
     .replace(/\n/g, `\n${' '.repeat(lineIndent)}`);
 
   return { completion, newCursorOffset };
+}
+
+function getCompletionItems(
+  partialKeyword: string
+): { completionItems: CompletionItem[]; correctedPartialKeyword: string } {
+  let correctedPartialKeyword = partialKeyword;
+  let completionItems = [] as CompletionItem[];
+
+  if (/^[^.]{2,}\.[^.]*$/.test(partialKeyword)) {
+    const [objectName, objectPartialProperty = ''] = partialKeyword.split('.');
+
+    if (OBJECTS_COMPLETION_MAP[objectName] !== undefined) {
+      completionItems = OBJECTS_COMPLETION_MAP[objectName].filter(
+        ({ keyword }) =>
+          keyword.length > objectPartialProperty.length &&
+          keyword.startsWith(objectPartialProperty)
+      );
+      correctedPartialKeyword = objectPartialProperty;
+    }
+  } else {
+    completionItems =
+      partialKeyword.length > 1
+        ? GLOBAL_COMPLETION_ITEMS.filter(
+            ({ keyword }) =>
+              keyword.length > partialKeyword.length &&
+              keyword.startsWith(partialKeyword)
+          )
+        : [];
+  }
+
+  return { completionItems, correctedPartialKeyword };
 }
 
 interface Completion {

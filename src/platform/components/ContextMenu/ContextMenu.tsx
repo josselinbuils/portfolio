@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks';
 import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
@@ -12,11 +12,14 @@ export const ContextMenu: FC<Props> = ({
   items,
   onHide,
   makeFirstItemActive = false,
+  onActivate = () => {},
   position,
   style,
 }) => {
   const defaultActiveIndex = makeFirstItemActive ? 0 : -1;
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+
+  useEffect(() => onActivate(activeIndex), [activeIndex, onActivate]);
 
   useKeyMap({
     ArrowDown: () =>
@@ -51,6 +54,7 @@ export const ContextMenu: FC<Props> = ({
           active={index === activeIndex}
           key={index}
           icon={icon}
+          onMouseEnter={() => setActiveIndex(index)}
           onClick={() => {
             onClick();
             onHide();

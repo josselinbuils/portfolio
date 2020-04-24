@@ -48,7 +48,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       setCursorOffset(newCursorOffset);
     }, []),
     partialKeyword: autoCompleteActive
-      ? code.slice(0, cursorOffset).split(' ').slice(-1)[0]
+      ? code
+          .slice(0, cursorOffset)
+          .split(/[ ([]|(\${)/)
+          .slice(-1)[0]
       : '',
     textAreaElement: textAreaElementRef.current,
   });

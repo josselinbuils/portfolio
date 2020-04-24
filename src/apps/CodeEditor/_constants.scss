@@ -4,13 +4,25 @@ $backgroundSecondaryColor: #2b2b2b;
 $backgroundTertiaryColor: #383a3d;
 $borderColorPrimary: darken($backgroundPrimaryColor, 5%);
 $borderColorTertiary: #606060;
-$fontFamily: Source Code Pro, PT Mono, Consolas, Monaco, Andale Mono,
-  Ubuntu Mono, monospace;
+$fontFamily: 'JetBrainsMono', monospace;
 $fontSize: 1.2rem;
 $lineHeight: 1.2;
 $textPrimaryColor: #c3c3c3;
 $textSecondaryColor: #a3b7c6;
 $textTertiaryColor: #70808c;
+
+@font-face {
+  font-family: 'JetBrainsMono';
+  font-weight: 400;
+  font-style: normal;
+
+  src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2')
+      format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff')
+      format('woff'),
+    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/ttf/JetBrainsMono-Regular.ttf')
+      format('truetype');
+}
 
 @mixin scrollbar {
   &::-webkit-scrollbar {

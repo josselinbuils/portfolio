@@ -1,6 +1,11 @@
 @import '../../constants';
 
 .autoCompletionMenu {
+  @include scrollbar;
+
+  overflow: auto;
+  min-width: 15rem;
+  max-height: 12rem;
   margin-top: 1.7rem;
   margin-left: -0.7rem;
   border: 0.1rem solid #2e2e2e;
