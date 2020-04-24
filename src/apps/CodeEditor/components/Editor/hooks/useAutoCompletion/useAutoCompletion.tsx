@@ -133,20 +133,16 @@ function getCompletionItems(
     const [objectName, objectPartialProperty = ''] = partialKeyword.split('.');
 
     if (OBJECTS_COMPLETION_MAP[objectName] !== undefined) {
-      completionItems = OBJECTS_COMPLETION_MAP[objectName].filter(
-        ({ keyword }) =>
-          keyword.length > objectPartialProperty.length &&
-          keyword.startsWith(objectPartialProperty)
-      );
+      completionItems = OBJECTS_COMPLETION_MAP[
+        objectName
+      ].filter(({ keyword }) => keyword.startsWith(objectPartialProperty));
       correctedPartialKeyword = objectPartialProperty;
     }
   } else {
     completionItems =
       partialKeyword.length > 1
-        ? GLOBAL_COMPLETION_ITEMS.filter(
-            ({ keyword }) =>
-              keyword.length > partialKeyword.length &&
-              keyword.startsWith(partialKeyword)
+        ? GLOBAL_COMPLETION_ITEMS.filter(({ keyword }) =>
+            keyword.startsWith(partialKeyword)
           )
         : [];
   }

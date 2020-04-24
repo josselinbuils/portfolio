@@ -71,9 +71,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         }
         const indent = getLineIndent(code, cursorOffset);
         const indentSpaces = ' '.repeat(indent);
-        const additionalSpaces = isOpenBracket(code[cursorOffset - 1])
-          ? INDENT_SPACES
-          : '';
+        const additionalSpaces =
+          isOpenBracket(code[cursorOffset - 1]) ||
+          code[cursorOffset - 1] === ':'
+            ? INDENT_SPACES
+            : '';
 
         if (isIntoBrackets(code, cursorOffset)) {
           docExec.insertText(
