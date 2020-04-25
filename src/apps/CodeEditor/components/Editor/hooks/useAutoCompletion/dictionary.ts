@@ -34,7 +34,11 @@ const keywordItems = [
   ['var', 'var '],
   ['void', 'void '],
   ['while', `while (${CURSOR}) {\n${INDENT}\n}`],
-].map(([keyword, template]) => ({ keyword, template })) as CompletionItem[];
+].map(([keyword, template]) => ({
+  displayName: keyword,
+  keyword,
+  template,
+})) as CompletionItem[];
 
 const globalItems = Object.getOwnPropertyNames(window)
   .sort()
