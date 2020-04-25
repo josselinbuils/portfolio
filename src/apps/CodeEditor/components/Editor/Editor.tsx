@@ -205,7 +205,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   function handleSelect({ target }: SyntheticEvent): void {
     const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
 
-    if (!isCodePortionEnd(code, cursorOffset)) {
+    if (!isCodePortionEnd(code, newCursorOffset)) {
       setAutoCompleteActive(false);
     }
     setCursorOffset(newCursorOffset);
