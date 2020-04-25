@@ -14,7 +14,7 @@ import React, {
 import { useKeyMap } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers } from './components';
-import { END_CODE_PORTION_CHARS, INDENT } from './constants';
+import { INDENT } from './constants';
 import { useAutoCompletion } from './hooks';
 import {
   docExec,
@@ -23,7 +23,7 @@ import {
   getLineBeforeCursor,
   getLineIndent,
   isAutoCloseChar,
-  isCodePortion,
+  isCodePortionEnd,
   isIntoAutoCloseGroup,
   isIntoBrackets,
   isOpenBracket,
@@ -182,8 +182,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         .replace(code.slice(0, cursorOffset), '')
         .replace(code.slice(cursorOffset), '');
       const autoCloseChar = getAutoCloseChar(diff);
+      const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
 
-      if (autoCloseChar !== undefined && isCodePortion(code, cursorOffset)) {
+      if (autoCloseChar !== undefined && allowAutoComplete) {
         docExec.insertText(autoCloseChar);
         setCursorOffset(cursorOffset + 1);
       } else if (
@@ -193,7 +194,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         docExec.forwardDelete();
       }
 
-      if (END_CODE_PORTION_CHARS.includes(value[cursorOffset + 1])) {
+      if (allowAutoComplete && !autoCompleteActive) {
         setAutoCompleteActive(true);
       }
     } else {
@@ -204,7 +205,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   function handleSelect({ target }: SyntheticEvent): void {
     const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
 
-    if (!END_CODE_PORTION_CHARS.includes(code[newCursorOffset])) {
+    if (!isCodePortionEnd(code, cursorOffset)) {
       setAutoCompleteActive(false);
     }
     setCursorOffset(newCursorOffset);

@@ -6,7 +6,7 @@ export * from './getCursorPosition';
 export * from './getLineBeforeCursor';
 export * from './getLineIndent';
 export * from './isAutoCloseChar';
-export * from './isCodePortion';
+export * from './isCodePortionEnd';
 export * from './isIntoAutoCloseGroup';
 export * from './isIntoBrackets';
 export * from './isOpenBracket';
