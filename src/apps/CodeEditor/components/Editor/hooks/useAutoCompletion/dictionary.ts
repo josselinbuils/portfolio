@@ -1,3 +1,4 @@
+import { INDENT } from '../../constants';
 import { CompletionItem } from './CompletionItem';
 
 export const CURSOR = '[CURSOR]';
@@ -10,29 +11,29 @@ const KEYWORDS = [
   ['const', 'const '],
   ['debugger', 'debugger;'],
   ['delete', 'delete '],
-  ['default', 'default:\n  '],
-  ['do', `do {\n  ${CURSOR}\n} while();`],
+  ['default', `default:\n${INDENT}`],
+  ['do', `do {\n${INDENT}${CURSOR}\n} while();`],
   ['else', 'else '],
   ['false', 'false'],
-  ['finally', `finally {\n  ${CURSOR}\n}`],
-  ['for', `for (${CURSOR}) {\n  \n}`],
-  ['function', `function ${CURSOR}() {\n  \n}`],
+  ['finally', `finally {\n${INDENT}${CURSOR}\n}`],
+  ['for', `for (${CURSOR}) {\n${INDENT}\n}`],
+  ['function', `function ${CURSOR}() {\n${INDENT}\n}`],
   ['if', `if (${CURSOR})`],
   ['instanceof', 'instanceof '],
   ['let', 'let '],
   ['new', 'new '],
   ['null', 'null'],
   ['return', 'return '],
-  ['switch', `switch (${CURSOR}) {\n  \n}`],
+  ['switch', `switch (${CURSOR}) {\n${INDENT}\n}`],
   ['this', 'this'],
   ['throw', 'throw'],
   ['true', 'true'],
-  ['try', `try {\n  ${CURSOR}\n} catch (error) {}`],
+  ['try', `try {\n${INDENT}${CURSOR}\n} catch (error) {}`],
   ['typeof', 'typeof '],
   ['undefined', 'undefined'],
   ['var', 'var '],
   ['void', 'void '],
-  ['while', `while (${CURSOR}) {\n  \n}`],
+  ['while', `while (${CURSOR}) {\n${INDENT}\n}`],
 ].map(([keyword, template]) => ({ keyword, template })) as CompletionItem[];
 
 const GLOBALS = Object.getOwnPropertyNames(window).map((keyword) =>

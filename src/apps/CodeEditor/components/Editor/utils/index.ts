@@ -5,6 +5,7 @@ export * from './getAutoCloseChar';
 export * from './getCursorPosition';
 export * from './getLineIndent';
 export * from './isAutoCloseChar';
+export * from './isCodePortion';
 export * from './isIntoAutoCloseGroup';
 export * from './isIntoBrackets';
 export * from './isOpenBracket';

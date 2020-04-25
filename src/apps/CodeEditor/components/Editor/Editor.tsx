@@ -14,7 +14,7 @@ import React, {
 import { useKeyMap } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers } from './components';
-import { END_WORD_CHARS, INDENT_SPACES } from './constants';
+import { END_CODE_PORTION_CHARS, INDENT } from './constants';
 import { useAutoCompletion } from './hooks';
 import {
   docExec,
@@ -22,6 +22,7 @@ import {
   getAutoCloseChar,
   getLineIndent,
   isAutoCloseChar,
+  isCodePortion,
   isIntoAutoCloseGroup,
   isIntoBrackets,
   isOpenBracket,
@@ -50,7 +51,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     partialKeyword: autoCompleteActive
       ? code
           .slice(0, cursorOffset)
-          .split(/[ ([]|(\${)/)
+          .split(/[ ([{]/)
           .slice(-1)[0]
       : '',
     textAreaElement: textAreaElementRef.current,
@@ -74,7 +75,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         const additionalSpaces =
           isOpenBracket(code[cursorOffset - 1]) ||
           code[cursorOffset - 1] === ':'
-            ? INDENT_SPACES
+            ? INDENT
             : '';
 
         if (isIntoBrackets(code, cursorOffset)) {
@@ -90,7 +91,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         if (hasCompletionItems) {
           complete();
         } else {
-          docExec.insertText(INDENT_SPACES);
+          docExec.insertText(INDENT);
         }
       },
     },
@@ -151,7 +152,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         .replace(code.slice(cursorOffset), '');
       const autoCloseChar = getAutoCloseChar(diff);
 
-      if (autoCloseChar !== undefined) {
+      if (autoCloseChar !== undefined && isCodePortion(code, cursorOffset)) {
         docExec.insertText(autoCloseChar);
         setCursorOffset(cursorOffset + 1);
       } else if (
@@ -161,7 +162,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         docExec.forwardDelete();
       }
 
-      if (END_WORD_CHARS.includes(value[cursorOffset + 1])) {
+      if (END_CODE_PORTION_CHARS.includes(value[cursorOffset + 1])) {
         setAutoCompleteActive(true);
       }
     } else if (autoCompleteActive) {
@@ -172,7 +173,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   function handleSelect({ target }: SyntheticEvent): void {
     const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
 
-    if (!END_WORD_CHARS.includes(code[newCursorOffset])) {
+    if (!END_CODE_PORTION_CHARS.includes(code[newCursorOffset])) {
       setAutoCompleteActive(false);
     }
     setCursorOffset(newCursorOffset);
