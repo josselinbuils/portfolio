@@ -2,7 +2,7 @@ import { blobToBase64 } from './blobToBase64';
 import { getTextWidth } from './getTextWidth';
 
 const BASE_FONT_SIZE_PX = 12;
-const BORDER_RADIUS_PX = 4;
+const BORDER_RADIUS_PX = 6;
 const LINE_HEIGHT = 1.2;
 const PADDING_EM = 1;
 const WOFF_FONT_URL =
@@ -17,7 +17,7 @@ export async function renderSVG(
   const base64Font = await blobToBase64(font);
   const borderRadius = BORDER_RADIUS_PX * scale;
   const fontSize = BASE_FONT_SIZE_PX * scale;
-  const lines = code.split('\n');
+  const lines = code.trim().split('\n');
   const maxLengthLine = lines.reduce(
     (str, line) => (line.length > str.length ? line : str),
     ''
