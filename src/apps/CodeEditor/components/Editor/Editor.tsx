@@ -87,6 +87,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           docExec.insertText(`\n${indentSpaces}${additionalSpaces}`);
         }
       },
+      Escape: () => {
+        if (autoCompleteActive) {
+          setAutoCompleteActive(false);
+        }
+      },
       Tab: () => {
         if (hasCompletionItems) {
           complete();
@@ -131,6 +136,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }, [scrollTop]);
 
+  function disableAutoCompletion(): void {
+    if (autoCompleteActive) {
+      setAutoCompleteActive(false);
+    }
+  }
+
   function format(): void {
     try {
       const formatted = formatCode(code, cursorOffset);
@@ -165,8 +176,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       if (END_CODE_PORTION_CHARS.includes(value[cursorOffset + 1])) {
         setAutoCompleteActive(true);
       }
-    } else if (autoCompleteActive) {
-      setAutoCompleteActive(false);
+    } else {
+      disableAutoCompletion();
     }
   }
 
@@ -195,6 +206,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         className={styles.textarea}
         onBlur={() => setActive(false)}
         onChange={handleChange}
+        onMouseDown={disableAutoCompletion}
         onFocus={() => setActive(true)}
         onScroll={({ target }) =>
           setScrollTop((target as HTMLTextAreaElement).scrollTop)
