@@ -1,12 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
 import { getCursorPosition } from '../../utils';
-import { CompletionItem } from './CompletionItem';
-import {
-  CURSOR,
-  GLOBAL_COMPLETION_ITEMS,
-  OBJECTS_COMPLETION_MAP,
-} from './dictionary';
+import { getCompletion, getCompletionItems } from './utils';
 
 export function useAutoCompletion({
   cursorOffset,
@@ -26,7 +21,7 @@ export function useAutoCompletion({
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const {
     hideContextMenu,
-    isContextMenuDisplayed,
+    isContextMenuDisplayed: hasCompletionItems,
     showContextMenu,
   } = useContextMenu();
 
@@ -78,76 +73,27 @@ export function useAutoCompletion({
     textAreaElement,
   ]);
 
-  return {
-    hasCompletionItems: isContextMenuDisplayed,
-    complete: useCallback(() => {
-      const { completionItems, correctedPartialKeyword } = getCompletionItems(
-        partialKeyword
+  const complete = useCallback(() => {
+    const { completionItems, correctedPartialKeyword } = getCompletionItems(
+      partialKeyword
+    );
+    const completionItem = completionItems[activeIndex];
+
+    if (completionItem !== undefined) {
+      const { template } = completionItem;
+
+      onCompletion(
+        getCompletion(
+          template,
+          cursorOffset,
+          correctedPartialKeyword,
+          lineIndent
+        )
       );
-      const completionItem = completionItems[activeIndex];
-
-      if (completionItem !== undefined) {
-        const { template } = completionItem;
-
-        onCompletion(
-          getCompletion(
-            template,
-            cursorOffset,
-            correctedPartialKeyword,
-            lineIndent
-          )
-        );
-      }
-    }, [activeIndex, cursorOffset, lineIndent, onCompletion, partialKeyword]),
-  };
-}
-
-function getCompletion(
-  template: string,
-  cursorOffset: number,
-  partialKeyword: string,
-  lineIndent: number
-): { completion: string; newCursorOffset: number } {
-  const cursorOffsetInTemplate = template.indexOf(CURSOR);
-
-  const newCursorOffset =
-    cursorOffset -
-    partialKeyword.length +
-    (cursorOffsetInTemplate !== -1 ? cursorOffsetInTemplate : template.length);
-
-  const completion = template
-    .slice(partialKeyword.length)
-    .replace(CURSOR, '')
-    .replace(/\n/g, `\n${' '.repeat(lineIndent)}`);
-
-  return { completion, newCursorOffset };
-}
-
-function getCompletionItems(
-  partialKeyword: string
-): { completionItems: CompletionItem[]; correctedPartialKeyword: string } {
-  let correctedPartialKeyword = partialKeyword;
-  let completionItems = [] as CompletionItem[];
-
-  if (/^[^.]{2,}\.[^.]*$/.test(partialKeyword)) {
-    const [objectName, objectPartialProperty = ''] = partialKeyword.split('.');
-
-    if (OBJECTS_COMPLETION_MAP[objectName] !== undefined) {
-      completionItems = OBJECTS_COMPLETION_MAP[
-        objectName
-      ].filter(({ keyword }) => keyword.startsWith(objectPartialProperty));
-      correctedPartialKeyword = objectPartialProperty;
     }
-  } else {
-    completionItems =
-      partialKeyword.length > 1
-        ? GLOBAL_COMPLETION_ITEMS.filter(({ keyword }) =>
-            keyword.startsWith(partialKeyword)
-          )
-        : [];
-  }
+  }, [activeIndex, cursorOffset, lineIndent, onCompletion, partialKeyword]);
 
-  return { completionItems, correctedPartialKeyword };
+  return { hasCompletionItems, complete };
 }
 
 interface Completion {
