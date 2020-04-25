@@ -6,6 +6,7 @@ export * from './getAutoCloseChar';
 export * from './getCursorPosition';
 export * from './getLineBeforeCursor';
 export * from './getLineIndent';
+export * from './hightlightCode';
 export * from './isAutoCloseChar';
 export * from './isCodePortionEnd';
 export * from './isIntoAutoCloseGroup';

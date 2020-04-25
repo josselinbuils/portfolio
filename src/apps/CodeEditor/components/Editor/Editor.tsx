@@ -1,8 +1,6 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import cn from 'classnames';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-javascript.min';
 import React, {
   ChangeEvent,
   FC,
@@ -24,6 +22,7 @@ import {
   getAutoCloseChar,
   getLineBeforeCursor,
   getLineIndent,
+  highlightCode,
   isAutoCloseChar,
   isCodePortionEnd,
   isIntoAutoCloseGroup,
@@ -125,15 +124,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   );
 
   useLayoutEffect(() => {
-    const highlighted = Prism.highlight(
-      code,
-      Prism.languages.javascript,
-      'javascript'
-    );
-
-    setHighlightedCode(
-      highlighted.slice(-1) === '\n' ? `${highlighted} ` : highlighted
-    );
+    setHighlightedCode(highlightCode(code));
     setLineCount((code.match(/\n/g)?.length || 0) + 1);
     (textAreaElementRef.current as HTMLTextAreaElement).scrollTop = 1e10;
   }, [code]);
