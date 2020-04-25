@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks';
 import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
@@ -18,6 +18,27 @@ export const ContextMenu: FC<Props> = ({
 }) => {
   const defaultActiveIndex = makeFirstItemActive ? 0 : -1;
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+  const listElementRef = useRef<HTMLUListElement>(null);
+
+  useLayoutEffect(() => {
+    const listElement = listElementRef.current;
+
+    if (listElement === null) {
+      return;
+    }
+
+    const listHeight = listElement.clientHeight;
+    const itemHeight = (listElement.firstElementChild as HTMLElement)
+      .clientHeight;
+    const maxScrollTop = activeIndex * itemHeight;
+    const minScrollTop = maxScrollTop + itemHeight - listHeight;
+
+    if (listElement.scrollTop > maxScrollTop) {
+      listElement.scrollTop = maxScrollTop;
+    } else if (listElement.scrollTop < minScrollTop) {
+      listElement.scrollTop = minScrollTop;
+    }
+  }, [activeIndex]);
 
   useEffect(() => onActivate(activeIndex), [activeIndex, onActivate]);
 
@@ -48,6 +69,7 @@ export const ContextMenu: FC<Props> = ({
         left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
         top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
       }}
+      ref={listElementRef}
     >
       {items.map(({ onClick, icon, title }, index) => (
         <ContextMenuItem
