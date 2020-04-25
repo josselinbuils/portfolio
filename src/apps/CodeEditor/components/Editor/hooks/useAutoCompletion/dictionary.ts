@@ -56,6 +56,8 @@ function mapObject(obj: any, keyword: string): CompletionItem {
   return {
     keyword,
     template:
-      typeof obj[keyword] === 'function' ? `${keyword}(${CURSOR})` : keyword,
+      typeof obj[keyword] === 'function' && /^[^A-Z]/.test(keyword)
+        ? `${keyword}(${CURSOR})`
+        : keyword,
   };
 }
