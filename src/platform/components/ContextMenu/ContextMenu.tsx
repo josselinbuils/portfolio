@@ -54,7 +54,11 @@ export const ContextMenu: FC<Props> = ({
           active={index === activeIndex}
           key={index}
           icon={icon}
-          onMouseEnter={() => setActiveIndex(index)}
+          onMouseMove={() => {
+            if (activeIndex !== index) {
+              setActiveIndex(index);
+            }
+          }}
           onClick={() => {
             onClick();
             onHide();

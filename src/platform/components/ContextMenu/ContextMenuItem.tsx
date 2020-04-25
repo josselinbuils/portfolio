@@ -7,7 +7,7 @@ import styles from './ContextMenuItem.module.scss';
 export const ContextMenuItem: FC<Props> = ({
   active,
   onClick,
-  onMouseEnter,
+  onMouseMove,
   icon,
   title,
 }) => (
@@ -15,7 +15,7 @@ export const ContextMenuItem: FC<Props> = ({
     aria-current={active}
     className={styles.item}
     onClick={onClick}
-    onMouseEnter={onMouseEnter}
+    onMouseMove={onMouseMove}
   >
     <div className={styles.icon}>{icon && <FontAwesomeIcon icon={icon} />}</div>
     <div className={styles.title}>{title}</div>
@@ -24,5 +24,5 @@ export const ContextMenuItem: FC<Props> = ({
 
 interface Props extends ContextMenuItemDescriptor {
   active: boolean;
-  onMouseEnter(): void;
+  onMouseMove(): void;
 }
