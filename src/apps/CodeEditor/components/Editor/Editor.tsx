@@ -50,8 +50,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       setCursorOffset(newCursorOffset);
     }, []),
     partialKeyword: autoCompleteActive
-      ? (code
-          .slice(0, cursorOffset)
+      ? (getLineBeforeCursor(code, cursorOffset)
           .split(/[ ([{]/)
           .pop() as string)
       : '',
