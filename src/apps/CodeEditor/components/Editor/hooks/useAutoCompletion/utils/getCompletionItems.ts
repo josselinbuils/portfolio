@@ -7,8 +7,9 @@ export function getCompletionItems(
   let correctedPartialKeyword = partialKeyword;
   let completionItems = [] as CompletionItem[];
 
-  if (/^[^.]{2,}\.[^.]*$/.test(partialKeyword)) {
-    const [objectName, objectPartialProperty = ''] = partialKeyword.split('.');
+  if (partialKeyword.includes('.')) {
+    const objectName = partialKeyword.split('.').slice(0, -1).join('.');
+    const objectPartialProperty = partialKeyword.split('.').pop() as string;
 
     if (OBJECTS_COMPLETION_MAP[objectName] !== undefined) {
       completionItems = OBJECTS_COMPLETION_MAP[

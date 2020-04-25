@@ -34,7 +34,7 @@ export function useAutoCompletion({
       if (completionItems.length > 0) {
         showContextMenu({
           className: menuClassName,
-          items: completionItems.map(({ keyword, template }) => ({
+          items: completionItems.map(({ displayName, template }) => ({
             onClick: () =>
               onCompletion(
                 getCompletion(
@@ -47,7 +47,7 @@ export function useAutoCompletion({
             title: (
               <>
                 <mark>{correctedPartialKeyword}</mark>
-                {keyword.slice(correctedPartialKeyword.length)}
+                {displayName.slice(correctedPartialKeyword.length)}
               </>
             ),
           })),

@@ -36,41 +36,87 @@ const keywordItems = [
   ['while', `while (${CURSOR}) {\n${INDENT}\n}`],
 ].map(([keyword, template]) => ({ keyword, template })) as CompletionItem[];
 
-const globals = Object.getOwnPropertyNames(window)
+const globalItems = Object.getOwnPropertyNames(window)
   .sort()
-  .filter(createPropFilter(window));
-const globalItems = globals.map(createObjectMapper(window));
+  .filter((name) => !!(window as any)[name] && isNativeProp(name))
+  .map(createObjectMapper(window));
 
 export const GLOBAL_COMPLETION_ITEMS = [...keywordItems, ...globalItems];
 
 export const OBJECTS_COMPLETION_MAP = {} as { [key: string]: CompletionItem[] };
 
-globals.forEach((name) => {
-  const parent = (window as any)[name];
-  const items = Object.getOwnPropertyNames(parent)
-    .sort()
-    .filter(createPropFilter(parent))
-    .map(createObjectMapper(parent));
+let antiCircularCache = [] as any[];
 
-  if (items.length > 0) {
-    OBJECTS_COMPLETION_MAP[name] = items;
-  }
-});
+mapObject('', window);
+
+antiCircularCache = [];
+
+mapObject('window', window);
+
+// Forces garbage collection
+antiCircularCache.length = 0;
 
 function createObjectMapper(obj: any): (keyword: string) => CompletionItem {
-  return (keyword) => ({
-    keyword,
-    template:
-      typeof obj[keyword] === 'function' && /^[^A-Z]/.test(keyword)
-        ? `${keyword}(${CURSOR})`
-        : keyword,
-  });
+  return (keyword) => {
+    const isFunc = isFunction(obj[keyword]);
+
+    return {
+      displayName: isFunc ? `${keyword}()` : keyword,
+      keyword,
+      template: isFunc ? `${keyword}(${CURSOR})` : keyword,
+    };
+  };
 }
 
 function createPropFilter(parent: any): (name: string) => boolean {
   return (name) =>
     !!parent[name] &&
-    /^[^A-Z_]/.test(name) &&
+    (typeof parent[name] !== 'function' || /^[^A-Z]/.test(name)) &&
+    isNativeProp(name);
+}
+
+function isFunction(value: any): boolean {
+  return typeof value === 'function' && /^[^A-Z]/.test(value.name);
+}
+
+function isPrimitive(value: any): boolean {
+  const type = typeof value;
+  return (
+    value === null ||
+    value === undefined ||
+    (type !== 'object' && type !== 'function')
+  );
+}
+
+function isNativeProp(name: string): boolean {
+  return (
+    !name.startsWith('_') &&
+    !name.startsWith('FontAwesome') &&
+    !name.startsWith('Prism') &&
+    !name.startsWith('regeneratorRuntime') &&
     !name.startsWith('webkit') &&
-    !name.startsWith('webpack');
+    !name.startsWith('webpack')
+  );
+}
+
+function mapObject(path: string, obj: any): void {
+  if (isFunction(obj) || isPrimitive(obj) || antiCircularCache.includes(obj)) {
+    return;
+  }
+  antiCircularCache.push(obj);
+
+  try {
+    const items = Object.getOwnPropertyNames(obj)
+      .filter(createPropFilter(obj))
+      .sort()
+      .map(createObjectMapper(obj));
+
+    items.forEach(({ keyword }) =>
+      mapObject(`${path && `${path}.`}${keyword}`, obj[keyword])
+    );
+
+    if (path.length > 0 && items.length > 0) {
+      OBJECTS_COMPLETION_MAP[path] = items;
+    }
+  } catch (error) {}
 }
