@@ -3,7 +3,7 @@ import { CompletionItem } from './CompletionItem';
 
 export const CURSOR = '[CURSOR]';
 
-const KEYWORDS = [
+const keywordItems = [
   ['break', 'break;'],
   ['catch', `catch (error) {${CURSOR}}`],
   ['case', `case ${CURSOR}:`],
@@ -36,28 +36,41 @@ const KEYWORDS = [
   ['while', `while (${CURSOR}) {\n${INDENT}\n}`],
 ].map(([keyword, template]) => ({ keyword, template })) as CompletionItem[];
 
-const GLOBALS = Object.getOwnPropertyNames(window).map((keyword) =>
-  mapObject(window, keyword)
-);
+const globals = Object.getOwnPropertyNames(window)
+  .sort()
+  .filter(createPropFilter(window));
+const globalItems = globals.map(createObjectMapper(window));
 
-export const GLOBAL_COMPLETION_ITEMS = [...KEYWORDS, ...GLOBALS];
+export const GLOBAL_COMPLETION_ITEMS = [...keywordItems, ...globalItems];
 
 export const OBJECTS_COMPLETION_MAP = {} as { [key: string]: CompletionItem[] };
 
-Object.getOwnPropertyNames(window)
-  .filter((name) => !!(window as any)[name])
-  .forEach((name) => {
-    OBJECTS_COMPLETION_MAP[name] = Object.getOwnPropertyNames(
-      (window as any)[name]
-    ).map((keyword) => mapObject((window as any)[name], keyword));
-  });
+globals.forEach((name) => {
+  const parent = (window as any)[name];
+  const items = Object.getOwnPropertyNames(parent)
+    .sort()
+    .filter(createPropFilter(parent))
+    .map(createObjectMapper(parent));
 
-function mapObject(obj: any, keyword: string): CompletionItem {
-  return {
+  if (items.length > 0) {
+    OBJECTS_COMPLETION_MAP[name] = items;
+  }
+});
+
+function createObjectMapper(obj: any): (keyword: string) => CompletionItem {
+  return (keyword) => ({
     keyword,
     template:
       typeof obj[keyword] === 'function' && /^[^A-Z]/.test(keyword)
         ? `${keyword}(${CURSOR})`
         : keyword,
-  };
+  });
+}
+
+function createPropFilter(parent: any): (name: string) => boolean {
+  return (name) =>
+    !!parent[name] &&
+    /^[^A-Z_]/.test(name) &&
+    !name.startsWith('webkit') &&
+    !name.startsWith('webpack');
 }
