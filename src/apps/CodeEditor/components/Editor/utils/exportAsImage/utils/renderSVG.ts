@@ -3,7 +3,7 @@ import { getTextWidth } from './getTextWidth';
 
 const BASE_FONT_SIZE_PX = 12;
 const BORDER_RADIUS_PX = 6;
-const LINE_HEIGHT = 1.2;
+const LINE_HEIGHT = 1.25;
 const PADDING_EM = 1;
 const WOFF_FONT_URL =
   'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff';
@@ -24,12 +24,14 @@ export async function renderSVG(
   );
   const maxLengthLineWidth = getTextWidth(
     maxLengthLine,
-    `${BASE_FONT_SIZE_PX}px/${LINE_HEIGHT} 'JetBrainsMono'`
+    `${BASE_FONT_SIZE_PX}px 'JetBrainsMono'`
   );
-  const width =
-    (maxLengthLineWidth + PADDING_EM * BASE_FONT_SIZE_PX * 2) * scale;
-  const height =
-    BASE_FONT_SIZE_PX * (LINE_HEIGHT * lines.length + PADDING_EM * 2) * scale;
+  const width = Math.ceil(
+    (maxLengthLineWidth + PADDING_EM * BASE_FONT_SIZE_PX * 2) * scale
+  );
+  const height = Math.ceil(
+    BASE_FONT_SIZE_PX * (LINE_HEIGHT * lines.length + PADDING_EM * 2) * scale
+  );
 
   const svg = `
 <!--suppress ALL -->
