@@ -3,6 +3,7 @@ export * from './docExec';
 export * from './formatCode';
 export * from './getAutoCloseChar';
 export * from './getCursorPosition';
+export * from './getLineBeforeCursor';
 export * from './getLineIndent';
 export * from './isAutoCloseChar';
 export * from './isCodePortion';

@@ -20,6 +20,7 @@ import {
   docExec,
   formatCode,
   getAutoCloseChar,
+  getLineBeforeCursor,
   getLineIndent,
   isAutoCloseChar,
   isCodePortion,
@@ -49,10 +50,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       setCursorOffset(newCursorOffset);
     }, []),
     partialKeyword: autoCompleteActive
-      ? code
+      ? (code
           .slice(0, cursorOffset)
           .split(/[ ([{]/)
-          .slice(-1)[0]
+          .pop() as string)
       : '',
     textAreaElement: textAreaElementRef.current,
   });
@@ -62,6 +63,16 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       Backspace: () => {
         if (isIntoAutoCloseGroup(code, cursorOffset)) {
           docExec.forwardDelete();
+        } else {
+          const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
+
+          if (/^ +$/.test(lineBeforeCursor)) {
+            setSelectionRange(
+              cursorOffset - lineBeforeCursor.length,
+              cursorOffset
+            );
+            docExec.delete();
+          }
         }
         return false;
       },
@@ -90,6 +101,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       Escape: () => {
         if (autoCompleteActive) {
           setAutoCompleteActive(false);
+        }
+      },
+      'Shift+Tab': () => {
+        if (code.slice(cursorOffset - INDENT.length, cursorOffset) === INDENT) {
+          setSelectionRange(cursorOffset - INDENT.length, cursorOffset);
+          docExec.delete();
         }
       },
       Tab: () => {
@@ -188,6 +205,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       setAutoCompleteActive(false);
     }
     setCursorOffset(newCursorOffset);
+  }
+
+  function setSelectionRange(start: number, end: number): void {
+    if (textAreaElementRef.current !== null) {
+      textAreaElementRef.current.setSelectionRange(start, end);
+    }
   }
 
   return (
