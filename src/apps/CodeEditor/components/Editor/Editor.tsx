@@ -61,20 +61,24 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   useKeyMap(
     {
       Backspace: () => {
+        if (isThereSelection()) {
+          return false;
+        }
+
         if (isIntoAutoCloseGroup(code, cursorOffset)) {
-          docExec.forwardDelete();
+          deleteRange(cursorOffset - 1, cursorOffset + 1);
         } else {
           const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
 
           if (/^ +$/.test(lineBeforeCursor)) {
-            setSelectionRange(
-              cursorOffset - lineBeforeCursor.length,
+            deleteRange(
+              cursorOffset - lineBeforeCursor.length - 1,
               cursorOffset
             );
-            docExec.delete();
+          } else {
+            return false;
           }
         }
-        return false;
       },
       'Control+S,Meta+S': format,
       Enter: () => {
@@ -105,8 +109,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       },
       'Shift+Tab': () => {
         if (code.slice(cursorOffset - INDENT.length, cursorOffset) === INDENT) {
-          setSelectionRange(cursorOffset - INDENT.length, cursorOffset);
-          docExec.delete();
+          deleteRange(cursorOffset - INDENT.length, cursorOffset);
         }
       },
       Tab: () => {
@@ -207,10 +210,19 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     setCursorOffset(newCursorOffset);
   }
 
-  function setSelectionRange(start: number, end: number): void {
+  function deleteRange(start: number, end: number): void {
     if (textAreaElementRef.current !== null) {
       textAreaElementRef.current.setSelectionRange(start, end);
+      docExec.delete();
     }
+  }
+
+  function isThereSelection(): boolean {
+    if (textAreaElementRef.current !== null) {
+      const { selectionEnd, selectionStart } = textAreaElementRef.current;
+      return selectionEnd !== selectionStart;
+    }
+    return false;
   }
 
   return (
