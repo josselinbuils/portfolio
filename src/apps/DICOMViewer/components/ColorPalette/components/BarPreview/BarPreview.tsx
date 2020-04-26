@@ -46,6 +46,6 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
 };
 
 interface Props {
-  className: string;
+  className?: string;
   lutComponents: LUTComponent[];
 }

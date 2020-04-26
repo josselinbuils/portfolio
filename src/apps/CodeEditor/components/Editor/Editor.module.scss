@@ -48,9 +48,9 @@
   font-size: $fontSize;
   line-height: $lineHeight;
   position: absolute;
-  top: 0;
+  top: 2.7rem;
   bottom: 0;
-  left: 6.5rem;
+  left: 7rem;
   overflow-y: auto;
   box-sizing: border-box;
   width: calc(100% - 6.5rem);
@@ -70,9 +70,16 @@
 
 .lineNumbers {
   position: absolute;
-  top: 0;
+  top: 2.7rem;
   bottom: 0;
-  left: 2.5rem;
+  left: 3rem;
+}
+
+.tabs {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 3rem;
 }
 
 .toolbar {
@@ -80,7 +87,6 @@
   top: 0;
   bottom: 0;
   left: 0;
-  border-right: 0.1rem solid $borderColorPrimary;
 }
 
 .textarea {

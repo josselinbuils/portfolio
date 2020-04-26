@@ -1,14 +1,18 @@
 import cn from 'classnames';
 import React, { Children, cloneElement, FC, ReactElement } from 'react';
 
-import styles from './Toolbar.module.scss';
+import styles from './Tabs.module.scss';
 
-export const Toolbar: FC<Props> = ({ children, className }) => {
+export const Tabs: FC<Props> = ({ children, className, label }) => {
   return (
-    <div className={cn(styles.toolbar, className)}>
+    <div
+      aria-label={label}
+      className={cn(styles.tabs, className)}
+      role="tablist"
+    >
       {Children.map(children, (child: ReactElement) =>
         cloneElement(child, {
-          className: cn(child.props.className, styles.toolButton),
+          className: cn(child.props.className, styles.tab),
         })
       )}
     </div>
@@ -18,4 +22,5 @@ export const Toolbar: FC<Props> = ({ children, className }) => {
 interface Props {
   children: ReactElement | ReactElement[];
   className?: string;
+  label: string;
 }

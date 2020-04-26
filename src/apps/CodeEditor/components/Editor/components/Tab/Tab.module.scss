@@ -1,0 +1,43 @@
+@import '../../../../constants';
+
+.icon {
+  font-size: 1.4rem;
+  margin-right: 0.7rem;
+}
+
+.tab {
+  $color: #b8babc;
+
+  font-family: $fontFamily;
+  font-size: 1.1rem;
+  position: relative;
+  display: inline-flex;
+  align-content: center;
+  height: 2.6rem;
+  padding: 0 0.8rem;
+  color: $color;
+  border: none;
+  outline: none;
+  background: none;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &:not(:disabled) {
+    &:hover,
+    &[aria-selected='true'] {
+      background: lighten($backgroundPrimaryColor, 10%);
+    }
+
+    &[aria-selected='true']::after {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 0.3rem;
+      content: '';
+      background: #007ad8;
+    }
+  }
+}

@@ -12,7 +12,7 @@ import React, {
 } from 'react';
 import { useKeyMap } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
-import { LineNumbers } from './components';
+import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
 import { useAutoCompletion } from './hooks';
 import {
@@ -219,6 +219,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   return (
     <div className={cn(styles.editor, className)}>
+      <Tabs className={styles.tabs} label="Files">
+        <Tab selected>Local</Tab>
+      </Tabs>
       <LineNumbers
         className={styles.lineNumbers}
         lineCount={lineCount}
@@ -250,7 +253,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           onClick={format}
           title={
             <>
-              Format&nbsp;<kbd>Ctrl</kbd>+<kbd>S</kbd>
+              Format<kbd>Ctrl</kbd>+<kbd>S</kbd>
             </>
           }
         />

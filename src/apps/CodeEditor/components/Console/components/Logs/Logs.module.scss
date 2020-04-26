@@ -33,11 +33,6 @@
   @include scrollbar();
 
   font-size: 1.2rem;
-  position: absolute;
-  top: 2.5rem;
-  right: 0;
-  bottom: 0;
-  left: 2.5rem;
   overflow-y: auto;
   box-sizing: border-box;
   white-space: pre-wrap;

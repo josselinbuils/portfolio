@@ -2,6 +2,15 @@
 
 .toolbar {
   box-sizing: border-box;
-  width: 2.5rem;
+  width: 3rem;
+  padding: 0.4rem;
+  text-align: center;
+  border-right: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
+}
+
+.toolButton {
+  & + & {
+    margin-top: 0.2rem;
+  }
 }

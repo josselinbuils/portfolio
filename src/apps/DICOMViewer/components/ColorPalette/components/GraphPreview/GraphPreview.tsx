@@ -194,7 +194,7 @@ export const GraphPreview: FC<Props> = ({
 
 interface Props {
   activeLUTComponentID: string | undefined;
-  className: string;
+  className?: string;
   lutComponents: LUTComponent[];
   onLUTComponentDrag(
     downEvent: MouseEvent,

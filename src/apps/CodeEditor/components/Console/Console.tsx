@@ -46,7 +46,7 @@ export const Console: FC<Props> = ({ active, className, codeToExec = '' }) => {
           onClick={() => execCode(codeToExec)}
           title={
             <>
-              Execute&nbsp;<kbd>Ctrl</kbd>+<kbd>E</kbd>
+              Execute<kbd>Ctrl</kbd>+<kbd>E</kbd>
             </>
           }
         />
@@ -57,7 +57,7 @@ export const Console: FC<Props> = ({ active, className, codeToExec = '' }) => {
           title="Clear"
         />
       </Toolbar>
-      <Logs logs={logs} ref={logsElementRef} />
+      <Logs className={styles.logs} logs={logs} ref={logsElementRef} />
     </div>
   );
 };
