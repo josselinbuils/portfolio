@@ -23,6 +23,5 @@ export const Tab: FC<Props> = ({
 );
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: string;
   selected: boolean;
 }

@@ -50,7 +50,5 @@ Notes.appDescriptor = NotesDescriptor;
 export default Notes;
 
 function getDefaultNotes(): string {
-  return localStorage.getItem('notes') !== null
-    ? (localStorage.getItem('notes') as string)
-    : 'Hello there 😃';
+  return localStorage.getItem('notes') || 'Hello there 😃';
 }

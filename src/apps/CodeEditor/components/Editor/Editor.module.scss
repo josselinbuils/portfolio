@@ -40,6 +40,10 @@
   }
 }
 
+.close {
+  margin-left: 0.7rem;
+}
+
 .code,
 .textarea {
   @include scrollbar;

@@ -1,23 +1,30 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, {
   ChangeEvent,
   FC,
+  MouseEvent,
   SyntheticEvent,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from 'react';
-import { useKeyMap } from '~/platform/hooks';
+import { useKeyMap, useList } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
+import { File } from './File';
 import { useAutoCompletion } from './hooks';
 import {
   docExec,
   exportAsImage,
+  fileSaver,
   formatCode,
   getAutoCloseChar,
   getLineBeforeCursor,
@@ -37,6 +44,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorOffset, setCursorOffset] = useState(0);
   const [highlightedCode, setHighlightedCode] = useState('');
+  const [files, fileManager] = useList<File>(fileSaver.loadFiles);
+  const [activeFileName, setActiveFileName] = useState<string>(files[0].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
@@ -56,6 +65,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       : '',
     textAreaElement: textAreaElementRef.current,
   });
+  const activeFile = files.find(({ name }) => name === activeFileName) as File;
 
   useKeyMap(
     {
@@ -79,6 +89,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           }
         }
       },
+      'Control+N': createFile,
       'Control+S,Meta+S': format,
       Enter: () => {
         if (hasCompletionItems) {
@@ -122,6 +133,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     active
   );
 
+  useEffect(() => {
+    activeFile.content = code;
+    fileSaver.saveFiles(files);
+  }, [activeFile, files, code]);
+
+  useLayoutEffect(() => {
+    onChange(activeFile.content);
+  }, [activeFile, onChange]);
+
   useLayoutEffect(() => {
     setHighlightedCode(highlightCode(code));
     setLineCount((code.match(/\n/g)?.length || 0) + 1);
@@ -146,6 +166,29 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       codeElementRef.current.scrollTop = scrollTop;
     }
   }, [scrollTop]);
+
+  function closeFile(name: string, event: MouseEvent): void {
+    const fileToClose = files.find((file) => file.name === name) as File;
+
+    if (activeFileName === name) {
+      const newActiveFileName = (files.find(
+        (file) => file !== fileToClose
+      ) as File).name;
+      setActiveFileName(newActiveFileName);
+    }
+
+    const updatedFiles = [...files];
+    updatedFiles.splice(files.indexOf(fileToClose), 1);
+    fileManager.set(updatedFiles);
+    event.stopPropagation();
+  }
+
+  function createFile(): void {
+    const maxIndex = Math.max(
+      ...files.map(({ name }) => parseInt(name.slice(5, -3) || '0', 10))
+    );
+    fileManager.push({ name: `local${maxIndex + 1}.js`, content: '' });
+  }
 
   function disableAutoCompletion(): void {
     if (autoCompleteActive) {
@@ -220,7 +263,22 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   return (
     <div className={cn(styles.editor, className)}>
       <Tabs className={styles.tabs} label="Files">
-        <Tab selected>Local</Tab>
+        {files.map(({ name }, index) => (
+          <Tab
+            key={name}
+            onClick={() => setActiveFileName(name)}
+            selected={name === activeFileName}
+          >
+            {name}
+            {index > 0 && (
+              <FontAwesomeIcon
+                className={styles.close}
+                icon={faTimes}
+                onClick={(event) => closeFile(name, event)}
+              />
+            )}
+          </Tab>
+        ))}
       </Tabs>
       <LineNumbers
         className={styles.lineNumbers}
@@ -247,6 +305,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         value={code}
       />
       <Toolbar className={styles.toolbar}>
+        <ToolButton
+          icon={faPlus}
+          onClick={createFile}
+          title={
+            <>
+              New<kbd>Ctrl</kbd>+<kbd>N</kbd>
+            </>
+          }
+        />
         <ToolButton
           disabled={code.length === 0}
           icon={faStream}

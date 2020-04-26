@@ -11,10 +11,10 @@
   font-family: $fontFamily;
   font-size: 1.1rem;
   position: relative;
-  display: inline-flex;
-  align-content: center;
+  display: inline-block;
   height: 2.6rem;
   padding: 0 0.8rem;
+  user-select: none;
   color: $color;
   border: none;
   outline: none;
