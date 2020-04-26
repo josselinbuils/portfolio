@@ -12,7 +12,7 @@ const PADDING_RIGHT_PX = 20;
 const PADDING_BOTTOM_PX = 17;
 const PADDING_LEFT_PX = 20;
 const WOFF_FONT_URL =
-  'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff';
+  'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2';
 
 export async function renderSVG(
   code: string,
@@ -68,7 +68,7 @@ export async function renderSVG(
         font-family: 'JetBrainsMono';
         font-weight: 400;
         font-style: normal;
-        src: url('${base64Font}') format('woff');
+        src: url('${base64Font}') format('woff2');
       }
 
       foreignObject {
