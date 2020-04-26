@@ -1,0 +1,81 @@
+.token {
+  &.annotation {
+    color: #bbb529;
+  }
+
+  &.bold {
+    font-weight: bold;
+  }
+
+  &.comment:not(.doc-comment) {
+    color: #808080;
+  }
+
+  &.constant {
+    color: #9876aa;
+  }
+
+  &.doc-comment {
+    font-style: italic;
+    color: #6a8759;
+
+    .keyword {
+      font-weight: bold;
+      text-decoration: underline;
+      color: #6a8759;
+    }
+
+    .parameter {
+      color: #8a653b;
+    }
+  }
+
+  &.doctype,
+  &.function,
+  &.selector {
+    color: #e8bf6a;
+  }
+
+  &.entity {
+    cursor: help;
+  }
+
+  &.important {
+    font-weight: bold;
+  }
+
+  &.italic {
+    font-style: italic;
+  }
+
+  &.keyword,
+  &.boolean,
+  &.constant,
+  &.null,
+  &.important,
+  &.rule {
+    color: #cc7832;
+  }
+
+  &.number {
+    color: #6897bb;
+  }
+
+  &.string,
+  &.regex,
+  &.char {
+    color: #6a8759;
+  }
+
+  &.tag {
+    color: #e8bf6a;
+
+    .attr-name {
+      color: #a3b7c6;
+    }
+
+    .attr-value {
+      color: #a5c261;
+    }
+  }
+}

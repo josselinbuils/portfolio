@@ -30,7 +30,6 @@ import {
   isOpenBracket,
 } from './utils';
 
-import 'prismjs-darcula-theme/darcula.css';
 import styles from './Editor.module.scss';
 
 export const Editor: FC<Props> = ({ className, code, onChange }) => {
