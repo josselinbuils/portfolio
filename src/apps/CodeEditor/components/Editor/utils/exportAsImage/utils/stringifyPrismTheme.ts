@@ -1,22 +1,27 @@
 export function stringifyPrismTheme(highlightedCode: string): string {
-  const selectorMatch = highlightedCode.match(/class="[^ ]+ ([^ "]+)/);
+  const tokenClassNameMatch = highlightedCode.match(/class="([^" ]+)/);
 
   // No highlighted parts
-  if (selectorMatch === null) {
+  if (tokenClassNameMatch === null) {
     return '';
   }
 
-  const selector = selectorMatch[1];
+  const tokenClassName = tokenClassNameMatch[1];
   const styleSheets = Array.from(document.styleSheets) as CSSStyleSheet[];
   const rules = styleSheets.find((sheet) =>
-    Array.from(sheet.rules).some(({ cssText }) => cssText.includes(selector))
+    Array.from(sheet.rules).some(({ cssText }) =>
+      cssText.includes(tokenClassName)
+    )
   );
 
   if (rules === undefined) {
-    throw new Error(`Unable to find Prism theme using selector '${selector}'`);
+    throw new Error(
+      `Unable to find Prism theme using class '${tokenClassName}'`
+    );
   }
 
   return Array.from(rules.cssRules)
+    .filter((rule) => rule.cssText.includes(tokenClassName))
     .map((rule) => rule.cssText)
     .join('');
 }
