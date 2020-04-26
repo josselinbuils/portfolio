@@ -1,8 +1,9 @@
 export function stringifyPrismTheme(highlightedCode: string): string {
   const selectorMatch = highlightedCode.match(/class="([^ ]+)/);
 
+  // No highlighted parts
   if (selectorMatch === null) {
-    throw new Error('Unable to find a css class name in highlighted code');
+    return '';
   }
 
   const selector = `.${selectorMatch[1]}`;

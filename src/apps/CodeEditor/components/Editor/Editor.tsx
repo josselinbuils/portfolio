@@ -245,6 +245,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       />
       <Toolbar className={styles.toolbar}>
         <ToolButton
+          disabled={code.length === 0}
           icon={faStream}
           onClick={format}
           title={
@@ -254,6 +255,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           }
         />
         <ToolButton
+          disabled={code.length === 0}
           icon={faCamera}
           onClick={() => exportAsImage(code, highlightedCode)}
           title="Export as image"

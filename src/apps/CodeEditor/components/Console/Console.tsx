@@ -10,7 +10,7 @@ import { decorateConsole, execCode, observeMutations } from './utils';
 
 import styles from './Console.module.scss';
 
-export const Console: FC<Props> = ({ active, className, codeToExec }) => {
+export const Console: FC<Props> = ({ active, className, codeToExec = '' }) => {
   const [logs, logManager] = useList<Log>([]);
   const logsElementRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +41,7 @@ export const Console: FC<Props> = ({ active, className, codeToExec }) => {
       <div className={styles.header}>Console</div>
       <Toolbar className={styles.toolbar}>
         <ToolButton
+          disabled={!codeToExec}
           icon={faPlay}
           onClick={() => execCode(codeToExec)}
           title={
@@ -50,6 +51,7 @@ export const Console: FC<Props> = ({ active, className, codeToExec }) => {
           }
         />
         <ToolButton
+          disabled={logs.length === 0}
           icon={faTrash}
           onClick={() => logManager.clear()}
           title="Clear"
