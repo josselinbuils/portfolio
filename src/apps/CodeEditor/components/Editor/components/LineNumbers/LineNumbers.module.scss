@@ -8,6 +8,7 @@
   box-sizing: border-box;
   width: 4rem;
   padding: 0.5rem 0.7rem;
+  user-select: none;
   text-align: right;
   white-space: pre-wrap;
   color: $textTertiaryColor;

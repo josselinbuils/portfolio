@@ -15,6 +15,7 @@
   box-sizing: border-box;
   height: 2.7rem;
   padding-left: 3rem;
+  user-select: none;
   color: $textPrimaryColor;
   border-top: 0.1rem solid $borderColorPrimary;
   border-bottom: 0.1rem solid $borderColorPrimary;
