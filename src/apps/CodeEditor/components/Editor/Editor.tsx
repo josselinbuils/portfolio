@@ -1,4 +1,5 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
@@ -35,6 +36,7 @@ import {
   isIntoAutoCloseGroup,
   isIntoBrackets,
   isOpenBracket,
+  openFile,
 } from './utils';
 
 import styles from './Editor.module.scss';
@@ -270,6 +272,19 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     return false;
   }
 
+  async function open(): Promise<void> {
+    try {
+      const file = await openFile();
+
+      if (file !== undefined) {
+        fileManager.push(file);
+        setActiveFileName(file.name);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className={cn(styles.editor, className)}>
       <Tabs className={styles.tabs} label="Files">
@@ -321,6 +336,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           title={
             <>
               New<kbd>Ctrl</kbd>+<kbd>N</kbd>
+            </>
+          }
+        />
+        <ToolButton
+          icon={faFolderOpen}
+          onClick={open}
+          title={
+            <>
+              Open<kbd>Ctrl</kbd>+<kbd>O</kbd>
             </>
           }
         />
