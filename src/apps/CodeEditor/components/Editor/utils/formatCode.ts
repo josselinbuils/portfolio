@@ -25,10 +25,6 @@ const parserDescriptors = {
     name: 'scss',
     parserFactory: () => import('prettier/parser-postcss'),
   },
-  typescript: {
-    name: 'typescript',
-    parserFactory: () => import('prettier/parser-typescript'),
-  },
   yaml: {
     name: 'yaml',
     parserFactory: () => import('prettier/parser-yaml'),
