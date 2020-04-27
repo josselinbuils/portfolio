@@ -100,8 +100,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         }
       },
       'Control+N,Meta+N': createFile,
-      'Control+O,Meta+O': () => open(),
-      'Control+S,Meta+S': () => format(),
+      'Control+O,Meta+O': () => {
+        open();
+      },
+      'Control+S,Meta+S': () => {
+        format();
+      },
       Enter: () => {
         if (hasCompletionItems) {
           return;
