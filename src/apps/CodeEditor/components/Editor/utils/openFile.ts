@@ -1,8 +1,11 @@
+import { EditorFile } from '../EditorFile';
+
 const MAX_FILE_SIZE_BYTES = 50000;
 
-export async function openFile(): Promise<
-  { name: string; content: string } | undefined
-> {
+export async function openFile(file?: File): Promise<EditorFile | undefined> {
+  if (file !== undefined) {
+    return readFile(file);
+  }
   return new Promise<{ name: string; content: string } | undefined>(
     (resolve, reject) => {
       const element = document.createElement('input');
@@ -10,20 +13,15 @@ export async function openFile(): Promise<
       element.setAttribute('type', 'file');
       element.style.display = 'none';
       element.addEventListener('change', async (event: Event) => {
-        const files = (event.target as HTMLInputElement).files;
+        file = (event.target as HTMLInputElement).files?.[0];
 
-        if (files === null) {
+        if (file === undefined) {
           resolve(undefined);
         } else {
-          const file = files[0];
-
           if (file.size > MAX_FILE_SIZE_BYTES) {
             reject(new Error('File too large to be loaded'));
           } else {
-            resolve({
-              content: await readFile(file),
-              name: file.name,
-            });
+            resolve(readFile(file));
           }
         }
       });
@@ -35,11 +33,15 @@ export async function openFile(): Promise<
   );
 }
 
-async function readFile(file: File): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
+async function readFile(file: File): Promise<EditorFile> {
+  return new Promise<EditorFile>((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('Unable to read file'));
-    reader.onload = (event) => resolve((event.target?.result as string) || '');
+    reader.onload = (event) =>
+      resolve({
+        content: (event.target?.result as string) || '',
+        name: file.name,
+      });
     reader.readAsText(file);
   });
 }

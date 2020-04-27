@@ -57,13 +57,30 @@
   left: 7rem;
   overflow-y: auto;
   box-sizing: border-box;
-  width: calc(100% - 6.5rem);
+  width: calc(100% - 7rem);
   padding: 0.5rem 0.7rem;
   white-space: pre-wrap;
   border: none;
   outline: none;
 
   overflow-wrap: break-word;
+}
+
+.dragAndDropOverlay {
+  font-size: 2rem;
+  position: absolute;
+  z-index: 1;
+  top: 2.8rem;
+  bottom: 0.1rem;
+  left: 7.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: calc(100% - 7.2rem);
+  pointer-events: none;
+  border: 0.3rem dashed $textPrimaryColor;
+  background: #2b2b2b;
 }
 
 .editor {

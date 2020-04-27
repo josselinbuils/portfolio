@@ -1,4 +1,4 @@
-export interface File {
+export interface EditorFile {
   content: string;
   name: string;
 }

@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, {
   ChangeEvent,
+  DragEvent,
   FC,
-  MouseEvent,
   SyntheticEvent,
   useCallback,
   useEffect,
@@ -20,7 +20,7 @@ import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
-import { File } from './File';
+import { EditorFile } from './EditorFile';
 import { useAutoCompletion } from './hooks';
 import {
   docExec,
@@ -45,8 +45,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorOffset, setCursorOffset] = useState(0);
+  const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
-  const [files, fileManager] = useList<File>(fileSaver.loadFiles);
+  const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
   const [
     activeFileName,
     previouslyActiveFileName,
@@ -71,7 +72,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       : '',
     textAreaElement: textAreaElementRef.current,
   });
-  const activeFile = files.find(({ name }) => name === activeFileName) as File;
+  const activeFile = files.find(
+    ({ name }) => name === activeFileName
+  ) as EditorFile;
 
   useKeyMap(
     {
@@ -173,8 +176,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }, [scrollTop]);
 
-  function closeFile(name: string, event: MouseEvent): void {
-    const fileToClose = files.find((file) => file.name === name) as File;
+  function closeFile(name: string): void {
+    const fileToClose = files.find((file) => file.name === name) as EditorFile;
 
     if (activeFileName === name) {
       const isPreviouslyActiveFileStillOpen = files.some(
@@ -182,7 +185,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       );
       const newActiveFileName = isPreviouslyActiveFileStillOpen
         ? (previouslyActiveFileName as string)
-        : (files.find((file) => file !== fileToClose) as File).name;
+        : (files.find((file) => file !== fileToClose) as EditorFile).name;
 
       setActiveFileName(newActiveFileName);
     }
@@ -190,7 +193,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     const updatedFiles = [...files];
     updatedFiles.splice(files.indexOf(fileToClose), 1);
     fileManager.set(updatedFiles);
-    event.stopPropagation();
   }
 
   function createFile(): void {
@@ -248,6 +250,17 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
+  async function handleDrop(event: DragEvent): Promise<void> {
+    event.preventDefault();
+    setDisplayDragOverlay(false);
+
+    const file = event.dataTransfer?.files?.[0];
+
+    if (file !== undefined) {
+      return open(file);
+    }
+  }
+
   function handleSelect({ target }: SyntheticEvent): void {
     const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
 
@@ -272,13 +285,16 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     return false;
   }
 
-  async function open(): Promise<void> {
+  async function open(file?: File): Promise<void> {
     try {
-      const file = await openFile();
+      const editorFile = await openFile(file);
 
-      if (file !== undefined) {
-        fileManager.push(file);
-        setActiveFileName(file.name);
+      if (editorFile !== undefined) {
+        if (files.some(({ name }) => name === editorFile.name)) {
+          closeFile(editorFile.name);
+        }
+        fileManager.push(editorFile);
+        setActiveFileName(editorFile.name);
       }
     } catch (error) {
       console.error(error);
@@ -299,7 +315,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
               <FontAwesomeIcon
                 className={styles.close}
                 icon={faTimes}
-                onClick={(event) => closeFile(name, event)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  closeFile(name);
+                }}
               />
             )}
           </Tab>
@@ -319,6 +338,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         className={styles.textarea}
         onBlur={() => setActive(false)}
         onChange={handleChange}
+        onDragEnd={() => setDisplayDragOverlay(false)}
+        onDragEnter={() => {
+          setDisplayDragOverlay(true);
+          return false;
+        }}
+        onDragLeave={() => setDisplayDragOverlay(false)}
+        onDragOver={() => false}
+        onDrop={handleDrop as (event: DragEvent) => void}
         onMouseDown={disableAutoCompletion}
         onFocus={() => setActive(true)}
         onScroll={({ target }) =>
@@ -329,6 +356,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         spellCheck={false}
         value={code}
       />
+      {displayDragOverlay && (
+        <div className={styles.dragAndDropOverlay}>Drop to open</div>
+      )}
       <Toolbar className={styles.toolbar}>
         <ToolButton
           icon={faPlus}
@@ -341,7 +371,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         />
         <ToolButton
           icon={faFolderOpen}
-          onClick={open}
+          // tslint:disable-next-line:no-unnecessary-callback-wrapper
+          onClick={() => open()}
           title={
             <>
               Open<kbd>Ctrl</kbd>+<kbd>O</kbd>

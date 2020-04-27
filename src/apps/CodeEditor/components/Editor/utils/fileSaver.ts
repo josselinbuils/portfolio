@@ -1,4 +1,4 @@
-import { File } from '../File';
+import { EditorFile } from '../EditorFile';
 
 const STORAGE_KEY = 'codeEditor';
 const DEFAULT_FILENAME = 'local.js';
@@ -8,7 +8,7 @@ export const fileSaver = {
   saveFiles,
 };
 
-function loadFiles(): File[] {
+function loadFiles(): EditorFile[] {
   const stored = localStorage.getItem(STORAGE_KEY);
   const defaultFiles = [{ name: DEFAULT_FILENAME, content: '' }];
 
@@ -18,10 +18,10 @@ function loadFiles(): File[] {
   return defaultFiles;
 }
 
-function saveFiles(files: File[]): void {
+function saveFiles(files: EditorFile[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ files } as SaveState));
 }
 
 interface SaveState {
-  files: File[];
+  files: EditorFile[];
 }
