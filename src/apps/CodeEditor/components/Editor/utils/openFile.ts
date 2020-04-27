@@ -22,6 +22,9 @@ const MAX_FILE_SIZE_BYTES = 50000;
 
 export async function openFile(file?: File): Promise<EditorFile | undefined> {
   if (file !== undefined) {
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      throw new Error('File too large to be loaded');
+    }
     return readFile(file);
   }
   return new Promise<EditorFile | undefined>((resolve, reject) => {
