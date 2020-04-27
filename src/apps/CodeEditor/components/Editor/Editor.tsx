@@ -15,7 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useKeyMap, useList } from '~/platform/hooks';
+import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
@@ -45,7 +45,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [cursorOffset, setCursorOffset] = useState(0);
   const [highlightedCode, setHighlightedCode] = useState('');
   const [files, fileManager] = useList<File>(fileSaver.loadFiles);
-  const [activeFileName, setActiveFileName] = useState<string>(files[0].name);
+  const [
+    activeFileName,
+    previouslyActiveFileName,
+    setActiveFileName,
+  ] = useMemState<string>(files[0].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
@@ -171,10 +175,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     const fileToClose = files.find((file) => file.name === name) as File;
 
     if (activeFileName === name) {
-      const newActiveFileName = (files.find(
-        (file) => file !== fileToClose
-      ) as File).name;
-      setActiveFileName(newActiveFileName);
+      setActiveFileName(previouslyActiveFileName as string);
     }
 
     const updatedFiles = [...files];

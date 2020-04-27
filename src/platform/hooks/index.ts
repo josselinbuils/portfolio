@@ -4,3 +4,4 @@ export * from './useEventListener';
 export * from './useInjector';
 export * from './useKeyMap';
 export { useList } from './useList';
+export * from './useMemState';
