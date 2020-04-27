@@ -99,7 +99,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           }
         }
       },
-      'Control+N': createFile,
+      'Control+N,Meta+N': createFile,
+      'Control+O,Meta+O': () => open(),
       'Control+S,Meta+S': format,
       Enter: () => {
         if (hasCompletionItems) {
@@ -203,8 +204,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       ...files.map((file) => parseInt(file.name.slice(5, -3) || '0', 10))
     );
     const name = `local${maxIndex + 1}.js`;
-    setActiveFileName(name);
     fileManager.push({ content: '', name, language: 'javascript' });
+    setActiveFileName(name);
   }
 
   function disableAutoCompletion(): void {
