@@ -2,7 +2,7 @@ export * from './createAutoCloseMap';
 export * from './docExec';
 export * from './exportAsImage';
 export * from './fileSaver';
-export * from './formatCode';
+export { formatCode } from './formatCode';
 export * from './getAutoCloseChar';
 export * from './getCursorPosition';
 export * from './getLineBeforeCursor';

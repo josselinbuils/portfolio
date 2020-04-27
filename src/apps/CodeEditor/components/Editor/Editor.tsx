@@ -38,6 +38,7 @@ import {
   isOpenBracket,
   openFile,
 } from './utils';
+import { canFormat } from './utils/formatCode';
 
 import styles from './Editor.module.scss';
 
@@ -152,10 +153,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }, [activeFile, onChange]);
 
   useLayoutEffect(() => {
-    setHighlightedCode(highlightCode(code));
-    setLineCount((code.match(/\n/g)?.length || 0) + 1);
-    (textAreaElementRef.current as HTMLTextAreaElement).scrollTop = 1e10;
-  }, [code]);
+    highlightCode(code, activeFile.language).then((highlighted) => {
+      setHighlightedCode(highlighted);
+      setLineCount((code.match(/\n/g)?.length || 0) + 1);
+      (textAreaElementRef.current as HTMLTextAreaElement).scrollTop = 1e10;
+    });
+  }, [activeFile.language, code]);
 
   useLayoutEffect(() => {
     const textAreaElement = textAreaElementRef.current;
@@ -201,7 +204,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     );
     const name = `local${maxIndex + 1}.js`;
     setActiveFileName(name);
-    fileManager.push({ name, content: '' });
+    fileManager.push({ content: '', name, language: 'javascript' });
   }
 
   function disableAutoCompletion(): void {
@@ -210,9 +213,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
-  function format(): void {
+  async function format(): Promise<void> {
     try {
-      const formatted = formatCode(code, cursorOffset);
+      const { language } = activeFile;
+      const formatted = await formatCode(code, cursorOffset, language);
       onChange(formatted.code);
       setCursorOffset(formatted.cursorOffset);
     } catch (error) {
@@ -380,7 +384,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           }
         />
         <ToolButton
-          disabled={code.length === 0}
+          disabled={code.length === 0 || !canFormat(activeFile.language)}
           icon={faStream}
           onClick={format}
           title={
