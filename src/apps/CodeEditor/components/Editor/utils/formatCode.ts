@@ -5,10 +5,6 @@ const parserDescriptors = {
     name: 'css',
     parserFactory: () => import('prettier/parser-postcss'),
   },
-  html: {
-    name: 'html',
-    parserFactory: () => import('prettier/parser-html'),
-  },
   javascript: {
     name: 'babel',
     parserFactory: () => import('prettier/parser-babel'),
@@ -17,17 +13,9 @@ const parserDescriptors = {
     name: 'json',
     parserFactory: () => import('prettier/parser-babel'),
   },
-  markdown: {
-    name: 'markdown',
-    parserFactory: () => import('prettier/parser-markdown'),
-  },
   scss: {
     name: 'scss',
     parserFactory: () => import('prettier/parser-postcss'),
-  },
-  yaml: {
-    name: 'yaml',
-    parserFactory: () => import('prettier/parser-yaml'),
   },
 } as {
   [language: string]: {
