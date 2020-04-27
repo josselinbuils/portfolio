@@ -185,9 +185,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function createFile(): void {
     const maxIndex = Math.max(
-      ...files.map(({ name }) => parseInt(name.slice(5, -3) || '0', 10))
+      ...files.map((file) => parseInt(file.name.slice(5, -3) || '0', 10))
     );
-    fileManager.push({ name: `local${maxIndex + 1}.js`, content: '' });
+    const name = `local${maxIndex + 1}.js`;
+    setActiveFileName(name);
+    fileManager.push({ name, content: '' });
   }
 
   function disableAutoCompletion(): void {
