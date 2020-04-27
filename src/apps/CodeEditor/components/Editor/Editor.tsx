@@ -175,7 +175,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     const fileToClose = files.find((file) => file.name === name) as File;
 
     if (activeFileName === name) {
-      setActiveFileName(previouslyActiveFileName as string);
+      const isPreviouslyActiveFileStillOpen = files.some(
+        (file) => file.name === previouslyActiveFileName
+      );
+      const newActiveFileName = isPreviouslyActiveFileStillOpen
+        ? (previouslyActiveFileName as string)
+        : (files.find((file) => file !== fileToClose) as File).name;
+
+      setActiveFileName(newActiveFileName);
     }
 
     const updatedFiles = [...files];
