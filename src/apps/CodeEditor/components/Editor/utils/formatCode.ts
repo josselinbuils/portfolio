@@ -1,4 +1,6 @@
 import { BuiltInParserName, Plugin } from 'prettier';
+import 'prettier/parser-babel';
+import prettier from 'prettier/standalone';
 
 const parserDescriptors = {
   css: {
@@ -33,7 +35,6 @@ export async function formatCode(
   cursorOffset: number,
   language: string
 ): Promise<{ code: string; cursorOffset: number }> {
-  const prettier = (await import('prettier/standalone')).default;
   const parserDescriptor = parserDescriptors[language];
 
   if (parserDescriptor === undefined) {
