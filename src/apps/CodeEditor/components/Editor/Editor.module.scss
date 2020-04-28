@@ -53,11 +53,11 @@
   line-height: $lineHeight;
   position: absolute;
   top: 2.7rem;
-  bottom: 0;
   left: 7rem;
   overflow-y: auto;
   box-sizing: border-box;
   width: calc(100% - 7rem);
+  height: calc(100% - 2.7rem);
   padding: 0.5rem 0.7rem;
   white-space: pre-wrap;
   border: none;

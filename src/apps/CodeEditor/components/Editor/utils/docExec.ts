@@ -12,6 +12,12 @@ function forwardDelete(): void {
   document.execCommand('forwardDelete', false);
 }
 
-function insertText(str: string): void {
-  document.execCommand('insertText', false, str);
+function insertText(field: HTMLTextAreaElement, str: string): void {
+  const isSupported = document.execCommand('insertText', false, str);
+
+  // Firefox, no undo/redo support
+  if (!isSupported) {
+    field.setRangeText(str, field.selectionStart, field.selectionEnd, 'end');
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+  }
 }

@@ -63,7 +63,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     lineIndent: getLineIndent(code, cursorOffset),
     menuClassName: styles.autoCompletionMenu,
     onCompletion: useCallback(({ completion, newCursorOffset }) => {
-      docExec.insertText(completion);
+      docExec.insertText(
+        textAreaElementRef.current as HTMLTextAreaElement,
+        completion
+      );
       setCursorOffset(newCursorOffset);
     }, []),
     partialKeyword: autoCompleteActive
@@ -71,7 +74,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           .split(/[ ([{]/)
           .pop() as string)
       : '',
-    textAreaElement: textAreaElementRef.current,
+    textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
   const activeFile = files.find(
     ({ name }) => name === activeFileName
@@ -120,11 +123,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
         if (isIntoBrackets(code, cursorOffset)) {
           docExec.insertText(
+            textAreaElementRef.current as HTMLTextAreaElement,
             `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`
           );
           setCursorOffset(cursorOffset + indent + 3);
         } else {
-          docExec.insertText(`\n${indentSpaces}${additionalSpaces}`);
+          docExec.insertText(
+            textAreaElementRef.current as HTMLTextAreaElement,
+            `\n${indentSpaces}${additionalSpaces}`
+          );
         }
       },
       Escape: () => {
@@ -141,7 +148,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         if (hasCompletionItems) {
           complete();
         } else {
-          docExec.insertText(INDENT);
+          docExec.insertText(
+            textAreaElementRef.current as HTMLTextAreaElement,
+            INDENT
+          );
         }
       },
     },
@@ -161,7 +171,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     highlightCode(code, activeFile.language).then((highlighted) => {
       setHighlightedCode(highlighted);
       setLineCount((code.match(/\n/g)?.length || 0) + 1);
-      (textAreaElementRef.current as HTMLTextAreaElement).scrollTop = 1e10;
+      ((textAreaElementRef.current as unknown) as HTMLTextAreaElement).scrollTop = 1e10;
     });
   }, [activeFile.language, code]);
 
@@ -242,7 +252,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
 
       if (autoCloseChar !== undefined && allowAutoComplete) {
-        docExec.insertText(autoCloseChar);
+        docExec.insertText(
+          textAreaElementRef.current as HTMLTextAreaElement,
+          autoCloseChar
+        );
         setCursorOffset(cursorOffset + 1);
       } else if (
         isIntoAutoCloseGroup(code, cursorOffset) &&
