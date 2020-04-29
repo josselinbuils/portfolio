@@ -1,4 +1,4 @@
-import { EditorFile } from '../EditorFile';
+import { EditorFile } from '../interfaces';
 
 const STORAGE_KEY = 'codeEditor';
 const DEFAULT_FILENAME = 'local.js';

@@ -1,29 +1,41 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
-import { getCursorPosition } from '../../utils';
+import { getCursorPosition, getLineBeforeCursor } from '../../utils';
 import { getCompletion, getCompletionItems } from './utils';
 
 export function useAutoCompletion({
+  active,
+  code,
   cursorOffset,
   lineIndent,
   menuClassName,
   onCompletion,
-  partialKeyword,
   textAreaElement,
 }: {
+  active: boolean;
+  code: string;
   cursorOffset: number;
   lineIndent: number;
   menuClassName: string;
-  partialKeyword: string;
   textAreaElement: HTMLTextAreaElement | null;
   onCompletion(completion: Completion): void;
 }): { hasCompletionItems: boolean; complete(): void } {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const onCompletionRef = useRef<(completion: Completion) => void>(
+    onCompletion
+  );
   const {
     hideContextMenu,
     isContextMenuDisplayed: hasCompletionItems,
     showContextMenu,
   } = useContextMenu();
+  const partialKeyword = active
+    ? (getLineBeforeCursor(code, cursorOffset)
+        .split(/[ ([{]/)
+        .pop() as string)
+    : '';
+
+  onCompletionRef.current = onCompletion;
 
   useLayoutEffect(() => {
     if (textAreaElement) {
@@ -36,7 +48,7 @@ export function useAutoCompletion({
           className: menuClassName,
           items: completionItems.map(({ displayName, template }) => ({
             onClick: () =>
-              onCompletion(
+              onCompletionRef.current(
                 getCompletion(
                   template,
                   cursorOffset,
@@ -67,7 +79,6 @@ export function useAutoCompletion({
     hideContextMenu,
     lineIndent,
     menuClassName,
-    onCompletion,
     partialKeyword,
     showContextMenu,
     textAreaElement,
@@ -82,7 +93,7 @@ export function useAutoCompletion({
     if (completionItem !== undefined) {
       const { template } = completionItem;
 
-      onCompletion(
+      onCompletionRef.current(
         getCompletion(
           template,
           cursorOffset,
@@ -91,12 +102,12 @@ export function useAutoCompletion({
         )
       );
     }
-  }, [activeIndex, cursorOffset, lineIndent, onCompletion, partialKeyword]);
+  }, [activeIndex, cursorOffset, lineIndent, partialKeyword]);
 
   return { hasCompletionItems, complete };
 }
 
-interface Completion {
+export interface Completion {
   completion: string;
   newCursorOffset: number;
 }

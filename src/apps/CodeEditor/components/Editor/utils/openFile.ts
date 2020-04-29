@@ -1,4 +1,4 @@
-import { EditorFile } from '../EditorFile';
+import { EditorFile } from '../interfaces/EditorFile';
 
 const LANGUAGE = {
   css: 'css',

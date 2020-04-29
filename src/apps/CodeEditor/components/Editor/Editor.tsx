@@ -6,11 +6,9 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, {
-  ChangeEvent,
   DragEvent,
   FC,
   SyntheticEvent,
-  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -20,14 +18,16 @@ import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
-import { EditorFile } from './EditorFile';
-import { useAutoCompletion } from './hooks';
+import { useAutoCompletion, useHistory } from './hooks';
+import { Completion } from './hooks/useAutoCompletion';
+import { Diff, EditorFile } from './interfaces';
 import {
   docExec,
   exportAsImage,
   fileSaver,
   formatCode,
   getAutoCloseChar,
+  getDiff,
   getLineBeforeCursor,
   getLineIndent,
   highlightCode,
@@ -59,23 +59,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
   const { complete, hasCompletionItems } = useAutoCompletion({
+    active: autoCompleteActive,
+    code,
     cursorOffset,
     lineIndent: getLineIndent(code, cursorOffset),
     menuClassName: styles.autoCompletionMenu,
-    onCompletion: useCallback(({ completion, newCursorOffset }) => {
-      docExec.insertText(
-        textAreaElementRef.current as HTMLTextAreaElement,
-        completion
-      );
-      setCursorOffset(newCursorOffset);
-    }, []),
-    partialKeyword: autoCompleteActive
-      ? (getLineBeforeCursor(code, cursorOffset)
-          .split(/[ ([{]/)
-          .pop() as string)
-      : '',
+    onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
+  const { pushHistory } = useHistory({ redo, undo });
   const activeFile = files.find(
     ({ name }) => name === activeFileName
   ) as EditorFile;
@@ -122,16 +114,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
             : '';
 
         if (isIntoBrackets(code, cursorOffset)) {
-          docExec.insertText(
-            textAreaElementRef.current as HTMLTextAreaElement,
-            `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`
+          insertText(
+            `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`,
+            undefined,
+            undefined,
+            cursorOffset + indent + 3
           );
-          setCursorOffset(cursorOffset + indent + 3);
         } else {
-          docExec.insertText(
-            textAreaElementRef.current as HTMLTextAreaElement,
-            `\n${indentSpaces}${additionalSpaces}`
-          );
+          insertText(`\n${indentSpaces}${additionalSpaces}`);
         }
       },
       Escape: () => {
@@ -148,10 +138,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         if (hasCompletionItems) {
           complete();
         } else {
-          docExec.insertText(
-            textAreaElementRef.current as HTMLTextAreaElement,
-            INDENT
-          );
+          insertText(INDENT);
         }
       },
     },
@@ -194,6 +181,13 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }, [scrollTop]);
 
+  function applyAutoCompletion({
+    completion,
+    newCursorOffset,
+  }: Completion): void {
+    insertText(completion, undefined, undefined, newCursorOffset);
+  }
+
   function closeFile(name: string): void {
     const fileToClose = files.find((file) => file.name === name) as EditorFile;
 
@@ -232,6 +226,13 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     try {
       const { language } = activeFile;
       const formatted = await formatCode(code, cursorOffset, language);
+      pushHistory([
+        getDiff(code, ''),
+        {
+          ...getDiff('', formatted.code),
+          cursorOffsetAfter: formatted.cursorOffset,
+        },
+      ]);
       onChange(formatted.code);
       setCursorOffset(formatted.cursorOffset);
     } catch (error) {
@@ -239,27 +240,39 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
-  function handleChange(event: ChangeEvent): void {
-    const { value } = event.target as HTMLTextAreaElement;
+  function insertText(
+    text: string,
+    offset: number = cursorOffset,
+    baseText: string = code,
+    newCursorOffset: number = offset + text.length
+  ): void {
+    handleChange(
+      `${baseText.slice(0, offset)}${text}${baseText.slice(offset)}`,
+      newCursorOffset
+    );
+  }
 
-    onChange(value);
+  function handleChange(newCode: string, newCursorOffset?: number): void {
+    const diffObj = getDiff(code, newCode);
 
-    if (value.length > code.length) {
-      const diff = value
-        .replace(code.slice(0, cursorOffset), '')
-        .replace(code.slice(cursorOffset), '');
-      const autoCloseChar = getAutoCloseChar(diff);
+    onChange(newCode);
+    pushHistory(diffObj);
+
+    if (newCursorOffset !== undefined) {
+      setCursorOffset(newCursorOffset);
+      diffObj.cursorOffsetAfter = newCursorOffset;
+    }
+
+    if (diffObj.type === '+') {
+      const autoCloseChar = getAutoCloseChar(diffObj.diff);
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
 
       if (autoCloseChar !== undefined && allowAutoComplete) {
-        docExec.insertText(
-          textAreaElementRef.current as HTMLTextAreaElement,
-          autoCloseChar
-        );
-        setCursorOffset(cursorOffset + 1);
+        const { endOffset } = diffObj;
+        insertText(autoCloseChar, endOffset, newCode, endOffset);
       } else if (
         isIntoAutoCloseGroup(code, cursorOffset) &&
-        isAutoCloseChar(diff)
+        isAutoCloseChar(diffObj.diff)
       ) {
         docExec.forwardDelete();
       }
@@ -323,6 +336,32 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
+  function redo({
+    cursorOffsetAfter,
+    endOffset,
+    diff,
+    startOffset,
+    type,
+  }: Diff): void {
+    onChange(
+      type === '+'
+        ? `${code.slice(0, startOffset)}${diff}${code.slice(startOffset)}`
+        : `${code.slice(0, endOffset)}${code.slice(startOffset)}`
+    );
+    setCursorOffset(cursorOffsetAfter || endOffset);
+  }
+
+  function undo(diffObj: Diff): void {
+    const { endOffset, diff, startOffset, type } = diffObj;
+
+    onChange(
+      type === '+'
+        ? `${code.slice(0, startOffset)}${code.slice(endOffset)}`
+        : `${code.slice(0, endOffset)}${diff}${code.slice(startOffset)}`
+    );
+    setCursorOffset(startOffset);
+  }
+
   return (
     <div className={cn(styles.editor, className)}>
       <Tabs className={styles.tabs} label="Files">
@@ -359,7 +398,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       <textarea
         className={styles.textarea}
         onBlur={() => setActive(false)}
-        onChange={handleChange}
+        onChange={({ target }) => handleChange(target.value)}
         onDragEnd={() => setDisplayDragOverlay(false)}
         onDragEnter={() => {
           setDisplayDragOverlay(true);
