@@ -234,15 +234,18 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     try {
       const { language } = activeFile;
       const formatted = await formatCode(code, cursorOffset, language);
-      pushHistory([
-        getDiff(code, ''),
-        {
-          ...getDiff('', formatted.code),
-          cursorOffsetAfter: formatted.cursorOffset,
-        },
-      ]);
-      onChange(formatted.code);
-      setCursorOffset(formatted.cursorOffset);
+
+      if (formatted.code !== code) {
+        pushHistory([
+          getDiff(code, ''),
+          {
+            ...getDiff('', formatted.code),
+            cursorOffsetAfter: formatted.cursorOffset,
+          },
+        ]);
+        onChange(formatted.code);
+        setCursorOffset(formatted.cursorOffset);
+      }
     } catch (error) {
       console.error(error);
     }

@@ -97,7 +97,6 @@ export function useHistory({
         historyIndexRef.current = history.length - 1;
       }
     }
-    console.log(history);
   }, []);
 
   return { pushHistory };
