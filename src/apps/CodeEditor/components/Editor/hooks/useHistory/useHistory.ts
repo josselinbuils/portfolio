@@ -27,10 +27,7 @@ export function useHistory({
       if (historyIndex > -1) {
         const history = historyRef.current;
         const diff = history[historyIndex];
-        let prevDiff = history[historyIndex - 1];
-        prevDiff = (Array.isArray(prevDiff)
-          ? prevDiff.slice().pop()
-          : prevDiff) as Diff;
+        const prevDiff = getLastSubDiff(history[historyIndex - 1]);
         const cursorOffsetBefore =
           prevDiff?.cursorOffsetAfter || prevDiff?.endOffset;
 
@@ -74,14 +71,38 @@ export function useHistory({
 
     if (historyIndex < history.length - 1) {
       history.length = historyIndex + 1;
-    }
-    if (history.length >= HISTORY_SIZE_LIMIT) {
-      history.splice(0, history.length - HISTORY_SIZE_LIMIT + 1);
-    }
+      history.push(diff);
+      historyIndexRef.current = history.length - 1;
+    } else {
+      if (history.length >= HISTORY_SIZE_LIMIT) {
+        history.splice(0, history.length - HISTORY_SIZE_LIMIT + 1);
+      }
 
-    history.push(diff);
-    historyIndexRef.current = history.length - 1;
+      const lastSubDiff = getLastSubDiff(history[history.length - 1]);
+
+      if (
+        history.length > 0 &&
+        !/\s/.test(diff.diff) &&
+        diff.startOffset === lastSubDiff.endOffset
+      ) {
+        const lastDiff = history[history.length - 1];
+
+        if (!Array.isArray(lastDiff)) {
+          history[history.length - 1] = [lastDiff, diff];
+        } else {
+          lastDiff.push(diff);
+        }
+      } else {
+        history.push(diff);
+        historyIndexRef.current = history.length - 1;
+      }
+    }
+    console.log(history);
   }, []);
 
   return { pushHistory };
+}
+
+function getLastSubDiff(diff: Diff | Diff[]): Diff {
+  return (Array.isArray(diff) ? diff.slice().pop() : diff) as Diff;
 }
