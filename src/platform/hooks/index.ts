@@ -1,4 +1,5 @@
 export * from './useDragAndDrop';
+export * from './useDynamicRef';
 export * from './useElementSize';
 export * from './useEventListener';
 export * from './useInjector';

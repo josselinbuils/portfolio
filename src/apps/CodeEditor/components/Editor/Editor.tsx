@@ -6,6 +6,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, {
+  ChangeEvent,
   DragEvent,
   FC,
   SyntheticEvent,
@@ -157,23 +158,30 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   useLayoutEffect(() => {
     highlightCode(code, activeFile.language).then((highlighted) => {
       setHighlightedCode(highlighted);
-      setLineCount((code.match(/\n/g)?.length || 0) + 1);
       ((textAreaElementRef.current as unknown) as HTMLTextAreaElement).scrollTop = 1e10;
     });
   }, [activeFile.language, code]);
 
   useLayoutEffect(() => {
+    const newLineCount = (code.match(/\n/g)?.length || 0) + 1;
+
+    if (newLineCount !== lineCount) {
+      setLineCount(newLineCount);
+    }
+  }, [code, lineCount]);
+
+  useLayoutEffect(() => {
     const textAreaElement = textAreaElementRef.current;
 
     if (textAreaElement !== null) {
-      const { selectionEnd, selectionStart } = textAreaElement;
+      const { selectionStart } = textAreaElement;
 
-      if (selectionEnd === selectionStart && selectionStart !== cursorOffset) {
+      if (!isThereSelection() && selectionStart !== cursorOffset) {
         textAreaElement.selectionStart = cursorOffset;
         textAreaElement.selectionEnd = cursorOffset;
       }
     }
-  }, [cursorOffset]);
+  }, [code, cursorOffset]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -246,22 +254,25 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     baseText: string = code,
     newCursorOffset: number = offset + text.length
   ): void {
-    handleChange(
-      `${baseText.slice(0, offset)}${text}${baseText.slice(offset)}`,
-      newCursorOffset
-    );
+    const newCode = `${baseText.slice(0, offset)}${text}${baseText.slice(
+      offset
+    )}`;
+    const diffObj = {
+      ...getDiff(code, newCode),
+      cursorOffsetAfter: newCursorOffset,
+    };
+    onChange(newCode);
+    setCursorOffset(newCursorOffset);
+    pushHistory(diffObj);
   }
 
-  function handleChange(newCode: string, newCursorOffset?: number): void {
+  function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
+    const newCode = event.target.value;
     const diffObj = getDiff(code, newCode);
 
     onChange(newCode);
+    setCursorOffset(diffObj.endOffset);
     pushHistory(diffObj);
-
-    if (newCursorOffset !== undefined) {
-      setCursorOffset(newCursorOffset);
-      diffObj.cursorOffsetAfter = newCursorOffset;
-    }
 
     if (diffObj.type === '+') {
       const autoCloseChar = getAutoCloseChar(diffObj.diff);
@@ -302,7 +313,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     if (!isCodePortionEnd(code, newCursorOffset)) {
       setAutoCompleteActive(false);
     }
-    setCursorOffset(newCursorOffset);
+
+    if (cursorOffset !== newCursorOffset) {
+      setCursorOffset(newCursorOffset);
+    }
   }
 
   function deleteRange(start: number, end: number): void {
@@ -351,7 +365,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     setCursorOffset(cursorOffsetAfter || endOffset);
   }
 
-  function undo(diffObj: Diff): void {
+  function undo(diffObj: Diff, cursorOffsetBefore?: number): void {
     const { endOffset, diff, startOffset, type } = diffObj;
 
     onChange(
@@ -359,7 +373,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         ? `${code.slice(0, startOffset)}${code.slice(endOffset)}`
         : `${code.slice(0, endOffset)}${diff}${code.slice(startOffset)}`
     );
-    setCursorOffset(startOffset);
+    setCursorOffset(cursorOffsetBefore || startOffset);
   }
 
   return (
@@ -398,7 +412,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       <textarea
         className={styles.textarea}
         onBlur={() => setActive(false)}
-        onChange={({ target }) => handleChange(target.value)}
+        onChange={handleChange}
         onDragEnd={() => setDisplayDragOverlay(false)}
         onDragEnter={() => {
           setDisplayDragOverlay(true);

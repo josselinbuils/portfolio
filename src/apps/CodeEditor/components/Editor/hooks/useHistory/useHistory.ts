@@ -1,48 +1,61 @@
-import { useEffect, useRef, useState } from 'react';
-import { useKeyMap, useList } from '~/platform/hooks';
+import { useCallback, useRef } from 'react';
+import { useDynamicRef, useKeyMap } from '~/platform/hooks';
 import { Diff } from '../../interfaces';
+
+const HISTORY_SIZE_LIMIT = 100;
 
 export function useHistory({
   redo,
   undo,
 }: {
   redo(diff: Diff): any;
-  undo(diff: Diff): any;
+  undo(diff: Diff, cursorOffsetBefore?: number): any;
 }): {
   pushHistory(diff: Diff | Diff[]): void;
 } {
-  const [history, historyManager] = useList<Diff>();
-  const [historyIndex, setHistoryIndex] = useState(-1);
-  const redoRef = useRef<(diff: Diff) => any>(redo);
-  const undoRef = useRef<(diff: Diff) => any>(undo);
-
-  redoRef.current = redo;
-  undoRef.current = undo;
+  const historyRef = useRef<(Diff | Diff[])[]>([]);
+  const historyIndexRef = useRef(-1);
+  const redoRef = useDynamicRef<(diff: Diff) => any>(redo);
+  const undoRef = useDynamicRef<
+    (diff: Diff, cursorOffsetBefore?: number) => any
+  >(undo);
 
   useKeyMap({
     'Control+Z,Meta+Z': () => {
-      if (historyIndex > -1) {
-        const diff = history[historyIndex];
+      const historyIndex = historyIndexRef.current;
 
-        setHistoryIndex(historyIndex - 1);
+      if (historyIndex > -1) {
+        const history = historyRef.current;
+        const diff = history[historyIndex];
+        let prevDiff = history[historyIndex - 1];
+        prevDiff = (Array.isArray(prevDiff)
+          ? prevDiff.slice().pop()
+          : prevDiff) as Diff;
+        const cursorOffsetBefore =
+          prevDiff?.cursorOffsetAfter || prevDiff?.endOffset;
+
+        historyIndexRef.current = historyIndex - 1;
 
         if (Array.isArray(diff)) {
           diff
             .slice()
             .reverse()
             .forEach((subDiff) => {
-              undoRef.current(subDiff);
+              undoRef.current(subDiff, cursorOffsetBefore);
             });
         } else {
-          undoRef.current(diff);
+          undoRef.current(diff, cursorOffsetBefore);
         }
       }
     },
     'Control+Shift+Z,Meta+Shift+Z': () => {
+      const history = historyRef.current;
+      const historyIndex = historyIndexRef.current;
+
       if (historyIndex < history.length - 1) {
         const diff = history[historyIndex + 1];
 
-        setHistoryIndex(historyIndex + 1);
+        historyIndexRef.current = historyIndex + 1;
 
         if (Array.isArray(diff)) {
           diff.forEach((subDiff) => {
@@ -55,17 +68,20 @@ export function useHistory({
     },
   });
 
-  useEffect(() => {
-    setHistoryIndex(history.length - 1);
-  }, [history]);
+  const pushHistory = useCallback((diff: Diff): void => {
+    const history = historyRef.current;
+    const historyIndex = historyIndexRef.current;
 
-  function pushHistory(diff: Diff): void {
     if (historyIndex < history.length - 1) {
-      historyManager.set([...history.slice(0, historyIndex), diff]);
-    } else {
-      historyManager.push(diff);
+      history.length = historyIndex + 1;
     }
-  }
+    if (history.length >= HISTORY_SIZE_LIMIT) {
+      history.splice(0, history.length - HISTORY_SIZE_LIMIT + 1);
+    }
+
+    history.push(diff);
+    historyIndexRef.current = history.length - 1;
+  }, []);
 
   return { pushHistory };
 }

@@ -1,4 +1,5 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import { useDynamicRef } from '~/platform/hooks';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
 import { getCursorPosition, getLineBeforeCursor } from '../../utils';
 import { getCompletion, getCompletionItems } from './utils';
@@ -20,10 +21,8 @@ export function useAutoCompletion({
   textAreaElement: HTMLTextAreaElement | null;
   onCompletion(completion: Completion): void;
 }): { hasCompletionItems: boolean; complete(): void } {
-  const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const onCompletionRef = useRef<(completion: Completion) => void>(
-    onCompletion
-  );
+  const activeIndexRef = useRef(-1);
+  const onCompletionRef = useDynamicRef(onCompletion);
   const {
     hideContextMenu,
     isContextMenuDisplayed: hasCompletionItems,
@@ -34,8 +33,12 @@ export function useAutoCompletion({
         .split(/[ ([{]/)
         .pop() as string)
     : '';
-
-  onCompletionRef.current = onCompletion;
+  const completePropsRef = useDynamicRef({
+    cursorOffset,
+    lineIndent,
+    onCompletion,
+    partialKeyword,
+  });
 
   useLayoutEffect(() => {
     if (textAreaElement) {
@@ -64,7 +67,9 @@ export function useAutoCompletion({
             ),
           })),
           makeFirstItemActive: true,
-          onActivate: setActiveIndex,
+          onActivate: (index) => {
+            activeIndexRef.current = index;
+          },
           position: getCursorPosition(
             textAreaElement,
             cursorOffset - correctedPartialKeyword.length
@@ -79,30 +84,32 @@ export function useAutoCompletion({
     hideContextMenu,
     lineIndent,
     menuClassName,
+    onCompletionRef,
     partialKeyword,
     showContextMenu,
     textAreaElement,
   ]);
 
   const complete = useCallback(() => {
+    const completeProps = completePropsRef.current;
     const { completionItems, correctedPartialKeyword } = getCompletionItems(
-      partialKeyword
+      completeProps.partialKeyword
     );
-    const completionItem = completionItems[activeIndex];
+    const completionItem = completionItems[activeIndexRef.current];
 
     if (completionItem !== undefined) {
       const { template } = completionItem;
 
-      onCompletionRef.current(
+      completeProps.onCompletion(
         getCompletion(
           template,
-          cursorOffset,
+          completeProps.cursorOffset,
           correctedPartialKeyword,
-          lineIndent
+          completeProps.lineIndent
         )
       );
     }
-  }, [activeIndex, cursorOffset, lineIndent, partialKeyword]);
+  }, [completePropsRef]);
 
   return { hasCompletionItems, complete };
 }
