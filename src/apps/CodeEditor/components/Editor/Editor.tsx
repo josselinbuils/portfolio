@@ -22,7 +22,7 @@ import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
 import { useAutoCompletion, useHistory } from './hooks';
 import { Completion } from './hooks/useAutoCompletion';
-import { Change, Diff, EditorFile } from './interfaces';
+import { EditorFile, State } from './interfaces';
 import {
   autoEditChange,
   docExec,
@@ -69,27 +69,24 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
-  const { pushHistory } = useHistory({ redo, undo });
+  const applyState = useCallback(
+    (state: State): void => {
+      onChange(state.code);
+      setCursorOffset(state.cursorOffset);
+    },
+    [onChange]
+  );
+  const { pushState } = useHistory({ fileName: activeFileName, applyState });
+  const updateState = useCallback(
+    (newState: State): void => {
+      applyState(newState);
+      pushState(newState);
+    },
+    [applyState, pushState]
+  );
   const activeFile = files.find(
     ({ name }) => name === activeFileName
   ) as EditorFile;
-
-  const applyChange = useCallback(
-    (change: Partial<Change>): void => {
-      const { cursorOffsetAfter, diffObj, newCode } = change;
-
-      if (newCode !== undefined) {
-        onChange(newCode);
-      }
-      if (cursorOffsetAfter !== undefined) {
-        setCursorOffset(cursorOffsetAfter);
-      }
-      if (diffObj !== undefined) {
-        pushHistory({ ...diffObj, cursorOffsetAfter });
-      }
-    },
-    [onChange, pushHistory]
-  );
 
   useKeyMap(
     {
@@ -168,11 +165,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }, [activeFile, files, code]);
 
   useLayoutEffect(() => {
-    applyChange({
-      newCode: activeFile.content,
-      cursorOffsetAfter: 0,
+    updateState({
+      code: activeFile.content,
+      cursorOffset: 0,
     });
-  }, [activeFile, applyChange]);
+  }, [activeFile, updateState]);
 
   useLayoutEffect(() => {
     highlightCode(code, activeFile.language).then((highlighted) => {
@@ -255,15 +252,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       const formatted = await formatCode(code, cursorOffset, language);
 
       if (formatted.code !== code) {
-        pushHistory([
-          getDiff(code, ''),
-          {
-            ...getDiff('', formatted.code),
-            cursorOffsetAfter: formatted.cursorOffset,
-          },
-        ]);
-        onChange(formatted.code);
-        setCursorOffset(formatted.cursorOffset);
+        updateState(formatted);
       }
     } catch (error) {
       console.error(error);
@@ -278,35 +267,34 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   ): void {
     const newCode = spliceString(baseCode, offset, 0, text);
 
-    applyChange({
-      newCode,
-      diffObj: getDiff(baseCode, newCode),
-      cursorOffsetAfter: newCursorOffset || offset + text.length,
+    updateState({
+      code: newCode,
+      cursorOffset: newCursorOffset || offset + text.length,
     });
   }
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
+    const currentState = { code, cursorOffset };
     const newCode = event.target.value;
     const diffObj = getDiff(code, newCode);
-    let change: Change | undefined = {
-      cursorOffsetAfter: diffObj.endOffset,
-      diffObj,
-      newCode,
+    let newState: State | undefined = {
+      code: newCode,
+      cursorOffset: diffObj.endOffset,
     };
 
-    if (diffObj.type === '+') {
+    if (newCode.length > code.length) {
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
 
       if (allowAutoComplete && !autoCompleteActive) {
         setAutoCompleteActive(true);
       }
-      change = autoEditChange(code, cursorOffset, change);
+      newState = autoEditChange(currentState, newState);
     } else {
       disableAutoCompletion();
     }
 
-    if (change !== undefined) {
-      applyChange(change);
+    if (newState !== undefined) {
+      updateState(newState);
     }
   }
 
@@ -363,30 +351,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  function redo(diffObj: Diff): void {
-    const { cursorOffsetAfter, endOffset, diff, startOffset, type } = diffObj;
-
-    applyChange({
-      newCode:
-        type === '+'
-          ? spliceString(code, startOffset, 0, diff)
-          : spliceString(code, endOffset, diff.length),
-      cursorOffsetAfter: cursorOffsetAfter || endOffset,
-    });
-  }
-
-  function undo(diffObj: Diff, cursorOffsetBefore?: number): void {
-    const { endOffset, diff, startOffset, type } = diffObj;
-
-    applyChange({
-      newCode:
-        type === '+'
-          ? spliceString(code, startOffset, diff.length)
-          : spliceString(code, endOffset, 0, diff),
-      cursorOffsetAfter: cursorOffsetBefore || startOffset,
-    });
   }
 
   return (

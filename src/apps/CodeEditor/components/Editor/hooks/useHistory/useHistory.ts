@@ -1,110 +1,94 @@
 import { useCallback, useRef } from 'react';
 import { useDynamicRef, useKeyMap } from '~/platform/hooks';
-import { Diff } from '../../interfaces';
+import { Diff, State } from '../../interfaces';
+import { getDiff } from '../../utils';
 
-const HISTORY_SIZE_LIMIT = 100;
+const HISTORY_SIZE_LIMIT = 50;
 
-// TODO do not merge history after direction change
-// TODO clear history when changing file or manage history by file
-
-export function useHistory({
-  redo,
-  undo,
+export function useHistory<T>({
+  applyState,
+  fileName,
 }: {
-  redo(diff: Diff): any;
-  undo(diff: Diff, cursorOffsetBefore?: number): any;
+  fileName: string;
+  applyState(state: State): any;
 }): {
-  pushHistory(diff: Diff | Diff[]): void;
+  pushState(state: State): void;
 } {
-  const historyRef = useRef<(Diff | Diff[])[]>([]);
-  const historyIndexRef = useRef(-1);
-  const redoRef = useDynamicRef<(diff: Diff) => any>(redo);
-  const undoRef = useDynamicRef<
-    (diff: Diff, cursorOffsetBefore?: number) => any
-  >(undo);
+  const historyRef = useRef<{
+    [fileName: string]: { index: number; states: StateWithDiff[] };
+  }>({});
+  const applyStateRef = useDynamicRef(applyState);
+
+  if (historyRef.current[fileName] === undefined) {
+    historyRef.current[fileName] = { index: -1, states: [] };
+  }
+
+  const fileHistoryRef = useDynamicRef(historyRef.current[fileName]);
 
   useKeyMap({
     'Control+Z,Meta+Z': () => {
-      const historyIndex = historyIndexRef.current;
+      const { index, states } = fileHistoryRef.current;
 
-      if (historyIndex > -1) {
-        const history = historyRef.current;
-        const diff = history[historyIndex];
-        const prevDiff = getLastSubDiff(history[historyIndex - 1]);
-        const cursorOffsetBefore =
-          prevDiff?.cursorOffsetAfter || prevDiff?.endOffset;
-
-        historyIndexRef.current = historyIndex - 1;
-
-        if (Array.isArray(diff)) {
-          diff
-            .slice()
-            .reverse()
-            .forEach((subDiff) => {
-              undoRef.current(subDiff, cursorOffsetBefore);
-            });
-        } else {
-          undoRef.current(diff, cursorOffsetBefore);
-        }
+      if (index > 0) {
+        const newIndex = index - 1;
+        fileHistoryRef.current.index = newIndex;
+        applyStateRef.current(states[newIndex]);
       }
     },
     'Control+Shift+Z,Meta+Shift+Z': () => {
-      const history = historyRef.current;
-      const historyIndex = historyIndexRef.current;
+      const { index, states } = fileHistoryRef.current;
 
-      if (historyIndex < history.length - 1) {
-        const diff = history[historyIndex + 1];
-
-        historyIndexRef.current = historyIndex + 1;
-
-        if (Array.isArray(diff)) {
-          diff.forEach((subDiff) => {
-            redoRef.current(subDiff);
-          });
-        } else {
-          redoRef.current(diff);
-        }
+      if (index < states.length - 1) {
+        const newIndex = index + 1;
+        fileHistoryRef.current.index = newIndex;
+        applyStateRef.current(states[newIndex]);
       }
     },
   });
 
-  const pushHistory = useCallback((diff: Diff): void => {
-    const history = historyRef.current;
-    const historyIndex = historyIndexRef.current;
+  const pushState = useCallback(
+    (newState: StateWithDiff): void => {
+      const { index, states } = fileHistoryRef.current;
 
-    if (historyIndex < history.length - 1) {
-      history.length = historyIndex + 1;
-      history.push(diff);
-      historyIndexRef.current = history.length - 1;
-    } else {
-      if (history.length >= HISTORY_SIZE_LIMIT) {
-        history.splice(0, history.length - HISTORY_SIZE_LIMIT + 1);
-      }
-
-      const lastSubDiff = getLastSubDiff(history[history.length - 1]);
-
-      if (
-        history.length > 0 &&
-        !/\s/.test(diff.diff) &&
-        diff.startOffset === lastSubDiff.endOffset
-      ) {
-        const lastDiff = history[history.length - 1];
-
-        if (!Array.isArray(lastDiff)) {
-          history[history.length - 1] = [lastDiff, diff];
-        } else {
-          lastDiff.push(diff);
-        }
+      if (index < states.length - 1) {
+        states.length = index + 1;
+        states.push(newState);
+        fileHistoryRef.current.index = states.length - 1;
       } else {
-        history.push(diff);
-        historyIndexRef.current = history.length - 1;
-      }
-    }
-  }, []);
+        if (states.length >= HISTORY_SIZE_LIMIT) {
+          states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
+        }
 
-  return { pushHistory };
+        if (states.length > 0) {
+          const currentState = states[states.length - 1];
+          const currentDiffObj = currentState.diffObj;
+          const newDiffObj = getDiff(currentState.code, newState.code);
+
+          newState.diffObj = newDiffObj;
+
+          if (
+            !/\s/.test(newState.diffObj.diff) &&
+            currentDiffObj !== undefined &&
+            newDiffObj.type === currentDiffObj.type &&
+            newDiffObj.startOffset === currentDiffObj.endOffset
+          ) {
+            currentState.code = newState.code;
+            currentState.cursorOffset = newState.cursorOffset;
+            currentDiffObj.diff = `${currentDiffObj.diff}${newDiffObj.diff}`;
+            currentDiffObj.endOffset = newDiffObj.endOffset;
+            return;
+          }
+        }
+        states.push(newState);
+        fileHistoryRef.current.index = states.length - 1;
+      }
+    },
+    [fileHistoryRef]
+  );
+
+  return { pushState };
 }
 
-function getLastSubDiff(diff: Diff | Diff[]): Diff {
-  return (Array.isArray(diff) ? diff.slice().pop() : diff) as Diff;
+interface StateWithDiff extends State {
+  diffObj?: Diff;
 }
