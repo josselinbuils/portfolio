@@ -4,6 +4,9 @@ import { Diff } from '../../interfaces';
 
 const HISTORY_SIZE_LIMIT = 100;
 
+// TODO do not merge history after direction change
+// TODO clear history when changing file or manage history by file
+
 export function useHistory({
   redo,
   undo,
@@ -97,6 +100,7 @@ export function useHistory({
         historyIndexRef.current = history.length - 1;
       }
     }
+    console.log(history);
   }, []);
 
   return { pushHistory };

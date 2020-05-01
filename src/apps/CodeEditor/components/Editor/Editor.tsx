@@ -10,6 +10,7 @@ import React, {
   DragEvent,
   FC,
   SyntheticEvent,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -21,23 +22,23 @@ import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
 import { useAutoCompletion, useHistory } from './hooks';
 import { Completion } from './hooks/useAutoCompletion';
-import { Diff, EditorFile } from './interfaces';
+import { Change, Diff, EditorFile } from './interfaces';
 import {
+  autoEditChange,
   docExec,
   exportAsImage,
   fileSaver,
   formatCode,
-  getAutoCloseChar,
   getDiff,
   getLineBeforeCursor,
   getLineIndent,
   highlightCode,
-  isAutoCloseChar,
   isCodePortionEnd,
   isIntoAutoCloseGroup,
   isIntoBrackets,
   isOpenBracket,
   openFile,
+  spliceString,
 } from './utils';
 import { canFormat } from './utils/formatCode';
 
@@ -72,6 +73,23 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const activeFile = files.find(
     ({ name }) => name === activeFileName
   ) as EditorFile;
+
+  const applyChange = useCallback(
+    (change: Partial<Change>): void => {
+      const { cursorOffsetAfter, diffObj, newCode } = change;
+
+      if (newCode !== undefined) {
+        onChange(newCode);
+      }
+      if (cursorOffsetAfter !== undefined) {
+        setCursorOffset(cursorOffsetAfter);
+      }
+      if (diffObj !== undefined) {
+        pushHistory({ ...diffObj, cursorOffsetAfter });
+      }
+    },
+    [onChange, pushHistory]
+  );
 
   useKeyMap(
     {
@@ -117,8 +135,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         if (isIntoBrackets(code, cursorOffset)) {
           insertText(
             `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`,
-            undefined,
-            undefined,
             cursorOffset + indent + 3
           );
         } else {
@@ -152,8 +168,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }, [activeFile, files, code]);
 
   useLayoutEffect(() => {
-    onChange(activeFile.content);
-  }, [activeFile, onChange]);
+    applyChange({
+      newCode: activeFile.content,
+      cursorOffsetAfter: 0,
+    });
+  }, [activeFile, applyChange]);
 
   useLayoutEffect(() => {
     highlightCode(code, activeFile.language).then((highlighted) => {
@@ -193,7 +212,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     completion,
     newCursorOffset,
   }: Completion): void {
-    insertText(completion, undefined, undefined, newCursorOffset);
+    insertText(completion, newCursorOffset);
   }
 
   function closeFile(name: string): void {
@@ -253,49 +272,41 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function insertText(
     text: string,
+    newCursorOffset?: number,
     offset: number = cursorOffset,
-    baseCode: string = code,
-    newCursorOffset: number = offset + text.length
+    baseCode: string = code
   ): void {
-    const newCode = `${baseCode.slice(0, offset)}${text}${baseCode.slice(
-      offset
-    )}`;
-    const diffObj = {
-      ...getDiff(baseCode, newCode),
-      cursorOffsetAfter: newCursorOffset,
-    };
-    onChange(newCode);
-    setCursorOffset(newCursorOffset);
-    pushHistory(diffObj);
+    const newCode = spliceString(baseCode, offset, 0, text);
+
+    applyChange({
+      newCode,
+      diffObj: getDiff(baseCode, newCode),
+      cursorOffsetAfter: newCursorOffset || offset + text.length,
+    });
   }
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newCode = event.target.value;
     const diffObj = getDiff(code, newCode);
-
-    onChange(newCode);
-    setCursorOffset(diffObj.endOffset);
-    pushHistory(diffObj);
+    let change: Change | undefined = {
+      cursorOffsetAfter: diffObj.endOffset,
+      diffObj,
+      newCode,
+    };
 
     if (diffObj.type === '+') {
-      const autoCloseChar = getAutoCloseChar(diffObj.diff);
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
-
-      if (autoCloseChar !== undefined && allowAutoComplete) {
-        const { endOffset } = diffObj;
-        insertText(autoCloseChar, endOffset, newCode, endOffset);
-      } else if (
-        isIntoAutoCloseGroup(code, cursorOffset) &&
-        isAutoCloseChar(diffObj.diff)
-      ) {
-        docExec.forwardDelete();
-      }
 
       if (allowAutoComplete && !autoCompleteActive) {
         setAutoCompleteActive(true);
       }
+      change = autoEditChange(code, cursorOffset, change);
     } else {
       disableAutoCompletion();
+    }
+
+    if (change !== undefined) {
+      applyChange(change);
     }
   }
 
@@ -353,30 +364,28 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
-  function redo({
-    cursorOffsetAfter,
-    endOffset,
-    diff,
-    startOffset,
-    type,
-  }: Diff): void {
-    onChange(
-      type === '+'
-        ? `${code.slice(0, startOffset)}${diff}${code.slice(startOffset)}`
-        : `${code.slice(0, endOffset)}${code.slice(startOffset)}`
-    );
-    setCursorOffset(cursorOffsetAfter || endOffset);
+  function redo(diffObj: Diff): void {
+    const { cursorOffsetAfter, endOffset, diff, startOffset, type } = diffObj;
+
+    applyChange({
+      newCode:
+        type === '+'
+          ? spliceString(code, startOffset, 0, diff)
+          : spliceString(code, endOffset, diff.length),
+      cursorOffsetAfter: cursorOffsetAfter || endOffset,
+    });
   }
 
   function undo(diffObj: Diff, cursorOffsetBefore?: number): void {
     const { endOffset, diff, startOffset, type } = diffObj;
 
-    onChange(
-      type === '+'
-        ? `${code.slice(0, startOffset)}${code.slice(endOffset)}`
-        : `${code.slice(0, endOffset)}${diff}${code.slice(startOffset)}`
-    );
-    setCursorOffset(cursorOffsetBefore || startOffset);
+    applyChange({
+      newCode:
+        type === '+'
+          ? spliceString(code, startOffset, diff.length)
+          : spliceString(code, endOffset, 0, diff),
+      cursorOffsetAfter: cursorOffsetBefore || startOffset,
+    });
   }
 
   return (
