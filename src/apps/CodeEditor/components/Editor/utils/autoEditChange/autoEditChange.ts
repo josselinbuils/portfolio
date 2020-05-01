@@ -7,7 +7,12 @@ import { getLineIndent } from '../getLineIndent';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
 import { spliceString } from '../spliceString';
-import { getAutoCloseChar, isAutoCloseChar, isIntoBrackets } from './utils';
+import {
+  getAutoCloseChar,
+  isAutoCloseChar,
+  isIntoBrackets,
+  isOpenBracket,
+} from './utils';
 
 const REGEX_BREAK = /^ *break; *$/;
 const REGEX_CHAINED_CALL = /^ *\..+; *$/;
@@ -50,8 +55,12 @@ export function autoEditChange(
         };
       } else {
         let indent = getLineIndent(code, cursorOffset);
+        const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
 
-        if (code[cursorOffset - 1] === ':') {
+        if (
+          isOpenBracket(lineBeforeCursor.trim().slice(-1)) ||
+          code[cursorOffset - 1] === ':'
+        ) {
           indent += INDENT.length;
         } else {
           const line = getLine(code, cursorOffset);
