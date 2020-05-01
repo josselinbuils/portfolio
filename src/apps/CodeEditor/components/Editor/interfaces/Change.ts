@@ -2,6 +2,6 @@ import { Diff } from './Diff';
 
 export interface Change {
   cursorOffsetAfter: number;
-  diffObj: Diff | Diff[];
+  diffObj: Diff;
   newCode: string;
 }

@@ -333,6 +333,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
+  // TODO use spliceString
   function deleteRange(start: number, end: number): void {
     if (textAreaElementRef.current !== null) {
       textAreaElementRef.current.setSelectionRange(start, end);
