@@ -25,7 +25,6 @@ import { Completion } from './hooks/useAutoCompletion';
 import { EditorFile, State } from './interfaces';
 import {
   autoEditChange,
-  docExec,
   exportAsImage,
   fileSaver,
   formatCode,
@@ -99,8 +98,13 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         }
       },
       'Shift+Tab': () => {
-        if (code.slice(cursorOffset - INDENT.length, cursorOffset) === INDENT) {
-          deleteRange(cursorOffset - INDENT.length, cursorOffset);
+        const deleteCount = INDENT.length;
+
+        if (code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT) {
+          updateState({
+            code: spliceString(code, cursorOffset - deleteCount, deleteCount),
+            cursorOffset: cursorOffset - deleteCount,
+          });
         }
       },
       Tab: () => {
@@ -120,11 +124,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }, [activeFile, files, code]);
 
   useLayoutEffect(() => {
-    updateState({
+    applyState({
       code: activeFile.content,
       cursorOffset: 0,
     });
-  }, [activeFile, updateState]);
+  }, [activeFile, applyState]);
 
   useLayoutEffect(() => {
     highlightCode(code, activeFile.language).then((highlighted) => {
@@ -145,9 +149,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     const textAreaElement = textAreaElementRef.current;
 
     if (textAreaElement !== null) {
-      const { selectionStart } = textAreaElement;
+      const { selectionEnd, selectionStart } = textAreaElement;
 
-      if (!isThereSelection() && selectionStart !== cursorOffset) {
+      if (selectionEnd === selectionStart && selectionStart !== cursorOffset) {
         textAreaElement.selectionStart = cursorOffset;
         textAreaElement.selectionEnd = cursorOffset;
       }
@@ -214,20 +218,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
-  function insertText(
-    text: string,
-    newCursorOffset?: number,
-    offset: number = cursorOffset,
-    baseCode: string = code
-  ): void {
-    const newCode = spliceString(baseCode, offset, 0, text);
-
-    updateState({
-      code: newCode,
-      cursorOffset: newCursorOffset || offset + text.length,
-    });
-  }
-
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newCode = event.target.value;
 
@@ -275,20 +265,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     }
   }
 
-  // TODO use spliceString
-  function deleteRange(start: number, end: number): void {
-    if (textAreaElementRef.current !== null) {
-      textAreaElementRef.current.setSelectionRange(start, end);
-      docExec.delete();
-    }
-  }
-
-  function isThereSelection(): boolean {
-    if (textAreaElementRef.current !== null) {
-      const { selectionEnd, selectionStart } = textAreaElementRef.current;
-      return selectionEnd !== selectionStart;
-    }
-    return false;
+  function insertText(
+    text: string,
+    newCursorOffset: number = cursorOffset + text.length
+  ): void {
+    updateState({
+      code: spliceString(code, cursorOffset, 0, text),
+      cursorOffset: newCursorOffset,
+    });
   }
 
   async function open(file?: File): Promise<void> {

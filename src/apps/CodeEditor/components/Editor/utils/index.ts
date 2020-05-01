@@ -1,6 +1,5 @@
 export * from './autoEditChange';
 export * from './createAutoCloseMap';
-export * from './docExec';
 export * from './exportAsImage';
 export * from './fileSaver';
 export { formatCode } from './formatCode';
