@@ -90,7 +90,6 @@ function computeFrameGeometry(
   }
 
   const { columns, rows } = frame;
-  // TODO use slice thickness
   const dimensionsMm = [pixelSpacing[0] * columns, pixelSpacing[1] * rows];
 
   const imageCenter = V(imagePosition)

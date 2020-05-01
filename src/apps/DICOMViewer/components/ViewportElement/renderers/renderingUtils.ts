@@ -250,7 +250,6 @@ function computeViewportSpaceCoordinates(
   };
 }
 
-// TODO Optimize this
 function getImageDimensions(
   viewport: Viewport
 ):

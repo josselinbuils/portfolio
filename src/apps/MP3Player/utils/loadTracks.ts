@@ -2,8 +2,6 @@ import dayjs from 'dayjs';
 import { BASE_URL } from '~/platform/constants';
 import { Music } from '../interfaces';
 
-// TODO format musics in the backend
-
 export async function loadTracks(
   path: string,
   order: string = 'popularity_total'
