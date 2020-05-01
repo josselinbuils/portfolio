@@ -44,6 +44,15 @@
   margin-left: 0.7rem;
 }
 
+.code::before {
+  position: absolute;
+  top: 0;
+  left: calc(0.7rem + 80ch);
+  height: 100%;
+  content: '';
+  border-right: 0.1rem solid #484848;
+}
+
 .code,
 .textarea {
   @include scrollbar;
