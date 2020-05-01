@@ -2,9 +2,7 @@ import { useEventListener } from './useEventListener';
 
 export function useKeyMap(
   keyMap: {
-    [keyStr: string]: (
-      event: KeyboardEvent
-    ) => void | false | Promise<void | false>;
+    [keyStr: string]: (event: KeyboardEvent) => false | any;
   },
   active: boolean = true
 ): void {
@@ -19,7 +17,7 @@ export function useKeyMap(
           keyStr.split(',').some((subKeyStr) => subKeyStr === eventKeyStr);
 
         if (isTarget) {
-          if ((await handler(event)) !== false) {
+          if (handler(event) !== false) {
             event.preventDefault();
           }
           break;

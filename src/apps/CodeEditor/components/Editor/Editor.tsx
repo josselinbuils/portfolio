@@ -86,12 +86,8 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   useKeyMap(
     {
       'Control+N,Meta+N': createFile,
-      'Control+O,Meta+O': () => {
-        open();
-      },
-      'Control+S,Meta+S': () => {
-        format();
-      },
+      'Control+O,Meta+O': () => open(undefined),
+      'Control+S,Meta+S': format,
       Escape: () => {
         if (autoCompleteActive) {
           setAutoCompleteActive(false);
