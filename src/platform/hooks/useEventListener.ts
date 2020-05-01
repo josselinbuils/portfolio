@@ -1,17 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { EventHandler } from '../interfaces';
-import { noop } from '../utils';
+import { useDynamicRef } from './useDynamicRef';
 
 export function useEventListener<EventType extends keyof WindowEventMap>(
   eventType: EventType,
   handler: EventHandler<EventType>,
   active: boolean = true
 ): void {
-  const handlerRef = useRef<EventHandler<EventType>>(noop);
-
-  useEffect(() => {
-    handlerRef.current = handler;
-  }, [handler]);
+  const handlerRef = useDynamicRef(handler);
 
   useEffect(() => {
     if (active) {
@@ -22,5 +18,5 @@ export function useEventListener<EventType extends keyof WindowEventMap>(
 
       return () => window.removeEventListener(eventType, listener);
     }
-  }, [active, eventType]);
+  }, [active, eventType, handlerRef]);
 }
