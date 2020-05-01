@@ -11,7 +11,5 @@ export * from './getLineIndent';
 export * from './highlightCode';
 export * from './isCodePortionEnd';
 export * from './isIntoAutoCloseGroup';
-export * from './isIntoBrackets';
-export * from './isOpenBracket';
 export * from './openFile';
 export * from './spliceString';

@@ -30,13 +30,9 @@ import {
   fileSaver,
   formatCode,
   getDiff,
-  getLineBeforeCursor,
   getLineIndent,
   highlightCode,
   isCodePortionEnd,
-  isIntoAutoCloseGroup,
-  isIntoBrackets,
-  isOpenBracket,
   openFile,
   spliceString,
 } from './utils';
@@ -90,53 +86,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   useKeyMap(
     {
-      Backspace: () => {
-        if (isThereSelection()) {
-          return false;
-        }
-
-        if (isIntoAutoCloseGroup(code, cursorOffset)) {
-          deleteRange(cursorOffset - 1, cursorOffset + 1);
-        } else {
-          const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
-
-          if (/^ +$/.test(lineBeforeCursor)) {
-            deleteRange(
-              cursorOffset - lineBeforeCursor.length - 1,
-              cursorOffset
-            );
-          } else {
-            return false;
-          }
-        }
-      },
       'Control+N,Meta+N': createFile,
       'Control+O,Meta+O': () => {
         open();
       },
       'Control+S,Meta+S': () => {
         format();
-      },
-      Enter: () => {
-        if (hasCompletionItems) {
-          return;
-        }
-        const indent = getLineIndent(code, cursorOffset);
-        const indentSpaces = ' '.repeat(indent);
-        const additionalSpaces =
-          isOpenBracket(code[cursorOffset - 1]) ||
-          code[cursorOffset - 1] === ':'
-            ? INDENT
-            : '';
-
-        if (isIntoBrackets(code, cursorOffset)) {
-          insertText(
-            `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`,
-            cursorOffset + indent + 3
-          );
-        } else {
-          insertText(`\n${indentSpaces}${additionalSpaces}`);
-        }
       },
       Escape: () => {
         if (autoCompleteActive) {
@@ -274,13 +229,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
-    const currentState = { code, cursorOffset };
     const newCode = event.target.value;
-    const diffObj = getDiff(code, newCode);
-    let newState: State | undefined = {
-      code: newCode,
-      cursorOffset: diffObj.endOffset,
-    };
 
     if (newCode.length > code.length) {
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
@@ -288,10 +237,15 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
       if (allowAutoComplete && !autoCompleteActive) {
         setAutoCompleteActive(true);
       }
-      newState = autoEditChange(currentState, newState);
     } else {
       disableAutoCompletion();
     }
+
+    const currentState = { code, cursorOffset };
+    const newState = autoEditChange(currentState, {
+      code: newCode,
+      cursorOffset: getDiff(code, newCode).endOffset,
+    });
 
     if (newState !== undefined) {
       updateState(newState);
