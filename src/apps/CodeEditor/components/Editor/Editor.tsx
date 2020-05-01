@@ -254,14 +254,14 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   function insertText(
     text: string,
     offset: number = cursorOffset,
-    baseText: string = code,
+    baseCode: string = code,
     newCursorOffset: number = offset + text.length
   ): void {
-    const newCode = `${baseText.slice(0, offset)}${text}${baseText.slice(
+    const newCode = `${baseCode.slice(0, offset)}${text}${baseCode.slice(
       offset
     )}`;
     const diffObj = {
-      ...getDiff(code, newCode),
+      ...getDiff(baseCode, newCode),
       cursorOffsetAfter: newCursorOffset,
     };
     onChange(newCode);
