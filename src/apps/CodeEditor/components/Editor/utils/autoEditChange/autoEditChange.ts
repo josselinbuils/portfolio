@@ -1,17 +1,17 @@
 import { INDENT } from '../../constants';
 import { State } from '../../interfaces';
 import { getDiff } from '../getDiff';
+import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
 import { spliceString } from '../spliceString';
-import {
-  getAutoCloseChar,
-  isAutoCloseChar,
-  isIntoBrackets,
-  isOpenBracket,
-} from './utils';
+import { getAutoCloseChar, isAutoCloseChar, isIntoBrackets } from './utils';
+
+const REGEX_BREAK = /^ *break; *$/;
+const REGEX_CHAINED_CALL = /^ *\..+; *$/;
+const REGEX_SPACES_ONLY = /^ *$/;
 
 export function autoEditChange(
   currentState: State,
@@ -38,28 +38,39 @@ export function autoEditChange(
       result = undefined;
     } else if (diff === '\n') {
       const { code, cursorOffset } = currentState;
-      const indent = getLineIndent(code, cursorOffset);
-      const indentSpaces = ' '.repeat(indent);
-      const additionalSpaces =
-        isOpenBracket(code[cursorOffset - 1]) || code[cursorOffset - 1] === ':'
-          ? INDENT
-          : '';
 
       if (isIntoBrackets(code, cursorOffset)) {
-        const insertion = `\n${indentSpaces}${additionalSpaces}\n${indentSpaces}`;
+        const indent = getLineIndent(code, cursorOffset);
+        const indentSpaces = ' '.repeat(indent);
+        const insertion = `\n${indentSpaces}${INDENT}\n${indentSpaces}`;
+
         result = {
           code: spliceString(code, cursorOffset, 0, insertion),
-          cursorOffset: cursorOffset + indent + additionalSpaces.length + 1,
+          cursorOffset: cursorOffset + indent + INDENT.length + 1,
         };
       } else {
-        const insertion = `\n${indentSpaces}${additionalSpaces}`;
+        let indent = getLineIndent(code, cursorOffset);
+
+        if (code[cursorOffset - 1] === ':') {
+          indent += INDENT.length;
+        } else {
+          const line = getLine(code, cursorOffset);
+
+          if (REGEX_BREAK.test(line) || REGEX_CHAINED_CALL.test(line)) {
+            indent = Math.max(indent - INDENT.length, 0);
+          }
+        }
+
+        const indentSpaces = ' '.repeat(indent);
+        const insertion = `\n${indentSpaces}`;
+
         result = {
           code: spliceString(code, cursorOffset, 0, insertion),
-          cursorOffset: cursorOffset + indent + additionalSpaces.length + 1,
+          cursorOffset: cursorOffset + insertion.length,
         };
       }
     }
-  } else {
+  } else if (diff.length === 1) {
     const { code, cursorOffset } = currentState;
 
     if (isIntoAutoCloseGroup(code, cursorOffset)) {
@@ -70,7 +81,7 @@ export function autoEditChange(
     } else {
       const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
 
-      if (/^ +$/.test(lineBeforeCursor)) {
+      if (REGEX_SPACES_ONLY.test(lineBeforeCursor)) {
         const deleteCount = lineBeforeCursor.length + 1;
         result = {
           code: spliceString(code, cursorOffset - deleteCount, deleteCount),

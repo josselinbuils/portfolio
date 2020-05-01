@@ -5,6 +5,7 @@ export * from './fileSaver';
 export { formatCode } from './formatCode';
 export * from './getCursorPosition';
 export * from './getDiff';
+export * from './getLine';
 export * from './getLineBeforeCursor';
 export * from './getLineIndent';
 export * from './highlightCode';
