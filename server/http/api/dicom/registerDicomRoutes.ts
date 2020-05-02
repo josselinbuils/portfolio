@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { Logger } from '../../../Logger';
 import { asyncRoute } from '../../asyncRoute';
-import { Logger } from '../../Logger';
 import { DicomController } from './DicomController';
 
 export function registerDicomRoutes(router: Router): void {

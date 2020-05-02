@@ -20,9 +20,9 @@ import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
 import { LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
-import { useAutoCompletion, useHistory } from './hooks';
+import { useAutoCompletion, useHistory, useSharedFile } from './hooks';
 import { Completion } from './hooks/useAutoCompletion';
-import { EditorFile, State } from './interfaces';
+import { EditableState, EditorFile } from './interfaces';
 import {
   autoEditChange,
   exportAsImage,
@@ -65,19 +65,30 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
   const applyState = useCallback(
-    (state: State): void => {
+    (state: EditableState): void => {
       onChange(state.code);
       setCursorOffset(state.cursorOffset);
     },
     [onChange]
   );
   const { pushState } = useHistory({ fileName: activeFileName, applyState });
+  const isSharedFileActive = activeFileName === 'shared.js';
+  const { updateClientState } = useSharedFile({
+    active: isSharedFileActive,
+    applyClientState: (state) => onChange(state.code),
+    code,
+  });
   const updateState = useCallback(
-    (newState: State): void => {
-      applyState(newState);
-      pushState(newState);
+    (newState: EditableState): void => {
+      if (isSharedFileActive) {
+        updateClientState(newState);
+        applyState(newState);
+      } else {
+        applyState(newState);
+        pushState(newState);
+      }
     },
-    [applyState, pushState]
+    [applyState, isSharedFileActive, pushState, updateClientState]
   );
   const activeFile = files.find(
     ({ name }) => name === activeFileName
@@ -115,9 +126,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   );
 
   useEffect(() => {
-    activeFile.content = code;
-    fileSaver.saveFiles(files);
-  }, [activeFile, files, code]);
+    if (!isSharedFileActive) {
+      activeFile.content = code;
+      fileSaver.saveFiles(files);
+    }
+  }, [activeFile, code, files, isSharedFileActive]);
 
   useLayoutEffect(() => {
     applyState({
@@ -188,7 +201,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
   function createFile(): void {
     const maxIndex = Math.max(
-      ...files.map((file) => parseInt(file.name.slice(5, -3) || '0', 10))
+      ...files.map((file) =>
+        parseInt(
+          (file.name.startsWith('local') && file.name.slice(5, -3)) || '0',
+          10
+        )
+      )
     );
     const name = `local${maxIndex + 1}.js`;
     fileManager.push({ content: '', name, language: 'javascript' });
@@ -202,6 +220,9 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   }
 
   async function format(): Promise<void> {
+    if (isSharedFileActive) {
+      return;
+    }
     try {
       const { language } = activeFile;
       const formatted = await formatCode(code, cursorOffset, language);
@@ -297,7 +318,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
             selected={name === activeFileName}
           >
             {name}
-            {index > 0 && (
+            {index >= fileSaver.defaultFiles.length && (
               <FontAwesomeIcon
                 className={styles.close}
                 icon={faTimes}
@@ -366,7 +387,11 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
           }
         />
         <ToolButton
-          disabled={code.length === 0 || !canFormat(activeFile.language)}
+          disabled={
+            code.length === 0 ||
+            isSharedFileActive ||
+            !canFormat(activeFile.language)
+          }
           icon={faStream}
           onClick={format}
           title={

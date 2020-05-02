@@ -1,7 +1,8 @@
 import { lstatSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { ASSETS_DIR, ENV_DEV } from '../../constants';
-import { Logger } from '../../Logger';
+import { ENV_DEV } from '../../../constants';
+import { Logger } from '../../../Logger';
+import { ASSETS_DIR } from '../../constants';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
 const dicomPath = join(process.cwd(), ASSETS_DIR, '/dicom');

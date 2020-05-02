@@ -1,4 +1,4 @@
-export interface State {
+export interface EditableState {
   code: string;
   cursorOffset: number;
 }

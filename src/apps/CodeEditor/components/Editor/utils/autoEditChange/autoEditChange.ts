@@ -1,5 +1,5 @@
 import { INDENT } from '../../constants';
-import { State } from '../../interfaces';
+import { EditableState } from '../../interfaces';
 import { getDiff } from '../getDiff';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
@@ -19,16 +19,16 @@ const REGEX_CHAINED_CALL = /^ *\..+; *$/;
 const REGEX_SPACES_ONLY = /^ *$/;
 
 export function autoEditChange(
-  currentState: State,
-  newState: State
-): State | undefined {
+  currentState: EditableState,
+  newState: EditableState
+): EditableState | undefined {
   const { diff, endOffset, type } = getDiff(currentState.code, newState.code);
   const autoCloseChar = getAutoCloseChar(diff);
   const allowAutoComplete = isCodePortionEnd(
     currentState.code,
     currentState.cursorOffset
   );
-  let result: State | undefined = newState;
+  let result: EditableState | undefined = newState;
 
   if (type === '+') {
     if (autoCloseChar !== undefined && allowAutoComplete) {

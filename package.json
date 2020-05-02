@@ -44,6 +44,7 @@
     "@types/request-promise-native": "^1.0.17",
     "@types/snoowrap": "^1.19.0",
     "@types/source-map-support": "^0.5.1",
+    "@types/ws": "^7.2.4",
     "ansi_up": "^4.0.4",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
@@ -61,13 +62,15 @@
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
     "react-snap": "^1.23.0",
+    "redux": "^4.0.5",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "rimraf": "^3.0.2",
     "serve-static": "^1.14.1",
     "snoowrap": "^1.21.0",
     "source-map-support": "^0.5.16",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "ws": "^7.2.5"
   },
   "devDependencies": {
     "@josselinbuils/exec-staged": "^0.1.1",

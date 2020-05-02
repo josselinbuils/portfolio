@@ -3,19 +3,19 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import { existsSync, statSync } from 'fs';
 import { join } from 'path';
 import serveStatic from 'serve-static';
+import { ENV_DEV } from '../constants';
+import { Logger } from '../Logger';
 import { registerDicomRoutes } from './api/dicom';
 import { registerJamendoRoutes } from './api/jamendo';
 import { registerRedditRoutes } from './api/reddit';
 import {
   ASSETS_DIR,
-  ENV_DEV,
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   MAX_AGE_DAYS,
   PUBLIC_DIR,
 } from './constants';
-import { Logger } from './Logger';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
 const ASSETS_PATH = join(process.cwd(), ASSETS_DIR);

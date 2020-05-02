@@ -1,23 +1,28 @@
 import { EditorFile } from '../interfaces';
 
 const STORAGE_KEY = 'codeEditor';
-const DEFAULT_FILENAME = 'local.js';
-const DEFAULT_LANGUAGE = 'javascript';
+
+const defaultFiles = [
+  {
+    content: '',
+    language: 'javascript',
+    name: 'local.js',
+  },
+  {
+    content: '',
+    language: 'javascript',
+    name: 'shared.js',
+  },
+];
 
 export const fileSaver = {
+  defaultFiles,
   loadFiles,
   saveFiles,
 };
 
 function loadFiles(): EditorFile[] {
   const stored = localStorage.getItem(STORAGE_KEY);
-  const defaultFiles = [
-    {
-      content: '',
-      language: DEFAULT_LANGUAGE,
-      name: DEFAULT_FILENAME,
-    },
-  ];
 
   if (stored !== null) {
     return (JSON.parse(stored) as SaveState)?.files || defaultFiles;

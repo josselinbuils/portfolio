@@ -5,6 +5,11 @@ export const BASE_URL =
     ? 'http://localhost:9000'
     : `https://${PROD_HOSTNAME}`;
 
+export const BASE_URL_WS =
+  window.location.host.indexOf('localhost') === 0
+    ? 'ws://localhost:9001'
+    : `wss://${PROD_HOSTNAME}`;
+
 export enum MouseButton {
   Left = 0,
   Middle = 1,

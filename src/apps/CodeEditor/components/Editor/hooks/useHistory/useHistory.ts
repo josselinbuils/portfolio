@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { useDynamicRef, useKeyMap } from '~/platform/hooks';
-import { Diff, State } from '../../interfaces';
+import { Diff, EditableState } from '../../interfaces';
 import { getDiff } from '../../utils';
 
 const HISTORY_SIZE_LIMIT = 50;
@@ -10,9 +10,9 @@ export function useHistory<T>({
   fileName,
 }: {
   fileName: string;
-  applyState(state: State): any;
+  applyState(state: EditableState): any;
 }): {
-  pushState(state: State): void;
+  pushState(state: EditableState): void;
 } {
   const historyRef = useRef<{
     [fileName: string]: { index: number; states: StateWithDiff[] };
@@ -89,6 +89,6 @@ export function useHistory<T>({
   return { pushState };
 }
 
-interface StateWithDiff extends State {
+interface StateWithDiff extends EditableState {
   diffObj?: Diff;
 }

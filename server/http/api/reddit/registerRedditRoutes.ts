@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { Logger } from '../../../Logger';
 import { asyncRoute } from '../../asyncRoute';
-import { Logger } from '../../Logger';
 import { RedditController } from './RedditController';
 
 export function registerRedditRoutes(router: Router): void {

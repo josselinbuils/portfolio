@@ -1,7 +1,7 @@
 import { BuiltInParserName, Plugin } from 'prettier';
 import 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
-import { State } from '../interfaces';
+import { EditableState } from '../interfaces';
 
 const parserDescriptors = {
   css: {
@@ -35,7 +35,7 @@ export async function formatCode(
   code: string,
   cursorOffset: number,
   language: string
-): Promise<State> {
+): Promise<EditableState> {
   const parserDescriptor = parserDescriptors[language];
 
   if (parserDescriptor === undefined) {

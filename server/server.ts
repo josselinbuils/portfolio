@@ -1,15 +1,14 @@
-import express from 'express';
-import SourceMapSupport from 'source-map-support';
-import { ENV_DEV, PORT } from './constants';
+import { ENV_DEV, PORT_HTTP, PORT_WS } from './constants';
+import { startHTTPServer } from './http';
 import { Logger } from './Logger';
-import { registerRouter } from './registerRouter';
+import { startWSServer } from './ws/startWSServer';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
 
-Logger.info(`Start portfolio server in ${ENV} mode`);
-
-SourceMapSupport.install();
-
-const app = registerRouter(express());
-
-app.listen(PORT, () => Logger.info(`Server is listening on port ${PORT}`));
+async function start(): Promise<void> {
+  Logger.info(`Starts portfolio server in ${ENV} mode`);
+  await startHTTPServer(PORT_HTTP);
+  await startWSServer(PORT_WS);
+  Logger.info('Portfolio successfully started');
+}
+start();
