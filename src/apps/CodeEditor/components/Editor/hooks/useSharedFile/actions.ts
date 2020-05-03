@@ -45,7 +45,11 @@ export const actionsHandlers = {
     const cursors = action.payload.cursors.filter(
       ({ clientID }) => clientID !== state.clientID
     );
-    return { ...state, cursors };
+    // We don't care if only our cursor changed
+    const haveCursorsChanged =
+      JSON.stringify(cursors) !== JSON.stringify(state.cursors);
+
+    return haveCursorsChanged ? { ...state, cursors } : state;
   },
 
   [ACTION_UPDATE_SHARED_STATE]: (

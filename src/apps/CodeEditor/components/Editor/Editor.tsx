@@ -22,7 +22,7 @@ import { Cursor, LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
 import { useAutoCompletion, useHistory, useSharedFile } from './hooks';
 import { Completion } from './hooks/useAutoCompletion';
-import { ClientCursor } from './hooks/useSharedFile/interfaces';
+import { ClientCursor, ClientState } from './hooks/useSharedFile';
 import { EditableState, EditorFile } from './interfaces';
 import {
   autoEditChange,
@@ -78,11 +78,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const isSharedFileActive = activeFileName === 'shared.js';
   const { updateClientState, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
-    applyClientState: (state) => {
-      onChange(state.code);
-      setCursorColor(state.cursorColor);
-      setCursors(state.cursors);
-    },
+    applyClientState,
     code,
   });
   const updateState = useCallback(
@@ -185,6 +181,18 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     newCursorOffset,
   }: Completion): void {
     insertText(completion, newCursorOffset);
+  }
+
+  function applyClientState(state: ClientState): void {
+    if (code !== state.code) {
+      onChange(state.code);
+    }
+    if (cursorColor !== state.cursorColor) {
+      setCursorColor(state.cursorColor);
+    }
+    if (cursors !== state.cursors) {
+      setCursors(state.cursors);
+    }
   }
 
   function closeFile(name: string): void {
