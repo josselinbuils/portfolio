@@ -85,6 +85,7 @@ export class WSServer {
       const client = this.getClientFromWS(ws);
       const clientIndex = this.clients.indexOf(client);
       this.clients.splice(clientIndex, 1);
+      this.sendCursors();
     });
 
     ws.on('message', (message: string) => {
@@ -102,9 +103,12 @@ export class WSServer {
 
   private reduce(client: Client, action: Action): void {
     if (action.type === ACTION_UPDATE_CURSOR_OFFSET) {
-      this.updateClientCursorOffset(client, action.payload.cursorOffset);
+      client.cursorOffset = action.payload.cursorOffset;
+      this.sendCursors();
     } else if (action.type === ACTION_UPDATE_SHARED_STATE) {
       const { cursorOffset, diffObj } = action.payload;
+
+      client.cursorOffset = cursorOffset;
 
       this.updateCode(
         diffObj.type === '+'
@@ -112,8 +116,17 @@ export class WSServer {
           : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
       );
       this.dispatch(action);
-      this.updateClientCursorOffset(client, cursorOffset);
+      this.sendCursors();
     }
+  }
+
+  private sendCursors(): void {
+    this.dispatch({
+      type: ACTION_UPDATE_CURSORS,
+      payload: {
+        cursors: this.getCursors(),
+      },
+    });
   }
 
   private updateCode(code: string): void {
@@ -126,17 +139,6 @@ export class WSServer {
           fs.writeFile(STATE_PATH, code, resolve as () => void);
         })
     );
-  }
-
-  private updateClientCursorOffset(client: Client, cursorOffset: number): void {
-    client.cursorOffset = cursorOffset;
-
-    this.dispatch({
-      type: ACTION_UPDATE_CURSORS,
-      payload: {
-        cursors: this.getCursors(),
-      },
-    });
   }
 }
 
