@@ -8,7 +8,7 @@ import { getDiff } from '../../utils';
 import { actionCreators, actionsHandlers } from './actions';
 import { ClientState } from './ClientState';
 
-const SAFE_UPDATE_DELAY_MS = 100;
+const SAFE_UPDATE_DELAY_MS = 500;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
 const reducer = ((clientState: ClientState, action: Action) =>
