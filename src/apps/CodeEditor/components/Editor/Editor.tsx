@@ -18,10 +18,11 @@ import React, {
 } from 'react';
 import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Toolbar, ToolButton } from '../../components';
-import { LineNumbers, Tab, Tabs } from './components';
+import { Cursor, LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
 import { useAutoCompletion, useHistory, useSharedFile } from './hooks';
 import { Completion } from './hooks/useAutoCompletion';
+import { ClientCursor } from './hooks/useSharedFile/interfaces';
 import { EditableState, EditorFile } from './interfaces';
 import {
   autoEditChange,
@@ -43,6 +44,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorOffset, setCursorOffset] = useState(0);
+  const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
@@ -73,9 +75,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   );
   const { pushState } = useHistory({ fileName: activeFileName, applyState });
   const isSharedFileActive = activeFileName === 'shared.js';
-  const { updateClientState } = useSharedFile({
+  const { updateClientState, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
-    applyClientState: (state) => onChange(state.code),
+    applyClientState: (state) => {
+      onChange(state.code);
+      setCursors(state.cursors);
+    },
     code,
   });
   const updateState = useCallback(
@@ -279,6 +284,10 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
 
     if (cursorOffset !== newCursorOffset) {
       setCursorOffset(newCursorOffset);
+
+      if (isSharedFileActive) {
+        updateCursorOffset(newCursorOffset);
+      }
     }
   }
 
@@ -336,11 +345,18 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         lineCount={lineCount}
         scrollTop={scrollTop}
       />
-      <div
-        className={styles.code}
-        dangerouslySetInnerHTML={{ __html: highlightedCode }}
-        ref={codeElementRef}
-      />
+      <div className={styles.code} ref={codeElementRef}>
+        <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+        {textAreaElementRef.current &&
+          cursors.map(({ clientID, color, offset }) => (
+            <Cursor
+              color={color}
+              key={clientID}
+              offset={offset}
+              parent={textAreaElementRef.current as HTMLTextAreaElement}
+            />
+          ))}
+      </div>
       <textarea
         className={styles.textarea}
         onBlur={() => setActive(false)}

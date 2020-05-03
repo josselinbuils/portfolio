@@ -1,15 +1,20 @@
 import fs from 'fs';
 import WebSocket, { OPEN, Server } from 'ws';
 import { Logger } from '../Logger';
-import { ClientState } from './ClientState';
 import { STATE_PATH } from './constants';
 import { ExecQueue } from './ExecQueue';
+import { ClientCursor, ClientState } from './interfaces';
 import { spliceString } from './spliceString';
 
+const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
+const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
+const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
 const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
+const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
 export class WSServer {
   private clientID = 0;
+  private readonly clients = [] as Client[];
   private code = fs.existsSync(STATE_PATH)
     ? fs.readFileSync(STATE_PATH, 'utf8')
     : '';
@@ -26,9 +31,7 @@ export class WSServer {
     this.server.on('connection', this.handleConnection.bind(this));
   }
 
-  private dispatch(action: any): void {
-    this.reduce(action);
-
+  private dispatch(action: Action): void {
     this.server.clients.forEach((wsClient) => {
       if (wsClient.readyState === OPEN) {
         wsClient.send(JSON.stringify(action));
@@ -36,28 +39,60 @@ export class WSServer {
     });
   }
 
+  private getClientFromWS(ws: WebSocket): Client {
+    return this.clients.find((client) => client.ws === ws);
+  }
+
+  private getCursors(): ClientCursor[] {
+    return this.clients.map(({ clientID, cursorColor, cursorOffset }) => ({
+      clientID,
+      color: cursorColor,
+      offset: cursorOffset,
+    }));
+  }
+
   private handleConnection(ws: WebSocket): void {
     this.requestQueue.enqueue(() => {
-      const clientState = {
-        clientID: ++this.clientID,
-        code: this.code,
-        cursorColor: 'red',
-      } as ClientState;
+      const clientID = ++this.clientID;
+      const colorsUsed = this.clients.map((c) => c.cursorColor);
+      const cursorColor =
+        CURSOR_COLORS.find((color) => !colorsUsed.includes(color)) || 'white';
+
+      const client = {
+        clientID,
+        cursorColor,
+        cursorOffset: 0,
+        ws,
+      };
+      this.clients.push(client);
 
       ws.send(
         JSON.stringify({
-          type: 'SET_STATE',
+          type: ACTION_SET_SHARED_STATE,
           payload: {
-            state: clientState,
+            state: {
+              clientID,
+              code: this.code,
+              cursorColor,
+              cursors: this.getCursors(),
+            },
           },
-        })
+        } as SetSharedStateAction)
       );
+    });
+
+    ws.on('close', () => {
+      const client = this.getClientFromWS(ws);
+      const clientIndex = this.clients.indexOf(client);
+      this.clients.splice(clientIndex, 1);
     });
 
     ws.on('message', (message: string) => {
       this.requestQueue.enqueue(() => {
         try {
-          this.dispatch(JSON.parse(message));
+          const action = JSON.parse(message) as Action;
+          const client = this.getClientFromWS(ws);
+          this.reduce(client, action);
         } catch (error) {
           Logger.error(error.stack);
         }
@@ -65,15 +100,19 @@ export class WSServer {
     });
   }
 
-  private reduce(action: any): void {
-    if (action.type === ACTION_UPDATE_SHARED_STATE) {
-      const { diffObj } = (action as UpdateSharedStateAction).payload;
+  private reduce(client: Client, action: Action): void {
+    if (action.type === ACTION_UPDATE_CURSOR_OFFSET) {
+      this.updateClientCursorOffset(client, action.payload.cursorOffset);
+    } else if (action.type === ACTION_UPDATE_SHARED_STATE) {
+      const { cursorOffset, diffObj } = action.payload;
 
       this.updateCode(
         diffObj.type === '+'
           ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
           : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
       );
+      this.dispatch(action);
+      this.updateClientCursorOffset(client, cursorOffset);
     }
   }
 
@@ -88,6 +127,30 @@ export class WSServer {
         })
     );
   }
+
+  private updateClientCursorOffset(client: Client, cursorOffset: number): void {
+    client.cursorOffset = cursorOffset;
+
+    this.dispatch({
+      type: ACTION_UPDATE_CURSORS,
+      payload: {
+        cursors: this.getCursors(),
+      },
+    });
+  }
+}
+
+export type Action =
+  | SetSharedStateAction
+  | UpdateCursorOffsetAction
+  | UpdateCursorsAction
+  | UpdateSharedStateAction;
+
+interface Client {
+  clientID: number;
+  cursorColor: string;
+  cursorOffset: number;
+  ws: WebSocket;
 }
 
 interface Diff {
@@ -97,7 +160,27 @@ interface Diff {
   type: '+' | '-';
 }
 
+interface SetSharedStateAction {
+  type: typeof ACTION_SET_SHARED_STATE;
+  payload: { state: ClientState };
+}
+
+interface UpdateCursorOffsetAction {
+  type: typeof ACTION_UPDATE_CURSOR_OFFSET;
+  payload: {
+    cursorOffset: number;
+  };
+}
+
+interface UpdateCursorsAction {
+  type: typeof ACTION_UPDATE_CURSORS;
+  payload: {
+    cursors: ClientCursor[];
+  };
+}
+
 interface UpdateSharedStateAction {
+  type: typeof ACTION_UPDATE_SHARED_STATE;
   payload: {
     cursorOffset: number;
     diffObj: Diff;

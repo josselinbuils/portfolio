@@ -1,12 +1,18 @@
 import { Reducer } from 'react';
 import { Diff } from '../../interfaces';
 import { spliceString } from '../../utils';
-import { ClientState } from './ClientState';
+import { ClientCursor, ClientState } from './interfaces';
 
-const ACTION_SET_STATE = 'SET_STATE';
+const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
+const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
+const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
 
 export const actionCreators = {
+  setSharedState: (state: ClientState): SetSharedStateAction => ({
+    type: ACTION_SET_SHARED_STATE,
+    payload: { state },
+  }),
   updateClientState: (
     diffObj: Diff,
     cursorOffset: number
@@ -17,11 +23,31 @@ export const actionCreators = {
       diffObj,
     },
   }),
+  updateCursorOffset: (cursorOffset: number): UpdateCursorOffsetAction => ({
+    type: ACTION_UPDATE_CURSOR_OFFSET,
+    payload: { cursorOffset },
+  }),
 };
 
 export const actionsHandlers = {
-  [ACTION_SET_STATE]: (state, action: SetSharedStateAction) =>
-    action.payload.state,
+  [ACTION_SET_SHARED_STATE]: (_, action: SetSharedStateAction) => {
+    const { state } = action.payload;
+    const cursors = state.cursors.filter(
+      ({ clientID }) => clientID !== state.clientID
+    );
+    return { ...state, cursors };
+  },
+
+  [ACTION_UPDATE_CURSORS]: (
+    state: ClientState,
+    action: UpdateCursorsAction
+  ) => {
+    const cursors = action.payload.cursors.filter(
+      ({ clientID }) => clientID !== state.clientID
+    );
+    return { ...state, cursors };
+  },
+
   [ACTION_UPDATE_SHARED_STATE]: (
     state: ClientState,
     action: UpdateSharedStateAction
@@ -36,19 +62,35 @@ export const actionsHandlers = {
       cursorOffset,
     };
   },
-} as { [action: string]: Reducer<ClientState | undefined, Action> };
+} as { [action: string]: Reducer<ClientState, Action> };
 
-export type Action = SetSharedStateAction | UpdateSharedStateAction;
+export type Action =
+  | SetSharedStateAction
+  | UpdateCursorOffsetAction
+  | UpdateCursorsAction
+  | UpdateSharedStateAction;
 
-interface BaseAction {
-  type: string;
-}
-
-interface SetSharedStateAction extends BaseAction {
+interface SetSharedStateAction {
+  type: typeof ACTION_SET_SHARED_STATE;
   payload: { state: ClientState };
 }
 
-interface UpdateSharedStateAction extends BaseAction {
+interface UpdateCursorOffsetAction {
+  type: typeof ACTION_UPDATE_CURSOR_OFFSET;
+  payload: {
+    cursorOffset: number;
+  };
+}
+
+interface UpdateCursorsAction {
+  type: typeof ACTION_UPDATE_CURSORS;
+  payload: {
+    cursors: ClientCursor[];
+  };
+}
+
+interface UpdateSharedStateAction {
+  type: typeof ACTION_UPDATE_SHARED_STATE;
   payload: {
     cursorOffset: number;
     diffObj: Diff;

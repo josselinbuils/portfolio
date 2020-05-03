@@ -38,7 +38,7 @@ const properties = [
 export function getCursorPosition(
   element: HTMLTextAreaElement,
   cursorOffset: number
-): Position {
+): Position<number> {
   const isBrowser = typeof window !== 'undefined';
   const isFirefox = isBrowser && (window as any).mozInnerScreenX !== null;
 
@@ -112,11 +112,9 @@ export function getCursorPosition(
   span.textContent = element.value.substring(cursorOffset) || '.';
   div.appendChild(span);
 
-  const { left, top } = element.getBoundingClientRect();
-
   const position = {
-    x: left + span.offsetLeft + parseInt(computed.borderLeftWidth, 0),
-    y: top + span.offsetTop + parseInt(computed.borderTopWidth, 0),
+    x: span.offsetLeft + parseInt(computed.borderLeftWidth, 0),
+    y: span.offsetTop + parseInt(computed.borderTopWidth, 0),
   };
 
   document.body.removeChild(div);

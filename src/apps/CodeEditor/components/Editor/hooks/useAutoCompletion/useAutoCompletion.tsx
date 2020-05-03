@@ -47,6 +47,12 @@ export function useAutoCompletion({
       );
 
       if (completionItems.length > 0) {
+        const cursorPosition = getCursorPosition(
+          textAreaElement,
+          cursorOffset - correctedPartialKeyword.length
+        );
+        const { x, y } = textAreaElement.getBoundingClientRect();
+
         showContextMenu({
           className: menuClassName,
           items: completionItems.map(({ displayName, template }) => ({
@@ -70,10 +76,10 @@ export function useAutoCompletion({
           onActivate: (index) => {
             activeIndexRef.current = index;
           },
-          position: getCursorPosition(
-            textAreaElement,
-            cursorOffset - correctedPartialKeyword.length
-          ),
+          position: {
+            x: x + cursorPosition.x,
+            y: y + cursorPosition.y,
+          },
         });
 
         return hideContextMenu;

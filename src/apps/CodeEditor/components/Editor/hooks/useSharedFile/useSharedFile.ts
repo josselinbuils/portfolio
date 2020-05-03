@@ -12,14 +12,22 @@ import { useDynamicRef } from '~/platform/hooks';
 import { EditableState } from '../../interfaces';
 import { getDiff } from '../../utils';
 import { Action, actionCreators, actionsHandlers } from './actions';
-import { ClientState } from './ClientState';
+import { ClientState } from './interfaces';
 
 const SAFE_UPDATE_DELAY_MS = 500;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
+const initialState = {
+  clientID: -1,
+  code: '',
+  cursorColor: 'white',
+  cursorOffset: 0,
+  cursors: [],
+} as ClientState;
+
 const reducer = ((clientState, action) =>
   actionsHandlers[action.type]?.(clientState, action) ||
-  clientState) as Reducer<ClientState | undefined, Action>;
+  clientState) as Reducer<ClientState, Action>;
 
 export function useSharedFile({
   active,
@@ -29,46 +37,62 @@ export function useSharedFile({
   active: boolean;
   code: string;
   applyClientState(clientState: ClientState): any;
-}): { updateClientState(newState: EditableState): void } {
+}): {
+  updateClientState(newState: EditableState): void;
+  updateCursorOffset(cursorOffset: number): void;
+} {
   const [dispatchToServer, setDispatchToServer] = useState<
     (action: Action) => void
   >(() => {});
-  const [clientState, dispatch] = useReducer(reducer, undefined);
+  const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
   const codeRef = useDynamicRef(code);
   const lastLocalChangeTime = useRef(0);
+  const lastCursorOffsetSentRef = useRef(0);
 
   useEffect(() => {
     if (!active) {
       return;
     }
-    const ws = new WebSocket(WS_URL);
-    const readyDeferred = new Deferred<void>();
+    let maintainOpen = true;
+    let ws: WebSocket;
 
-    ws.onmessage = (event) => {
-      try {
-        const action = JSON.parse(event.data) as Action;
-        dispatch(action);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    function openSocket(): void {
+      ws = new WebSocket(WS_URL);
+      const readyDeferred = new Deferred<void>();
 
-    ws.onopen = () => readyDeferred.resolve();
+      ws.onclose = () => {
+        if (maintainOpen) {
+          openSocket();
+        }
+      };
+      ws.onopen = () => readyDeferred.resolve();
+      ws.onmessage = (event) => {
+        try {
+          const action = JSON.parse(event.data) as Action;
+          dispatch(action);
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    setDispatchToServer(() => async (action: Action) => {
-      await readyDeferred.promise;
-      ws.send(JSON.stringify(action));
-    });
+      setDispatchToServer(() => async (action: Action) => {
+        await readyDeferred.promise;
+        ws.send(JSON.stringify(action));
+      });
+    }
+    openSocket();
 
     return () => {
+      maintainOpen = false;
       setDispatchToServer(() => {});
       ws.close();
+      dispatch(actionCreators.setSharedState(initialState));
     };
   }, [active]);
 
   useEffect(() => {
-    if (!active || clientState === undefined) {
+    if (clientState === undefined) {
       return;
     }
     const targetTime = lastLocalChangeTime.current + SAFE_UPDATE_DELAY_MS;
@@ -84,21 +108,34 @@ export function useSharedFile({
 
       return () => clearTimeout(timeoutId);
     }
-  }, [active, applyClientStateRef, clientState]);
+  }, [applyClientStateRef, clientState]);
 
   const updateClientState = useCallback(
     (newState: EditableState) => {
-      if (active) {
-        const action = actionCreators.updateClientState(
-          getDiff(codeRef.current, newState.code),
-          newState.cursorOffset
-        );
-        dispatchToServer(action);
-        lastLocalChangeTime.current = performance.now();
-      }
+      const action = actionCreators.updateClientState(
+        getDiff(codeRef.current, newState.code),
+        newState.cursorOffset
+      );
+      dispatchToServer(action);
+      lastLocalChangeTime.current = performance.now();
+      lastCursorOffsetSentRef.current = newState.cursorOffset;
     },
-    [active, codeRef, dispatchToServer]
+    [codeRef, dispatchToServer]
   );
 
-  return { updateClientState };
+  const updateCursorOffset = useCallback(
+    (cursorOffset: number) => {
+      if (cursorOffset !== lastCursorOffsetSentRef.current) {
+        const action = actionCreators.updateCursorOffset(cursorOffset);
+        dispatchToServer(action);
+        lastCursorOffsetSentRef.current = cursorOffset;
+      }
+    },
+    [dispatchToServer]
+  );
+
+  return {
+    updateClientState,
+    updateCursorOffset,
+  };
 }
