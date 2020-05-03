@@ -39,6 +39,16 @@ export class WSServer {
     });
   }
 
+  private fixCursorOffsets(): void {
+    const codeLength = this.code.length;
+
+    for (const client of this.clients) {
+      if (client.cursorOffset > codeLength) {
+        client.cursorOffset = codeLength;
+      }
+    }
+  }
+
   private getClientFromWS(ws: WebSocket): Client {
     return this.clients.find((client) => client.ws === ws);
   }
@@ -116,6 +126,7 @@ export class WSServer {
           : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
       );
       this.dispatch(action);
+      this.fixCursorOffsets();
       this.sendCursors();
     }
   }

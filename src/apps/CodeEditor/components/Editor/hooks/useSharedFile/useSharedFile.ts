@@ -14,7 +14,7 @@ import { getDiff } from '../../utils';
 import { Action, actionCreators, actionsHandlers } from './actions';
 import { ClientState } from './interfaces';
 
-const SAFE_UPDATE_DELAY_MS = 500;
+const SAFE_UPDATE_DELAY_MS = 300;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
 const initialState = {
