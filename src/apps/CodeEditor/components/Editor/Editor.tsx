@@ -405,7 +405,6 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         />
         <ToolButton
           icon={faFolderOpen}
-          // tslint:disable-next-line:no-unnecessary-callback-wrapper
           onClick={() => open()}
           title={
             <>

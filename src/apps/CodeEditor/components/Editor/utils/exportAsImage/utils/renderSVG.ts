@@ -41,11 +41,17 @@ export async function renderSVG(
   const font = await (await fetch(WOFF_FONT_URL)).blob();
   const base64Font = await blobToBase64(font);
 
+  // Cleans code
+  const removeUselessSpaces = (str: string) =>
+    str.replace(/^\s+/, '').replace(/\s+$/, '');
+  code = removeUselessSpaces(code);
+  highlightedCode = removeUselessSpaces(highlightedCode);
+
   // Stringifies Prism theme
   const prismTheme = stringifyPrismTheme(highlightedCode);
 
   // Computes dimensions
-  const lines = code.trim().split('\n');
+  const lines = code.split('\n');
   const maxLengthLine = lines.reduce(
     (str, line) => (line.length > str.length ? line : str),
     ''
@@ -71,15 +77,13 @@ export async function renderSVG(
         src: url('${base64Font}') format('woff2');
       }
 
-      foreignObject {
+      div {
         font-family: 'JetBrainsMono', monospace;
         font-size: ${fontSize}px;
         line-height: ${lineHeight}px;
         white-space: pre-wrap;
         color: #a3b7c6;
         background: #2b2b2b;
-        width: 100%;
-        height: 100%;
         padding: ${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px;
         box-sizing: border-box;
         border-radius: ${borderRadius}px;
