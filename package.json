@@ -62,7 +62,6 @@
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
     "react-snap": "^1.23.0",
-    "redux": "^4.0.5",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "rimraf": "^3.0.2",

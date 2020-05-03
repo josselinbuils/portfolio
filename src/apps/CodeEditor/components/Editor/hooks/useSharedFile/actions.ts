@@ -1,4 +1,4 @@
-import { Action, Reducer } from 'redux';
+import { Reducer } from 'react';
 import { Diff } from '../../interfaces';
 import { spliceString } from '../../utils';
 import { ClientState } from './ClientState';
@@ -20,14 +20,13 @@ export const actionCreators = {
 };
 
 export const actionsHandlers = {
-  [ACTION_SET_STATE]: (state: ClientState, action) =>
-    (action as SetSharedStateAction).payload.state,
-  [ACTION_UPDATE_SHARED_STATE]: (state: ClientState, action) => {
-    const {
-      cursorOffset,
-      diffObj,
-    } = (action as UpdateSharedStateAction).payload;
-
+  [ACTION_SET_STATE]: (state, action: SetSharedStateAction) =>
+    action.payload.state,
+  [ACTION_UPDATE_SHARED_STATE]: (
+    state: ClientState,
+    action: UpdateSharedStateAction
+  ) => {
+    const { cursorOffset, diffObj } = action.payload;
     return {
       ...state,
       code:
@@ -37,13 +36,19 @@ export const actionsHandlers = {
       cursorOffset,
     };
   },
-} as { [action: string]: Reducer<ClientState> };
+} as { [action: string]: Reducer<ClientState | undefined, Action> };
 
-interface SetSharedStateAction extends Action {
+export type Action = SetSharedStateAction | UpdateSharedStateAction;
+
+interface BaseAction {
+  type: string;
+}
+
+interface SetSharedStateAction extends BaseAction {
   payload: { state: ClientState };
 }
 
-interface UpdateSharedStateAction extends Action {
+interface UpdateSharedStateAction extends BaseAction {
   payload: {
     cursorOffset: number;
     diffObj: Diff;
