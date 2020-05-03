@@ -44,6 +44,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
   const [active, setActive] = useState(false);
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorOffset, setCursorOffset] = useState(0);
+  const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
@@ -79,6 +80,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     active: isSharedFileActive,
     applyClientState: (state) => {
       onChange(state.code);
+      setCursorColor(state.cursorColor);
       setCursors(state.cursors);
     },
     code,
@@ -377,6 +379,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         onSelect={handleSelect}
         ref={textAreaElementRef}
         spellCheck={false}
+        style={{ caretColor: cursorColor }}
         value={code}
       />
       {displayDragOverlay && (

@@ -20,7 +20,7 @@ const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 const initialState = {
   clientID: -1,
   code: '',
-  cursorColor: 'white',
+  cursorColor: '#f0f0f0',
   cursorOffset: 0,
   cursors: [],
 } as ClientState;
