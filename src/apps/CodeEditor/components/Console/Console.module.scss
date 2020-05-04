@@ -6,14 +6,14 @@
 }
 
 .header {
-  font-size: 1.4rem;
-  line-height: 2.7rem;
+  font-size: 1.3rem;
+  line-height: 2.3rem;
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   box-sizing: border-box;
-  height: 2.7rem;
+  height: 2.5rem;
   padding-left: 3rem;
   user-select: none;
   color: $textPrimaryColor;
@@ -24,7 +24,7 @@
 
 .logs {
   position: absolute;
-  top: 2.7rem;
+  top: 2.5rem;
   right: 0;
   bottom: 0;
   left: 3rem;
@@ -32,7 +32,7 @@
 
 .toolbar {
   position: absolute;
-  top: 2.7rem;
+  top: 2.5rem;
   bottom: 0;
   left: 0;
 }
