@@ -1,11 +1,14 @@
 @import '../../constants';
 
 .statusBar {
+  font-size: 0.11rem;
+  line-height: 1.9rem;
   overflow: hidden;
   box-sizing: border-box;
   height: 2rem;
+  padding: 0 0.7rem;
   text-align: right;
-  color: $textTertiaryColor;
+  color: $textPrimaryColor;
   border-top: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
 }

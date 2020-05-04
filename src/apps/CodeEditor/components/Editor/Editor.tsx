@@ -17,6 +17,7 @@ import React, {
   useState,
 } from 'react';
 import { useKeyMap, useList, useMemState } from '~/platform/hooks';
+import { Position } from '~/platform/interfaces';
 import { Toolbar, ToolButton } from '../../components';
 import { Cursor, LineNumbers, Tab, Tabs } from './components';
 import { INDENT } from './constants';
@@ -30,7 +31,9 @@ import {
   fileSaver,
   formatCode,
   getDiff,
+  getLineBeforeCursor,
   getLineIndent,
+  getLineNumber,
   highlightCode,
   isCodePortionEnd,
   openFile,
@@ -40,7 +43,12 @@ import { canFormat } from './utils/formatCode';
 
 import styles from './Editor.module.scss';
 
-export const Editor: FC<Props> = ({ className, code, onChange }) => {
+export const Editor: FC<Props> = ({
+  className,
+  code,
+  onChange,
+  onCursorPositionUpdate,
+}) => {
   const [active, setActive] = useState(false);
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorOffset, setCursorOffset] = useState(0);
@@ -149,6 +157,12 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
     });
   }, [activeFile.language, code]);
 
+  useEffect(() => {
+    const x = getLineBeforeCursor(code, cursorOffset).length + 1;
+    const y = getLineNumber(code, cursorOffset) + 1;
+    onCursorPositionUpdate({ x, y });
+  }, [code, cursorOffset, onCursorPositionUpdate]);
+
   useLayoutEffect(() => {
     const newLineCount = (code.match(/\n/g)?.length || 0) + 1;
 
@@ -168,7 +182,7 @@ export const Editor: FC<Props> = ({ className, code, onChange }) => {
         textAreaElement.selectionEnd = cursorOffset;
       }
     }
-  }, [code, cursorOffset]);
+  }, [cursorOffset]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -441,4 +455,5 @@ interface Props {
   className?: string;
   code: string;
   onChange(code: string): void;
+  onCursorPositionUpdate(cursorPosition: Position<number>): void;
 }

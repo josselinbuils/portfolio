@@ -11,6 +11,10 @@ const CodeEditor: WindowComponent = ({
   ...injectedWindowProps
 }) => {
   const [code, setCode] = useState('');
+  const [cursorPosition, setCursorPosition] = useState({
+    x: 0,
+    y: 0,
+  });
 
   return (
     <Window
@@ -25,9 +29,17 @@ const CodeEditor: WindowComponent = ({
       titleColor="#2f2f2f"
     >
       <div className={styles.codeEditor}>
-        <Editor className={styles.editor} code={code} onChange={setCode} />
+        <Editor
+          className={styles.editor}
+          code={code}
+          onChange={setCode}
+          onCursorPositionUpdate={setCursorPosition}
+        />
         <Console active={active} className={styles.console} codeToExec={code} />
-        <StatusBar className={styles.statusBar} />
+        <StatusBar
+          className={styles.statusBar}
+          cursorPosition={cursorPosition}
+        />
       </div>
     </Window>
   );
