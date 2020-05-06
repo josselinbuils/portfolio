@@ -314,6 +314,8 @@ export const Editor: FC<Props> = ({
     }
     if (isSharedFileActive) {
       updateCursorOffset(newCursorOffset);
+      // TODO find a cleaner solution
+      updateClientState({ code, cursorOffset: newCursorOffset });
     } else {
       setCursorOffset(newCursorOffset);
     }
