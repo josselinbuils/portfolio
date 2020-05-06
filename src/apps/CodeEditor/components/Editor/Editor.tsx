@@ -88,12 +88,12 @@ export const Editor: FC<Props> = ({
     active: isSharedFileActive,
     applyClientState,
     code,
+    cursorOffset,
   });
   const updateState = useCallback(
     (newState: EditableState): void => {
       if (isSharedFileActive) {
         updateClientState(newState);
-        applyState(newState);
       } else {
         applyState(newState);
         pushState(newState);
@@ -204,6 +204,9 @@ export const Editor: FC<Props> = ({
     if (cursorColor !== state.cursorColor) {
       setCursorColor(state.cursorColor);
     }
+    if (cursorOffset !== state.cursorOffset) {
+      setCursorOffset(state.cursorOffset);
+    }
     if (cursors !== state.cursors) {
       setCursors(state.cursors);
     }
@@ -306,12 +309,13 @@ export const Editor: FC<Props> = ({
       setAutoCompleteActive(false);
     }
 
-    if (cursorOffset !== newCursorOffset) {
+    if (cursorOffset === newCursorOffset) {
+      return;
+    }
+    if (isSharedFileActive) {
+      updateCursorOffset(newCursorOffset);
+    } else {
       setCursorOffset(newCursorOffset);
-
-      if (isSharedFileActive) {
-        updateCursorOffset(newCursorOffset);
-      }
     }
   }
 

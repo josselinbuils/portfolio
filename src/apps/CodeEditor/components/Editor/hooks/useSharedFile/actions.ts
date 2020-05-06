@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { Diff } from '../../interfaces';
-import { spliceString } from '../../utils';
 import { ClientCursor, ClientState } from './interfaces';
+import { applyDiff } from './utils';
 
 const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
@@ -59,10 +59,7 @@ export const actionsHandlers = {
     const { cursorOffset, diffObj } = action.payload;
     return {
       ...state,
-      code:
-        diffObj.type === '+'
-          ? spliceString(state.code, diffObj.startOffset, 0, diffObj.diff)
-          : spliceString(state.code, diffObj.endOffset, diffObj.diff.length),
+      code: applyDiff(state.code, diffObj),
       cursorOffset,
     };
   },

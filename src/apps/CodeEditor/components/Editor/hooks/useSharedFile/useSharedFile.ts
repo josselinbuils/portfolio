@@ -1,20 +1,13 @@
 import { Deferred } from '@josselinbuils/utils';
-import {
-  Reducer,
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks';
-import { EditableState } from '../../interfaces';
+import { Diff, EditableState } from '../../interfaces';
 import { getDiff } from '../../utils';
 import { Action, actionCreators, actionsHandlers } from './actions';
 import { ClientState } from './interfaces';
+import { applyDiff, computeHash } from './utils';
 
-const SAFE_UPDATE_DELAY_MS = 300;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
 const initialState = {
@@ -33,22 +26,24 @@ export function useSharedFile({
   active,
   applyClientState,
   code,
+  cursorOffset,
 }: {
   active: boolean;
   code: string;
+  cursorOffset: number;
   applyClientState(clientState: ClientState): any;
 }): {
   updateClientState(newState: EditableState): void;
   updateCursorOffset(cursorOffset: number): void;
 } {
-  const [dispatchToServer, setDispatchToServer] = useState<
-    (action: Action) => void
-  >(() => {});
+  const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
   const codeRef = useDynamicRef(code);
-  const lastLocalChangeTime = useRef(0);
+  const cursorOffsetRef = useDynamicRef(cursorOffset);
   const lastCursorOffsetSentRef = useRef(0);
+  const hashToWaitForRef = useRef<number>();
+  const diffQueueRef = useRef<PartialDiff[]>([]);
 
   useEffect(() => {
     if (!active) {
@@ -76,16 +71,16 @@ export function useSharedFile({
         }
       };
 
-      setDispatchToServer(() => async (action: Action) => {
+      dispatchToServerRef.current = async (action: Action) => {
         await readyDeferred.promise;
         ws.send(JSON.stringify(action));
-      });
+      };
     }
     openSocket();
 
     return () => {
       maintainOpen = false;
-      setDispatchToServer(() => {});
+      dispatchToServerRef.current = () => {};
       ws.close();
       dispatch(actionCreators.setSharedState(initialState));
     };
@@ -95,47 +90,63 @@ export function useSharedFile({
     if (clientState === undefined) {
       return;
     }
-    const targetTime = lastLocalChangeTime.current + SAFE_UPDATE_DELAY_MS;
-    const delay = Math.max(targetTime - performance.now(), 0);
-    const apply = () => applyClientStateRef.current(clientState);
+    applyClientStateRef.current(clientState);
 
-    if (delay === 0) {
-      apply();
+    if (diffQueueRef.current.length > 0) {
+      const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
+      const startOffset = clientState.cursorOffset;
+      const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
+      const diffObj = { diff, endOffset, startOffset, type } as Diff;
+      const action = actionCreators.updateClientState(diffObj, endOffset);
+      const newCode = applyDiff(clientState.code, diffObj);
+      dispatchToServerRef.current(action);
+      lastCursorOffsetSentRef.current = endOffset;
+      hashToWaitForRef.current = computeHash(newCode);
     } else {
-      const timeoutId = setTimeout(() => {
-        applyClientStateRef.current(clientState);
-      }, delay);
-
-      return () => clearTimeout(timeoutId);
+      hashToWaitForRef.current = computeHash(clientState.code);
     }
-  }, [applyClientStateRef, clientState]);
+  }, [applyClientStateRef, clientState, codeRef, cursorOffsetRef]);
 
   const updateClientState = useCallback(
     (newState: EditableState) => {
-      const action = actionCreators.updateClientState(
-        getDiff(codeRef.current, newState.code),
-        newState.cursorOffset
-      );
-      dispatchToServer(action);
-      lastLocalChangeTime.current = performance.now();
-      lastCursorOffsetSentRef.current = newState.cursorOffset;
-    },
-    [codeRef, dispatchToServer]
-  );
+      const currentState = {
+        code: codeRef.current,
+        cursorOffset: cursorOffsetRef.current,
+      };
+      const currentHash = computeHash(currentState.code);
+      const diffObj = getDiff(currentState.code, newState.code);
 
-  const updateCursorOffset = useCallback(
-    (cursorOffset: number) => {
-      if (cursorOffset !== lastCursorOffsetSentRef.current) {
-        const action = actionCreators.updateCursorOffset(cursorOffset);
-        dispatchToServer(action);
-        lastCursorOffsetSentRef.current = cursorOffset;
+      if (
+        currentHash === hashToWaitForRef.current &&
+        diffQueueRef.current.length === 0
+      ) {
+        const action = actionCreators.updateClientState(
+          diffObj,
+          newState.cursorOffset
+        );
+        hashToWaitForRef.current = computeHash(newState.code);
+        lastCursorOffsetSentRef.current = newState.cursorOffset;
+        dispatchToServerRef.current(action);
+      } else {
+        const { diff, type } = diffObj;
+        diffQueueRef.current.push({ diff, type });
       }
     },
-    [dispatchToServer]
+    [cursorOffsetRef, codeRef]
   );
+
+  const updateCursorOffset = useCallback((newCursorOffset: number) => {
+    if (newCursorOffset !== lastCursorOffsetSentRef.current) {
+      const action = actionCreators.updateCursorOffset(newCursorOffset);
+      dispatchToServerRef.current(action);
+      lastCursorOffsetSentRef.current = newCursorOffset;
+    }
+  }, []);
 
   return {
     updateClientState,
     updateCursorOffset,
   };
 }
+
+type PartialDiff = Pick<Diff, 'diff' | 'type'>;
