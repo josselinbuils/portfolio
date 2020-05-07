@@ -181,11 +181,10 @@ export const Editor: FC<Props> = ({
       const { selectionEnd, selectionStart } = textAreaElement;
 
       if (selectionEnd === selectionStart && selectionStart !== cursorOffset) {
-        textAreaElement.selectionStart = cursorOffset;
-        textAreaElement.selectionEnd = cursorOffset;
+        textAreaElement.setSelectionRange(cursorOffset, cursorOffset);
       }
     }
-  }, [cursorOffset]);
+  });
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -291,6 +290,11 @@ export const Editor: FC<Props> = ({
 
     if (newState !== undefined) {
       updateState(newState);
+
+      if (isSharedFileActive) {
+        // Fuck that React issue https://github.com/facebook/react/issues/12762
+        onChange(`${code} `);
+      }
     }
   }
 
