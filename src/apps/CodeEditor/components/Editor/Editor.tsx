@@ -148,6 +148,9 @@ export const Editor: FC<Props> = ({
       code: activeFile.content,
       cursorOffset: 0,
     });
+    if (textAreaElementRef.current !== null) {
+      textAreaElementRef.current.focus();
+    }
   }, [activeFile, applyState]);
 
   useLayoutEffect(() => {
