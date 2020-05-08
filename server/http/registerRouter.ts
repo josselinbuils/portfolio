@@ -13,7 +13,8 @@ import {
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
-  MAX_AGE_DAYS,
+  MAX_AGE_API_SECONDS,
+  MAX_AGE_ASSETS_SECONDS,
   PUBLIC_DIR,
 } from './constants';
 
@@ -61,11 +62,19 @@ export function registerRouter(app: Express): Express {
 
   const assetsOptions = {
     immutable: true,
-    maxAge: MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
+    maxAge: MAX_AGE_ASSETS_SECONDS * 1000,
   };
   router.use(ASSETS_DIR, serveStatic(ASSETS_PATH, assetsOptions));
   router.use(serveStatic(CLIENT_PATH));
   router.use(bodyParser.json());
+
+  app.get('*', (req, res, next) => {
+    res.set(
+      'Cache-Control',
+      `public, max-age=${MAX_AGE_API_SECONDS}, immutable`
+    );
+    next();
+  });
 
   registerDicomRoutes(router);
   registerJamendoRoutes(router);
