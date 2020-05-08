@@ -14,7 +14,7 @@ import {
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   MAX_AGE_API_SECONDS,
-  MAX_AGE_ASSETS_SECONDS,
+  MAX_AGE_STATIC_SECONDS,
   PUBLIC_DIR,
 } from './constants';
 
@@ -60,13 +60,12 @@ export function registerRouter(app: Express): Express {
     next();
   });
 
-  const assetsOptions = {
+  const cacheOptions = {
     immutable: true,
-    maxAge: MAX_AGE_ASSETS_SECONDS * 1000,
+    maxAge: MAX_AGE_STATIC_SECONDS * 1000,
   };
-  router.use(ASSETS_DIR, serveStatic(ASSETS_PATH, assetsOptions));
-  router.use(serveStatic(CLIENT_PATH));
-  router.use(bodyParser.json());
+  router.use(ASSETS_DIR, serveStatic(ASSETS_PATH, cacheOptions));
+  router.use(serveStatic(CLIENT_PATH, cacheOptions));
 
   app.get('*', (req, res, next) => {
     res.set(
@@ -76,6 +75,7 @@ export function registerRouter(app: Express): Express {
     next();
   });
 
+  router.use(bodyParser.json());
   registerDicomRoutes(router);
   registerJamendoRoutes(router);
   registerRedditRoutes(router);
