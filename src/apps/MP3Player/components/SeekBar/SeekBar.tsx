@@ -45,7 +45,7 @@ export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
         ref={progressBarRef}
       />
       <time className={styles.duration}>
-        {currentMusic ? currentMusic.readableDuration : '00:00'}
+        {currentMusic ? currentMusic.duration : '00:00'}
       </time>
       <Button
         checked={!min}

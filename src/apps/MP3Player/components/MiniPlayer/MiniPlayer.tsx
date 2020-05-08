@@ -25,7 +25,7 @@ export const MiniPlayer: FC<Props> = ({ min, onClickTogglePlaylist }) => {
       <div className={styles.musicInfo}>
         {currentMusic && (
           <span>
-            {currentMusic.artist_name} - {currentMusic.name}
+            {currentMusic.artistName} - {currentMusic.name}
           </span>
         )}
       </div>

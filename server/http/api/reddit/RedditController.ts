@@ -1,8 +1,7 @@
 import { Request } from 'express';
 import Snoowrap, { Subreddit as SnoowrapSubreddit } from 'snoowrap';
-import { reddit } from '../../config';
+import { config } from '../../config';
 import { RedditPost, Subreddit } from './interfaces';
-import { isRedditConfig } from './RedditConfig';
 import { formatPosts } from './utils';
 
 const USER_AGENT = 'Portfolio by Josselin Buils';
@@ -11,11 +10,7 @@ export class RedditController {
   snoowrap: Snoowrap;
 
   constructor() {
-    if (!isRedditConfig(reddit)) {
-      throw Error('Invalid configuration: reddit');
-    }
-
-    const { clientId, clientSecret, password, username } = reddit;
+    const { clientId, clientSecret, password, username } = config.reddit;
 
     this.snoowrap = new Snoowrap({
       userAgent: USER_AGENT,

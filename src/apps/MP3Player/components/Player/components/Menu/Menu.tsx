@@ -8,7 +8,7 @@ export const Menu: FC<Props> = ({ activeMusicList, onClickMusicList }) => (
     {musicLists.map((musicList) => (
       <MenuItem
         activeMusicList={activeMusicList}
-        key={musicList.path}
+        key={musicList.name}
         musicList={musicList}
         onClickPlaylist={onClickMusicList}
       />

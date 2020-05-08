@@ -1,9 +1,10 @@
-import * as path from 'path';
+import { validate } from 'jsonschema';
+import path from 'path';
+import configSchema from './config.schema.json';
 
-const config = require(path.join(process.cwd(), 'config.json')) as Config;
-
-export const jamendo = config.jamendo;
-export const reddit = config.reddit;
+const rawConfig = require(path.join(process.cwd(), 'config.json')) as Config;
+export const config = validate(rawConfig, configSchema, { throwError: true })
+  .instance as Config;
 
 interface Config {
   jamendo: {
@@ -12,7 +13,7 @@ interface Config {
   reddit: {
     clientId: string;
     clientSecret: string;
-    username: string;
     password: string;
+    username: string;
   };
 }

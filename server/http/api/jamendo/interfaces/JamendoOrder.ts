@@ -1,0 +1,18 @@
+export type JamendoOrder =
+  | 'album_name'
+  | 'artist_name'
+  | 'buzzrate'
+  | 'downloads_month'
+  | 'downloads_total'
+  | 'downloads_week'
+  | 'duration'
+  | 'id'
+  | 'listens_month'
+  | 'listens_total'
+  | 'listens_week'
+  | 'name'
+  | 'popularity_month'
+  | 'popularity_total'
+  | 'popularity_week'
+  | 'releasedate'
+  | 'relevance';

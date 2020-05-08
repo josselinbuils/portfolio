@@ -1,0 +1,24 @@
+{
+  "id": "/Config",
+  "type": "object",
+  "properties": {
+    "jamendo": {
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string" }
+      },
+      "required": ["clientId"]
+    },
+    "reddit": {
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string" },
+        "clientSecret": { "type": "string" },
+        "password": { "type": "string" },
+        "username": { "type": "string" }
+      },
+      "required": ["clientId", "clientSecret", "password", "username"]
+    }
+  },
+  "required": ["jamendo", "reddit"]
+}
