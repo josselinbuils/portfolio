@@ -2,7 +2,7 @@
   "extends": "./tsconfig.paths",
   "compilerOptions": {
     "baseUrl": "./src",
-    "target": "es5",
+    "target": "es2019",
     "lib": [
       "dom",
       "dom.iterable",
