@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import { MusicList } from '~/apps/MP3Player/interfaces';
+import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
 import { ButtonLink } from '~/platform/components';
 
 import styles from './MenuItem.module.scss';

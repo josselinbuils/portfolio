@@ -1,6 +1,8 @@
 import React, { FC, useContext } from 'react';
-import { Controls, MusicPreview, SeekBar } from '~/apps/MP3Player/components';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
+import { Controls } from '../../../Controls';
+import { MusicPreview } from '../../../MusicPreview';
+import { SeekBar } from '../../../SeekBar';
 import { MusicInfo } from './MusicInfo';
 
 import styles from './Footer.module.scss';

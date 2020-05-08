@@ -1,8 +1,12 @@
 import cn from 'classnames';
 import React, { FC, useState } from 'react';
-import { MusicList } from '../../interfaces';
+import { MusicList } from '../../interfaces/MusicList';
 import { musicLists } from '../../musicLists';
-import { Footer, JamendoLink, Logo, Menu, Musics } from './components';
+import { Footer } from './components/Footer';
+import { JamendoLink } from './components/JamendoLink';
+import { Logo } from './components/Logo';
+import { Menu } from './components/Menu';
+import { Musics } from './components/Musics';
 
 import styles from './Player.module.scss';
 

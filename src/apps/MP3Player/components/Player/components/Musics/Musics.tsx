@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
-import { Music, MusicList } from '~/apps/MP3Player/interfaces';
-import { loadMusics } from '~/apps/MP3Player/utils';
+import { Music } from '~/apps/MP3Player/interfaces/Music';
+import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
+import { loadMusics } from '~/apps/MP3Player/utils/loadMusics';
 import { Select, Spinner } from '~/platform/components';
 import { cancelable } from '~/platform/utils';
 

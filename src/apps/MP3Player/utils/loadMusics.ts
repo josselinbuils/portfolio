@@ -1,5 +1,5 @@
 import { BASE_URL } from '~/platform/constants';
-import { Music } from '../interfaces';
+import { Music } from '../interfaces/Music';
 
 export async function loadMusics(
   jamendoTag: string,
