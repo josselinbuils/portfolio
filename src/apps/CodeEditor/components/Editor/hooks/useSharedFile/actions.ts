@@ -15,12 +15,14 @@ export const actionCreators = {
   }),
   updateClientState: (
     diffObj: Diff,
-    cursorOffset: number
+    cursorOffset: number,
+    safetyHash: number
   ): UpdateSharedStateAction => ({
     type: ACTION_UPDATE_SHARED_STATE,
     payload: {
       cursorOffset,
       diffObj,
+      safetyHash,
     },
   }),
   updateCursorOffset: (cursorOffset: number): UpdateCursorOffsetAction => ({
@@ -95,5 +97,6 @@ interface UpdateSharedStateAction {
   payload: {
     cursorOffset: number;
     diffObj: Diff;
+    safetyHash: number;
   };
 }

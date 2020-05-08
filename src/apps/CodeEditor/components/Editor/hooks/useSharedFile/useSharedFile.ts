@@ -92,18 +92,24 @@ export function useSharedFile({
     }
     applyClientStateRef.current(clientState);
 
+    const currentHash = computeHash(clientState.code);
+
     if (diffQueueRef.current.length > 0) {
       const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
       const startOffset = clientState.cursorOffset;
       const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
       const diffObj = { diff, endOffset, startOffset, type } as Diff;
-      const action = actionCreators.updateClientState(diffObj, endOffset);
+      const action = actionCreators.updateClientState(
+        diffObj,
+        endOffset,
+        currentHash
+      );
       const newCode = applyDiff(clientState.code, diffObj);
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = endOffset;
       hashToWaitForRef.current = computeHash(newCode);
     } else {
-      hashToWaitForRef.current = computeHash(clientState.code);
+      hashToWaitForRef.current = currentHash;
     }
   }, [applyClientStateRef, clientState, codeRef, cursorOffsetRef]);
 
@@ -122,7 +128,8 @@ export function useSharedFile({
       ) {
         const action = actionCreators.updateClientState(
           diffObj,
-          newState.cursorOffset
+          newState.cursorOffset,
+          currentHash
         );
         hashToWaitForRef.current = computeHash(newState.code);
         lastCursorOffsetSentRef.current = newState.cursorOffset;

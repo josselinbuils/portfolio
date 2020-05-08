@@ -2,9 +2,8 @@ import fs from 'fs';
 import WebSocket, { OPEN, Server } from 'ws';
 import { Logger } from '../Logger';
 import { STATE_PATH } from './constants';
-import { ExecQueue } from './ExecQueue';
 import { ClientCursor, ClientState } from './interfaces';
-import { spliceString } from './spliceString';
+import { computeHash, ExecQueue, spliceString } from './utils';
 
 const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
@@ -18,6 +17,7 @@ export class WSServer {
   private code = fs.existsSync(STATE_PATH)
     ? fs.readFileSync(STATE_PATH, 'utf8')
     : '';
+  private codeHash = computeHash(this.code);
   private readonly codeUpdateQueue = new ExecQueue();
   private readonly requestQueue = new ExecQueue();
   private readonly server: Server;
@@ -116,7 +116,12 @@ export class WSServer {
       client.cursorOffset = action.payload.cursorOffset;
       this.sendCursors();
     } else if (action.type === ACTION_UPDATE_SHARED_STATE) {
-      const { cursorOffset, diffObj } = action.payload;
+      const { cursorOffset, diffObj, safetyHash } = action.payload;
+
+      if (safetyHash !== this.codeHash) {
+        // Requested update is obsolete
+        return;
+      }
 
       client.cursorOffset = cursorOffset;
 
@@ -142,6 +147,7 @@ export class WSServer {
 
   private updateCode(code: string): void {
     this.code = code;
+    this.codeHash = computeHash(code);
 
     // Avoids race conditions
     this.codeUpdateQueue.enqueue(
@@ -197,5 +203,6 @@ interface UpdateSharedStateAction {
   payload: {
     cursorOffset: number;
     diffObj: Diff;
+    safetyHash: number;
   };
 }
