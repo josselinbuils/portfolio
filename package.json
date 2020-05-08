@@ -47,6 +47,7 @@
     "@types/ws": "^7.2.4",
     "ansi_up": "^4.0.4",
     "body-parser": "^1.19.0",
+    "circular-dependency-plugin": "^5.2.0",
     "classnames": "^2.2.6",
     "cpx": "^1.5.0",
     "dayjs": "^1.8.26",
