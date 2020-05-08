@@ -4,8 +4,9 @@ import {
   PhotometricInterpretation,
   PixelRepresentation,
 } from '../constants';
-import { DicomFrame, Frame } from '../models';
-import { V } from './math';
+import { DicomFrame } from '../models/DicomFrame';
+import { Frame } from '../models/Frame';
+import { V } from './math/Vector';
 
 enum DicomImageFormat {
   Int8 = 'int8',

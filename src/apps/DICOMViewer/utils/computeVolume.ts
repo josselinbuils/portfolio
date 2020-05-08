@@ -1,7 +1,8 @@
 import { NormalizedImageFormat } from '../constants';
-import { SharedProperties } from '../interfaces';
-import { Frame, Volume } from '../models';
-import { V } from './math';
+import { SharedProperties } from '../interfaces/SharedProperties';
+import { Frame } from '../models/Frame';
+import { Volume } from '../models/Volume';
+import { V } from './math/Vector';
 
 export function computeVolume(
   frames: Frame[],

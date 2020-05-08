@@ -1,5 +1,5 @@
 import { RendererType, ViewType } from '../constants';
-import { Dataset } from '../models';
+import { Dataset } from '../models/Dataset';
 
 export function getAvailableViewTypes(
   dataset: Dataset,

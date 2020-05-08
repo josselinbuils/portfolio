@@ -1,13 +1,11 @@
 import { MouseButton } from '~/platform/constants';
 import { MouseTool } from '../constants';
-import { Viewport } from '../models';
-import {
-  startPaging,
-  startPan,
-  startRotate,
-  startWindowing,
-  startZoom,
-} from './tools';
+import { Viewport } from '../models/Viewport';
+import { startPaging } from './tools/startPaging';
+import { startPan } from './tools/startPan';
+import { startRotate } from './tools/startRotate';
+import { startWindowing } from './tools/startWindowing';
+import { startZoom } from './tools/startZoom';
 
 export function startTool(
   downEvent: MouseEvent,

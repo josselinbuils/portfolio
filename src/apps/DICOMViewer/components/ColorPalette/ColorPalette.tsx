@@ -2,8 +2,10 @@ import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, useEffect, useState } from 'react';
-import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
-import { BarPreview, GraphPreview, LUTComponentList } from './components';
+import { LUTComponent } from '../../interfaces/LUTComponent';
+import { BarPreview } from './components/BarPreview';
+import { GraphPreview } from './components/GraphPreview';
+import { LUTComponentList } from './components/LUTComponentList';
 
 import styles from './ColorPalette.module.scss';
 

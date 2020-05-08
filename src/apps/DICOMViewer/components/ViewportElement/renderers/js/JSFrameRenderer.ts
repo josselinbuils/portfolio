@@ -1,7 +1,8 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import { VOILUT } from '~/apps/DICOMViewer/interfaces';
-import { Frame, Viewport } from '~/apps/DICOMViewer/models';
-import { loadVOILUT } from '~/apps/DICOMViewer/utils';
+import { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import { Frame } from '~/apps/DICOMViewer/models/Frame';
+import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,
@@ -9,11 +10,9 @@ import {
   RenderingProperties,
 } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import {
-  drawImageData,
-  getCanvasRenderingContexts,
-  getDefaultVOILUT,
-} from './utils';
+import { drawImageData } from './utils/drawImageData';
+import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
+import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
 export class JSFrameRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;

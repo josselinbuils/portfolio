@@ -1,5 +1,7 @@
-import { CoordinateSpace } from '../interfaces';
-import { M3, M4, V } from './math';
+import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { M3 } from './math/Matrix3';
+import { M4 } from './math/Matrix4';
+import { V } from './math/Vector';
 
 let cache: {
   [key: string]: { from: number[][]; to: number[][] };

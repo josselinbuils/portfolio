@@ -1,5 +1,5 @@
-import { Viewport } from '~/apps/DICOMViewer/models';
-import { V } from '~/apps/DICOMViewer/utils/math';
+import { Viewport } from '../../models/Viewport';
+import { V } from '../math/Vector';
 
 const PAGING_SENSIBILITY = 1.2;
 

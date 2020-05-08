@@ -1,6 +1,8 @@
-import { Viewport, Volume } from '~/apps/DICOMViewer/models';
-import { changePointSpace } from '~/apps/DICOMViewer/utils';
-import { getLinePlaneIntersection, V } from '~/apps/DICOMViewer/utils/math';
+import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { Volume } from '~/apps/DICOMViewer/models/Volume';
+import { changePointSpace } from '~/apps/DICOMViewer/utils/changePointSpace';
+import { getLinePlaneIntersection } from '~/apps/DICOMViewer/utils/math/getLinePlaneIntersection';
+import { V } from '~/apps/DICOMViewer/utils/math/Vector';
 
 const STYLE_FRONT = 'rgba(255, 255, 255, .7)';
 const STYLE_BEHIND = 'rgba(255, 255, 255, .2)';

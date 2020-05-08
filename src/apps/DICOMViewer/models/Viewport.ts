@@ -1,6 +1,7 @@
 import { RendererType, ViewType } from '../constants';
-import { CoordinateSpace, LUTComponent } from '../interfaces';
-import { V } from '../utils/math';
+import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { LUTComponent } from '../interfaces/LUTComponent';
+import { V } from '../utils/math/Vector';
 import { Camera } from './Camera';
 import { Dataset } from './Dataset';
 import { Renderable } from './Renderable';

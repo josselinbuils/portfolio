@@ -1,5 +1,5 @@
-import { Viewport } from '~/apps/DICOMViewer/models';
-import { isImageCentered } from './utils';
+import { Viewport } from '../../models/Viewport';
+import { isImageCentered } from './utils/isImageCentered';
 
 const ZOOM_LIMIT = 0.07;
 const ZOOM_MAX = 5;

@@ -1,11 +1,9 @@
-import { CoordinateSpace } from '../interfaces';
-import { DicomFrame } from '../models';
-import {
-  computeFrames,
-  computeSharedProperties,
-  computeVolume,
-} from '../utils';
-import { V } from '../utils/math';
+import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { DicomFrame } from '../models/DicomFrame';
+import { computeFrames } from '../utils/computeFrames';
+import { computeSharedProperties } from '../utils/computeSharedProperties';
+import { computeVolume } from '../utils/computeVolume';
+import { V } from '../utils/math/Vector';
 import { Frame } from './Frame';
 import { Model } from './Model';
 import { Volume } from './Volume';

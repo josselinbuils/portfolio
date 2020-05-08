@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { throttle } from '~/platform/utils';
-import { hexToRGB, rgbToHex } from './utils';
+import { hexToRGB } from './utils/hexToRGB';
+import { rgbToHex } from './utils/rgbToHex';
 
 import styles from './ColorPicker.module.scss';
 

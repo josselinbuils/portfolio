@@ -1,5 +1,6 @@
-import { LUTComponent, VOILUT } from '../interfaces';
-import { applyPolynomialInterpolation } from './math';
+import { LUTComponent } from '../interfaces/LUTComponent';
+import { VOILUT } from '../interfaces/VOILUT';
+import { applyPolynomialInterpolation } from './math/applyPolynomialInterpolation';
 import { scaleLUTComponents } from './scaleLUTComponents';
 
 export function loadVOILUT(

@@ -4,20 +4,21 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';
-import {
-  AnnotationsElement,
-  ColorPalette,
-  LeftToolbar,
-  SelectDataset,
-  ViewportElement,
-} from './components';
+import { AnnotationsElement } from './components/AnnotationsElement';
+import { ColorPalette } from './components/ColorPalette';
+import { LeftToolbar } from './components/LeftToolbar';
+import { SelectDataset } from './components/SelectDataset';
+import { ViewportElement } from './components/ViewportElement';
 import { MouseTool, RendererType, ViewType } from './constants';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
-import { Annotations, LUTComponent } from './interfaces';
-import { Dataset, Viewport } from './models';
-import { getAvailableViewTypes, startTool } from './utils';
+import { Annotations } from './interfaces/Annotations';
+import { Dataset } from './models/Dataset';
+import { Viewport } from './models/Viewport';
+import { getAvailableViewTypes } from './utils/getAvailableViewTypes';
+import { startTool } from './utils/startTool';
 
 import styles from './DICOMViewer.module.scss';
 

@@ -1,6 +1,6 @@
 import { ViewType } from '../constants';
-import { CoordinateSpace } from '../interfaces';
-import { V } from '../utils/math';
+import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { V } from '../utils/math/Vector';
 import { Frame } from './Frame';
 import { Renderable } from './Renderable';
 import { Volume } from './Volume';

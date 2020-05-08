@@ -1,16 +1,14 @@
 import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
-import { Viewport } from '~/apps/DICOMViewer/models';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks';
 import { Size } from '~/platform/interfaces';
-import {
-  JSFrameRenderer,
-  JSVolumeRenderer,
-  Renderer,
-  WebGLRenderer,
-} from './renderers';
+import { Viewport } from '../../models/Viewport';
+import { JSFrameRenderer } from './renderers/js/JSFrameRenderer';
+import { JSVolumeRenderer } from './renderers/js/JSVolumeRenderer';
+import { Renderer } from './renderers/Renderer';
+import { WebGLRenderer } from './renderers/webgl/WebGLRenderer';
 
 import styles from './ViewportElement.module.scss';
 

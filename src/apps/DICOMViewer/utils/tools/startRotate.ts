@@ -1,6 +1,9 @@
-import { Camera, Viewport, Volume } from '~/apps/DICOMViewer/models';
-import { areFloatEquals } from '~/apps/DICOMViewer/utils';
-import { M3, V } from '~/apps/DICOMViewer/utils/math';
+import { Camera } from '../../models/Camera';
+import { Viewport } from '../../models/Viewport';
+import { Volume } from '../../models/Volume';
+import { areFloatEquals } from '../areFloatEquals';
+import { M3 } from '../math/Matrix3';
+import { V } from '../math/Vector';
 
 export function startRotate(
   viewport: Viewport,

@@ -1,4 +1,4 @@
-import { Viewport } from '~/apps/DICOMViewer/models';
+import { Viewport } from '../../models/Viewport';
 
 const WINDOW_LEVEL_SENSIBILITY = 3;
 const WINDOW_WIDTH_SENSIBILITY = 5;

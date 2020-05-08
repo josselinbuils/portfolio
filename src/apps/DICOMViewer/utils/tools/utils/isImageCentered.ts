@@ -1,5 +1,6 @@
-import { Viewport, Volume } from '~/apps/DICOMViewer/models';
-import { changePointSpace } from '~/apps/DICOMViewer/utils';
+import { Viewport } from '../../../models/Viewport';
+import { Volume } from '../../../models/Volume';
+import { changePointSpace } from '../../../utils/changePointSpace';
 
 const DELTA_LIMIT = 0.02;
 

@@ -1,8 +1,12 @@
 import { ViewType } from '~/apps/DICOMViewer/constants';
-import { LUTComponent, VOILUT } from '~/apps/DICOMViewer/interfaces';
-import { Dataset, Viewport, Volume } from '~/apps/DICOMViewer/models';
-import { changePointSpace, loadVOILUT } from '~/apps/DICOMViewer/utils';
-import { V } from '~/apps/DICOMViewer/utils/math';
+import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import { Dataset } from '~/apps/DICOMViewer/models/Dataset';
+import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { Volume } from '~/apps/DICOMViewer/models/Volume';
+import { changePointSpace } from '~/apps/DICOMViewer/utils/changePointSpace';
+import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
+import { V } from '~/apps/DICOMViewer/utils/math/Vector';
 import { Renderer } from '../Renderer';
 import {
   BoundedViewportSpaceCoordinates,
@@ -11,12 +15,10 @@ import {
   ViewportSpaceCoordinates,
 } from '../RenderingProperties';
 import { getRenderingProperties } from '../renderingUtils';
-import {
-  displayCube,
-  drawImageData,
-  getCanvasRenderingContexts,
-  getDefaultVOILUT,
-} from './utils';
+import { displayCube } from './utils/displayCube';
+import { drawImageData } from './utils/drawImageData';
+import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
+import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
 const skinLUTComponents = [
   { id: '0', start: 10, end: 135, color: [235, 190, 180] },

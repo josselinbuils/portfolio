@@ -1,10 +1,10 @@
 import dicomParser from 'dicom-parser';
 import untar from 'js-untar';
 import cloneDeep from 'lodash.clonedeep';
-import { PhotometricInterpretation } from '~/apps/DICOMViewer/constants';
-import { DicomFrame } from '~/apps/DICOMViewer/models';
 import { BASE_URL } from '~/platform/constants';
 import { onFetchProgress } from '~/platform/utils';
+import { PhotometricInterpretation } from '../../../constants';
+import { DicomFrame } from '../../../models/DicomFrame';
 import { DatasetDescriptor } from '../DatasetDescriptor';
 
 export async function loadFrames(

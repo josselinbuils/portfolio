@@ -1,4 +1,4 @@
-import { LUTComponent } from '~/apps/DICOMViewer/interfaces';
+import { LUTComponent } from '../interfaces/LUTComponent';
 
 const BASE_SIZE = 256;
 
