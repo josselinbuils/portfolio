@@ -3,11 +3,6 @@
 
 $navBarHeight: 7.5rem;
 
-* {
-  cursor: default;
-  user-select: none;
-}
-
 .body {
   display: flex;
   overflow: hidden;
@@ -22,6 +17,12 @@ $navBarHeight: 7.5rem;
   flex-direction: column;
   height: 100%;
   color: $textColor;
+
+  &,
+  * {
+    cursor: default;
+    user-select: none;
+  }
 }
 
 .sidebar {
