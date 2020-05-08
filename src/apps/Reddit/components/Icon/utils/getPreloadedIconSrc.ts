@@ -1,10 +1,9 @@
-import { getIn } from '@josselinbuils/utils';
 import { getSubreddit } from '../../../utils';
 
 export async function getPreloadedIconSrc(
   subreddit: string
 ): Promise<string | undefined> {
-  const iconSrc = getIn(await getSubreddit(subreddit), 'iconSrc');
+  const iconSrc = (await getSubreddit(subreddit))?.iconSrc;
 
   if (iconSrc === undefined) {
     return;
