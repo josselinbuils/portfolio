@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import { CommandHelp } from '~/apps/Terminal/components';
 import { PINNED_APPS_DESCRIPTORS } from '~/platform/components/Desktop/components/TaskBar';
 import { useInjector } from '~/platform/hooks';
 import { WindowManager } from '~/platform/services';
+import { CommandHelp } from '../../components/CommandHelp';
 import { Executor } from '../Executor';
 
 export const Open: Executor = ({ args }) => {

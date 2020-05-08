@@ -1,10 +1,11 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
-import { CommandHelp } from '~/apps/Terminal/components';
 import { useList } from '~/platform/hooks';
+import { CommandHelp } from '../../components/CommandHelp';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';
 import { Log } from './Log';
-import { formatLogs, hasOption } from './utils';
+import { formatLogs } from './utils/formatLogs';
+import { hasOption } from './utils/hasOption';
 
 import styles from './BuildManager.module.scss';
 

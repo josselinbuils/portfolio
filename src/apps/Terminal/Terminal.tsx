@@ -2,20 +2,17 @@ import { Deferred } from '@josselinbuils/utils';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useKeyMap, useList } from '~/platform/hooks';
-import {
-  About,
-  AsyncExecutor,
-  BashError,
-  BuildManager,
-  Command,
-  Executor,
-  Help,
-  isAsyncExecutor,
-  Open,
-  Skills,
-  UserQuery,
-  Work,
-} from './executors';
+import { About } from './executors/About';
+import { AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
+import { BashError } from './executors/BashError';
+import { BuildManager } from './executors/BuildManager';
+import { Command } from './executors/Command';
+import { Executor } from './executors/Executor';
+import { Help } from './executors/Help';
+import { Open } from './executors/Open';
+import { Skills } from './executors/Skills';
+import { UserQuery } from './executors/UserQuery';
+import { Work } from './executors/Work';
 import { TerminalDescriptor } from './TerminalDescriptor';
 
 import styles from './Terminal.module.scss';
