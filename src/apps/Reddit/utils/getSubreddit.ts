@@ -1,14 +1,13 @@
 import { BASE_URL } from '~/platform/constants';
 import { Subreddit } from '../interfaces';
 
-const cache: { [subreddit: string]: Subreddit } = {};
+const subredditsWithoutIcon = ['r/popular'];
 
 export async function getSubreddit(
   subreddit: string
 ): Promise<Subreddit | undefined> {
-  if (cache[subreddit] === undefined) {
+  if (!subredditsWithoutIcon.includes(subreddit)) {
     const response = await fetch(`${BASE_URL}/api/reddit/${subreddit}`);
-    cache[subreddit] = await response.json();
+    return response.json();
   }
-  return cache[subreddit];
 }
