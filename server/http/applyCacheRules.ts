@@ -7,11 +7,11 @@ const cacheRules = [
     maxAge: 365 * 24 * 60 * 60,
   },
   {
-    path: `/favicon`,
+    path: '/favicon',
     maxAge: 7 * 24 * 60 * 60,
   },
   {
-    path: `/static`,
+    path: '/static',
     maxAge: 365 * 24 * 60 * 60,
   },
   {
