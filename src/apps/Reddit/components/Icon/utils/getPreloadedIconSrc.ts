@@ -1,4 +1,4 @@
-import { getSubreddit } from '../../../utils';
+import { getSubreddit } from '../../../utils/getSubreddit';
 
 export async function getPreloadedIconSrc(
   subreddit: string

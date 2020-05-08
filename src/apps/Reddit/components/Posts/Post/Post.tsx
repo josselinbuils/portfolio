@@ -2,13 +2,11 @@ import { faComment } from '@fortawesome/free-regular-svg-icons/faComment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, MouseEvent } from 'react';
-import { RedditPost } from '../../RedditPost';
+import { RedditPost } from '../RedditPost';
 import { PostDetails } from './PostDetails';
-import {
-  formatNumber,
-  getPreviewDisplaySize,
-  getPreviewResolution,
-} from './utils';
+import { formatNumber } from './utils/formatNumber';
+import { getPreviewDisplaySize } from './utils/getPreviewDisplaySize';
+import { getPreviewResolution } from './utils/getPreviewResolution';
 
 import styles from './Post.module.scss';
 

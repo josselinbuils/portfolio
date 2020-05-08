@@ -1,5 +1,5 @@
 import { BASE_URL } from '~/platform/constants';
-import { Subreddit } from '../interfaces';
+import { Subreddit } from '../interfaces/Subreddit';
 
 const subredditsWithoutIcon = ['r/popular'];
 

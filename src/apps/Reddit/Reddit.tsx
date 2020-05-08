@@ -1,7 +1,10 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { Header, Logo, Menu, Posts } from './components';
-import { RedditFilter } from './interfaces';
+import { Header } from './components/Header';
+import { Logo } from './components/Logo';
+import { Menu } from './components/Menu';
+import { Posts } from './components/Posts';
+import { RedditFilter } from './interfaces/RedditFilter';
 import { RedditDescriptor } from './RedditDescriptor';
 
 import styles from './Reddit.module.scss';
