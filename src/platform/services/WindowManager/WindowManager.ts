@@ -1,12 +1,12 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
 import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
-import Terminal from '~/apps/Terminal';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   static injectionId = 'WindowManager';
+  static defaultApp: WindowComponent;
 
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
@@ -14,7 +14,7 @@ export class WindowManager {
   private id = -1;
 
   constructor() {
-    this.openWindow(Terminal);
+    this.openWindow(WindowManager.defaultApp);
   }
 
   closeWindow = (id: number): void => {

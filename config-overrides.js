@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = (config) => {
   config.plugins.push(
     new CircularDependencyPlugin({
+      allowAsyncCycles: false,
       exclude: /node_modules/,
       failOnError: true,
       cwd: process.cwd(),

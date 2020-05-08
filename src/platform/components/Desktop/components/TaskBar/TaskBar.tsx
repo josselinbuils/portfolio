@@ -1,27 +1,11 @@
 import cn from 'classnames';
 import React, { FC, useRef } from 'react';
-import { CodeEditorDescriptor } from '~/apps/CodeEditor/CodeEditorDescriptor';
-import { DICOMViewerDescriptor } from '~/apps/DICOMViewer/DICOMViewerDescriptor';
-import { MP3PlayerDescriptor } from '~/apps/MP3Player/MP3PlayerDescriptor';
-import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
-import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
-import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
-import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
+import { PINNED_APPS_DESCRIPTORS } from './constants';
 import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { Task } from './Task';
 import { getTaskKey } from './utils/getTaskKey';
 
 import styles from './TaskBar.module.scss';
-
-export const PINNED_APPS_DESCRIPTORS = [
-  TerminalDescriptor,
-  CodeEditorDescriptor,
-  DICOMViewerDescriptor,
-  MP3PlayerDescriptor,
-  TeraviaDescriptor,
-  RedditDescriptor,
-  NotesDescriptor,
-];
 
 export const TaskBar: FC<Props> = ({ className }) => {
   const taskBarRef = useRef(null);
