@@ -18,28 +18,34 @@ import React, {
 } from 'react';
 import { useKeyMap, useList, useMemState } from '~/platform/hooks';
 import { Position } from '~/platform/interfaces';
-import { Toolbar, ToolButton } from '../../components';
-import { Cursor, LineNumbers, Tab, Tabs } from './components';
+import { Toolbar } from '../../components/Toolbar';
+import { ToolButton } from '../../components/ToolButton';
+import { Cursor } from './components/Cursor';
+import { LineNumbers } from './components/LineNumbers';
+import { Tab } from './components/Tab';
+import { Tabs } from './components/Tabs';
 import { INDENT } from './constants';
-import { useAutoCompletion, useHistory, useSharedFile } from './hooks';
-import { Completion } from './hooks/useAutoCompletion';
-import { ClientCursor, ClientState } from './hooks/useSharedFile';
-import { EditableState, EditorFile } from './interfaces';
+import { Completion, useAutoCompletion } from './hooks/useAutoCompletion';
+import { useHistory } from './hooks/useHistory';
 import {
-  autoEditChange,
-  exportAsImage,
-  fileSaver,
-  formatCode,
-  getDiff,
-  getLineBeforeCursor,
-  getLineIndent,
-  getLineNumber,
-  highlightCode,
-  isCodePortionEnd,
-  openFile,
-  spliceString,
-} from './utils';
-import { canFormat } from './utils/formatCode';
+  ClientCursor,
+  ClientState,
+  useSharedFile,
+} from './hooks/useSharedFile';
+import { EditableState } from './interfaces/EditableState';
+import { EditorFile } from './interfaces/EditorFile';
+import { autoEditChange } from './utils/autoEditChange';
+import { exportAsImage } from './utils/exportAsImage';
+import { fileSaver } from './utils/fileSaver';
+import { canFormat, formatCode } from './utils/formatCode';
+import { getDiff } from './utils/getDiff';
+import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
+import { getLineIndent } from './utils/getLineIndent';
+import { getLineNumber } from './utils/getLineNumber';
+import { highlightCode } from './utils/highlightCode';
+import { isCodePortionEnd } from './utils/isCodePortionEnd';
+import { openFile } from './utils/openFile';
+import { spliceString } from './utils/spliceString';
 
 import styles from './Editor.module.scss';
 

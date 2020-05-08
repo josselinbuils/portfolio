@@ -2,11 +2,14 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
-import { Toolbar, ToolButton } from '~/apps/CodeEditor/components';
-import { Logs } from '~/apps/CodeEditor/components/Console/components';
 import { useKeyMap, useList } from '~/platform/hooks';
+import { Toolbar } from '../../components/Toolbar';
+import { ToolButton } from '../../components/ToolButton';
+import { Logs } from './components/Logs';
 import { Log } from './Log';
-import { decorateConsole, execCode, observeMutations } from './utils';
+import { decorateConsole } from './utils/decorateConsole';
+import { execCode } from './utils/execCode';
+import { observeMutations } from './utils/observeMutations';
 
 import styles from './Console.module.scss';
 

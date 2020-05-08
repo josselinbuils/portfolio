@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { CodeEditorDescriptor } from './CodeEditorDescriptor';
-import { Console, Editor, StatusBar } from './components';
+import { Console } from './components/Console';
+import { Editor } from './components/Editor';
+import { StatusBar } from './components/StatusBar';
 
 import styles from './CodeEditor.module.scss';
 

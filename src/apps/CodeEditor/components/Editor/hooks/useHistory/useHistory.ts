@@ -1,7 +1,8 @@
 import { useCallback, useRef } from 'react';
 import { useDynamicRef, useKeyMap } from '~/platform/hooks';
-import { Diff, EditableState } from '../../interfaces';
-import { getDiff } from '../../utils';
+import { Diff } from '../../interfaces/Diff';
+import { EditableState } from '../../interfaces/EditableState';
+import { getDiff } from '../../utils/getDiff';
 
 const HISTORY_SIZE_LIMIT = 50;
 

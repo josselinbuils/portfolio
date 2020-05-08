@@ -1,4 +1,4 @@
-import { createAutoCLoseMap } from './utils';
+import { createAutoCLoseMap } from './utils/createAutoCloseMap';
 
 export const BRACKET_GROUPS = ['{}', '()', '[]'];
 export const AUTO_CLOSE_GROUPS = [...BRACKET_GROUPS, '""', "''", '``'];

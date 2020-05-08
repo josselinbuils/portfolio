@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
-import { Diff } from '../../interfaces';
+import { Diff } from '../../interfaces/Diff';
 import { ClientCursor, ClientState } from './interfaces';
-import { applyDiff } from './utils';
+import { applyDiff } from './utils/applyDiff';
 
 const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';

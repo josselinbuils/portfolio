@@ -2,11 +2,13 @@ import { Deferred } from '@josselinbuils/utils';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks';
-import { Diff, EditableState } from '../../interfaces';
-import { getDiff } from '../../utils';
+import { Diff } from '../../interfaces/Diff';
+import { EditableState } from '../../interfaces/EditableState';
+import { getDiff } from '../../utils/getDiff';
 import { Action, actionCreators, actionsHandlers } from './actions';
 import { ClientState } from './interfaces';
-import { applyDiff, computeHash } from './utils';
+import { applyDiff } from './utils/applyDiff';
+import { computeHash } from './utils/computeHash';
 
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 

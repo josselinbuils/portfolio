@@ -1,7 +1,8 @@
 import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import { useDynamicRef } from '~/platform/hooks';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
-import { getCursorPosition, getLineBeforeCursor } from '../../utils';
+import { getCursorPosition } from '../../utils/getCursorPosition';
+import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
 import { getCompletion, getCompletionItems } from './utils';
 
 export function useAutoCompletion({

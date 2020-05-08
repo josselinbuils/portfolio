@@ -1,7 +1,7 @@
 import { BuiltInParserName, Plugin } from 'prettier';
 import 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
-import { EditableState } from '../interfaces';
+import { EditableState } from '../interfaces/EditableState';
 
 const parserDescriptors = {
   css: {

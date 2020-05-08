@@ -1,4 +1,4 @@
-import { Diff } from '../interfaces';
+import { Diff } from '../interfaces/Diff';
 
 export function getDiff(a: string, b: string): Diff {
   const isAddition = b.length >= a.length;

@@ -1,4 +1,4 @@
-import { EditorFile } from '../interfaces';
+import { EditorFile } from '../interfaces/EditorFile';
 
 const STORAGE_KEY = 'codeEditor';
 

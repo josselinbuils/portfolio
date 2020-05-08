@@ -1,5 +1,5 @@
 import { INDENT } from '../../constants';
-import { EditableState } from '../../interfaces';
+import { EditableState } from '../../interfaces/EditableState';
 import { getDiff } from '../getDiff';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
