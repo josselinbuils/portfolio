@@ -7,9 +7,9 @@ import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
 import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
 import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
-import { useTaskDescriptors } from './hooks';
+import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { Task } from './Task';
-import { getTaskKey } from './utils';
+import { getTaskKey } from './utils/getTaskKey';
 
 import styles from './TaskBar.module.scss';
 

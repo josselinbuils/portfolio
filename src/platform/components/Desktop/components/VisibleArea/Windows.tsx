@@ -1,10 +1,8 @@
 import React, { FC, useLayoutEffect, useState } from 'react';
-import { useInjector } from '~/platform/hooks';
-import { Size } from '~/platform/interfaces';
-import {
-  WindowInstance,
-  WindowManager,
-} from '~/platform/services/WindowManager';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { Size } from '~/platform/interfaces/Size';
+import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const windowManager = useInjector(WindowManager);

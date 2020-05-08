@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import { PINNED_APPS_DESCRIPTORS } from '~/platform/components/Desktop/components/TaskBar';
-import { useInjector } from '~/platform/hooks';
-import { WindowManager } from '~/platform/services';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { WindowManager } from '~/platform/services/WindowManager';
 import { CommandHelp } from '../../components/CommandHelp';
 import { Executor } from '../Executor';
 

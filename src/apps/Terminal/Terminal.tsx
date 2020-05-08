@@ -1,7 +1,8 @@
 import { Deferred } from '@josselinbuils/utils';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
-import { useKeyMap, useList } from '~/platform/hooks';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { useList } from '~/platform/hooks/useList';
 import { About } from './executors/About';
 import { AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError';

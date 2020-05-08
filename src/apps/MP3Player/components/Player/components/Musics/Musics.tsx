@@ -7,8 +7,9 @@ import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
 import { Music } from '~/apps/MP3Player/interfaces/Music';
 import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '~/apps/MP3Player/utils/loadMusics';
-import { Select, Spinner } from '~/platform/components';
-import { cancelable } from '~/platform/utils';
+import { Select } from '~/platform/components/Select';
+import { Spinner } from '~/platform/components/Spinner';
+import { cancelable } from '~/platform/utils/cancelable';
 
 import styles from './Musics.module.scss';
 

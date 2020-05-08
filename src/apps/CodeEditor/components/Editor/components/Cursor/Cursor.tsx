@@ -1,5 +1,5 @@
 import React, { FC, useLayoutEffect, useState } from 'react';
-import { Position } from '~/platform/interfaces';
+import { Position } from '~/platform/interfaces/Position';
 // Needs to import directly from getCursorPosition to avoid webpack crash
 import { getCursorPosition } from '../../utils/getCursorPosition';
 

@@ -1,6 +1,6 @@
 import { FC, RefObject } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import { Size } from '~/platform/interfaces';
+import { Size } from '~/platform/interfaces/Size';
 import { Window } from './Window';
 
 export interface WindowComponent extends FC<InjectedWindowProps> {

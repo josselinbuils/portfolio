@@ -1,7 +1,7 @@
 import { Deferred } from '@josselinbuils/utils';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { BASE_URL_WS } from '~/platform/constants';
-import { useDynamicRef } from '~/platform/hooks';
+import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
 import { getDiff } from '../../utils/getDiff';

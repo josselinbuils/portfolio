@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
-import { useList } from '~/platform/hooks';
+import { useList } from '~/platform/hooks/useList';
 import { CommandHelp } from '../../components/CommandHelp';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';

@@ -5,10 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useEventListener, useInjector } from '~/platform/hooks';
-import { Size } from '~/platform/interfaces';
+import { useEventListener } from '~/platform/hooks/useEventListener';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { Size } from '~/platform/interfaces/Size';
 import { WindowManager } from '~/platform/services/WindowManager';
-import { getRefElementSize } from '~/platform/utils';
+import { getRefElementSize } from '~/platform/utils/getRefElementSize';
 import { Selection } from './Selection';
 import { Windows } from './Windows';
 

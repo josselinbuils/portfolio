@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
-import { useDynamicRef, useKeyMap } from '~/platform/hooks';
+import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
 import { getDiff } from '../../utils/getDiff';

@@ -1,10 +1,8 @@
 import { useLayoutEffect, useState } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import { useInjector } from '~/platform/hooks';
-import {
-  WindowInstance,
-  WindowManager,
-} from '~/platform/services/WindowManager';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 import { TaskDescriptor } from '../TaskDescriptor';
 
 export function useTaskDescriptors(

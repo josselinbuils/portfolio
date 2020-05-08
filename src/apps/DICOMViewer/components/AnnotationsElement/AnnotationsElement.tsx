@@ -3,7 +3,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import React, { FC, RefObject, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu';
-import { useContextMenu } from '~/platform/providers/ContextMenuProvider';
+import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { Annotations } from '../../interfaces/Annotations';
 
 import styles from './AnnotationsElement.module.scss';

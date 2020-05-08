@@ -2,7 +2,7 @@ import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 import { faFireAlt } from '@fortawesome/free-solid-svg-icons/faFireAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
-import { ButtonLink } from '~/platform/components';
+import { ButtonLink } from '~/platform/components/ButtonLink';
 import { RedditFilter } from '../../interfaces/RedditFilter';
 
 import styles from './FilterButton.module.scss';

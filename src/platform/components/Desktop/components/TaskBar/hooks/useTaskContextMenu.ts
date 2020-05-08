@@ -5,11 +5,9 @@ import {
   ContextMenuDescriptor,
   ContextMenuItemDescriptor,
 } from '~/platform/components/ContextMenu';
-import { useInjector } from '~/platform/hooks';
-import {
-  WindowInstance,
-  WindowManager,
-} from '~/platform/services/WindowManager';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 
 export function useTaskContextMenu(
   appDescriptor: AppDescriptor,

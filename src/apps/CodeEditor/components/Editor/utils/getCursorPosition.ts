@@ -1,4 +1,4 @@
-import { Position } from '~/platform/interfaces';
+import { Position } from '~/platform/interfaces/Position';
 
 const properties = [
   'direction',

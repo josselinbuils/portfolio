@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useEventListener } from '~/platform/hooks';
-import { Position } from '~/platform/interfaces';
+import { useEventListener } from '~/platform/hooks/useEventListener';
+import { Position } from '~/platform/interfaces/Position';
 
 import styles from './Selection.module.scss';
 

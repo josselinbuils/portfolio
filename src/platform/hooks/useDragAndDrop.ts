@@ -1,7 +1,7 @@
 import React from 'react';
 import { MouseButton } from '../constants';
-import { EventHandler } from '../interfaces';
-import { noop } from '../utils';
+import { EventHandler } from '../interfaces/EventHandler';
+import { noop } from '../utils/noop';
 
 export function useDragAndDrop(
   downHandler: (downEvent: React.MouseEvent) => MouseMoveHandler | void,

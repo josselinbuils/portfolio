@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useKeyMap } from '~/platform/hooks';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import { ContextMenuItem } from './ContextMenuItem';

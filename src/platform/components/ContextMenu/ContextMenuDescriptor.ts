@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { Position } from '~/platform/interfaces';
+import { Position } from '~/platform/interfaces/Position';
 import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 
 export interface ContextMenuDescriptor {

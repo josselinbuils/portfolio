@@ -1,4 +1,4 @@
-import { Size } from '~/platform/interfaces';
+import { Size } from '~/platform/interfaces/Size';
 import { ImageResolution } from '../../RedditPost';
 import { PREVIEW_MAX_HEIGHT, PREVIEW_MAX_WIDTH } from '../constants';
 

@@ -1,6 +1,6 @@
 import { Deferred } from '@josselinbuils/utils';
 import { BASE_URL_WS } from '~/platform/constants';
-import { noop } from '~/platform/utils';
+import { noop } from '~/platform/utils/noop';
 
 export enum MessageType {
   AuthToken = 'authToken',

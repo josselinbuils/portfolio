@@ -16,8 +16,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useKeyMap, useList, useMemState } from '~/platform/hooks';
-import { Position } from '~/platform/interfaces';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { useList } from '~/platform/hooks/useList';
+import { useMemState } from '~/platform/hooks/useMemState';
+import { Position } from '~/platform/interfaces/Position';
 import { Toolbar } from '../../components/Toolbar';
 import { ToolButton } from '../../components/ToolButton';
 import { Cursor } from './components/Cursor';

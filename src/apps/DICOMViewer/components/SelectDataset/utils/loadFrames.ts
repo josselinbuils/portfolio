@@ -2,7 +2,7 @@ import dicomParser from 'dicom-parser';
 import untar from 'js-untar';
 import cloneDeep from 'lodash.clonedeep';
 import { BASE_URL } from '~/platform/constants';
-import { onFetchProgress } from '~/platform/utils';
+import { onFetchProgress } from '~/platform/utils/onFetchProgress';
 import { PhotometricInterpretation } from '../../../constants';
 import { DicomFrame } from '../../../models/DicomFrame';
 import { DatasetDescriptor } from '../DatasetDescriptor';

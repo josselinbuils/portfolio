@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode } from 'react';
-import { Position } from '~/platform/interfaces';
+import { Position } from '~/platform/interfaces/Position';
 
 export interface TooltipDescriptor {
   className?: string;

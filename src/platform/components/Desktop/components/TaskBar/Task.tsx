@@ -2,13 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import { useInjector } from '~/platform/hooks';
-import { WithContextMenu } from '~/platform/providers/ContextMenuProvider';
-import {
-  WindowInstance,
-  WindowManager,
-} from '~/platform/services/WindowManager';
-import { useTaskContextMenu, useTaskRunner } from './hooks';
+import { useInjector } from '~/platform/hooks/useInjector';
+import { WithContextMenu } from '~/platform/providers/ContextMenuProvider/WithContextMenu';
+import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import { useTaskContextMenu } from './hooks/useTaskContextMenu';
+import { useTaskRunner } from './hooks/useTaskRunner';
 
 import styles from './Task.module.scss';
 

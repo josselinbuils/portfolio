@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { EventHandler } from '../interfaces';
+import { EventHandler } from '../interfaces/EventHandler';
 import { useDynamicRef } from './useDynamicRef';
 
 export function useEventListener<EventType extends keyof WindowEventMap>(

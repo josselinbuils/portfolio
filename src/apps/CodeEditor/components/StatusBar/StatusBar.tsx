@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import { Position } from '~/platform/interfaces';
+import { Position } from '~/platform/interfaces/Position';
 
 import styles from './StatusBar.module.scss';
 

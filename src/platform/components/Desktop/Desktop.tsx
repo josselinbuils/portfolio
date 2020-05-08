@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import { TaskBar, VisibleArea } from './components';
+import { TaskBar } from './components/TaskBar';
+import { VisibleArea } from './components/VisibleArea';
 
 import styles from './Desktop.module.scss';
 

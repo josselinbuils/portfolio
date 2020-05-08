@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
-import { Spinner } from '~/platform/components';
+import { Spinner } from '~/platform/components/Spinner';
 import { BASE_URL } from '~/platform/constants';
-import { cancelable } from '~/platform/utils';
+import { cancelable } from '~/platform/utils/cancelable';
 import { Dataset } from '../../models/Dataset';
 import { DatasetDescriptor } from './DatasetDescriptor';
 import { ProgressRing } from './ProgressRing';
