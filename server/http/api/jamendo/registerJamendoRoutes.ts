@@ -8,6 +8,6 @@ export function registerJamendoRoutes(router: Router): void {
 
   const handler = asyncRoute(getTracks);
 
-  router.get('/api/jamendo/tracks/:order', handler);
-  router.get('/api/jamendo/tracks/:tag/:order', handler);
+  router.get('/jamendo/tracks/:order', handler);
+  router.get('/jamendo/tracks/:tag/:order', handler);
 }

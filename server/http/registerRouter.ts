@@ -1,34 +1,36 @@
 import bodyParser from 'body-parser';
 import express, { Express, NextFunction, Request, Response } from 'express';
-import { existsSync, statSync } from 'fs';
-import { join } from 'path';
+import path from 'path';
 import serveStatic from 'serve-static';
 import { ENV_DEV } from '../constants';
 import { Logger } from '../Logger';
 import { registerDicomRoutes } from './api/dicom';
 import { registerJamendoRoutes } from './api/jamendo';
 import { registerRedditRoutes } from './api/reddit';
+import { applyAssetsCompression } from './applyAssetsCompression';
+import { applyCacheRules } from './applyCacheRules';
 import {
+  API_URL_PATH,
   ASSETS_DIR,
+  ASSETS_URL_PATH,
+  CLIENT_DIST_DIR,
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
-  MAX_AGE_API_SECONDS,
-  MAX_AGE_STATIC_SECONDS,
-  PUBLIC_DIR,
 } from './constants';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
-const ASSETS_PATH = join(process.cwd(), ASSETS_DIR);
-const CLIENT_PATH = join(process.cwd(), PUBLIC_DIR);
+const ASSETS_FS_PATH = path.join(process.cwd(), ASSETS_DIR);
+const CLIENT_PATH = path.join(process.cwd(), CLIENT_DIST_DIR);
 const HTTP_PREFIX = process.env.HTTP_PREFIX || HTTP_DEFAULT_PREFIX;
 
 export function registerRouter(app: Express): Express {
   Logger.info('Initializes router');
 
-  const router = express.Router();
+  const mainRouter = express.Router();
+  const apiRouter = express.Router();
 
-  router.use((req, res, next) => {
+  mainRouter.use((req, res, next) => {
     Logger.info(`<- ${req.method} ${req.url}`);
 
     if (ENV === ENV_DEV) {
@@ -37,59 +39,28 @@ export function registerRouter(app: Express): Express {
     next();
   });
 
-  router.use(ASSETS_DIR, (req, res, next) => {
-    const path = join(ASSETS_PATH, req.url);
-    const gzPath = `${path}.gz`;
+  applyCacheRules(mainRouter);
+  applyAssetsCompression(mainRouter);
 
-    res.set('Access-Control-Expose-Headers', 'Content-Length');
+  mainRouter.use(ASSETS_URL_PATH, serveStatic(ASSETS_FS_PATH));
+  mainRouter.use(serveStatic(CLIENT_PATH));
 
-    if (existsSync(gzPath)) {
-      req.url += '.gz';
-      res.set(
-        'Access-Control-Expose-Headers',
-        'Content-Length, Content-Length-Uncompressed'
-      );
-      res.set('Content-Encoding', 'gzip');
-      res.set('Content-Type', 'application/octet-stream');
+  apiRouter.use(bodyParser.json());
+  registerDicomRoutes(apiRouter);
+  registerJamendoRoutes(apiRouter);
+  registerRedditRoutes(apiRouter);
+  mainRouter.use(API_URL_PATH, apiRouter);
 
-      if (existsSync(path)) {
-        const { size } = statSync(path);
-        res.set('Content-Length-Uncompressed', size.toString());
-      }
-    }
-    next();
-  });
-
-  const cacheOptions = {
-    immutable: true,
-    maxAge: MAX_AGE_STATIC_SECONDS * 1000,
-  };
-  router.use(ASSETS_DIR, serveStatic(ASSETS_PATH, cacheOptions));
-  router.use(serveStatic(CLIENT_PATH, cacheOptions));
-
-  app.get('*', (req, res, next) => {
-    res.set(
-      'Cache-Control',
-      `public, max-age=${MAX_AGE_API_SECONDS}, immutable`
-    );
-    next();
-  });
-
-  router.use(bodyParser.json());
-  registerDicomRoutes(router);
-  registerJamendoRoutes(router);
-  registerRedditRoutes(router);
-
-  router.get('*', (req, res) => res.status(HTTP_NOT_FOUND).end());
+  mainRouter.get('*', (req, res) => res.status(HTTP_NOT_FOUND).end());
 
   // next is required even if not used
   // noinspection JSUnusedLocalSymbols
-  router.use(
+  mainRouter.use(
     (error: Error, req: Request, res: Response, next: NextFunction) => {
       Logger.error(error.stack as string);
       res.status(HTTP_INTERNAL_ERROR).end();
     }
   );
 
-  return app.use(HTTP_PREFIX, router);
+  return app.use(HTTP_PREFIX, mainRouter);
 }

@@ -8,7 +8,7 @@ export function registerRedditRoutes(router: Router): void {
 
   const controller = new RedditController();
 
-  router.get('/api/reddit/r/:subreddit', asyncRoute(controller.getSubreddit));
-  router.get('/api/reddit/r/:subreddit/hot', asyncRoute(controller.getHot));
-  router.get('/api/reddit/r/:subreddit/top', asyncRoute(controller.getTop));
+  router.get('/reddit/r/:subreddit', asyncRoute(controller.getSubreddit));
+  router.get('/reddit/r/:subreddit/hot', asyncRoute(controller.getHot));
+  router.get('/reddit/r/:subreddit/top', asyncRoute(controller.getTop));
 }
