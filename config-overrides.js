@@ -22,7 +22,5 @@ module.exports = (config) => {
     config.plugins.push(new BundleAnalyzerPlugin());
   }
 
-  console.log(process.env);
-
   return config;
 };
