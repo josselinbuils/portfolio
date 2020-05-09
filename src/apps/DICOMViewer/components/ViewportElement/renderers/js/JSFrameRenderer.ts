@@ -27,7 +27,6 @@ export class JSFrameRenderer implements Renderer {
 
   render(viewport: Viewport): void {
     const { camera, dataset, height, width, windowWidth } = viewport;
-    // TODO get it through rendering properties
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { imageFormat } = frame;
 

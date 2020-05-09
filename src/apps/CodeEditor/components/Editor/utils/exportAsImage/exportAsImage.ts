@@ -1,4 +1,6 @@
-import { createImage, download, renderSVG } from './utils';
+import { createImage } from './utils/createImage';
+import { download } from './utils/download';
+import { renderSVG } from './utils/renderSVG';
 
 const FILENAME = 'snippet.jpg';
 const SCALE = 2;

@@ -2,7 +2,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import React, { FC, RefObject, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
-import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu';
+import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu/ContextMenuItemDescriptor';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { Annotations } from '../../interfaces/Annotations';
 

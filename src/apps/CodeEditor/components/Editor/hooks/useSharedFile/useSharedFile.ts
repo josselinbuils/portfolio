@@ -4,10 +4,10 @@ import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
+import { applyDiff } from '../../utils/applyDiff';
 import { Action, actionCreators, actionsHandlers } from './actions';
-import { ClientState } from './interfaces/ClientState';
-import { applyDiff } from './utils/applyDiff';
-import { computeHash } from './utils/computeHash';
+import { ClientState } from './ClientState';
+import { computeHash } from './computeHash';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;

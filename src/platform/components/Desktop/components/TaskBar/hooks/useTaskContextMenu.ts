@@ -1,10 +1,8 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { RefObject } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
-import {
-  ContextMenuDescriptor,
-  ContextMenuItemDescriptor,
-} from '~/platform/components/ContextMenu';
+import { ContextMenuDescriptor } from '~/platform/components/ContextMenu/ContextMenuDescriptor';
+import { ContextMenuItemDescriptor } from '~/platform/components/ContextMenu/ContextMenuItemDescriptor';
 import { useInjector } from '~/platform/hooks/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';

@@ -1,8 +1,8 @@
 import { Reducer } from 'react';
 import { Diff } from '../../interfaces/Diff';
-import { ClientCursor } from './interfaces/ClientCursor';
-import { ClientState } from './interfaces/ClientState';
-import { applyDiff } from './utils/applyDiff';
+import { applyDiff } from '../../utils/applyDiff';
+import { ClientCursor } from './ClientCursor';
+import { ClientState } from './ClientState';
 
 const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_REDO = 'REDO';

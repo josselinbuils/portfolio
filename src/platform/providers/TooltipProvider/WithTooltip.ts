@@ -6,7 +6,7 @@ import {
   useContext,
   useState,
 } from 'react';
-import { TooltipDescriptor } from '~/platform/components/Tooltip';
+import { TooltipDescriptor } from '~/platform/components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 
 const TOOLTIP_DELAY_MS = 500;

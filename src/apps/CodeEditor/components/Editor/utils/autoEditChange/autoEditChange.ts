@@ -7,12 +7,10 @@ import { getLineIndent } from '../getLineIndent';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
 import { spliceString } from '../spliceString';
-import {
-  getAutoCloseChar,
-  isAutoCloseChar,
-  isIntoBrackets,
-  isOpenBracket,
-} from './utils';
+import { getAutoCloseChar } from './utils/getAutoCloseChar';
+import { isAutoCloseChar } from './utils/isAutoCloseChar';
+import { isIntoBrackets } from './utils/isIntoBrackets';
+import { isOpenBracket } from './utils/isOpenBracket';
 
 const REGEX_BREAK = /^ *break; *$/;
 const REGEX_CHAINED_CALL = /^ *\..+; *$/;

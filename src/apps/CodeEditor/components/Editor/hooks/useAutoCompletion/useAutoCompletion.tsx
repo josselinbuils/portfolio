@@ -3,7 +3,8 @@ import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { getCursorPosition } from '../../utils/getCursorPosition';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
-import { getCompletion, getCompletionItems } from './utils';
+import { getCompletion } from './utils/getCompletion';
+import { getCompletionItems } from './utils/getCompletionItems';
 
 export function useAutoCompletion({
   active,

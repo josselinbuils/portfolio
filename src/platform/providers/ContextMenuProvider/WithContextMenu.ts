@@ -1,5 +1,5 @@
 import { Children, cloneElement, FC, ReactElement } from 'react';
-import { ContextMenuDescriptor } from '~/platform/components/ContextMenu';
+import { ContextMenuDescriptor } from '~/platform/components/ContextMenu/ContextMenuDescriptor';
 import { useContextMenu } from './useContextMenu';
 
 export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {

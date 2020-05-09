@@ -30,10 +30,11 @@ import { INDENT } from './constants';
 import { Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile';
-import { ClientCursor } from './hooks/useSharedFile/interfaces/ClientCursor';
-import { ClientState } from './hooks/useSharedFile/interfaces/ClientState';
+import { ClientCursor } from './hooks/useSharedFile/ClientCursor';
+import { ClientState } from './hooks/useSharedFile/ClientState';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
+import { applyDiff } from './utils/applyDiff';
 import { autoEditChange } from './utils/autoEditChange';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
@@ -267,8 +268,6 @@ export const Editor: FC<Props> = ({
     }
   }
 
-  // TODO fix issue when removing selection by putting a new character that was
-  // not the first selection character
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newCode = event.target.value;
 
@@ -292,7 +291,7 @@ export const Editor: FC<Props> = ({
       updateState(newState);
 
       if (isSharedFileActive) {
-        // Fuck that React issue https://github.com/facebook/react/issues/12762
+        // Mitigates that React issue https://github.com/facebook/react/issues/12762
         onChange(`${code} `);
       }
     }
@@ -354,7 +353,21 @@ export const Editor: FC<Props> = ({
 
   function updateState(newState: EditableState): void {
     if (isSharedFileActive) {
-      updateClientState(getDiff(code, newState.code), newState.cursorOffset);
+      const diffObj = getDiff(code, newState.code);
+      const newCode = applyDiff(code, diffObj);
+
+      if (newCode === newState.code) {
+        updateClientState(diffObj, newState.cursorOffset);
+      } else {
+        // Sometimes 2 diffs are necessary.
+        // Ex: removing selection by putting a new character that was not the
+        // first character of the selection.
+        updateClientState(diffObj, diffObj.endOffset);
+        updateClientState(
+          getDiff(newCode, newState.code),
+          newState.cursorOffset
+        );
+      }
     } else {
       applyState(newState);
       pushState(newState);

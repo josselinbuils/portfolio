@@ -1,5 +1,5 @@
-import { Diff } from '../../../interfaces/Diff';
-import { spliceString } from '../../../utils/spliceString';
+import { Diff } from '../interfaces/Diff';
+import { spliceString } from './spliceString';
 
 export function applyDiff(code: string, diffObj: Diff): string {
   return diffObj.type === '+'
