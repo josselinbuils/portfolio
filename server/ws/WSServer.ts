@@ -161,7 +161,7 @@ export class WSServer {
             ? actionCreators.updateClientState(diffObj, cursorOffset)
             : actionCreators.updateClientState(diffObj)
         );
-        this.updateClientCursorOffset(client, cursorOffset);
+        this.updateClientCursorOffset(client, cursorOffset, true);
 
         if (diffObj.diff.length > 0) {
           this.updateCode(
@@ -201,11 +201,17 @@ export class WSServer {
     );
   }
 
-  private updateClientCursorOffset(client: Client, cursorOffset: number): void {
+  private updateClientCursorOffset(
+    client: Client,
+    cursorOffset: number,
+    excludeClient: boolean = false
+  ): void {
     client.cursorOffset = cursorOffset;
-    this.dispatchAll(
-      actionCreators.updateCursorOffset(client.id, cursorOffset)
-    );
+    this.dispatchAll(({ id }) => {
+      if (!excludeClient || id !== client.id) {
+        return actionCreators.updateCursorOffset(client.id, cursorOffset);
+      }
+    });
   }
 }
 
