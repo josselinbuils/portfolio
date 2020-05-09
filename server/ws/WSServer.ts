@@ -1,14 +1,21 @@
 import fs from 'fs';
 import WebSocket, { OPEN, Server } from 'ws';
 import { Logger } from '../Logger';
+import {
+  Action,
+  actionCreators,
+  ACTION_REDO,
+  ACTION_UNDO,
+  ACTION_UPDATE_CURSOR_OFFSET,
+  ACTION_UPDATE_SHARED_STATE,
+} from './actions';
 import { STATE_PATH } from './constants';
-import { ClientCursor, ClientState } from './interfaces';
-import { computeHash, ExecQueue, spliceString } from './utils';
+import { ClientCursor } from './interfaces/ClientCursor';
+import { computeHash } from './utils/computeHash';
+import { ExecQueue } from './utils/ExecQueue';
+import { History } from './utils/History';
+import { spliceString } from './utils/spliceString';
 
-const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
-const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
-const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
-const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
 export class WSServer {
@@ -19,6 +26,7 @@ export class WSServer {
     : '';
   private codeHash = computeHash(this.code);
   private readonly codeUpdateQueue = new ExecQueue();
+  private readonly history = new History();
   private readonly requestQueue = new ExecQueue();
   private readonly server: Server;
 
@@ -26,15 +34,28 @@ export class WSServer {
     return new WSServer(port, listeningCallback);
   }
 
+  private static dispatch(wsClient: WebSocket, action: Action): void {
+    wsClient.send(JSON.stringify(action));
+  }
+
   private constructor(port: number, listeningCallback: () => any) {
     this.server = new Server({ port }, listeningCallback);
     this.server.on('connection', this.handleConnection.bind(this));
   }
 
-  private dispatch(action: Action): void {
+  private dispatchAll(
+    action: Action | ((client: Client) => Action | undefined)
+  ): void {
+    const actionCreator = typeof action === 'function' ? action : () => action;
+
     this.server.clients.forEach((wsClient) => {
       if (wsClient.readyState === OPEN) {
-        wsClient.send(JSON.stringify(action));
+        const client = this.getClientFromWS(wsClient);
+        const clientAction = actionCreator(client);
+
+        if (clientAction !== undefined) {
+          WSServer.dispatch(wsClient, actionCreator(client));
+        }
       }
     });
   }
@@ -44,66 +65,59 @@ export class WSServer {
 
     for (const client of this.clients) {
       if (client.cursorOffset > codeLength) {
-        client.cursorOffset = codeLength;
+        this.updateClientCursorOffset(client, codeLength);
       }
     }
   }
 
-  private getClientFromWS(ws: WebSocket): Client {
-    return this.clients.find((client) => client.ws === ws);
+  private getClientFromWS(wsClient: WebSocket): Client {
+    return this.clients.find((client) => client.ws === wsClient);
   }
 
   private getCursors(): ClientCursor[] {
-    return this.clients.map(({ clientID, cursorColor, cursorOffset }) => ({
-      clientID,
+    return this.clients.map(({ cursorColor, cursorOffset, id }) => ({
+      clientID: id,
       color: cursorColor,
       offset: cursorOffset,
     }));
   }
 
-  private handleConnection(ws: WebSocket): void {
+  private handleConnection(wsClient: WebSocket): void {
     this.requestQueue.enqueue(() => {
-      const clientID = ++this.clientID;
+      const id = ++this.clientID;
       const colorsUsed = this.clients.map((c) => c.cursorColor);
       const cursorColor =
         CURSOR_COLORS.find((color) => !colorsUsed.includes(color)) || 'white';
 
       const client = {
-        clientID,
         cursorColor,
         cursorOffset: 0,
-        ws,
+        id,
+        ws: wsClient,
       };
       this.clients.push(client);
 
-      ws.send(
-        JSON.stringify({
-          type: ACTION_SET_SHARED_STATE,
-          payload: {
-            state: {
-              clientID,
-              code: this.code,
-              cursorColor,
-              cursors: this.getCursors(),
-            },
-          },
-        } as SetSharedStateAction)
-      );
+      const state = {
+        code: this.code,
+        cursorColor,
+        id,
+      };
+      WSServer.dispatch(wsClient, actionCreators.setSharedState(state));
+      this.sendCursors();
     });
 
-    ws.on('close', () => {
-      const client = this.getClientFromWS(ws);
+    wsClient.on('close', () => {
+      const client = this.getClientFromWS(wsClient);
       const clientIndex = this.clients.indexOf(client);
       this.clients.splice(clientIndex, 1);
       this.sendCursors();
     });
 
-    ws.on('message', (message: string) => {
+    wsClient.on('message', (message: string) => {
       this.requestQueue.enqueue(() => {
         try {
           const action = JSON.parse(message) as Action;
-          const client = this.getClientFromWS(ws);
-          this.reduce(client, action);
+          this.reduce(wsClient, action);
         } catch (error) {
           Logger.error(error.stack);
         }
@@ -111,43 +125,68 @@ export class WSServer {
     });
   }
 
-  private reduce(client: Client, action: Action): void {
-    if (action.type === ACTION_UPDATE_CURSOR_OFFSET) {
-      client.cursorOffset = action.payload.cursorOffset;
-      this.sendCursors();
-    } else if (action.type === ACTION_UPDATE_SHARED_STATE) {
-      const { cursorOffset, diffObj, safetyHash } = action.payload;
+  private reduce(wsClient: WebSocket, action: Action): void {
+    const client = this.getClientFromWS(wsClient);
 
-      if (safetyHash !== this.codeHash) {
-        // Requested update is obsolete
-        return;
+    switch (action.type) {
+      case ACTION_REDO:
+      case ACTION_UNDO: {
+        const historyFunction = action.type === ACTION_UNDO ? 'undo' : 'redo';
+
+        this.history[historyFunction](({ code, cursorOffset }) => {
+          this.dispatchAll(actionCreators.setSharedState({ code }));
+          this.updateClientCursorOffset(client, cursorOffset);
+          this.updateCode(code);
+        });
+        break;
       }
 
-      client.cursorOffset = cursorOffset;
+      case ACTION_UPDATE_CURSOR_OFFSET:
+        this.updateClientCursorOffset(client, action.payload.cursorOffset);
+        break;
 
-      this.updateCode(
-        diffObj.type === '+'
-          ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
-          : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
-      );
-      this.dispatch(action);
-      this.fixCursorOffsets();
-      this.sendCursors();
+      case ACTION_UPDATE_SHARED_STATE: {
+        const { cursorOffset, diffObj, safetyHash } = action.payload;
+
+        if (safetyHash !== this.codeHash) {
+          // Requested update is obsolete
+          return;
+        }
+        this.dispatchAll(({ id }) =>
+          id === client.id
+            ? actionCreators.updateClientState(diffObj, cursorOffset)
+            : actionCreators.updateClientState(diffObj)
+        );
+        this.updateClientCursorOffset(client, cursorOffset);
+
+        if (diffObj.diff.length > 0) {
+          this.updateCode(
+            diffObj.type === '+'
+              ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
+              : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
+          );
+          this.history.pushState({
+            code: this.code,
+            cursorOffset,
+          });
+        }
+      }
     }
   }
 
   private sendCursors(): void {
-    this.dispatch({
-      type: ACTION_UPDATE_CURSORS,
-      payload: {
-        cursors: this.getCursors(),
-      },
-    });
+    const cursors = this.getCursors();
+    this.dispatchAll((client) =>
+      actionCreators.updateCursors(
+        cursors.filter(({ clientID }) => clientID !== client.id)
+      )
+    );
   }
 
   private updateCode(code: string): void {
     this.code = code;
     this.codeHash = computeHash(code);
+    this.fixCursorOffsets();
 
     // Avoids race conditions
     this.codeUpdateQueue.enqueue(
@@ -157,52 +196,18 @@ export class WSServer {
         })
     );
   }
+
+  private updateClientCursorOffset(client: Client, cursorOffset: number): void {
+    client.cursorOffset = cursorOffset;
+    this.dispatchAll(
+      actionCreators.updateCursorOffset(client.id, cursorOffset)
+    );
+  }
 }
 
-export type Action =
-  | SetSharedStateAction
-  | UpdateCursorOffsetAction
-  | UpdateCursorsAction
-  | UpdateSharedStateAction;
-
-interface Client {
-  clientID: number;
+export interface Client {
   cursorColor: string;
   cursorOffset: number;
+  id: number;
   ws: WebSocket;
-}
-
-interface Diff {
-  endOffset: number;
-  diff: string;
-  startOffset: number;
-  type: '+' | '-';
-}
-
-interface SetSharedStateAction {
-  type: typeof ACTION_SET_SHARED_STATE;
-  payload: { state: ClientState };
-}
-
-interface UpdateCursorOffsetAction {
-  type: typeof ACTION_UPDATE_CURSOR_OFFSET;
-  payload: {
-    cursorOffset: number;
-  };
-}
-
-interface UpdateCursorsAction {
-  type: typeof ACTION_UPDATE_CURSORS;
-  payload: {
-    cursors: ClientCursor[];
-  };
-}
-
-interface UpdateSharedStateAction {
-  type: typeof ACTION_UPDATE_SHARED_STATE;
-  payload: {
-    cursorOffset: number;
-    diffObj: Diff;
-    safetyHash: number;
-  };
 }

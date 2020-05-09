@@ -1,13 +1,14 @@
 import { Request } from 'express';
 import Snoowrap, { Subreddit as SnoowrapSubreddit } from 'snoowrap';
 import { config } from '../../config';
-import { RedditPost, Subreddit } from './interfaces';
-import { formatPosts } from './utils';
+import { RedditPost } from './interfaces/RedditPost';
+import { Subreddit } from './interfaces/Subreddit';
+import { formatPosts } from './utils/formatPosts';
 
 const USER_AGENT = 'Portfolio by Josselin Buils';
 
 export class RedditController {
-  snoowrap: Snoowrap;
+  private readonly snoowrap: Snoowrap;
 
   constructor() {
     const { clientId, clientSecret, password, username } = config.reddit;

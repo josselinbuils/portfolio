@@ -1,5 +1,5 @@
 import { ENV_DEV, PORT_HTTP, PORT_WS } from './constants';
-import { startHTTPServer } from './http';
+import { startHTTPServer } from './http/startHTTPServer';
 import { Logger } from './Logger';
 import { startWSServer } from './ws/startWSServer';
 

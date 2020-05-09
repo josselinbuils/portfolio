@@ -1,5 +1,6 @@
 import { Logger } from '../../../../Logger';
-import { JamendoParameters, JamendoResponse } from '../interfaces';
+import { JamendoParameters } from '../interfaces/JamendoParameters';
+import { JamendoResponse } from '../interfaces/JamendoResponse';
 import { httpClient } from './httpClient';
 
 export async function requestJamendoAPI<T>(

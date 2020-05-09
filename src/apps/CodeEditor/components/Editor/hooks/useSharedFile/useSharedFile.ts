@@ -2,18 +2,20 @@ import { Deferred } from '@josselinbuils/utils';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
 import { getDiff } from '../../utils/getDiff';
 import { Action, actionCreators, actionsHandlers } from './actions';
-import { ClientState } from './interfaces';
+import { ClientState } from './interfaces/ClientState';
 import { applyDiff } from './utils/applyDiff';
 import { computeHash } from './utils/computeHash';
 
+const REOPEN_DELAY_MS = 1000;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
 const initialState = {
-  clientID: -1,
+  id: -1,
   code: '',
   cursorColor: '#f0f0f0',
   cursorOffset: 0,
@@ -47,23 +49,44 @@ export function useSharedFile({
   const hashToWaitForRef = useRef<number>();
   const diffQueueRef = useRef<PartialDiff[]>([]);
 
+  useKeyMap(
+    {
+      'Control+Z,Meta+Z': () =>
+        dispatchToServerRef.current(actionCreators.undo()),
+      'Control+Shift+Z,Meta+Shift+Z': () =>
+        dispatchToServerRef.current(actionCreators.redo()),
+    },
+    active
+  );
+
   useEffect(() => {
     if (!active) {
       return;
     }
     let maintainOpen = true;
+    let reopenTimeoutID: number;
     let ws: WebSocket;
 
     function openSocket(): void {
       ws = new WebSocket(WS_URL);
       const readyDeferred = new Deferred<void>();
 
+      dispatchToServerRef.current = async (action: Action) => {
+        await readyDeferred.promise;
+        ws.send(JSON.stringify(action));
+      };
+
       ws.onclose = () => {
         if (maintainOpen) {
-          openSocket();
+          reopenTimeoutID = window.setTimeout(openSocket, REOPEN_DELAY_MS);
         }
       };
-      ws.onopen = () => readyDeferred.resolve();
+      ws.onopen = () => {
+        readyDeferred.resolve();
+        dispatchToServerRef.current(
+          actionCreators.updateCursorOffset(cursorOffsetRef.current)
+        );
+      };
       ws.onmessage = (event) => {
         try {
           const action = JSON.parse(event.data) as Action;
@@ -72,21 +95,17 @@ export function useSharedFile({
           console.error(error);
         }
       };
-
-      dispatchToServerRef.current = async (action: Action) => {
-        await readyDeferred.promise;
-        ws.send(JSON.stringify(action));
-      };
     }
     openSocket();
 
     return () => {
       maintainOpen = false;
+      clearTimeout(reopenTimeoutID);
       dispatchToServerRef.current = () => {};
       ws.close();
       dispatch(actionCreators.setSharedState(initialState));
     };
-  }, [active]);
+  }, [active, cursorOffsetRef]);
 
   useEffect(() => {
     if (clientState === undefined) {
@@ -97,6 +116,9 @@ export function useSharedFile({
     const currentHash = computeHash(clientState.code);
 
     if (diffQueueRef.current.length > 0) {
+      if (currentHash !== hashToWaitForRef.current) {
+        return;
+      }
       const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
       const startOffset = clientState.cursorOffset;
       const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);

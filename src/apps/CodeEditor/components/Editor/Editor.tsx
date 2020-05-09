@@ -29,11 +29,9 @@ import { Tabs } from './components/Tabs';
 import { INDENT } from './constants';
 import { Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
-import {
-  ClientCursor,
-  ClientState,
-  useSharedFile,
-} from './hooks/useSharedFile';
+import { useSharedFile } from './hooks/useSharedFile';
+import { ClientCursor } from './hooks/useSharedFile/interfaces/ClientCursor';
+import { ClientState } from './hooks/useSharedFile/interfaces/ClientState';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange';
@@ -69,7 +67,8 @@ export const Editor: FC<Props> = ({
     activeFileName,
     previouslyActiveFileName,
     setActiveFileName,
-  ] = useMemState<string>(files[0].name);
+    // TODO remove that
+  ] = useMemState<string>(files[1].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
@@ -90,8 +89,12 @@ export const Editor: FC<Props> = ({
     },
     [onChange]
   );
-  const { pushState } = useHistory({ fileName: activeFileName, applyState });
   const isSharedFileActive = activeFileName === 'shared.js';
+  const { pushState } = useHistory({
+    active: !isSharedFileActive,
+    fileName: activeFileName,
+    applyState,
+  });
   const { updateClientState, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
@@ -277,6 +280,8 @@ export const Editor: FC<Props> = ({
     }
   }
 
+  // TODO fix issue when removing selection by putting a new character that was
+  // not the first selection character
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newCode = event.target.value;
 

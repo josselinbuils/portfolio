@@ -1,16 +1,18 @@
 import { useCallback, useRef } from 'react';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { Diff } from '../../interfaces/Diff';
-import { EditableState } from '../../interfaces/EditableState';
-import { getDiff } from '../../utils/getDiff';
+import { Diff } from '../interfaces/Diff';
+import { EditableState } from '../interfaces/EditableState';
+import { getDiff } from '../utils/getDiff';
 
 const HISTORY_SIZE_LIMIT = 50;
 
 export function useHistory<T>({
+  active,
   applyState,
   fileName,
 }: {
+  active: boolean;
   fileName: string;
   applyState(state: EditableState): any;
 }): {
@@ -27,26 +29,29 @@ export function useHistory<T>({
 
   const fileHistoryRef = useDynamicRef(historyRef.current[fileName]);
 
-  useKeyMap({
-    'Control+Z,Meta+Z': () => {
-      const { index, states } = fileHistoryRef.current;
+  useKeyMap(
+    {
+      'Control+Z,Meta+Z': () => {
+        const { index, states } = fileHistoryRef.current;
 
-      if (index > 0) {
-        const newIndex = index - 1;
-        fileHistoryRef.current.index = newIndex;
-        applyStateRef.current(states[newIndex]);
-      }
-    },
-    'Control+Shift+Z,Meta+Shift+Z': () => {
-      const { index, states } = fileHistoryRef.current;
+        if (index > 0) {
+          const newIndex = index - 1;
+          fileHistoryRef.current.index = newIndex;
+          applyStateRef.current(states[newIndex]);
+        }
+      },
+      'Control+Shift+Z,Meta+Shift+Z': () => {
+        const { index, states } = fileHistoryRef.current;
 
-      if (index < states.length - 1) {
-        const newIndex = index + 1;
-        fileHistoryRef.current.index = newIndex;
-        applyStateRef.current(states[newIndex]);
-      }
+        if (index < states.length - 1) {
+          const newIndex = index + 1;
+          fileHistoryRef.current.index = newIndex;
+          applyStateRef.current(states[newIndex]);
+        }
+      },
     },
-  });
+    active
+  );
 
   const pushState = useCallback(
     (newState: StateWithDiff): void => {
