@@ -4,13 +4,12 @@ import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
-import { EditableState } from '../../interfaces/EditableState';
-import { getDiff } from '../../utils/getDiff';
 import { Action, actionCreators, actionsHandlers } from './actions';
 import { ClientState } from './interfaces/ClientState';
 import { applyDiff } from './utils/applyDiff';
 import { computeHash } from './utils/computeHash';
 
+const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
@@ -29,21 +28,19 @@ const reducer = ((clientState, action) =>
 export function useSharedFile({
   active,
   applyClientState,
-  code,
   cursorOffset,
 }: {
   active: boolean;
-  code: string;
   cursorOffset: number;
   applyClientState(clientState: ClientState): any;
 }): {
-  updateClientState(newState: EditableState): void;
+  updateClientState(diffObj: Diff, cursorOffset: number): void;
   updateCursorOffset(cursorOffset: number): void;
 } {
   const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
-  const codeRef = useDynamicRef(code);
+  const codeRef = useRef(clientState.code);
   const cursorOffsetRef = useDynamicRef(cursorOffset);
   const lastCursorOffsetSentRef = useRef(0);
   const hashToWaitForRef = useRef<number>();
@@ -113,13 +110,34 @@ export function useSharedFile({
     }
     applyClientStateRef.current(clientState);
 
+    const previousCode = codeRef.current;
+    codeRef.current = clientState.code;
     const currentHash = computeHash(clientState.code);
 
     if (diffQueueRef.current.length > 0) {
       if (currentHash !== hashToWaitForRef.current) {
+        if (clientState.code !== codeRef.current) {
+          // We received a non expected state. As the server is always right,
+          // we have to deal with it
+          diffQueueRef.current.length = 0;
+          hashToWaitForRef.current = currentHash;
+
+          if (DEBUG) {
+            console.error('empty queue');
+          }
+          return;
+        }
+        // We received a state update without code change
+        if (DEBUG) {
+          console.log('wait before sending', diffQueueRef.current[0]);
+        }
         return;
       }
       const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
+
+      if (DEBUG) {
+        console.log('dequeue', { diff, type }, currentHash, clientState.code);
+      }
       const startOffset = clientState.cursorOffset;
       const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
       const diffObj = { diff, endOffset, startOffset, type } as Diff;
@@ -132,38 +150,50 @@ export function useSharedFile({
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = endOffset;
       hashToWaitForRef.current = computeHash(newCode);
-    } else {
+    } else if (
+      hashToWaitForRef.current === undefined ||
+      clientState.code !== previousCode
+    ) {
+      if (DEBUG) {
+        console.log(`reset hashToWaitFor to ${currentHash}`);
+      }
       hashToWaitForRef.current = currentHash;
     }
-  }, [applyClientStateRef, clientState, codeRef, cursorOffsetRef]);
+  }, [applyClientStateRef, clientState, codeRef]);
 
   const updateClientState = useCallback(
-    (newState: EditableState) => {
-      const currentState = {
-        code: codeRef.current,
-        cursorOffset: cursorOffsetRef.current,
-      };
-      const currentHash = computeHash(currentState.code);
-      const diffObj = getDiff(currentState.code, newState.code);
+    (diffObj: Diff, newCursorOffset: number) => {
+      const currentHash = computeHash(codeRef.current);
+      const diffQueue = diffQueueRef.current;
 
-      if (
-        currentHash === hashToWaitForRef.current &&
-        diffQueueRef.current.length === 0
-      ) {
+      if (DEBUG) {
+        console.log(`compare ${currentHash} and ${hashToWaitForRef.current}`);
+      }
+
+      if (currentHash === hashToWaitForRef.current && diffQueue.length === 0) {
         const action = actionCreators.updateClientState(
           diffObj,
-          newState.cursorOffset,
+          newCursorOffset,
           currentHash
         );
-        hashToWaitForRef.current = computeHash(newState.code);
-        lastCursorOffsetSentRef.current = newState.cursorOffset;
+        const newCode = applyDiff(codeRef.current, diffObj);
+
+        if (DEBUG) {
+          console.log('send directly', diffObj.diff);
+        }
+        hashToWaitForRef.current = computeHash(newCode);
+        lastCursorOffsetSentRef.current = newCursorOffset;
         dispatchToServerRef.current(action);
       } else {
         const { diff, type } = diffObj;
-        diffQueueRef.current.push({ diff, type });
+
+        if (DEBUG) {
+          console.log('enqueue', { diff, type });
+        }
+        diffQueue.push({ diff, type });
       }
     },
-    [cursorOffsetRef, codeRef]
+    [codeRef]
   );
 
   const updateCursorOffset = useCallback((newCursorOffset: number) => {

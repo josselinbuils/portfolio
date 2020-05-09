@@ -97,20 +97,8 @@ export const Editor: FC<Props> = ({
   const { updateClientState, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
-    code,
     cursorOffset,
   });
-  const updateState = useCallback(
-    (newState: EditableState): void => {
-      if (isSharedFileActive) {
-        updateClientState(newState);
-      } else {
-        applyState(newState);
-        pushState(newState);
-      }
-    },
-    [applyState, isSharedFileActive, pushState, updateClientState]
-  );
   const activeFile = files.find(
     ({ name }) => name === activeFileName
   ) as EditorFile;
@@ -334,7 +322,7 @@ export const Editor: FC<Props> = ({
     if (isSharedFileActive) {
       updateCursorOffset(newCursorOffset);
       // TODO find a cleaner solution
-      updateClientState({ code, cursorOffset: newCursorOffset });
+      updateClientState(getDiff(code, code), newCursorOffset);
     } else {
       setCursorOffset(newCursorOffset);
     }
@@ -363,6 +351,15 @@ export const Editor: FC<Props> = ({
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  function updateState(newState: EditableState): void {
+    if (isSharedFileActive) {
+      updateClientState(getDiff(code, newState.code), newState.cursorOffset);
+    } else {
+      applyState(newState);
+      pushState(newState);
     }
   }
 
