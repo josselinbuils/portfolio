@@ -67,8 +67,7 @@ export const Editor: FC<Props> = ({
     activeFileName,
     previouslyActiveFileName,
     setActiveFileName,
-    // TODO remove that
-  ] = useMemState<string>(files[1].name);
+  ] = useMemState<string>(files[0].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
