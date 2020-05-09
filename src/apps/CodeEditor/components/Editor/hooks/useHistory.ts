@@ -3,7 +3,7 @@ import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../interfaces/Diff';
 import { EditableState } from '../interfaces/EditableState';
-import { getDiff } from '../utils/getDiff';
+import { getDiffs } from '../utils/getDiffs';
 
 const HISTORY_SIZE_LIMIT = 50;
 
@@ -69,21 +69,24 @@ export function useHistory<T>({
         if (states.length > 0) {
           const currentState = states[states.length - 1];
           const currentDiffObj = currentState.diffObj;
-          const newDiffObj = getDiff(currentState.code, newState.code);
+          const newDiffObjs = getDiffs(currentState.code, newState.code);
 
-          newState.diffObj = newDiffObj;
+          if (newDiffObjs.length === 1) {
+            const newDiffObj = newDiffObjs[0];
+            newState.diffObj = newDiffObj;
 
-          if (
-            !/\s/.test(newState.diffObj.diff) &&
-            currentDiffObj !== undefined &&
-            newDiffObj.type === currentDiffObj.type &&
-            newDiffObj.startOffset === currentDiffObj.endOffset
-          ) {
-            currentState.code = newState.code;
-            currentState.cursorOffset = newState.cursorOffset;
-            currentDiffObj.diff = `${currentDiffObj.diff}${newDiffObj.diff}`;
-            currentDiffObj.endOffset = newDiffObj.endOffset;
-            return;
+            if (
+              !/\s/.test(newState.diffObj.diff) &&
+              currentDiffObj !== undefined &&
+              newDiffObj.type === currentDiffObj.type &&
+              newDiffObj.startOffset === currentDiffObj.endOffset
+            ) {
+              currentState.code = newState.code;
+              currentState.cursorOffset = newState.cursorOffset;
+              currentDiffObj.diff = `${currentDiffObj.diff}${newDiffObj.diff}`;
+              currentDiffObj.endOffset = newDiffObj.endOffset;
+              return;
+            }
           }
         }
         states.push(newState);

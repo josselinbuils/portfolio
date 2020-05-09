@@ -1,6 +1,8 @@
 import { INDENT } from '../../constants';
+import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
-import { getDiff } from '../getDiff';
+import { applyDiff } from '../applyDiff';
+import { getDiffs } from '../getDiffs';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
@@ -20,7 +22,17 @@ export function autoEditChange(
   currentState: EditableState,
   newState: EditableState
 ): EditableState | undefined {
-  const { diff, endOffset, type } = getDiff(currentState.code, newState.code);
+  const diffObjs = getDiffs(currentState.code, newState.code);
+  const { diff, endOffset, type } = diffObjs.pop() as Diff;
+
+  if (diffObjs.length > 0) {
+    const intermediateDiffObj = diffObjs.pop() as Diff;
+    currentState = {
+      code: applyDiff(currentState.code, intermediateDiffObj),
+      cursorOffset: intermediateDiffObj.endOffset,
+    };
+  }
+
   const autoCloseChar = getAutoCloseChar(diff);
   const allowAutoComplete = isCodePortionEnd(
     currentState.code,

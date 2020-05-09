@@ -105,7 +105,7 @@ export function useSharedFile({
   }, [active, cursorOffsetRef]);
 
   useEffect(() => {
-    if (clientState === undefined) {
+    if (!active || clientState === undefined) {
       return;
     }
     applyClientStateRef.current(clientState);
@@ -129,14 +129,14 @@ export function useSharedFile({
         }
         // We received a state update without code change
         if (DEBUG) {
-          console.log('wait before sending', diffQueueRef.current[0]);
+          console.debug('wait before sending', diffQueueRef.current[0]);
         }
         return;
       }
       const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
 
       if (DEBUG) {
-        console.log('dequeue', { diff, type }, currentHash, clientState.code);
+        console.debug('dequeue', { diff, type }, currentHash, clientState.code);
       }
       const startOffset = clientState.cursorOffset;
       const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
@@ -155,19 +155,22 @@ export function useSharedFile({
       clientState.code !== previousCode
     ) {
       if (DEBUG) {
-        console.log(`reset hashToWaitFor to ${currentHash}`);
+        console.debug(`reset hashToWaitFor to ${currentHash}`);
       }
       hashToWaitForRef.current = currentHash;
     }
-  }, [applyClientStateRef, clientState, codeRef]);
+  }, [active, applyClientStateRef, clientState, codeRef]);
 
   const updateClientState = useCallback(
     (diffObj: Diff, newCursorOffset: number) => {
+      if (!active) {
+        return;
+      }
       const currentHash = computeHash(codeRef.current);
       const diffQueue = diffQueueRef.current;
 
       if (DEBUG) {
-        console.log(`compare ${currentHash} and ${hashToWaitForRef.current}`);
+        console.debug(`compare ${currentHash} and ${hashToWaitForRef.current}`);
       }
 
       if (currentHash === hashToWaitForRef.current && diffQueue.length === 0) {
@@ -179,7 +182,7 @@ export function useSharedFile({
         const newCode = applyDiff(codeRef.current, diffObj);
 
         if (DEBUG) {
-          console.log('send directly', diffObj.diff);
+          console.debug('send directly', diffObj.diff);
         }
         hashToWaitForRef.current = computeHash(newCode);
         lastCursorOffsetSentRef.current = newCursorOffset;
@@ -188,12 +191,12 @@ export function useSharedFile({
         const { diff, type } = diffObj;
 
         if (DEBUG) {
-          console.log('enqueue', { diff, type });
+          console.debug('enqueue', { diff, type });
         }
         diffQueue.push({ diff, type });
       }
     },
-    [codeRef]
+    [active]
   );
 
   const updateCursorOffset = useCallback((newCursorOffset: number) => {

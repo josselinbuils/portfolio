@@ -1,6 +1,23 @@
 import { Diff } from '../interfaces/Diff';
+import { applyDiff } from './applyDiff';
 
-export function getDiff(a: string, b: string): Diff {
+// Sometimes multiple diffs are necessary even for a single change.
+// Ex: removing selection by putting a new character that was not the first
+// character of the selection.
+export function getDiffs(a: string, b: string): Diff[] {
+  const diffObjs = [];
+  let base = a;
+
+  do {
+    const diffObj = getDiff(base, b);
+    diffObjs.push(diffObj);
+    base = applyDiff(base, diffObj);
+  } while (base !== b);
+
+  return diffObjs;
+}
+
+function getDiff(a: string, b: string): Diff {
   const isAddition = b.length >= a.length;
   const type = isAddition ? '+' : '-';
   let startOffset = 0;

@@ -32,14 +32,14 @@ import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile';
 import { ClientCursor } from './hooks/useSharedFile/ClientCursor';
 import { ClientState } from './hooks/useSharedFile/ClientState';
+import { Diff } from './interfaces/Diff';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
-import { applyDiff } from './utils/applyDiff';
 import { autoEditChange } from './utils/autoEditChange';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
-import { getDiff } from './utils/getDiff';
+import { getDiffs } from './utils/getDiffs';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
@@ -136,10 +136,8 @@ export const Editor: FC<Props> = ({
   );
 
   useEffect(() => {
-    if (!isSharedFileActive) {
-      activeFile.content = code;
-      fileSaver.saveFiles(files);
-    }
+    activeFile.content = code;
+    fileSaver.saveFiles(files);
   }, [activeFile, code, files, isSharedFileActive]);
 
   useLayoutEffect(() => {
@@ -236,13 +234,13 @@ export const Editor: FC<Props> = ({
     const maxIndex = Math.max(
       ...files.map((file) =>
         parseInt(
-          (file.name.startsWith('local') && file.name.slice(5, -3)) || '0',
+          file.name.startsWith('local') ? file.name.slice(5, -3) || '0' : '-1',
           10
         )
       )
     );
-    const name = `local${maxIndex + 1}.js`;
-    fileManager.push({ content: '', name, language: 'javascript' });
+    const name = `local${maxIndex > -1 ? maxIndex + 1 : ''}.js`;
+    fileManager.push({ content: '', language: 'javascript', name });
     setActiveFileName(name);
   }
 
@@ -284,7 +282,7 @@ export const Editor: FC<Props> = ({
     const currentState = { code, cursorOffset };
     const newState = autoEditChange(currentState, {
       code: newCode,
-      cursorOffset: getDiff(code, newCode).endOffset,
+      cursorOffset: (getDiffs(code, newCode).pop() as Diff).endOffset,
     });
 
     if (newState !== undefined) {
@@ -353,21 +351,11 @@ export const Editor: FC<Props> = ({
 
   function updateState(newState: EditableState): void {
     if (isSharedFileActive) {
-      const diffObj = getDiff(code, newState.code);
-      const newCode = applyDiff(code, diffObj);
-
-      if (newCode === newState.code) {
-        updateClientState(diffObj, newState.cursorOffset);
-      } else {
-        // Sometimes 2 diffs are necessary.
-        // Ex: removing selection by putting a new character that was not the
-        // first character of the selection.
-        updateClientState(diffObj, diffObj.endOffset);
-        updateClientState(
-          getDiff(newCode, newState.code),
-          newState.cursorOffset
-        );
-      }
+      getDiffs(code, newState.code).forEach((diffObj, index, diffObjs) => {
+        const isLast = index === diffObjs.length - 1;
+        const offset = isLast ? newState.cursorOffset : diffObj.endOffset;
+        updateClientState(diffObj, offset);
+      });
     } else {
       applyState(newState);
       pushState(newState);
