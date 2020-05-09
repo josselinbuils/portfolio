@@ -17,16 +17,20 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
         message: `${error.message}${formattedPosition}`,
       });
     } else if (error) {
-      logManager.push({ level: LogLevel.Error, message: error.toString() });
+      logManager.push({
+        level: LogLevel.Error,
+        message: [error.toString(), ...additionalArgs].join(' '),
+      });
     }
     originalConsoleError(error, ...additionalArgs);
   };
 
-  console.log = (message?: any, ...additionalArgs: any[]) => {
-    if (message) {
-      logManager.push({ level: LogLevel.Info, message: message.toString() });
-    }
-    originalConsoleLog(message, ...additionalArgs);
+  console.log = (...args: any[]) => {
+    logManager.push({
+      level: LogLevel.Info,
+      message: [...args].join(' '),
+    });
+    originalConsoleLog(...args);
   };
 
   return () => {
