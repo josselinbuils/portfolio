@@ -149,7 +149,11 @@ export class WSServer {
         const { cursorOffset, diffObj, safetyHash } = action.payload;
 
         if (safetyHash !== this.codeHash) {
-          // Requested update is obsolete
+          // Requested update is obsolete so we reset client code
+          WSServer.dispatch(
+            wsClient,
+            actionCreators.setSharedState({ code: this.code })
+          );
           return;
         }
         this.dispatchAll(({ id }) =>
