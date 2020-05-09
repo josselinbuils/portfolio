@@ -1,5 +1,5 @@
 import { Deferred } from '@josselinbuils/utils';
-import { BASE_URL_WS } from '~/platform/constants';
+import { PROD_HOSTNAME } from '~/platform/constants';
 import { noop } from '~/platform/utils/noop';
 
 export enum MessageType {
@@ -18,7 +18,7 @@ export class BuildManagerClient {
   private readonly ws: WebSocket;
 
   constructor() {
-    const ws = new WebSocket(`${BASE_URL_WS}/build-manager`);
+    const ws = new WebSocket(`wss://${PROD_HOSTNAME}/build-manager`);
 
     ws.onclose = () => this.closeHandler();
 
