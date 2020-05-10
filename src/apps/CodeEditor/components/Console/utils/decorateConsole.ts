@@ -63,5 +63,12 @@ function prettify(value: any): string {
   } else if (value && value.toString() === '[object Object]') {
     prettified = replaceLineBreaks(JSON.stringify(value));
   }
+
+  const matches = prettified.match(/^\[object ([^\]]+)]$/);
+
+  if (matches !== null) {
+    prettified = matches[1];
+  }
+
   return prettified;
 }
