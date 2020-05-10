@@ -19,7 +19,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
     } else if (error) {
       logManager.push({
         level: LogLevel.Error,
-        message: [error.toString(), ...additionalArgs].join(' '),
+        message: [error.toString(), ...additionalArgs].map(prettify).join(' '),
       });
     }
     originalConsoleError(error, ...additionalArgs);
@@ -28,7 +28,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   console.log = (...args: any[]) => {
     logManager.push({
       level: LogLevel.Info,
-      message: [...args].join(' '),
+      message: [...args].map(prettify).join(' '),
     });
     originalConsoleLog(...args);
   };
@@ -37,4 +37,11 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
     console.error = originalConsoleError;
     console.log = originalConsoleLog;
   };
+}
+
+function prettify(value: any): string {
+  if (value && value.toString() === '[object Object]') {
+    return JSON.stringify(value);
+  }
+  return value;
 }
