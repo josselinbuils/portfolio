@@ -9,23 +9,25 @@ import styles from './Logs.module.scss';
 export const Logs = forwardRef<HTMLDivElement, Props>(
   ({ className, logs }, ref) => (
     <div className={cn(styles.logs, className)} ref={ref}>
-      {logs.map(({ level, message }, index) => (
-        <div className={cn(styles.log, styles[level])} key={index}>
-          {level === LogLevel.Error ? (
-            <>
-              <span className={styles.errorMessage}>
-                <FontAwesomeIcon icon={faBomb} /> {message.split('\n')[0]}
-                {'\n'}
-              </span>
-              <span className={styles.errorStack}>
-                {message.split('\n').slice(1).join('\n')}
-              </span>
-            </>
-          ) : (
-            message
-          )}
-        </div>
-      ))}
+      {logs.map(({ level, message }, index) =>
+        level === LogLevel.Error ? (
+          <div className={cn(styles.log, styles[level])} key={index}>
+            <span className={styles.errorMessage}>
+              <FontAwesomeIcon icon={faBomb} /> {message.split('\n')[0]}
+              {'\n'}
+            </span>
+            <span className={styles.errorStack}>
+              {message.split('\n').slice(1).join('\n')}
+            </span>
+          </div>
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{ __html: message }}
+            className={cn(styles.log, styles[level])}
+            key={index}
+          />
+        )
+      )}
     </div>
   )
 );

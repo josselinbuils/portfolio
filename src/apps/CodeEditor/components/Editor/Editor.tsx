@@ -22,6 +22,7 @@ import { useMemState } from '~/platform/hooks/useMemState';
 import { Position } from '~/platform/interfaces/Position';
 import { Toolbar } from '../../components/Toolbar';
 import { ToolButton } from '../../components/ToolButton';
+import { highlightCode } from '../../utils/highlightCode';
 import { Cursor } from './components/Cursor';
 import { LineNumbers } from './components/LineNumbers';
 import { Tab } from './components/Tab';
@@ -32,7 +33,6 @@ import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile';
 import { ClientCursor } from './hooks/useSharedFile/ClientCursor';
 import { ClientState } from './hooks/useSharedFile/ClientState';
-import { Diff } from './interfaces/Diff';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange';
@@ -43,7 +43,6 @@ import { getDiffs } from './utils/getDiffs';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
-import { highlightCode } from './utils/highlightCode';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { openFile } from './utils/openFile';
 import { spliceString } from './utils/spliceString';
@@ -269,6 +268,7 @@ export const Editor: FC<Props> = ({
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     const newCode = event.target.value;
+    const newCursorOffset = event.target.selectionStart;
 
     if (newCode.length > code.length) {
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
@@ -283,7 +283,7 @@ export const Editor: FC<Props> = ({
     const currentState = { code, cursorOffset };
     const newState = autoEditChange(currentState, {
       code: newCode,
-      cursorOffset: (getDiffs(code, newCode).pop() as Diff).endOffset,
+      cursorOffset: newCursorOffset,
     });
 
     if (newState !== undefined) {

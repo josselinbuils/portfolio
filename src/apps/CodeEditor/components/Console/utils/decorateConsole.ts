@@ -1,11 +1,14 @@
 import { ListManager } from '~/platform/hooks/useList';
+import { highlightCode } from '../../../utils/highlightCode';
 import { Log, LogLevel } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {
   const originalConsoleError = console.error.bind(console.error);
   const originalConsoleLog = console.log.bind(console.log);
 
-  console.error = (error?: any, ...additionalArgs: any[]) => {
+  console.error = (error?: any) => {
+    originalConsoleError(error);
+
     if (error instanceof Error) {
       const position = error.stack?.match(
         /^[^\n]+\n[^\n]+<anonymous>:(\d+:\d+)/
@@ -19,18 +22,22 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
     } else if (error) {
       logManager.push({
         level: LogLevel.Error,
-        message: [error.toString(), ...additionalArgs].map(prettify).join(' '),
+        message: error.toString(),
       });
     }
-    originalConsoleError(error, ...additionalArgs);
   };
 
+  // Should not be async as it creates side effects as making eval function
+  // return a promise
   console.log = (...args: any[]) => {
-    logManager.push({
-      level: LogLevel.Info,
-      message: [...args].map(prettify).join(' '),
-    });
     originalConsoleLog(...args);
+
+    Promise.all(args.map(prettify)).then((parts) => {
+      logManager.push({
+        level: LogLevel.Info,
+        message: parts.join(' '),
+      });
+    });
   };
 
   return () => {
@@ -39,18 +46,16 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   };
 }
 
-function prettify(value: any): string {
-  if ([null, undefined].includes(value)) {
-    return `${value}`;
-  }
+async function prettify(value: any): Promise<string> {
+  let prettified = `${value}`;
+
   if (typeof value === 'string') {
-    return `'${value}'`;
+    prettified = `'${value}'`;
+  } else if (Array.isArray(value)) {
+    prettified = `[${value.map(prettify).join(', ')}]`;
+  } else if (value && value.toString() === '[object Object]') {
+    prettified = JSON.stringify(value);
   }
-  if (Array.isArray(value)) {
-    return `[${value.map(prettify).join(', ')}]`;
-  }
-  if (value && value.toString() === '[object Object]') {
-    return JSON.stringify(value);
-  }
-  return value;
+
+  return highlightCode(prettified, 'javascript');
 }
