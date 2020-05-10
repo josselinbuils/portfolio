@@ -4,6 +4,7 @@ import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
+import { EditableState } from '../../interfaces/EditableState';
 import { applyDiff } from '../../utils/applyDiff';
 import { Action, createAction, handleAction } from './actions';
 import { ClientState } from './ClientState';
@@ -16,7 +17,7 @@ const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 const initialState = {
   id: -1,
   code: '',
-  cursorColor: '#f0f0f0',
+  cursorColor: 'transparent',
   cursorOffset: 0,
   cursors: [],
 } as ClientState;
@@ -36,7 +37,7 @@ export function useSharedFile({
   cursorOffset: number;
   applyClientState(clientState: ClientState): any;
 }): {
-  updateCode(diffObj: Diff, cursorOffset: number): void;
+  updateCode(code: string | Diff, cursorOffset: number): void;
   updateCursorOffset(cursorOffset: number): void;
 } {
   const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
@@ -46,7 +47,7 @@ export function useSharedFile({
   const cursorOffsetRef = useDynamicRef(cursorOffset);
   const lastCursorOffsetSentRef = useRef(0);
   const hashToWaitForRef = useRef<number>();
-  const diffQueueRef = useRef<PartialDiff[]>([]);
+  const updateQueueRef = useRef<Update[]>([]);
 
   useKeyMap(
     {
@@ -116,12 +117,12 @@ export function useSharedFile({
     codeRef.current = clientState.code;
     const currentHash = computeHash(clientState.code);
 
-    if (diffQueueRef.current.length > 0) {
+    if (updateQueueRef.current.length > 0) {
       if (currentHash !== hashToWaitForRef.current) {
         if (clientState.code !== codeRef.current) {
           // We received a non expected state. As the server is always right,
           // we have to deal with it
-          diffQueueRef.current.length = 0;
+          updateQueueRef.current.length = 0;
           hashToWaitForRef.current = currentHash;
 
           if (DEBUG) {
@@ -131,22 +132,35 @@ export function useSharedFile({
         }
         // We received a state update without code change
         if (DEBUG) {
-          console.debug('wait before sending', diffQueueRef.current[0]);
+          console.debug('wait before sending', updateQueueRef.current[0]);
         }
         return;
       }
-      const { diff, type } = diffQueueRef.current.shift() as PartialDiff;
+      const update = updateQueueRef.current.shift() as Update;
+      let action: Action;
+      let newCode: string;
+      let newCursorOffset: number;
 
       if (DEBUG) {
-        console.debug('dequeue', { diff, type }, currentHash, clientState.code);
+        console.debug('dequeue', update, currentHash, clientState.code);
       }
-      const startOffset = clientState.cursorOffset;
-      const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
-      const diffObj = { diff, endOffset, startOffset, type } as Diff;
-      const action = createAction.updateCode(diffObj, endOffset, currentHash);
-      const newCode = applyDiff(clientState.code, diffObj);
+
+      if ((update as EditableState).code !== undefined) {
+        newCode = (update as EditableState).code;
+        newCursorOffset = (update as EditableState).cursorOffset;
+        action = createAction.updateCode(newCode, newCursorOffset, currentHash);
+      } else {
+        const { diff, type } = update as Pick<Diff, 'diff' | 'type'>;
+        const startOffset = clientState.cursorOffset;
+        const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
+        const diffObj = { diff, endOffset, startOffset, type } as Diff;
+
+        action = createAction.updateCode(diffObj, endOffset, currentHash);
+        newCode = applyDiff(clientState.code, diffObj);
+        newCursorOffset = endOffset;
+      }
       dispatchToServerRef.current(action);
-      lastCursorOffsetSentRef.current = endOffset;
+      lastCursorOffsetSentRef.current = newCursorOffset;
       hashToWaitForRef.current = computeHash(newCode);
     } else if (
       hashToWaitForRef.current === undefined ||
@@ -160,38 +174,49 @@ export function useSharedFile({
   }, [active, applyClientStateRef, clientState, codeRef]);
 
   const updateCode = useCallback(
-    (diffObj: Diff, newCursorOffset: number) => {
+    (code: string | Diff, newCursorOffset: number) => {
       if (!active) {
         return;
       }
       const currentHash = computeHash(codeRef.current);
-      const diffQueue = diffQueueRef.current;
+      const updateQueue = updateQueueRef.current;
 
       if (DEBUG) {
         console.debug(`compare ${currentHash} and ${hashToWaitForRef.current}`);
       }
 
-      if (currentHash === hashToWaitForRef.current && diffQueue.length === 0) {
+      if (
+        currentHash === hashToWaitForRef.current &&
+        updateQueue.length === 0
+      ) {
         const action = createAction.updateCode(
-          diffObj,
+          code,
           newCursorOffset,
           currentHash
         );
-        const newCode = applyDiff(codeRef.current, diffObj);
+        const newCode =
+          typeof code === 'string' ? code : applyDiff(codeRef.current, code);
 
         if (DEBUG) {
-          console.debug('send directly', diffObj.diff);
+          console.debug('send directly', code);
         }
         hashToWaitForRef.current = computeHash(newCode);
         lastCursorOffsetSentRef.current = newCursorOffset;
         dispatchToServerRef.current(action);
       } else {
-        const { diff, type } = diffObj;
+        let update: Update;
+
+        if (typeof code === 'string') {
+          update = { code, cursorOffset: newCursorOffset };
+        } else {
+          const { diff, type } = code;
+          update = { diff, type };
+        }
 
         if (DEBUG) {
-          console.debug('enqueue', { diff, type });
+          console.debug('enqueue', update);
         }
-        diffQueue.push({ diff, type });
+        updateQueue.push(update);
       }
     },
     [active]
@@ -211,4 +236,4 @@ export function useSharedFile({
   };
 }
 
-type PartialDiff = Pick<Diff, 'diff' | 'type'>;
+type Update = Partial<EditableState> | Pick<Diff, 'diff' | 'type'>;

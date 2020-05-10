@@ -147,6 +147,14 @@ export class WSServer {
 
       case ACTION_UPDATE_CODE: {
         const { cursorOffset, diffObj, safetyHash } = action.payload;
+        let { code } = action.payload;
+
+        if (code === undefined) {
+          code =
+            diffObj.type === '+'
+              ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
+              : spliceString(this.code, diffObj.endOffset, diffObj.diff.length);
+        }
 
         if (safetyHash !== this.codeHash) {
           // Requested update is obsolete so we reset client code
@@ -158,22 +166,12 @@ export class WSServer {
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? createAction.updateCode(diffObj, cursorOffset)
-            : createAction.updateCode(diffObj)
+            ? createAction.updateCode(diffObj || code, cursorOffset)
+            : createAction.updateCode(diffObj || code)
         );
         this.updateClientCursorOffset(client, cursorOffset, true);
-
-        if (diffObj.diff.length > 0) {
-          this.updateCode(
-            diffObj.type === '+'
-              ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
-              : spliceString(this.code, diffObj.endOffset, diffObj.diff.length)
-          );
-          this.history.pushState({
-            code: this.code,
-            cursorOffset,
-          });
-        }
+        this.updateCode(code);
+        this.history.pushState({ code, cursorOffset });
       }
     }
   }

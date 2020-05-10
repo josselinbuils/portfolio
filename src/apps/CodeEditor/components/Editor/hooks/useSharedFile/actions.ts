@@ -7,7 +7,7 @@ import { ClientState } from './ClientState';
 const ACTION_REDO = 'REDO';
 const ACTION_UNDO = 'UNDO';
 const ACTION_UPDATE_CLIENT_STATE = 'UPDATE_CLIENT_STATE';
-const ACTION_UPDATE_CODE = 'UPDATE_CLIENT_STATE';
+const ACTION_UPDATE_CODE = 'UPDATE_CODE';
 const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
 const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
 
@@ -21,17 +21,25 @@ export const createAction = {
     payload: { state },
   }),
   updateCode: (
-    diffObj: Diff,
+    code: string | Diff,
     cursorOffset: number,
     safetyHash: number
-  ): UpdateCodeAction => ({
-    type: ACTION_UPDATE_CODE,
-    payload: {
-      cursorOffset,
-      diffObj,
-      safetyHash,
-    },
-  }),
+  ): UpdateCodeAction => {
+    const action = {
+      type: ACTION_UPDATE_CODE,
+      payload: {
+        cursorOffset,
+        safetyHash,
+      },
+    } as UpdateCodeAction;
+
+    if (typeof code === 'string') {
+      action.payload.code = code;
+    } else {
+      action.payload.diffObj = code;
+    }
+    return action;
+  },
   updateCursorOffset: (cursorOffset: number): UpdateCursorOffsetAction => ({
     type: ACTION_UPDATE_CURSOR_OFFSET,
     payload: { cursorOffset },
@@ -46,11 +54,12 @@ export const handleAction = {
 
   [ACTION_UPDATE_CODE]: (state: ClientState, action: UpdateCodeAction) => {
     const { cursorOffset = state.cursorOffset, diffObj } = action.payload;
-    return {
-      ...state,
-      code: applyDiff(state.code, diffObj),
-      cursorOffset,
-    };
+    let { code } = action.payload;
+
+    if (code === undefined) {
+      code = applyDiff(state.code, diffObj as Diff);
+    }
+    return { ...state, code, cursorOffset };
   },
 
   [ACTION_UPDATE_CURSOR_OFFSET]: (
@@ -103,8 +112,9 @@ interface UpdateClientStateAction {
 interface UpdateCodeAction {
   type: typeof ACTION_UPDATE_CODE;
   payload: {
+    code?: string;
     cursorOffset?: number;
-    diffObj: Diff;
+    diffObj?: Diff;
     safetyHash?: number;
   };
 }

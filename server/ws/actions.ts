@@ -16,12 +16,20 @@ export const createAction = {
     type: ACTION_UPDATE_CLIENT_STATE,
     payload: { state },
   }),
-  updateCode: (diffObj: Diff, cursorOffset?: number): UpdateCodeAction => {
+  updateCode: (
+    code: string | Diff,
+    cursorOffset?: number
+  ): UpdateCodeAction => {
     const action = {
       type: ACTION_UPDATE_CODE,
-      payload: { diffObj },
+      payload: {},
     } as UpdateCodeAction;
 
+    if (typeof code === 'string') {
+      action.payload.code = code;
+    } else {
+      action.payload.diffObj = code;
+    }
     if (cursorOffset !== undefined) {
       action.payload.cursorOffset = cursorOffset;
     }
@@ -66,8 +74,9 @@ interface UpdateClientStateAction {
 interface UpdateCodeAction {
   type: typeof ACTION_UPDATE_CODE;
   payload: {
+    code?: string;
     cursorOffset?: number;
-    diffObj: Diff;
+    diffObj?: Diff;
     safetyHash?: number;
   };
 }

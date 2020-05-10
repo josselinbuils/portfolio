@@ -251,15 +251,16 @@ export const Editor: FC<Props> = ({
   }
 
   async function format(): Promise<void> {
-    if (isSharedFileActive) {
-      return;
-    }
     try {
       const { language } = activeFile;
       const formatted = await formatCode(code, cursorOffset, language);
 
       if (formatted.code !== code) {
-        updateState(formatted);
+        if (isSharedFileActive) {
+          updateCode(formatted.code, formatted.cursorOffset);
+        } else {
+          updateState(formatted);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -393,6 +394,7 @@ export const Editor: FC<Props> = ({
       <div className={styles.code} ref={codeElementRef}>
         <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
         {textAreaElementRef.current &&
+          isSharedFileActive &&
           cursors.map(({ clientID, color, offset }) => (
             <Cursor
               color={color}
@@ -422,7 +424,7 @@ export const Editor: FC<Props> = ({
         onSelect={handleSelect}
         ref={textAreaElementRef}
         spellCheck={false}
-        style={{ caretColor: cursorColor }}
+        style={isSharedFileActive ? { caretColor: cursorColor } : undefined}
         value={code}
       />
       {displayDragOverlay && (
@@ -448,11 +450,7 @@ export const Editor: FC<Props> = ({
           }
         />
         <ToolButton
-          disabled={
-            code.length === 0 ||
-            isSharedFileActive ||
-            !canFormat(activeFile.language)
-          }
+          disabled={code.length === 0 || !canFormat(activeFile.language)}
           icon={faStream}
           onClick={format}
           title={
