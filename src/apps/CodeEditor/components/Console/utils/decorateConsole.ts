@@ -40,8 +40,14 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
 }
 
 function prettify(value: any): string {
+  if ([null, undefined].includes(value)) {
+    return `${value}`;
+  }
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
   if (Array.isArray(value)) {
-    return `[${value.toString().split(',').join(', ')}]`;
+    return `[${value.map(prettify).join(', ')}]`;
   }
   if (value && value.toString() === '[object Object]') {
     return JSON.stringify(value);
