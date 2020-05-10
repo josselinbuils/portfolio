@@ -91,6 +91,7 @@ export const Editor: FC<Props> = ({
   const isSharedFileActive = activeFileName === 'shared.js';
   const { pushState } = useHistory({
     active: !isSharedFileActive,
+    code,
     fileName: activeFileName,
     applyState,
   });
@@ -352,6 +353,9 @@ export const Editor: FC<Props> = ({
 
   function updateState(newState: EditableState): void {
     if (isSharedFileActive) {
+      // Sometimes multiple diffs are necessary even for a single change.
+      // Ex: removing selection by putting a new character that was not the
+      // first character of the selection.
       getDiffs(code, newState.code).forEach((diff, index, diffs) => {
         const isLast = index === diffs.length - 1;
         const offset = isLast
@@ -361,8 +365,8 @@ export const Editor: FC<Props> = ({
         updateCode(diff, offset);
       });
     } else {
-      applyState(newState);
       pushState(newState);
+      applyState(newState);
     }
   }
 

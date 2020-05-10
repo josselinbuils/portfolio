@@ -23,9 +23,6 @@ export function getCursorOffsetBeforeDiff([type, start, diff]: Diff): number {
   return type === DiffType.Addition ? start : start + diff.length;
 }
 
-// Sometimes multiple diffs are necessary even for a single change.
-// Ex: removing selection by putting a new character that was not the first
-// character of the selection.
 export function getDiffs(a: string, b: string): Diff[] {
   const diffObjs = [];
   let base = a;
@@ -48,6 +45,10 @@ export function getDiffs(a: string, b: string): Diff[] {
   }
 
   return diffObjs;
+}
+
+export function revertDiff(code: string, [type, start, diff]: Diff): string {
+  return applyDiff(code, [type * -1, start, diff]);
 }
 
 function getFirstDiff(a: string, b: string): Diff {
