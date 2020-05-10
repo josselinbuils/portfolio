@@ -1,5 +1,10 @@
-import { Diff } from '../interfaces/Diff';
-import { getDiff } from './getDiff';
+import {
+  Diff,
+  getCursorOffsetAfterDiff,
+  getCursorOffsetBeforeDiff,
+  getDiffs,
+  getDiffType,
+} from './diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
 
@@ -21,22 +26,26 @@ export class History {
 
       if (states.length > 0) {
         const currentState = states[states.length - 1];
-        const currentDiffObj = currentState.diffObj;
-        const newDiffObj = getDiff(currentState.code, newState.code);
+        const currentDiff = currentState.diff;
+        const newDiffs = getDiffs(currentState.code, newState.code);
 
-        newState.diffObj = newDiffObj;
+        if (newDiffs.length === 1) {
+          const newDiff = newDiffs[0];
+          newState.diff = newDiff;
 
-        if (
-          !/\s/.test(newState.diffObj.diff) &&
-          currentDiffObj !== undefined &&
-          newDiffObj.type === currentDiffObj.type &&
-          newDiffObj.startOffset === currentDiffObj.endOffset
-        ) {
-          currentState.code = newState.code;
-          currentState.cursorOffset = newState.cursorOffset;
-          currentDiffObj.diff = `${currentDiffObj.diff}${newDiffObj.diff}`;
-          currentDiffObj.endOffset = newDiffObj.endOffset;
-          return;
+          if (
+            !/\s/.test(newDiff[2]) &&
+            currentDiff !== undefined &&
+            getDiffType(newDiff) === getDiffType(currentDiff) &&
+            getCursorOffsetBeforeDiff(newDiff) ===
+              getCursorOffsetAfterDiff(currentDiff)
+          ) {
+            currentState.code = newState.code;
+            currentState.cursorOffset = newState.cursorOffset;
+            currentDiff[1] += newDiff[1];
+            currentDiff[2] = `${currentDiff[2]}${newDiff[2]}`;
+            return;
+          }
         }
       }
       states.push(newState);
@@ -70,5 +79,5 @@ type ApplyStateFunction = (state: HistoryState) => any;
 export interface HistoryState {
   code: string;
   cursorOffset: number;
-  diffObj?: Diff;
+  diff?: Diff;
 }

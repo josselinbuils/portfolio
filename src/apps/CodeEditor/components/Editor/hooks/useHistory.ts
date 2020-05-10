@@ -1,9 +1,14 @@
 import { useCallback, useRef } from 'react';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { Diff } from '../interfaces/Diff';
 import { EditableState } from '../interfaces/EditableState';
-import { getDiffs } from '../utils/getDiffs';
+import {
+  Diff,
+  getCursorOffsetAfterDiff,
+  getCursorOffsetBeforeDiff,
+  getDiffs,
+  getDiffType,
+} from '../utils/diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
 
@@ -68,23 +73,24 @@ export function useHistory<T>({
 
         if (states.length > 0) {
           const currentState = states[states.length - 1];
-          const currentDiffObj = currentState.diffObj;
-          const newDiffObjs = getDiffs(currentState.code, newState.code);
+          const currentDiff = currentState.diff;
+          const newDiffs = getDiffs(currentState.code, newState.code);
 
-          if (newDiffObjs.length === 1) {
-            const newDiffObj = newDiffObjs[0];
-            newState.diffObj = newDiffObj;
+          if (newDiffs.length === 1) {
+            const newDiff = newDiffs[0];
+            newState.diff = newDiff;
 
             if (
-              !/\s/.test(newState.diffObj.diff) &&
-              currentDiffObj !== undefined &&
-              newDiffObj.type === currentDiffObj.type &&
-              newDiffObj.startOffset === currentDiffObj.endOffset
+              !/\s/.test(newDiff[2]) &&
+              currentDiff !== undefined &&
+              getDiffType(newDiff) === getDiffType(currentDiff) &&
+              getCursorOffsetBeforeDiff(newDiff) ===
+                getCursorOffsetAfterDiff(currentDiff)
             ) {
               currentState.code = newState.code;
               currentState.cursorOffset = newState.cursorOffset;
-              currentDiffObj.diff = `${currentDiffObj.diff}${newDiffObj.diff}`;
-              currentDiffObj.endOffset = newDiffObj.endOffset;
+              currentDiff[1] += newDiff[1];
+              currentDiff[2] = `${currentDiff[2]}${newDiff[2]}`;
               return;
             }
           }
@@ -100,5 +106,5 @@ export function useHistory<T>({
 }
 
 interface StateWithDiff extends EditableState {
-  diffObj?: Diff;
+  diff?: Diff;
 }

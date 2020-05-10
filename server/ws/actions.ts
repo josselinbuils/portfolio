@@ -1,6 +1,6 @@
 import { ClientCursor } from './interfaces/ClientCursor';
 import { ClientState } from './interfaces/ClientState';
-import { Diff } from './interfaces/Diff';
+import { Diff } from './utils/diffs';
 
 export const ACTION_REDO = 'REDO';
 export const ACTION_UNDO = 'UNDO';
@@ -28,7 +28,7 @@ export const createAction = {
     if (typeof code === 'string') {
       action.payload.code = code;
     } else {
-      action.payload.diffObj = code;
+      action.payload.diff = code;
     }
     if (cursorOffset !== undefined) {
       action.payload.cursorOffset = cursorOffset;
@@ -76,7 +76,7 @@ interface UpdateCodeAction {
   payload: {
     code?: string;
     cursorOffset?: number;
-    diffObj?: Diff;
+    diff?: Diff;
     safetyHash?: number;
   };
 }

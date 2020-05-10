@@ -1,6 +1,5 @@
 import { Reducer } from 'react';
-import { Diff } from '../../interfaces/Diff';
-import { applyDiff } from '../../utils/applyDiff';
+import { applyDiff, Diff } from '../../utils/diffs';
 import { ClientCursor } from './ClientCursor';
 import { ClientState } from './ClientState';
 
@@ -36,7 +35,7 @@ export const createAction = {
     if (typeof code === 'string') {
       action.payload.code = code;
     } else {
-      action.payload.diffObj = code;
+      action.payload.diff = code;
     }
     return action;
   },
@@ -53,11 +52,11 @@ export const handleAction = {
   }),
 
   [ACTION_UPDATE_CODE]: (state: ClientState, action: UpdateCodeAction) => {
-    const { cursorOffset = state.cursorOffset, diffObj } = action.payload;
+    const { cursorOffset = state.cursorOffset, diff } = action.payload;
     let { code } = action.payload;
 
     if (code === undefined) {
-      code = applyDiff(state.code, diffObj as Diff);
+      code = applyDiff(state.code, diff as Diff);
     }
     return { ...state, code, cursorOffset };
   },
@@ -114,7 +113,7 @@ interface UpdateCodeAction {
   payload: {
     code?: string;
     cursorOffset?: number;
-    diffObj?: Diff;
+    diff?: Diff;
     safetyHash?: number;
   };
 }

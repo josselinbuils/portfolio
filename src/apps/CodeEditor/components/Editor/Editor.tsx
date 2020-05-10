@@ -36,10 +36,10 @@ import { ClientState } from './hooks/useSharedFile/ClientState';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange';
+import { getCursorOffsetAfterDiff, getDiffs } from './utils/diffs';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
-import { getDiffs } from './utils/getDiffs';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
@@ -352,10 +352,13 @@ export const Editor: FC<Props> = ({
 
   function updateState(newState: EditableState): void {
     if (isSharedFileActive) {
-      getDiffs(code, newState.code).forEach((diffObj, index, diffObjs) => {
-        const isLast = index === diffObjs.length - 1;
-        const offset = isLast ? newState.cursorOffset : diffObj.endOffset;
-        updateCode(diffObj, offset);
+      getDiffs(code, newState.code).forEach((diff, index, diffs) => {
+        const isLast = index === diffs.length - 1;
+        const offset = isLast
+          ? newState.cursorOffset
+          : getCursorOffsetAfterDiff(diff);
+
+        updateCode(diff, offset);
       });
     } else {
       applyState(newState);

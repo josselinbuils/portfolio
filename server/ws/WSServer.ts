@@ -146,14 +146,12 @@ export class WSServer {
         break;
 
       case ACTION_UPDATE_CODE: {
-        const { cursorOffset, diffObj, safetyHash } = action.payload;
+        const { cursorOffset, diff, safetyHash } = action.payload;
         let { code } = action.payload;
 
         if (code === undefined) {
-          code =
-            diffObj.type === '+'
-              ? spliceString(this.code, diffObj.startOffset, 0, diffObj.diff)
-              : spliceString(this.code, diffObj.endOffset, diffObj.diff.length);
+          const [start, deleteCount, str] = diff;
+          code = spliceString(this.code, start, deleteCount, str);
         }
 
         if (safetyHash !== this.codeHash) {
@@ -166,8 +164,8 @@ export class WSServer {
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? createAction.updateCode(diffObj || code, cursorOffset)
-            : createAction.updateCode(diffObj || code)
+            ? createAction.updateCode(diff || code, cursorOffset)
+            : createAction.updateCode(diff || code)
         );
         this.updateClientCursorOffset(client, cursorOffset, true);
         this.updateCode(code);

@@ -3,14 +3,13 @@ import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
-import { applyDiff } from '../../utils/applyDiff';
+import { applyDiff, Diff, getCursorOffsetAfterDiff } from '../../utils/diffs';
 import { Action, createAction, handleAction } from './actions';
 import { ClientState } from './ClientState';
 import { computeHash } from './computeHash';
 
-const DEBUG = false;
+const DEBUG = true;
 const REOPEN_DELAY_MS = 1000;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
@@ -150,13 +149,12 @@ export function useSharedFile({
         newCursorOffset = (update as EditableState).cursorOffset;
         action = createAction.updateCode(newCode, newCursorOffset, currentHash);
       } else {
-        const { diff, type } = update as Pick<Diff, 'diff' | 'type'>;
-        const startOffset = clientState.cursorOffset;
-        const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
-        const diffObj = { diff, endOffset, startOffset, type } as Diff;
+        const diff = update as Diff;
+        diff[0] = clientState.cursorOffset;
 
-        action = createAction.updateCode(diffObj, endOffset, currentHash);
-        newCode = applyDiff(clientState.code, diffObj);
+        const endOffset = getCursorOffsetAfterDiff(diff);
+        action = createAction.updateCode(diff, endOffset, currentHash);
+        newCode = applyDiff(clientState.code, diff);
         newCursorOffset = endOffset;
       }
       dispatchToServerRef.current(action);
@@ -182,7 +180,7 @@ export function useSharedFile({
       const updateQueue = updateQueueRef.current;
 
       if (DEBUG) {
-        console.debug(`compare ${currentHash} and ${hashToWaitForRef.current}`);
+        console.debug('updateCode()', code, newCursorOffset);
       }
 
       if (
@@ -204,14 +202,10 @@ export function useSharedFile({
         lastCursorOffsetSentRef.current = newCursorOffset;
         dispatchToServerRef.current(action);
       } else {
-        let update: Update;
-
-        if (typeof code === 'string') {
-          update = { code, cursorOffset: newCursorOffset };
-        } else {
-          const { diff, type } = code;
-          update = { diff, type };
-        }
+        const update =
+          typeof code === 'string'
+            ? { code, cursorOffset: newCursorOffset }
+            : code;
 
         if (DEBUG) {
           console.debug('enqueue', update);
@@ -236,4 +230,4 @@ export function useSharedFile({
   };
 }
 
-type Update = Partial<EditableState> | Pick<Diff, 'diff' | 'type'>;
+type Update = EditableState | Diff;

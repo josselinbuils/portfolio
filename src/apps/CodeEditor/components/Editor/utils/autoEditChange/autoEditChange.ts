@@ -1,8 +1,6 @@
 import { INDENT } from '../../constants';
-import { Diff } from '../../interfaces/Diff';
 import { EditableState } from '../../interfaces/EditableState';
-import { applyDiff } from '../applyDiff';
-import { getDiffs } from '../getDiffs';
+import { applyDiff, Diff, getCursorOffsetAfterDiff, getDiffs } from '../diffs';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
@@ -22,14 +20,15 @@ export function autoEditChange(
   currentState: EditableState,
   newState: EditableState
 ): EditableState | undefined {
-  const diffObjs = getDiffs(currentState.code, newState.code);
-  const { diff, endOffset, type } = diffObjs.pop() as Diff;
+  const diffs = getDiffs(currentState.code, newState.code);
+  const [start, deleteCount, diff] = diffs.pop() as Diff;
+  const isAddition = deleteCount === 0;
 
-  if (diffObjs.length > 0) {
-    const intermediateDiffObj = diffObjs.pop() as Diff;
+  if (diffs.length > 0) {
+    const intermediateDiff = diffs.pop() as Diff;
     currentState = {
-      code: applyDiff(currentState.code, intermediateDiffObj),
-      cursorOffset: intermediateDiffObj.endOffset,
+      code: applyDiff(currentState.code, intermediateDiff),
+      cursorOffset: getCursorOffsetAfterDiff(intermediateDiff),
     };
   }
 
@@ -40,11 +39,13 @@ export function autoEditChange(
   );
   let result: EditableState | undefined = newState;
 
-  if (type === '+') {
+  if (isAddition) {
     if (autoCloseChar !== undefined && allowAutoComplete) {
+      const cursorOffset = getCursorOffsetAfterDiff([start, deleteCount, diff]);
+
       result = {
-        code: spliceString(newState.code, endOffset, 0, autoCloseChar),
-        cursorOffset: endOffset,
+        code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),
+        cursorOffset,
       };
     } else if (
       isIntoAutoCloseGroup(currentState.code, currentState.cursorOffset) &&
@@ -101,14 +102,14 @@ export function autoEditChange(
       const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
 
       if (REGEX_SPACES_ONLY.test(lineBeforeCursor)) {
-        const deleteCount = lineBeforeCursor.length + 1;
+        const delCount = lineBeforeCursor.length + 1;
+
         result = {
-          code: spliceString(code, cursorOffset - deleteCount, deleteCount),
-          cursorOffset: cursorOffset - deleteCount,
+          code: spliceString(code, cursorOffset - delCount, delCount),
+          cursorOffset: cursorOffset - delCount,
         };
       }
     }
   }
-
   return result;
 }
