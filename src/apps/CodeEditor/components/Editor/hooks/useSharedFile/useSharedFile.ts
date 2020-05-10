@@ -9,7 +9,7 @@ import { Action, createAction, handleAction } from './actions';
 import { ClientState } from './ClientState';
 import { computeHash } from './computeHash';
 
-const DEBUG = true;
+const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
 const WS_URL = `${BASE_URL_WS}/portfolio-react`;
 
@@ -150,7 +150,7 @@ export function useSharedFile({
         action = createAction.updateCode(newCode, newCursorOffset, currentHash);
       } else {
         const diff = update as Diff;
-        diff[0] = clientState.cursorOffset;
+        diff[1] = clientState.cursorOffset;
 
         const endOffset = getCursorOffsetAfterDiff(diff);
         action = createAction.updateCode(diff, endOffset, currentHash);

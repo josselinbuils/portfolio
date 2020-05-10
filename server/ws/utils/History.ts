@@ -1,9 +1,9 @@
 import {
   Diff,
+  DiffType,
   getCursorOffsetAfterDiff,
   getCursorOffsetBeforeDiff,
   getDiffs,
-  getDiffType,
 } from './diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
@@ -36,14 +36,16 @@ export class History {
           if (
             !/\s/.test(newDiff[2]) &&
             currentDiff !== undefined &&
-            getDiffType(newDiff) === getDiffType(currentDiff) &&
+            newDiff[0] === currentDiff[0] &&
             getCursorOffsetBeforeDiff(newDiff) ===
               getCursorOffsetAfterDiff(currentDiff)
           ) {
             currentState.code = newState.code;
             currentState.cursorOffset = newState.cursorOffset;
-            currentDiff[1] += newDiff[1];
-            currentDiff[2] = `${currentDiff[2]}${newDiff[2]}`;
+            currentDiff[2] =
+              newDiff[0] === DiffType.Addition
+                ? `${currentDiff[2]}${newDiff[2]}`
+                : `${newDiff[2]}${currentDiff[2]}`;
             return;
           }
         }

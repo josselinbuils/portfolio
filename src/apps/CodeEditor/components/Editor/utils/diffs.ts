@@ -3,19 +3,24 @@ import { spliceString } from './spliceString';
 
 const MAX_DIFFS = 10000;
 
-export function applyDiff(
-  code: string,
-  [start, deleteCount, diff]: Diff
-): string {
-  return spliceString(code, start, deleteCount, diff);
+export enum DiffType {
+  Addition = 1,
+  Deletion = -1,
+  NoDiff = 0,
 }
 
-export function getCursorOffsetAfterDiff([start, _, diff]: Diff): number {
-  return start + diff.length;
+export function applyDiff(code: string, [type, start, diff]: Diff): string {
+  return type === DiffType.Addition
+    ? spliceString(code, start, 0, diff)
+    : spliceString(code, start, diff.length);
 }
 
-export function getCursorOffsetBeforeDiff([start, deleteCount]: Diff): number {
-  return start + deleteCount;
+export function getCursorOffsetAfterDiff([type, start, diff]: Diff): number {
+  return type === DiffType.Addition ? start + diff.length : start;
+}
+
+export function getCursorOffsetBeforeDiff([type, start, diff]: Diff): number {
+  return type === DiffType.Addition ? start : start + diff.length;
 }
 
 // Sometimes multiple diffs are necessary even for a single change.
@@ -31,18 +36,18 @@ export function getDiffs(a: string, b: string): Diff[] {
     base = applyDiff(base, diffObj);
 
     if (i >= MAX_DIFFS) {
-      throw new Error('Max allowed number of diffs reached');
+      const parts = [
+        'Max allowed number of diffs reached',
+        '############################################################',
+        a,
+        '############################################################',
+        b,
+      ];
+      throw new Error(parts.join('\n'));
     }
   }
 
   return diffObjs;
-}
-
-export function getDiffType([_, deleteCount, diff]: Diff): number {
-  if (diff.length === 0) {
-    return 0;
-  }
-  return deleteCount > 0 ? -1 : 1;
 }
 
 function getFirstDiff(a: string, b: string): Diff {
@@ -50,20 +55,14 @@ function getFirstDiff(a: string, b: string): Diff {
   let offset = 0;
 
   for (const [type, diff] of diffs) {
-    switch (type) {
-      case -1:
-        return [offset, diff.length, ''];
-
-      case 0:
-        offset += diff.length;
-        break;
-
-      case 1:
-        return [offset, 0, diff];
+    if (type === DiffType.NoDiff) {
+      offset += diff.length;
+    } else {
+      return [type, offset, diff];
     }
   }
   return [0, 0, ''];
 }
 
-/** [start, deleteCount, diff] */
+/** [type, start, diff] */
 export type Diff = [number, number, string];

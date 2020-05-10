@@ -1,6 +1,12 @@
 import { INDENT } from '../../constants';
 import { EditableState } from '../../interfaces/EditableState';
-import { applyDiff, Diff, getCursorOffsetAfterDiff, getDiffs } from '../diffs';
+import {
+  applyDiff,
+  Diff,
+  DiffType,
+  getCursorOffsetAfterDiff,
+  getDiffs,
+} from '../diffs';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
@@ -21,8 +27,7 @@ export function autoEditChange(
   newState: EditableState
 ): EditableState | undefined {
   const diffs = getDiffs(currentState.code, newState.code);
-  const [start, deleteCount, diff] = diffs.pop() as Diff;
-  const isAddition = deleteCount === 0;
+  const [type, start, diff] = diffs.pop() as Diff;
 
   if (diffs.length > 0) {
     const intermediateDiff = diffs.pop() as Diff;
@@ -39,9 +44,9 @@ export function autoEditChange(
   );
   let result: EditableState | undefined = newState;
 
-  if (isAddition) {
+  if (type === DiffType.Addition) {
     if (autoCloseChar !== undefined && allowAutoComplete) {
-      const cursorOffset = getCursorOffsetAfterDiff([start, deleteCount, diff]);
+      const cursorOffset = getCursorOffsetAfterDiff([type, start, diff]);
 
       result = {
         code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),

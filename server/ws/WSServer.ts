@@ -12,9 +12,9 @@ import {
 import { STATE_PATH } from './constants';
 import { ClientCursor } from './interfaces/ClientCursor';
 import { computeHash } from './utils/computeHash';
+import { applyDiff } from './utils/diffs';
 import { ExecQueue } from './utils/ExecQueue';
 import { History } from './utils/History';
-import { spliceString } from './utils/spliceString';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
@@ -150,8 +150,7 @@ export class WSServer {
         let { code } = action.payload;
 
         if (code === undefined) {
-          const [start, deleteCount, str] = diff;
-          code = spliceString(this.code, start, deleteCount, str);
+          code = applyDiff(this.code, diff);
         }
 
         if (safetyHash !== this.codeHash) {
