@@ -1,5 +1,8 @@
+import { diff_match_patch as DiffMatchPatch } from 'diff-match-patch';
 import { Diff } from '../interfaces/Diff';
 import { applyDiff } from './applyDiff';
+
+const MAX_DIFFS = 10000;
 
 // Sometimes multiple diffs are necessary even for a single change.
 // Ex: removing selection by putting a new character that was not the first
@@ -8,41 +11,50 @@ export function getDiffs(a: string, b: string): Diff[] {
   const diffObjs = [];
   let base = a;
 
-  do {
-    const diffObj = getDiff(base, b);
+  for (let i = 0; base !== b; i++) {
+    const diffObj = getFirstDiff(base, b);
     diffObjs.push(diffObj);
     base = applyDiff(base, diffObj);
-  } while (base !== b);
+
+    if (i >= MAX_DIFFS) {
+      throw new Error('Max allowed number of diffs reached');
+    }
+  }
 
   return diffObjs;
 }
 
-function getDiff(a: string, b: string): Diff {
-  const isAddition = b.length >= a.length;
-  const type = isAddition ? '+' : '-';
-  let startOffset = 0;
-  let endOffset = 0;
-  let diff = '';
+function getFirstDiff(a: string, b: string): Diff {
+  const diffs = new DiffMatchPatch().diff_main(a, b);
+  let offset = 0;
 
-  if (a !== b) {
-    const longer = isAddition ? b : a;
-    const shorter = isAddition ? a : b;
+  for (const [type, diff] of diffs) {
+    switch (type) {
+      case -1:
+        return {
+          type: '-',
+          startOffset: offset + diff.length,
+          endOffset: offset,
+          diff,
+        };
 
-    startOffset = longer
-      .split('')
-      .findIndex((value, index) => shorter.charAt(index) !== value);
+      case 0:
+        offset += diff.length;
+        break;
 
-    for (
-      let i = startOffset;
-      i < longer.length && longer.slice(i) !== shorter.slice(i - diff.length);
-      i++
-    ) {
-      diff = `${diff}${longer.charAt(i)}`;
+      case 1:
+        return {
+          type: '+',
+          startOffset: offset,
+          endOffset: offset + diff.length,
+          diff,
+        };
     }
-
-    endOffset = isAddition ? startOffset + diff.length : startOffset;
-    startOffset = isAddition ? startOffset : startOffset + diff.length;
   }
-
-  return { diff, endOffset, startOffset, type };
+  return {
+    type: '+',
+    startOffset: 0,
+    endOffset: 0,
+    diff: '',
+  };
 }
