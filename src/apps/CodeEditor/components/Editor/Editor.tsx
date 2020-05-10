@@ -19,9 +19,9 @@ import React, {
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';
 import { useMemState } from '~/platform/hooks/useMemState';
-import { Position } from '~/platform/interfaces/Position';
 import { Toolbar } from '../../components/Toolbar';
 import { ToolButton } from '../../components/ToolButton';
+import { CursorPosition } from '../../interfaces/CursorPosition';
 import { highlightCode } from '../../utils/highlightCode';
 import { Cursor } from './components/Cursor';
 import { LineNumbers } from './components/LineNumbers';
@@ -159,7 +159,7 @@ export const Editor: FC<Props> = ({
   useEffect(() => {
     const x = getLineBeforeCursor(code, cursorOffset).length + 1;
     const y = getLineNumber(code, cursorOffset) + 1;
-    onCursorPositionUpdate({ x, y });
+    onCursorPositionUpdate({ offset: cursorOffset, x, y });
   }, [code, cursorOffset, onCursorPositionUpdate]);
 
   useLayoutEffect(() => {
@@ -474,5 +474,5 @@ interface Props {
   className?: string;
   code: string;
   onChange(code: string): void;
-  onCursorPositionUpdate(cursorPosition: Position<number>): void;
+  onCursorPositionUpdate(cursorPosition: CursorPosition): void;
 }

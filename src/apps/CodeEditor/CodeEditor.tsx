@@ -14,6 +14,7 @@ const CodeEditor: WindowComponent = ({
 }) => {
   const [code, setCode] = useState('');
   const [cursorPosition, setCursorPosition] = useState({
+    offset: 0,
     x: 0,
     y: 0,
   });

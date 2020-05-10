@@ -1,19 +1,19 @@
 import cn from 'classnames';
 import React, { FC } from 'react';
-import { Position } from '~/platform/interfaces/Position';
+import { CursorPosition } from '../../interfaces/CursorPosition';
 
 import styles from './StatusBar.module.scss';
 
 export const StatusBar: FC<Props> = ({ className, cursorPosition }) => {
-  const { x, y } = cursorPosition;
+  const { offset, x, y } = cursorPosition;
   return (
     <div className={cn(styles.statusBar, className)}>
-      {x}:{y}
+      {x}:{y} [{offset}]
     </div>
   );
 };
 
 interface Props {
   className?: string;
-  cursorPosition: Position<number>;
+  cursorPosition: CursorPosition;
 }
