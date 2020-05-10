@@ -40,6 +40,9 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
 }
 
 function prettify(value: any): string {
+  if (Array.isArray(value)) {
+    return `[${value.toString().split(',').join(', ')}]`;
+  }
   if (value && value.toString() === '[object Object]') {
     return JSON.stringify(value);
   }
