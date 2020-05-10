@@ -32,7 +32,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   console.log = (...args: any[]) => {
     originalConsoleLog(...args);
 
-    Promise.all(args.map(prettify)).then((parts) => {
+    Promise.all(args.map(highlight)).then((parts) => {
       logManager.push({
         level: LogLevel.Info,
         message: parts.join(' '),
@@ -46,7 +46,11 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   };
 }
 
-async function prettify(value: any): Promise<string> {
+async function highlight(code: string): Promise<string> {
+  return highlightCode(prettify(code), 'javascript');
+}
+
+function prettify(value: any): string {
   let prettified = `${value}`;
 
   if (typeof value === 'string') {
@@ -56,6 +60,5 @@ async function prettify(value: any): Promise<string> {
   } else if (value && value.toString() === '[object Object]') {
     prettified = JSON.stringify(value);
   }
-
-  return highlightCode(prettified, 'javascript');
+  return prettified;
 }
