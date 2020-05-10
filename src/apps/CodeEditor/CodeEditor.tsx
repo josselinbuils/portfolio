@@ -24,7 +24,7 @@ const CodeEditor: WindowComponent = ({
       active={active}
       {...injectedWindowProps}
       background="#45484a"
-      minHeight={500}
+      minHeight={600}
       minWidth={800}
       ref={windowRef}
       title={CodeEditorDescriptor.appName}
