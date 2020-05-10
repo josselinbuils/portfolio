@@ -2,26 +2,25 @@ import { ClientCursor } from './interfaces/ClientCursor';
 import { ClientState } from './interfaces/ClientState';
 import { Diff } from './interfaces/Diff';
 
-export const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 export const ACTION_REDO = 'REDO';
 export const ACTION_UNDO = 'UNDO';
+export const ACTION_UPDATE_CLIENT_STATE = 'UPDATE_CLIENT_STATE';
+export const ACTION_UPDATE_CODE = 'UPDATE_CODE';
 export const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
 export const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
-export const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
 
-export const actionCreators = {
-  setSharedState: (state: Partial<ClientState>): SetSharedStateAction => ({
-    type: ACTION_SET_SHARED_STATE,
+export const createAction = {
+  updateClientState: (
+    state: Partial<ClientState>
+  ): UpdateClientStateAction => ({
+    type: ACTION_UPDATE_CLIENT_STATE,
     payload: { state },
   }),
-  updateClientState: (
-    diffObj: Diff,
-    cursorOffset?: number
-  ): UpdateSharedStateAction => {
+  updateCode: (diffObj: Diff, cursorOffset?: number): UpdateCodeAction => {
     const action = {
-      type: ACTION_UPDATE_SHARED_STATE,
+      type: ACTION_UPDATE_CODE,
       payload: { diffObj },
-    } as UpdateSharedStateAction;
+    } as UpdateCodeAction;
 
     if (cursorOffset !== undefined) {
       action.payload.cursorOffset = cursorOffset;
@@ -43,23 +42,34 @@ export const actionCreators = {
 
 export type Action =
   | RedoAction
-  | SetSharedStateAction
   | UndoAction
+  | UpdateClientStateAction
   | UpdateCursorOffsetAction
   | UpdateCursorsAction
-  | UpdateSharedStateAction;
+  | UpdateCodeAction;
 
 interface RedoAction {
   type: typeof ACTION_REDO;
 }
 
-interface SetSharedStateAction {
-  type: typeof ACTION_SET_SHARED_STATE;
-  payload: { state: Partial<ClientState> };
-}
-
 interface UndoAction {
   type: typeof ACTION_UNDO;
+}
+
+interface UpdateClientStateAction {
+  type: typeof ACTION_UPDATE_CLIENT_STATE;
+  payload: {
+    state: Partial<ClientState>;
+  };
+}
+
+interface UpdateCodeAction {
+  type: typeof ACTION_UPDATE_CODE;
+  payload: {
+    cursorOffset?: number;
+    diffObj: Diff;
+    safetyHash?: number;
+  };
 }
 
 interface UpdateCursorOffsetAction {
@@ -74,14 +84,5 @@ interface UpdateCursorsAction {
   type: typeof ACTION_UPDATE_CURSORS;
   payload: {
     cursors: ClientCursor[];
-  };
-}
-
-interface UpdateSharedStateAction {
-  type: typeof ACTION_UPDATE_SHARED_STATE;
-  payload: {
-    cursorOffset?: number;
-    diffObj: Diff;
-    safetyHash?: number;
   };
 }

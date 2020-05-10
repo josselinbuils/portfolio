@@ -3,11 +3,11 @@ import WebSocket, { OPEN, Server } from 'ws';
 import { Logger } from '../Logger';
 import {
   Action,
-  actionCreators,
   ACTION_REDO,
   ACTION_UNDO,
+  ACTION_UPDATE_CODE,
   ACTION_UPDATE_CURSOR_OFFSET,
-  ACTION_UPDATE_SHARED_STATE,
+  createAction,
 } from './actions';
 import { STATE_PATH } from './constants';
 import { ClientCursor } from './interfaces/ClientCursor';
@@ -102,7 +102,7 @@ export class WSServer {
         cursorColor,
         id,
       };
-      WSServer.dispatch(wsClient, actionCreators.setSharedState(state));
+      WSServer.dispatch(wsClient, createAction.updateClientState(state));
       this.sendCursors();
     });
 
@@ -134,7 +134,7 @@ export class WSServer {
         const historyFunction = action.type === ACTION_UNDO ? 'undo' : 'redo';
 
         this.history[historyFunction](({ code, cursorOffset }) => {
-          this.dispatchAll(actionCreators.setSharedState({ code }));
+          this.dispatchAll(createAction.updateClientState({ code }));
           this.updateClientCursorOffset(client, cursorOffset);
           this.updateCode(code);
         });
@@ -145,21 +145,21 @@ export class WSServer {
         this.updateClientCursorOffset(client, action.payload.cursorOffset);
         break;
 
-      case ACTION_UPDATE_SHARED_STATE: {
+      case ACTION_UPDATE_CODE: {
         const { cursorOffset, diffObj, safetyHash } = action.payload;
 
         if (safetyHash !== this.codeHash) {
           // Requested update is obsolete so we reset client code
           WSServer.dispatch(
             wsClient,
-            actionCreators.setSharedState({ code: this.code })
+            createAction.updateClientState({ code: this.code })
           );
           return;
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? actionCreators.updateClientState(diffObj, cursorOffset)
-            : actionCreators.updateClientState(diffObj)
+            ? createAction.updateCode(diffObj, cursorOffset)
+            : createAction.updateCode(diffObj)
         );
         this.updateClientCursorOffset(client, cursorOffset, true);
 
@@ -181,7 +181,7 @@ export class WSServer {
   private sendCursors(): void {
     const cursors = this.getCursors();
     this.dispatchAll((client) =>
-      actionCreators.updateCursors(
+      createAction.updateCursors(
         cursors.filter(({ clientID }) => clientID !== client.id)
       )
     );
@@ -209,7 +209,7 @@ export class WSServer {
     client.cursorOffset = cursorOffset;
     this.dispatchAll(({ id }) => {
       if (!excludeClient || id !== client.id) {
-        return actionCreators.updateCursorOffset(client.id, cursorOffset);
+        return createAction.updateCursorOffset(client.id, cursorOffset);
       }
     });
   }

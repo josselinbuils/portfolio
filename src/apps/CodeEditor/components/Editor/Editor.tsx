@@ -95,7 +95,7 @@ export const Editor: FC<Props> = ({
     fileName: activeFileName,
     applyState,
   });
-  const { updateClientState, updateCursorOffset } = useSharedFile({
+  const { updateCode, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
     cursorOffset,
@@ -354,7 +354,7 @@ export const Editor: FC<Props> = ({
       getDiffs(code, newState.code).forEach((diffObj, index, diffObjs) => {
         const isLast = index === diffObjs.length - 1;
         const offset = isLast ? newState.cursorOffset : diffObj.endOffset;
-        updateClientState(diffObj, offset);
+        updateCode(diffObj, offset);
       });
     } else {
       applyState(newState);

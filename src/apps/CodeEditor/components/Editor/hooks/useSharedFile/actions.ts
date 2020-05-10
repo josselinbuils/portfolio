@@ -4,26 +4,28 @@ import { applyDiff } from '../../utils/applyDiff';
 import { ClientCursor } from './ClientCursor';
 import { ClientState } from './ClientState';
 
-const ACTION_SET_SHARED_STATE = 'SET_SHARED_STATE';
 const ACTION_REDO = 'REDO';
 const ACTION_UNDO = 'UNDO';
-const ACTION_UPDATE_SHARED_STATE = 'UPDATE_SHARED_STATE';
+const ACTION_UPDATE_CLIENT_STATE = 'UPDATE_CLIENT_STATE';
+const ACTION_UPDATE_CODE = 'UPDATE_CLIENT_STATE';
 const ACTION_UPDATE_CURSOR_OFFSET = 'UPDATE_CURSOR_OFFSET';
 const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
 
-export const actionCreators = {
+export const createAction = {
   redo: (): RedoAction => ({ type: ACTION_REDO }),
-  setSharedState: (state: Partial<ClientState>): SetSharedStateAction => ({
-    type: ACTION_SET_SHARED_STATE,
-    payload: { state },
-  }),
   undo: (): UndoAction => ({ type: ACTION_UNDO }),
   updateClientState: (
+    state: Partial<ClientState>
+  ): UpdateClientStateAction => ({
+    type: ACTION_UPDATE_CLIENT_STATE,
+    payload: { state },
+  }),
+  updateCode: (
     diffObj: Diff,
     cursorOffset: number,
     safetyHash: number
-  ): UpdateSharedStateAction => ({
-    type: ACTION_UPDATE_SHARED_STATE,
+  ): UpdateCodeAction => ({
+    type: ACTION_UPDATE_CODE,
     payload: {
       cursorOffset,
       diffObj,
@@ -36,11 +38,20 @@ export const actionCreators = {
   }),
 };
 
-export const actionsHandlers = {
-  [ACTION_SET_SHARED_STATE]: (state, action: SetSharedStateAction) => ({
+export const handleAction = {
+  [ACTION_UPDATE_CLIENT_STATE]: (state, action: UpdateClientStateAction) => ({
     ...state,
     ...action.payload.state,
   }),
+
+  [ACTION_UPDATE_CODE]: (state: ClientState, action: UpdateCodeAction) => {
+    const { cursorOffset = state.cursorOffset, diffObj } = action.payload;
+    return {
+      ...state,
+      code: applyDiff(state.code, diffObj),
+      cursorOffset,
+    };
+  },
 
   [ACTION_UPDATE_CURSOR_OFFSET]: (
     state: ClientState,
@@ -64,39 +75,38 @@ export const actionsHandlers = {
     state: ClientState,
     action: UpdateCursorsAction
   ) => ({ ...state, cursors: action.payload.cursors }),
-
-  [ACTION_UPDATE_SHARED_STATE]: (
-    state: ClientState,
-    action: UpdateSharedStateAction
-  ) => {
-    const { cursorOffset = state.cursorOffset, diffObj } = action.payload;
-    return {
-      ...state,
-      code: applyDiff(state.code, diffObj),
-      cursorOffset,
-    };
-  },
 } as { [action: string]: Reducer<ClientState, Action> };
 
 export type Action =
   | RedoAction
-  | SetSharedStateAction
   | UndoAction
+  | UpdateClientStateAction
+  | UpdateCodeAction
   | UpdateCursorOffsetAction
-  | UpdateCursorsAction
-  | UpdateSharedStateAction;
+  | UpdateCursorsAction;
 
 interface RedoAction {
   type: typeof ACTION_REDO;
 }
 
-interface SetSharedStateAction {
-  type: typeof ACTION_SET_SHARED_STATE;
-  payload: { state: Partial<ClientState> };
-}
-
 interface UndoAction {
   type: typeof ACTION_UNDO;
+}
+
+interface UpdateClientStateAction {
+  type: typeof ACTION_UPDATE_CLIENT_STATE;
+  payload: {
+    state: Partial<ClientState>;
+  };
+}
+
+interface UpdateCodeAction {
+  type: typeof ACTION_UPDATE_CODE;
+  payload: {
+    cursorOffset?: number;
+    diffObj: Diff;
+    safetyHash?: number;
+  };
 }
 
 interface UpdateCursorOffsetAction {
@@ -111,15 +121,5 @@ interface UpdateCursorsAction {
   type: typeof ACTION_UPDATE_CURSORS;
   payload: {
     cursors: ClientCursor[];
-  };
-}
-
-// TODO change that shitty name
-interface UpdateSharedStateAction {
-  type: typeof ACTION_UPDATE_SHARED_STATE;
-  payload: {
-    cursorOffset?: number;
-    diffObj: Diff;
-    safetyHash?: number;
   };
 }

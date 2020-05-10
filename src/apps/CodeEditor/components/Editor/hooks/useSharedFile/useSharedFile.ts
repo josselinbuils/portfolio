@@ -5,7 +5,7 @@ import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { Diff } from '../../interfaces/Diff';
 import { applyDiff } from '../../utils/applyDiff';
-import { Action, actionCreators, actionsHandlers } from './actions';
+import { Action, createAction, handleAction } from './actions';
 import { ClientState } from './ClientState';
 import { computeHash } from './computeHash';
 
@@ -22,8 +22,10 @@ const initialState = {
 } as ClientState;
 
 const reducer = ((clientState, action) =>
-  actionsHandlers[action.type]?.(clientState, action) ||
-  clientState) as Reducer<ClientState, Action>;
+  handleAction[action.type]?.(clientState, action) || clientState) as Reducer<
+  ClientState,
+  Action
+>;
 
 export function useSharedFile({
   active,
@@ -34,7 +36,7 @@ export function useSharedFile({
   cursorOffset: number;
   applyClientState(clientState: ClientState): any;
 }): {
-  updateClientState(diffObj: Diff, cursorOffset: number): void;
+  updateCode(diffObj: Diff, cursorOffset: number): void;
   updateCursorOffset(cursorOffset: number): void;
 } {
   const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
@@ -49,9 +51,9 @@ export function useSharedFile({
   useKeyMap(
     {
       'Control+Z,Meta+Z': () =>
-        dispatchToServerRef.current(actionCreators.undo()),
+        dispatchToServerRef.current(createAction.undo()),
       'Control+Shift+Z,Meta+Shift+Z': () =>
-        dispatchToServerRef.current(actionCreators.redo()),
+        dispatchToServerRef.current(createAction.redo()),
     },
     active
   );
@@ -81,7 +83,7 @@ export function useSharedFile({
       ws.onopen = () => {
         readyDeferred.resolve();
         dispatchToServerRef.current(
-          actionCreators.updateCursorOffset(cursorOffsetRef.current)
+          createAction.updateCursorOffset(cursorOffsetRef.current)
         );
       };
       ws.onmessage = (event) => {
@@ -100,7 +102,7 @@ export function useSharedFile({
       clearTimeout(reopenTimeoutID);
       dispatchToServerRef.current = () => {};
       ws.close();
-      dispatch(actionCreators.setSharedState(initialState));
+      dispatch(createAction.updateClientState(initialState));
     };
   }, [active, cursorOffsetRef]);
 
@@ -141,11 +143,7 @@ export function useSharedFile({
       const startOffset = clientState.cursorOffset;
       const endOffset = startOffset + diff.length * (type === '+' ? 1 : -1);
       const diffObj = { diff, endOffset, startOffset, type } as Diff;
-      const action = actionCreators.updateClientState(
-        diffObj,
-        endOffset,
-        currentHash
-      );
+      const action = createAction.updateCode(diffObj, endOffset, currentHash);
       const newCode = applyDiff(clientState.code, diffObj);
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = endOffset;
@@ -161,7 +159,7 @@ export function useSharedFile({
     }
   }, [active, applyClientStateRef, clientState, codeRef]);
 
-  const updateClientState = useCallback(
+  const updateCode = useCallback(
     (diffObj: Diff, newCursorOffset: number) => {
       if (!active) {
         return;
@@ -174,7 +172,7 @@ export function useSharedFile({
       }
 
       if (currentHash === hashToWaitForRef.current && diffQueue.length === 0) {
-        const action = actionCreators.updateClientState(
+        const action = createAction.updateCode(
           diffObj,
           newCursorOffset,
           currentHash
@@ -201,14 +199,14 @@ export function useSharedFile({
 
   const updateCursorOffset = useCallback((newCursorOffset: number) => {
     if (newCursorOffset !== lastCursorOffsetSentRef.current) {
-      const action = actionCreators.updateCursorOffset(newCursorOffset);
+      const action = createAction.updateCursorOffset(newCursorOffset);
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = newCursorOffset;
     }
   }, []);
 
   return {
-    updateClientState,
+    updateCode,
     updateCursorOffset,
   };
 }
