@@ -53,12 +53,15 @@ async function highlight(code: string): Promise<string> {
 function prettify(value: any): string {
   let prettified = `${value}`;
 
+  const replaceLineBreaks = (str: string) => str.replace(/\n|\\n/g, '↵');
+
   if (typeof value === 'string') {
     prettified = `'${value}'`;
   } else if (Array.isArray(value)) {
-    prettified = `[${value.map(prettify).join(', ')}]`;
+    const items = value.map((v) => replaceLineBreaks(prettify(v)));
+    prettified = `[${items.join(', ')}]`;
   } else if (value && value.toString() === '[object Object]') {
-    prettified = JSON.stringify(value);
+    prettified = replaceLineBreaks(JSON.stringify(value));
   }
   return prettified;
 }
