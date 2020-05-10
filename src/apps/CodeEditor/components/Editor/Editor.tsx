@@ -31,12 +31,11 @@ import { INDENT } from './constants';
 import { Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile';
-import { ClientCursor } from './hooks/useSharedFile/ClientCursor';
-import { ClientState } from './hooks/useSharedFile/ClientState';
+import { ClientCursor } from './hooks/useSharedFile/interfaces/ClientCursor';
+import { ClientState } from './hooks/useSharedFile/interfaces/ClientState';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange';
-import { getCursorOffsetAfterDiff, getDiffs } from './utils/diffs';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
@@ -95,9 +94,10 @@ export const Editor: FC<Props> = ({
     fileName: activeFileName,
     applyState,
   });
-  const { updateCode, updateCursorOffset } = useSharedFile({
+  const { updateClientState, updateCursorOffset } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
+    code,
     cursorOffset,
   });
   const activeFile = files.find(
@@ -257,7 +257,7 @@ export const Editor: FC<Props> = ({
 
       if (formatted.code !== code) {
         if (isSharedFileActive) {
-          updateCode(formatted.code, formatted.cursorOffset);
+          updateClientState(formatted);
         } else {
           updateState(formatted);
         }
@@ -353,17 +353,7 @@ export const Editor: FC<Props> = ({
 
   function updateState(newState: EditableState): void {
     if (isSharedFileActive) {
-      // Sometimes multiple diffs are necessary even for a single change.
-      // Ex: removing selection by putting a new character that was not the
-      // first character of the selection.
-      getDiffs(code, newState.code).forEach((diff, index, diffs) => {
-        const isLast = index === diffs.length - 1;
-        const offset = isLast
-          ? newState.cursorOffset
-          : getCursorOffsetAfterDiff(diff);
-
-        updateCode(diff, offset);
-      });
+      updateClientState(newState);
     } else {
       pushState(newState);
       applyState(newState);

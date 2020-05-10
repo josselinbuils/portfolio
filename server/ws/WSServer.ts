@@ -1,20 +1,20 @@
 import fs from 'fs';
 import WebSocket, { OPEN, Server } from 'ws';
-import { Logger } from '../Logger';
+import { History } from '../../src/apps/CodeEditor/components/Editor/hooks/useHistory/History';
 import {
   Action,
   ACTION_REDO,
   ACTION_UNDO,
   ACTION_UPDATE_CODE,
   ACTION_UPDATE_CURSOR_OFFSET,
-  createAction,
-} from './actions';
+} from '../../src/apps/CodeEditor/components/Editor/hooks/useSharedFile/interfaces/actions';
+import { ClientCursor } from '../../src/apps/CodeEditor/components/Editor/hooks/useSharedFile/interfaces/ClientCursor';
+import { computeHash } from '../../src/apps/CodeEditor/components/Editor/hooks/useSharedFile/utils/computeHash';
+import { applyDiff } from '../../src/apps/CodeEditor/components/Editor/utils/diffs';
+import { Logger } from '../Logger';
 import { STATE_PATH } from './constants';
-import { ClientCursor } from './interfaces/ClientCursor';
-import { computeHash } from './utils/computeHash';
-import { applyDiff } from './utils/diffs';
-import { ExecQueue } from './utils/ExecQueue';
-import { History } from './utils/History';
+import { createAction } from './createAction';
+import { ExecQueue } from './ExecQueue';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
@@ -132,12 +132,11 @@ export class WSServer {
       case ACTION_REDO:
       case ACTION_UNDO: {
         const historyFunction = action.type === ACTION_UNDO ? 'undo' : 'redo';
+        const { code, cursorOffset } = this.history[historyFunction](this.code);
 
-        this.history[historyFunction](({ code, cursorOffset }) => {
-          this.dispatchAll(createAction.updateClientState({ code }));
-          this.updateClientCursorOffset(client, cursorOffset);
-          this.updateCode(code);
-        });
+        this.dispatchAll(createAction.updateClientState({ code }));
+        this.updateClientCursorOffset(client, cursorOffset);
+        this.updateCode(code);
         break;
       }
 
@@ -146,12 +145,8 @@ export class WSServer {
         break;
 
       case ACTION_UPDATE_CODE: {
-        const { cursorOffset, diff, safetyHash } = action.payload;
-        let { code } = action.payload;
-
-        if (code === undefined) {
-          code = applyDiff(this.code, diff);
-        }
+        const { cursorOffset, diffs, safetyHash } = action.payload;
+        const code = diffs.reduce(applyDiff, this.code);
 
         if (safetyHash !== this.codeHash) {
           // Requested update is obsolete so we reset client code
@@ -163,12 +158,12 @@ export class WSServer {
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? createAction.updateCode(diff || code, cursorOffset)
-            : createAction.updateCode(diff || code)
+            ? createAction.updateCode(diffs, cursorOffset)
+            : createAction.updateCode(diffs)
         );
         this.updateClientCursorOffset(client, cursorOffset, true);
+        this.history.pushState(this.code, { code, cursorOffset });
         this.updateCode(code);
-        this.history.pushState({ code, cursorOffset });
       }
     }
   }

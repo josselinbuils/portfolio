@@ -8,7 +8,7 @@
     "analyze": "ANALYZE=true yarn build:client",
     "build": "yarn build:server && yarn build:client",
     "build:client": "react-app-rewired build && react-snap && rimraf dist/client && cpx \"build/**/*\" dist/client && rimraf build",
-    "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && cpx \"tmp/**/*\" dist/server && rimraf tmp",
+    "build:server": "tsc -p ./server/tsconfig.json && rimraf dist/server && rimraf dist/src && cpx \"tmp/**/*\" dist && rimraf tmp",
     "build:server:dev": "tsc -p server/tsconfig.dev.json",
     "csscomb:staged": "exec-staged 'csscomb -tv' '\\.scss$'",
     "dev:client": "react-app-rewired start",

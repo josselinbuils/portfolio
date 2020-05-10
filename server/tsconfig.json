@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -10,5 +9,5 @@
     "sourceMap": true,
     "target": "es2019"
   },
-  "include": ["**/*"]
+  "include": ["."]
 }

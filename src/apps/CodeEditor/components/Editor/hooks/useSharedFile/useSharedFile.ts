@@ -4,10 +4,17 @@ import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { EditableState } from '../../interfaces/EditableState';
-import { applyDiff, Diff, getCursorOffsetAfterDiff } from '../../utils/diffs';
-import { Action, createAction, handleAction } from './actions';
-import { ClientState } from './ClientState';
-import { computeHash } from './computeHash';
+import {
+  applyDiff,
+  Diff,
+  getCursorOffsetAfterDiff,
+  getDiffs,
+} from '../../utils/diffs';
+import { Action } from './interfaces/actions';
+import { ClientState } from './interfaces/ClientState';
+import { computeHash } from './utils/computeHash';
+import { createAction } from './utils/createAction';
+import { handleAction } from './utils/handleAction';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
@@ -29,24 +36,27 @@ const reducer = ((clientState, action) =>
 
 export function useSharedFile({
   active,
+  code,
   applyClientState,
   cursorOffset,
 }: {
   active: boolean;
+  code: string;
   cursorOffset: number;
   applyClientState(clientState: ClientState): any;
 }): {
-  updateCode(code: string | Diff, cursorOffset: number): void;
+  updateClientState(newState: EditableState): void;
   updateCursorOffset(cursorOffset: number): void;
 } {
   const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
-  const codeRef = useRef(clientState.code);
+  const clientCodeRef = useRef(clientState.code);
+  const codeRef = useDynamicRef(code);
   const cursorOffsetRef = useDynamicRef(cursorOffset);
   const lastCursorOffsetSentRef = useRef(0);
   const hashToWaitForRef = useRef<number>();
-  const updateQueueRef = useRef<Update[]>([]);
+  const updateQueueRef = useRef<Diff[]>([]);
 
   useKeyMap(
     {
@@ -112,13 +122,13 @@ export function useSharedFile({
     }
     applyClientStateRef.current(clientState);
 
-    const previousCode = codeRef.current;
-    codeRef.current = clientState.code;
+    const previousCode = clientCodeRef.current;
+    clientCodeRef.current = clientState.code;
     const currentHash = computeHash(clientState.code);
 
     if (updateQueueRef.current.length > 0) {
       if (currentHash !== hashToWaitForRef.current) {
-        if (clientState.code !== codeRef.current) {
+        if (clientState.code !== clientCodeRef.current) {
           // We received a non expected state. As the server is always right,
           // we have to deal with it
           updateQueueRef.current.length = 0;
@@ -135,31 +145,25 @@ export function useSharedFile({
         }
         return;
       }
-      const update = updateQueueRef.current.shift() as Update;
-      let action: Action;
-      let newCode: string;
-      let newCursorOffset: number;
+
+      const diff = updateQueueRef.current.shift() as Diff;
 
       if (DEBUG) {
-        console.debug('dequeue', update, currentHash, clientState.code);
+        console.debug('dequeue', diff, currentHash, clientState.code);
       }
 
-      if ((update as EditableState).code !== undefined) {
-        newCode = (update as EditableState).code;
-        newCursorOffset = (update as EditableState).cursorOffset;
-        action = createAction.updateCode(newCode, newCursorOffset, currentHash);
-      } else {
-        const diff = update as Diff;
-        diff[1] = clientState.cursorOffset;
+      diff[1] = clientState.cursorOffset;
 
-        const endOffset = getCursorOffsetAfterDiff(diff);
-        action = createAction.updateCode(diff, endOffset, currentHash);
-        newCode = applyDiff(clientState.code, diff);
-        newCursorOffset = endOffset;
-      }
+      const newCursorOffset = getCursorOffsetAfterDiff(diff);
+      const action = createAction.updateCode(
+        [diff],
+        newCursorOffset,
+        currentHash
+      );
+
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = newCursorOffset;
-      hashToWaitForRef.current = computeHash(newCode);
+      hashToWaitForRef.current = computeHash(applyDiff(clientState.code, diff));
     } else if (
       hashToWaitForRef.current === undefined ||
       clientState.code !== previousCode
@@ -169,18 +173,20 @@ export function useSharedFile({
       }
       hashToWaitForRef.current = currentHash;
     }
-  }, [active, applyClientStateRef, clientState, codeRef]);
+  }, [active, applyClientStateRef, clientState, clientCodeRef]);
 
-  const updateCode = useCallback(
-    (code: string | Diff, newCursorOffset: number) => {
+  const updateClientState = useCallback(
+    (newState: EditableState) => {
       if (!active) {
         return;
       }
-      const currentHash = computeHash(codeRef.current);
+      const currentHash = computeHash(clientCodeRef.current);
       const updateQueue = updateQueueRef.current;
+      const newCursorOffset = newState.cursorOffset;
+      const diffs = getDiffs(codeRef.current, newState.code);
 
       if (DEBUG) {
-        console.debug('updateCode()', code, newCursorOffset);
+        console.debug('updateClientState()', newState);
       }
 
       if (
@@ -188,32 +194,28 @@ export function useSharedFile({
         updateQueue.length === 0
       ) {
         const action = createAction.updateCode(
-          code,
+          diffs,
           newCursorOffset,
           currentHash
         );
-        const newCode =
-          typeof code === 'string' ? code : applyDiff(codeRef.current, code);
 
         if (DEBUG) {
-          console.debug('send directly', code);
+          console.debug('send directly', diffs);
         }
-        hashToWaitForRef.current = computeHash(newCode);
+        hashToWaitForRef.current = computeHash(newState.code);
         lastCursorOffsetSentRef.current = newCursorOffset;
         dispatchToServerRef.current(action);
       } else {
-        const update =
-          typeof code === 'string'
-            ? { code, cursorOffset: newCursorOffset }
-            : code;
-
-        if (DEBUG) {
-          console.debug('enqueue', update);
+        if (diffs.length > 1) {
+          throw new Error('Cannot queue multiple diffs');
         }
-        updateQueue.push(update);
+        if (DEBUG) {
+          console.debug('enqueue', diffs[0]);
+        }
+        updateQueue.push(diffs[0]);
       }
     },
-    [active]
+    [active, codeRef]
   );
 
   const updateCursorOffset = useCallback((newCursorOffset: number) => {
@@ -225,9 +227,7 @@ export function useSharedFile({
   }, []);
 
   return {
-    updateCode,
+    updateClientState,
     updateCursorOffset,
   };
 }
-
-type Update = EditableState | Diff;
