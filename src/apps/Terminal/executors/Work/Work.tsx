@@ -9,7 +9,7 @@ export const Work: Executor = () => (
       <p className={styles.header}>
         <span>Software Engineer at General Electric Healthcare</span>
         <span className={styles.location}>(Buc, France)</span>
-        <span className={styles.period}>oct 2015 -> nov 2018</span>
+        <span className={styles.period}>oct 2015 -&gt; nov 2018</span>
       </p>
       <p className={styles.description}>
         I worked on the frontend part of an SDK that aims to facilitate the
@@ -20,7 +20,7 @@ export const Work: Executor = () => (
       <p className={styles.header}>
         <span>Frontend developer at ManoMano</span>
         <span className={styles.location}>(Bordeaux, France)</span>
-        <span className={styles.period}>dec 2018 -> now</span>
+        <span className={styles.period}>dec 2018 -&gt; now</span>
       </p>
       <p className={styles.description}>I work on the ManoMano website.</p>
     </div>
