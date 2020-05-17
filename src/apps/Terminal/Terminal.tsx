@@ -340,6 +340,11 @@ const Terminal: WindowComponent = ({
               <ExecutorComponent args={args} key={id} />
             )
         )}
+        <noscript>
+          <p className={styles.error}>
+            ✘ failed to run command '/bin/bash': JavaScript disabled
+          </p>
+        </noscript>
         <div className={styles.userInput}>
           {!waiting && <Command args={[USER, userInput]} />}
           {query && (
