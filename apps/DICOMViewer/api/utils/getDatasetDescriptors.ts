@@ -21,7 +21,7 @@ export function getDatasetDescriptors(): DatasetDescriptor[] {
         const filePath = path.join(datasetsPath, fileName);
         const byteLength = fs.statSync(filePath).size;
         const name = path.parse(fileName).name;
-        const url = `${ASSETS_URL}/dicom/datasets/${name}`;
+        const url = `${ASSETS_URL}/dicom/datasets/${fileName}`;
         const preview = fs
           .readdirSync(previewsPath)
           .find((p) => p.includes(name));
