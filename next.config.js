@@ -1,7 +1,13 @@
+const { homepage } = require('./package.json');
+
+const { pathname } = new URL(homepage);
+const isProduction = process.env.NODE_ENV === 'production';
+const basePath = isProduction ? pathname : '';
+
 let config = {
-  assetPrefix: process.env.HTTP_PREFIX || '',
+  assetPrefix: basePath,
   experimental: {
-    basePath: process.env.HTTP_PREFIX || '',
+    basePath: basePath,
     productionBrowserSourceMaps: true,
   },
 };

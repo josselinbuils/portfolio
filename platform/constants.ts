@@ -1,11 +1,16 @@
-export const PROD_HOSTNAME = 'josselinbuils.me';
-const PROD_BASE_PATH = '/portfolio-next';
+import packageFile from '~/package.json';
+
+const { hostname, pathname } = new URL(packageFile.homepage);
+
+export const PROD_HOSTNAME = hostname;
+const PROD_BASE_PATH = pathname;
+const PROD_BASE_URL = packageFile.homepage;
 
 export const BASE_URL =
   typeof window === 'undefined' ||
   window.location.host.indexOf('localhost') === 0
     ? 'http://localhost:3000'
-    : `https://${PROD_HOSTNAME}${PROD_BASE_PATH}`;
+    : PROD_BASE_URL;
 
 export const BASE_URL_WS =
   typeof window === 'undefined' ||

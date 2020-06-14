@@ -1,6 +1,7 @@
 import cn from 'classnames';
 import React from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
+import { PROD_HOSTNAME } from '~/platform/constants';
 import { TeraviaDescriptor } from './TeraviaDescriptor';
 
 import styles from './Teravia.module.scss';
@@ -28,7 +29,7 @@ const Teravia: WindowComponent = ({
         allow="fullscreen"
         className={cn(styles.iframe, { [styles.inactive]: !active })}
         height="100%"
-        src="https://josselinbuils.me/teravia"
+        src={`https://${PROD_HOSTNAME}/teravia`}
         title={TeraviaDescriptor.appName}
         width="100%"
       />

@@ -35,11 +35,6 @@ const Index = () => (
         content="Hey, I'm Josselin, a full-stack JavaScript developer :)"
       />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link
-        type="text/plain"
-        rel="author"
-        href="https://josselinbuils.me/humans.txt"
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

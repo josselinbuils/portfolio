@@ -1,5 +1,7 @@
 export interface DatasetDescriptor {
-  files: string[];
+  byteLength: number;
+  compressedURL?: string;
   name: string;
   preview: string;
+  url: string;
 }

@@ -1,37 +1,22 @@
 import dicomParser from 'dicom-parser';
 import untar from 'js-untar';
 import cloneDeep from 'lodash.clonedeep';
-import { BASE_URL } from '~/platform/constants';
 import { onFetchProgress } from '~/platform/utils/onFetchProgress';
 import { PhotometricInterpretation } from '../../../constants';
+import { DatasetDescriptor } from '../../../interfaces/DatasetDescriptor';
 import { DicomFrame } from '../../../models/DicomFrame';
-import { DatasetDescriptor } from '../DatasetDescriptor';
 
 export async function loadFrames(
-  dataset: DatasetDescriptor,
+  descriptor: DatasetDescriptor,
   onProgress: (progress: number) => void
 ): Promise<DicomFrame[]> {
+  const { url } = descriptor;
+  const buffer = await loadDataset(descriptor, onProgress);
+  const fileBuffers = /\.tar$/.test(url)
+    ? (await untar(buffer)).map((res: any) => res.buffer)
+    : [buffer];
+
   let frames: DicomFrame[];
-  const fileBuffers: any[] = [];
-  const filesToLoadCount = dataset.files.length;
-  let filesLoadedCount = 0;
-
-  function onFileProgress(currentFileProgress: number): void {
-    onProgress(
-      Math.min((filesLoadedCount + currentFileProgress) / filesToLoadCount, 1)
-    );
-  }
-
-  for (const file of dataset.files) {
-    if (/\.tar$/.test(file)) {
-      const tarBuffer = await getDicomFile(file, onFileProgress);
-      const tarFiles = (await untar(tarBuffer)) as any[];
-      fileBuffers.push(...tarFiles.map((res) => res.buffer));
-    } else {
-      fileBuffers.push(await getDicomFile(file, onFileProgress));
-    }
-    filesLoadedCount++;
-  }
 
   if (fileBuffers.length === 1) {
     frames = await loadInstance(fileBuffers[0]);
@@ -109,14 +94,15 @@ function floatStringsToArray(
   return undefined;
 }
 
-async function getDicomFile(
-  path: string,
+async function loadDataset(
+  descriptor: DatasetDescriptor,
   onProgress: (progress: number) => void
 ): Promise<ArrayBuffer> {
   try {
-    const response = await fetch(
-      `${BASE_URL}/assets/dicom/datasets/${path}`
-    ).then(onFetchProgress(onProgress));
+    const { byteLength, url } = descriptor;
+    const response = await fetch(url).then(
+      onFetchProgress(onProgress, byteLength)
+    );
     return response.arrayBuffer();
   } catch (error) {
     throw new Error(`Unable to retrieve DICOM file: ${error.stack}`);
