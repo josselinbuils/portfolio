@@ -1,6 +1,5 @@
 import path from 'path';
-import { ASSETS_DIR, ASSETS_URL } from '~/platform/api/constants';
-import { BASE_URL } from '~/platform/constants';
+import { ASSETS_DIR, ASSETS_URL, BASE_URL } from '~/platform/api/constants';
 
 const DICOM_PATH = path.join(process.cwd(), ASSETS_DIR, '/dicom');
 export const DATASETS_PATH = path.join(DICOM_PATH, '/datasets');

@@ -1,8 +1,8 @@
 import { Deferred } from '@josselinbuils/utils';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
-import { BASE_URL_WS } from '~/platform/constants';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { EditableState } from '../../interfaces/EditableState';
 import {
   applyDiff,
@@ -18,7 +18,7 @@ import { handleAction } from './utils/handleAction';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
-const WS_URL = `${BASE_URL_WS}/portfolio-react`;
+const WS_URL = `${getWSBaseURL}/portfolio-react`;
 
 const initialState = {
   id: -1,

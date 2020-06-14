@@ -1,4 +1,4 @@
-import { BASE_URL } from '~/platform/constants';
+import { getBaseURL } from '~/platform/utils/getBaseURL';
 import { Music } from '../interfaces/Music';
 
 export async function loadMusics(
@@ -6,7 +6,7 @@ export async function loadMusics(
   jamendoOrder: string = 'popularity_total'
 ): Promise<Music[]> {
   const response = await fetch(
-    `${BASE_URL}/api/MP3Player/tracks?order=${jamendoOrder}${
+    `${getBaseURL()}/api/MP3Player/tracks?order=${jamendoOrder}${
       jamendoTag ? `&tag=${jamendoTag}` : ''
     }`
   );
