@@ -1,6 +1,6 @@
 module.exports = {
-  assetPrefix: process.env.BASE_PATH || '',
+  assetPrefix: process.env.HTTP_PREFIX || '',
   publicRuntimeConfig: {
-    basePath: process.env.BASE_PATH || '',
+    basePath: process.env.HTTP_PREFIX || '',
   },
 };
