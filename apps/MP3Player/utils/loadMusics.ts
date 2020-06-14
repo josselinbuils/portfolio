@@ -6,7 +6,9 @@ export async function loadMusics(
   jamendoOrder: string = 'popularity_total'
 ): Promise<Music[]> {
   const response = await fetch(
-    `${BASE_URL}/api/jamendo/tracks?order=${jamendoOrder}${jamendoTag ? `&tag=${jamendoTag}` : ''}`
+    `${BASE_URL}/api/MP3Player/tracks?order=${jamendoOrder}${
+      jamendoTag ? `&tag=${jamendoTag}` : ''
+    }`
   );
   return response.json();
 }

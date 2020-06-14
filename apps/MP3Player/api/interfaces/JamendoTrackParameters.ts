@@ -1,8 +1,7 @@
 import { JamendoBoost } from './JamendoBoost';
 import { JamendoOrder } from './JamendoOrder';
-import { JamendoParameters } from './JamendoParameters';
 
-export interface JamendoTrackParameters extends JamendoParameters {
+export interface JamendoTrackParameters {
   boost?: JamendoBoost;
   client_id: string;
   format?: 'json' | 'jsonpretty' | 'xml';

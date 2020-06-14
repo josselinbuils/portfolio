@@ -1,11 +1,11 @@
 import { Logger } from '~/platform/api/Logger';
-import { JamendoParameters } from '../interfaces/JamendoParameters';
 import { JamendoResponse } from '../interfaces/JamendoResponse';
+import { JamendoTrackParameters } from '../interfaces/JamendoTrackParameters';
 import { httpClient } from './httpClient';
 
 export async function requestJamendoAPI<T>(
   path: string,
-  jamendoParameters: JamendoParameters
+  jamendoParameters: JamendoTrackParameters
 ): Promise<T[]> {
   const queryParams = Object.entries(jamendoParameters)
     .map(([key, value]) => `${key}=${value}`)
