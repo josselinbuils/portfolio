@@ -2,6 +2,7 @@ let config = {
   assetPrefix: process.env.HTTP_PREFIX || '',
   experimental: {
     basePath: process.env.HTTP_PREFIX || '',
+    productionBrowserSourceMaps: true,
   },
 };
 
