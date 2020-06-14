@@ -70,12 +70,12 @@
   "devDependencies": {
     "@josselinbuils/exec-staged": "^0.1.1",
     "@josselinbuils/tslint": "^5.1.0",
+    "@next/bundle-analyzer": "^9.4.4",
     "concurrently": "^5.2.0",
     "csscomb": "^4.3.0",
     "husky": "^4.2.5",
     "nodemon": "^2.0.4",
-    "tslint": "^6.1.2",
-    "webpack-bundle-analyzer": "^3.8.0"
+    "tslint": "^6.1.2"
   },
   "engines": {
     "node": ">=14"
