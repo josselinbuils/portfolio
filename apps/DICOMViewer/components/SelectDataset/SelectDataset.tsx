@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner';
-import { BASE_URL } from '~/platform/constants';
 import { cancelable } from '~/platform/utils/cancelable';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
@@ -90,11 +89,8 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
             key={descriptor.name}
             onClick={() => setDatasetDescriptor(descriptor)}
           >
-            {descriptor.preview ? (
-              <img
-                alt={descriptor.name}
-                src={`${BASE_URL}/assets/dicom/previews/${descriptor.preview}`}
-              />
+            {descriptor.previewURL ? (
+              <img alt={descriptor.name} src={descriptor.previewURL} />
             ) : (
               <span>{descriptor.name}</span>
             )}

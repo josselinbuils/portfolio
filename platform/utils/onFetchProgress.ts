@@ -1,26 +1,20 @@
 import { throttle } from '~/platform/utils/throttle';
 
 export function onFetchProgress(
-  onProgress: (progress: number) => void,
-  byteLength?: number
+  onProgress: (progress: number) => void
 ): (response: Response) => Response {
   const onProgressThrottled = throttle(onProgress, 300);
 
   return function responseHandler(response: Response): Response {
-    let totalBytes: number;
+    const contentLength =
+      response.headers.get('content-length-uncompressed') ||
+      response.headers.get('content-length');
 
-    if (byteLength !== undefined) {
-      totalBytes = byteLength;
-    } else {
-      const contentLength = response.headers.get('content-length');
-
-      if (!contentLength) {
-        throw Error('Unable to retrieve content-length header');
-      }
-
-      totalBytes = parseInt(contentLength, 10);
+    if (!contentLength) {
+      throw Error('Unable to retrieve content-length header');
     }
 
+    const totalBytes = parseInt(contentLength, 10);
     let loadedBytes = 0;
 
     return new Response(

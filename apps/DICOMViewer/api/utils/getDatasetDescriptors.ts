@@ -1,47 +1,35 @@
 import fs from 'fs';
 import path from 'path';
-import { ASSETS_DIR, ASSETS_URL } from '~/platform/api/constants';
 import { Logger } from '~/platform/api/Logger';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
-
-const dicomPath = path.join(process.cwd(), ASSETS_DIR, '/dicom');
-const datasetsPath = path.join(dicomPath, '/datasets');
-const previewsPath = path.join(dicomPath, '/previews');
+import {
+  DATASETS_PATH,
+  DATASETS_URL,
+  PREVIEWS_PATH,
+  PREVIEWS_URL,
+} from '../constants';
 
 export function getDatasetDescriptors(): DatasetDescriptor[] {
-  Logger.info(`Loads datasets from ${datasetsPath}`);
+  Logger.info(`Loads datasets from ${DATASETS_PATH}`);
 
   try {
     return fs
-      .readdirSync(datasetsPath)
+      .readdirSync(DATASETS_PATH)
       .filter(
         (fileName) => !fileName.startsWith('.') && !fileName.endsWith('.gz')
       )
       .map((fileName) => {
-        const filePath = path.join(datasetsPath, fileName);
-        const byteLength = fs.statSync(filePath).size;
         const name = path.parse(fileName).name;
-        const url = `${ASSETS_URL}/dicom/datasets/${fileName}`;
+        const url = `${DATASETS_URL}/${fileName}`;
         const preview = fs
-          .readdirSync(previewsPath)
+          .readdirSync(PREVIEWS_PATH)
           .find((p) => p.includes(name));
 
         if (preview === undefined) {
           throw new Error(`Unable to find preview for ${name}`);
         }
-
-        const descriptor = {
-          byteLength,
-          name,
-          preview,
-          url,
-        } as DatasetDescriptor;
-
-        if (fs.existsSync(`${filePath}.gz`)) {
-          descriptor.compressedURL = `${url}.gz`;
-        }
-
-        return descriptor;
+        const previewURL = `${PREVIEWS_URL}/${preview}`;
+        return { name, previewURL, url };
       });
   } catch (error) {
     Logger.error(`Unable to compute datasets descriptors: ${error.stack}`);

@@ -11,7 +11,7 @@ export async function loadFrames(
   onProgress: (progress: number) => void
 ): Promise<DicomFrame[]> {
   const { url } = descriptor;
-  const buffer = await loadDataset(descriptor, onProgress);
+  const buffer = await getDICOMFile(url, onProgress);
   const fileBuffers = /\.tar$/.test(url)
     ? (await untar(buffer)).map((res: any) => res.buffer)
     : [buffer];
@@ -94,15 +94,12 @@ function floatStringsToArray(
   return undefined;
 }
 
-async function loadDataset(
-  descriptor: DatasetDescriptor,
+async function getDICOMFile(
+  url: string,
   onProgress: (progress: number) => void
 ): Promise<ArrayBuffer> {
   try {
-    const { byteLength, url } = descriptor;
-    const response = await fetch(url).then(
-      onFetchProgress(onProgress, byteLength)
-    );
+    const response = await fetch(url).then(onFetchProgress(onProgress));
     return response.arrayBuffer();
   } catch (error) {
     throw new Error(`Unable to retrieve DICOM file: ${error.stack}`);
