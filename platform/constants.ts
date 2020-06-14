@@ -1,16 +1,17 @@
-const PROD_BASE_PATH = 'josselinbuils.me/portfolio-next';
+export const PROD_HOSTNAME = 'josselinbuils.me';
+const PROD_BASE_PATH = '/portfolio-next';
 
 export const BASE_URL =
   typeof window === 'undefined' ||
   window.location.host.indexOf('localhost') === 0
     ? 'http://localhost:3000'
-    : `https://${PROD_BASE_PATH}`;
+    : `https://${PROD_HOSTNAME}${PROD_BASE_PATH}`;
 
 export const BASE_URL_WS =
   typeof window === 'undefined' ||
   window.location.host.indexOf('localhost') === 0
     ? 'ws://localhost:3001'
-    : `wss://${PROD_BASE_PATH}`;
+    : `wss://${PROD_HOSTNAME}${PROD_BASE_PATH}`;
 
 export enum MouseButton {
   Left = 0,
