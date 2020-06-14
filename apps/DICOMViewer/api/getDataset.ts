@@ -24,7 +24,7 @@ export async function getDataset(
 
     res.setHeader(
       'Access-Control-Expose-Headers',
-      'Content-Length, Content-Length-Uncompressed'
+      'Content-Length-Uncompressed'
     );
     res.setHeader('Content-Encoding', 'gzip');
     res.setHeader('Content-Type', 'application/octet-stream');
@@ -32,5 +32,8 @@ export async function getDataset(
 
     return serveStatic(req, res, `${assetPath}.gz`);
   }
+
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length');
+
   return serveStatic(req, res, assetPath);
 }
