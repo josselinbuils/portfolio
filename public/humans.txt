@@ -1,8 +1,0 @@
-/* TEAM */
-Your title: Josselin BUILS
-Site: contact@josselinbuils.me
-Location: Versailles, France
-
-/* SITE */
-Standards: HTML5, CSS3, JavaScript (ES7)
-Components: Angular 5

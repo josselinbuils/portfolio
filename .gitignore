@@ -1,7 +1,8 @@
+.next
 assets
 build
 config.json
-dist
 node_modules
+out
 sharedCode.txt
 tmp
