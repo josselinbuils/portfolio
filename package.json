@@ -4,10 +4,21 @@
   "homepage": "https://josselinbuils.me",
   "private": true,
   "scripts": {
+    "add:staged": "exec-staged 'git add' '\\.(js|tsx?|scss)$'",
+    "analyze": "ANALYZE=true yarn build",
+    "csscomb:staged": "exec-staged 'csscomb -tv' '\\.scss$'",
     "dev": "next",
     "build": "next build",
+    "lint": "tslint -p tsconfig.json",
+    "lint:staged": "exec-staged 'yarn lint' '\\.tsx?$'",
+    "prettier:staged": "exec-staged 'prettier --write' '\\.(js|tsx?|scss)$'",
     "start": "next start",
     "type-check": "tsc"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint:staged && yarn prettier:staged && yarn csscomb:staged && yarn add:staged"
+    }
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
