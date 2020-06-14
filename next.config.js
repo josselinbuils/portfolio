@@ -1,6 +1,6 @@
 let config = {
   assetPrefix: process.env.HTTP_PREFIX || '',
-  publicRuntimeConfig: {
+  experimental: {
     basePath: process.env.HTTP_PREFIX || '',
   },
 };
