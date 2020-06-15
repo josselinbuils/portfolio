@@ -4,7 +4,6 @@ import { WSServer } from '~/apps/CodeEditor/api/WSServer';
 let wsServer: WSServer;
 
 export default function (req: NextApiRequest): void {
-  console.log('hello');
   if (req.headers.upgrade === 'websocket') {
     if (wsServer === undefined) {
       wsServer = WSServer.create();
