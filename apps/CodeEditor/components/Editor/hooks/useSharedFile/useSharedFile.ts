@@ -18,7 +18,7 @@ import { handleAction } from './utils/handleAction';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
-const WS_URL = `${getWSBaseURL}/portfolio-react`;
+const WS_URL = `${getWSBaseURL()}/api/CodeEditor/ws`;
 
 const initialState = {
   id: -1,
