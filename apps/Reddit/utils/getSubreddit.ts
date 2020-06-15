@@ -7,7 +7,7 @@ export async function getSubreddit(
   subreddit: string
 ): Promise<Subreddit | undefined> {
   if (!subredditsWithoutIcon.includes(subreddit)) {
-    const response = await fetch(`${getBaseURL()}/api/reddit/${subreddit}`);
+    const response = await fetch(`${getBaseURL()}/api/Reddit/${subreddit}`);
     return response.json();
   }
 }

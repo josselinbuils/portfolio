@@ -1,6 +1,6 @@
 import { getBaseURL } from '~/platform/utils/getBaseURL';
 import { RedditFilter } from '../../interfaces/RedditFilter';
-import { RedditPost } from './RedditPost';
+import { RedditPost } from '../../interfaces/RedditPost';
 
 export async function getPosts(
   subreddit: string,
@@ -10,7 +10,7 @@ export async function getPosts(
   subreddit: string;
 }> {
   const response = await fetch(
-    `${getBaseURL()}/api/reddit/${subreddit}/${filter}`
+    `${getBaseURL()}/api/Reddit/${subreddit}/${filter}`
   );
   const posts = await response.json();
   return { posts, subreddit };

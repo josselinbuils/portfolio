@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner';
 import { RedditFilter } from '../../interfaces/RedditFilter';
+import { RedditPost } from '../../interfaces/RedditPost';
 import { getPosts } from './getPosts';
 import { Post } from './Post';
-import { RedditPost } from './RedditPost';
 
 export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
   const [currentSubreddit, setCurrentSubreddit] = useState<string>();
