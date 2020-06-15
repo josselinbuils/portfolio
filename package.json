@@ -37,6 +37,7 @@
     "@types/ws": "^7.2.5",
     "add": "^2.0.6",
     "ansi_up": "^4.0.4",
+    "circular-dependency-plugin": "^5.2.0",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.28",
     "dicom-parser": "^1.8.5",

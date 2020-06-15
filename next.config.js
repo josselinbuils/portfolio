@@ -1,3 +1,4 @@
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const { homepage } = require('./package.json');
 
 const { pathname } = new URL(homepage);
@@ -10,10 +11,22 @@ let config = {
     basePath: basePath,
     productionBrowserSourceMaps: true,
   },
+  webpack: (config) => {
+    config.plugins.push(
+      new CircularDependencyPlugin({
+        allowAsyncCycles: false,
+        exclude: /node_modules/,
+        failOnError: true,
+        cwd: process.cwd(),
+      })
+    );
+    return config;
+  },
 };
 
 if (process.env.ANALYZE === 'true') {
-  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  const bundleAnalyzer = require('@next/bundle-analyzer');
+  const withBundleAnalyzer = bundleAnalyzer({
     enabled: process.env.ANALYZE === 'true',
   });
   config = withBundleAnalyzer(config);
