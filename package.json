@@ -1,6 +1,6 @@
 {
-  "name": "portfolio-next",
-  "homepage": "https://josselinbuils.me/portfolio-next",
+  "name": "portfolio",
+  "homepage": "https://josselinbuils.me",
   "version": "0.1.0",
   "private": true,
   "scripts": {

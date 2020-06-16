@@ -1,8 +1,8 @@
 FROM node:14
 
-COPY . portfolio-next
+COPY . portfolio
 
-WORKDIR portfolio-next
+WORKDIR portfolio
 
 RUN yarn install --production --frozen-lockfile && \
     yarn build
