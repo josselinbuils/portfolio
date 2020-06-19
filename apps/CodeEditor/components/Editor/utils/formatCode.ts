@@ -39,7 +39,10 @@ export async function formatCode(
   const parserDescriptor = parserDescriptors[language];
 
   if (parserDescriptor === undefined) {
-    return { code, cursorOffset };
+    return {
+      code,
+      selection: { end: cursorOffset, start: cursorOffset },
+    };
   }
 
   const { name, parserFactory } = parserDescriptor;
@@ -54,6 +57,6 @@ export async function formatCode(
 
   return {
     code: result.formatted,
-    cursorOffset: result.cursorOffset,
+    selection: { end: result.cursorOffset, start: result.cursorOffset },
   };
 }

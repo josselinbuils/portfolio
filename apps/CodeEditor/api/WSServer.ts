@@ -8,10 +8,11 @@ import {
   ACTION_REDO,
   ACTION_UNDO,
   ACTION_UPDATE_CODE,
-  ACTION_UPDATE_CURSOR_OFFSET,
+  ACTION_UPDATE_SELECTION,
 } from '../components/Editor/hooks/useSharedFile/interfaces/actions';
 import { ClientCursor } from '../components/Editor/hooks/useSharedFile/interfaces/ClientCursor';
 import { computeHash } from '../components/Editor/hooks/useSharedFile/utils/computeHash';
+import { Selection } from '../components/Editor/interfaces/Selection';
 import { applyDiff } from '../components/Editor/utils/diffs';
 import { STATE_PATH } from './constants';
 import { createAction } from './utils/createAction';
@@ -74,8 +75,11 @@ export class WSServer {
     const codeLength = this.code.length;
 
     for (const client of this.clients) {
-      if (client.cursorOffset > codeLength) {
-        this.updateClientCursorOffset(client, codeLength);
+      if (client.selection.start > codeLength) {
+        this.updateClientSelection(client, {
+          end: codeLength,
+          start: codeLength,
+        });
       }
     }
   }
@@ -85,10 +89,10 @@ export class WSServer {
   }
 
   private getCursors(): ClientCursor[] {
-    return this.clients.map(({ cursorColor, cursorOffset, id }) => ({
+    return this.clients.map(({ cursorColor, id, selection }) => ({
       clientID: id,
       color: cursorColor,
-      offset: cursorOffset,
+      offset: selection.start,
     }));
   }
 
@@ -101,8 +105,8 @@ export class WSServer {
 
       const client = {
         cursorColor,
-        cursorOffset: 0,
         id,
+        selection: { end: 0, start: 0 },
         ws: wsClient,
       };
       this.clients.push(client);
@@ -147,22 +151,22 @@ export class WSServer {
         if (state === undefined) {
           return;
         }
-        const { code, cursorOffset } = state;
+        const { code, selection } = state;
 
         this.dispatchAll(createAction.updateClientState({ code }));
-        this.updateClientCursorOffset(client, cursorOffset);
+        this.updateClientSelection(client, selection);
         this.updateCode(code);
         break;
       }
 
-      case ACTION_UPDATE_CURSOR_OFFSET:
-        this.updateClientCursorOffset(client, action.payload.cursorOffset);
+      case ACTION_UPDATE_SELECTION:
+        this.updateClientSelection(client, action.payload.selection);
         break;
 
       case ACTION_UPDATE_CODE: {
-        const { cursorOffset, diffs, safetyHash } = action.payload;
+        const { diffs, safetyHash, selection } = action.payload;
 
-        if (cursorOffset === undefined) {
+        if (selection === undefined) {
           return;
         }
         const code = diffs.reduce(applyDiff, this.code);
@@ -177,11 +181,11 @@ export class WSServer {
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? createAction.updateCode(diffs, cursorOffset)
+            ? createAction.updateCode(diffs, selection)
             : createAction.updateCode(diffs)
         );
-        this.updateClientCursorOffset(client, cursorOffset, true);
-        this.history.pushState(this.code, { code, cursorOffset });
+        this.updateClientSelection(client, selection, true);
+        this.history.pushState(this.code, { code, selection });
         this.updateCode(code);
       }
     }
@@ -210,15 +214,15 @@ export class WSServer {
     );
   }
 
-  private updateClientCursorOffset(
+  private updateClientSelection(
     client: Client,
-    cursorOffset: number,
+    selection: Selection,
     excludeClient: boolean = false
   ): void {
-    client.cursorOffset = cursorOffset;
+    client.selection = selection;
     this.dispatchAll(({ id }) => {
       if (!excludeClient || id !== client.id) {
-        return createAction.updateCursorOffset(client.id, cursorOffset);
+        return createAction.updateSelection(client.id, selection);
       }
     });
   }
@@ -226,7 +230,7 @@ export class WSServer {
 
 export interface Client {
   cursorColor: string;
-  cursorOffset: number;
   id: number;
+  selection: Selection;
   ws: WebSocket;
 }

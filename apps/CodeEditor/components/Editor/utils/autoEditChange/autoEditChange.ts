@@ -31,16 +31,20 @@ export function autoEditChange(
 
   if (diffs.length > 0) {
     const intermediateDiff = diffs.pop() as Diff;
+    const cursorOffset = getCursorOffsetAfterDiff(intermediateDiff);
     currentState = {
       code: applyDiff(currentState.code, intermediateDiff),
-      cursorOffset: getCursorOffsetAfterDiff(intermediateDiff),
+      selection: {
+        end: cursorOffset,
+        start: cursorOffset,
+      },
     };
   }
 
   const autoCloseChar = getAutoCloseChar(diff);
   const allowAutoComplete = isCodePortionEnd(
     currentState.code,
-    currentState.cursorOffset
+    currentState.selection.start
   );
   let result: EditableState | undefined = newState;
 
@@ -50,36 +54,43 @@ export function autoEditChange(
 
       result = {
         code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),
-        cursorOffset,
+        selection: {
+          end: cursorOffset,
+          start: cursorOffset,
+        },
       };
     } else if (
-      isIntoAutoCloseGroup(currentState.code, currentState.cursorOffset) &&
+      isIntoAutoCloseGroup(currentState.code, currentState.selection.start) &&
       isAutoCloseChar(diff)
     ) {
       result = undefined;
     } else if (diff === '\n') {
-      const { code, cursorOffset } = currentState;
+      const { code, selection } = currentState;
 
-      if (isIntoBrackets(code, cursorOffset)) {
-        const indent = getLineIndent(code, cursorOffset);
+      if (isIntoBrackets(code, selection.start)) {
+        const indent = getLineIndent(code, selection.start);
         const indentSpaces = ' '.repeat(indent);
         const insertion = `\n${indentSpaces}${INDENT}\n${indentSpaces}`;
+        const cursorOffset = selection.start + indent + INDENT.length + 1;
 
         result = {
           code: spliceString(code, cursorOffset, 0, insertion),
-          cursorOffset: cursorOffset + indent + INDENT.length + 1,
+          selection: {
+            end: cursorOffset,
+            start: cursorOffset,
+          },
         };
       } else {
-        let indent = getLineIndent(code, cursorOffset);
-        const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
+        let indent = getLineIndent(code, selection.start);
+        const lineBeforeCursor = getLineBeforeCursor(code, selection.start);
 
         if (
           isOpenBracket(lineBeforeCursor.trim().slice(-1)) ||
-          code[cursorOffset - 1] === ':'
+          code[selection.start - 1] === ':'
         ) {
           indent += INDENT.length;
         } else {
-          const line = getLine(code, cursorOffset);
+          const line = getLine(code, selection.start);
 
           if (REGEX_BREAK.test(line) || REGEX_CHAINED_CALL.test(line)) {
             indent = Math.max(indent - INDENT.length, 0);
@@ -88,30 +99,38 @@ export function autoEditChange(
 
         const indentSpaces = ' '.repeat(indent);
         const insertion = `\n${indentSpaces}`;
+        const cursorOffset = selection.start + insertion.length;
 
         result = {
-          code: spliceString(code, cursorOffset, 0, insertion),
-          cursorOffset: cursorOffset + insertion.length,
+          code: spliceString(code, selection.start, 0, insertion),
+          selection: {
+            end: cursorOffset,
+            start: cursorOffset,
+          },
         };
       }
     }
   } else if (diff.length === 1) {
-    const { code, cursorOffset } = currentState;
+    const { code, selection } = currentState;
 
-    if (isIntoAutoCloseGroup(code, cursorOffset)) {
+    if (isIntoAutoCloseGroup(code, selection.start)) {
       result = {
-        code: spliceString(code, cursorOffset - 1, 2),
-        cursorOffset: newState.cursorOffset,
+        code: spliceString(code, selection.start - 1, 2),
+        selection: newState.selection,
       };
     } else {
-      const lineBeforeCursor = getLineBeforeCursor(code, cursorOffset);
+      const lineBeforeCursor = getLineBeforeCursor(code, selection.start);
 
       if (REGEX_SPACES_ONLY.test(lineBeforeCursor)) {
         const delCount = lineBeforeCursor.length + 1;
+        const cursorOffset = selection.start - delCount;
 
         result = {
-          code: spliceString(code, cursorOffset - delCount, delCount),
-          cursorOffset: cursorOffset - delCount,
+          code: spliceString(code, selection.start - delCount, delCount),
+          selection: {
+            end: cursorOffset,
+            start: cursorOffset,
+          },
         };
       }
     }

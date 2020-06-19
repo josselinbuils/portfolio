@@ -4,6 +4,7 @@ import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { EditableState } from '../../interfaces/EditableState';
+import { Selection } from '../../interfaces/Selection';
 import {
   applyDiff,
   Diff,
@@ -24,8 +25,11 @@ const initialState = {
   id: -1,
   code: '',
   cursorColor: 'transparent',
-  cursorOffset: 0,
   cursors: [],
+  selection: {
+    end: 0,
+    start: 0,
+  },
 } as ClientState;
 
 const reducer = ((clientState, action) =>
@@ -38,23 +42,23 @@ export function useSharedFile({
   active,
   code,
   applyClientState,
-  cursorOffset,
+  selection,
 }: {
   active: boolean;
   code: string;
-  cursorOffset: number;
+  selection: Selection;
   applyClientState(clientState: ClientState): any;
 }): {
   updateClientState(newState: EditableState): void;
-  updateCursorOffset(cursorOffset: number): void;
+  updateSelection(selection: Selection): void;
 } {
   const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
   const clientCodeRef = useRef(clientState.code);
   const codeRef = useDynamicRef(code);
-  const cursorOffsetRef = useDynamicRef(cursorOffset);
-  const lastCursorOffsetSentRef = useRef(0);
+  const selectionRef = useDynamicRef(selection);
+  const lastCursorOffsetSentRef = useRef<Selection>({ end: 0, start: 0 });
   const hashToWaitForRef = useRef<number>();
   const updateQueueRef = useRef<Diff[]>([]);
 
@@ -93,7 +97,7 @@ export function useSharedFile({
       ws.onopen = () => {
         readyDeferred.resolve();
         dispatchToServerRef.current(
-          createAction.updateCursorOffset(cursorOffsetRef.current)
+          createAction.updateSelection(selectionRef.current)
         );
       };
       ws.onmessage = (event) => {
@@ -114,7 +118,7 @@ export function useSharedFile({
       ws.close();
       dispatch(createAction.updateClientState(initialState));
     };
-  }, [active, cursorOffsetRef]);
+  }, [active, selectionRef]);
 
   useEffect(() => {
     if (!active || clientState === undefined) {
@@ -152,17 +156,17 @@ export function useSharedFile({
         console.debug('dequeue', diff, currentHash, clientState.code);
       }
 
-      diff[1] = clientState.cursorOffset;
+      diff[1] = clientState.selection.start;
 
       const newCursorOffset = getCursorOffsetAfterDiff(diff);
-      const action = createAction.updateCode(
-        [diff],
-        newCursorOffset,
-        currentHash
-      );
+      const newSelection = {
+        end: newCursorOffset,
+        start: newCursorOffset,
+      };
+      const action = createAction.updateCode([diff], newSelection, currentHash);
 
       dispatchToServerRef.current(action);
-      lastCursorOffsetSentRef.current = newCursorOffset;
+      lastCursorOffsetSentRef.current = newSelection;
       hashToWaitForRef.current = computeHash(applyDiff(clientState.code, diff));
     } else if (
       hashToWaitForRef.current === undefined ||
@@ -182,7 +186,6 @@ export function useSharedFile({
       }
       const currentHash = computeHash(clientCodeRef.current);
       const updateQueue = updateQueueRef.current;
-      const newCursorOffset = newState.cursorOffset;
       const diffs = getDiffs(codeRef.current, newState.code);
 
       if (DEBUG) {
@@ -195,7 +198,7 @@ export function useSharedFile({
       ) {
         const action = createAction.updateCode(
           diffs,
-          newCursorOffset,
+          newState.selection,
           currentHash
         );
 
@@ -203,7 +206,7 @@ export function useSharedFile({
           console.debug('send directly', diffs);
         }
         hashToWaitForRef.current = computeHash(newState.code);
-        lastCursorOffsetSentRef.current = newCursorOffset;
+        lastCursorOffsetSentRef.current = newState.selection;
         dispatchToServerRef.current(action);
       } else {
         if (diffs.length > 1) {
@@ -218,16 +221,23 @@ export function useSharedFile({
     [active, codeRef]
   );
 
-  const updateCursorOffset = useCallback((newCursorOffset: number) => {
-    if (newCursorOffset !== lastCursorOffsetSentRef.current) {
-      const action = createAction.updateCursorOffset(newCursorOffset);
+  const updateSelection = useCallback((newSelection: Selection) => {
+    const currentHash = computeHash(clientCodeRef.current);
+
+    if (
+      currentHash === hashToWaitForRef.current &&
+      updateQueueRef.current.length === 0 &&
+      (newSelection.start !== lastCursorOffsetSentRef.current.start ||
+        newSelection.end !== lastCursorOffsetSentRef.current.end)
+    ) {
+      const action = createAction.updateSelection({ ...newSelection });
       dispatchToServerRef.current(action);
-      lastCursorOffsetSentRef.current = newCursorOffset;
+      lastCursorOffsetSentRef.current = { ...newSelection };
     }
   }, []);
 
   return {
     updateClientState,
-    updateCursorOffset,
+    updateSelection,
   };
 }

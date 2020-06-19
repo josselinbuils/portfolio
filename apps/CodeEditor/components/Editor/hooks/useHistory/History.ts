@@ -10,6 +10,8 @@ import {
 
 const HISTORY_SIZE_LIMIT = 50;
 
+// TODO manage selections
+
 export class History {
   private index = -1;
   private readonly states = [] as HistoryState[];
@@ -21,7 +23,7 @@ export class History {
     if (index < states.length - 1) {
       states.length = index + 1;
       states.push({
-        cursorOffset: newState.cursorOffset,
+        cursorOffset: newState.selection.start,
         diffs: newDiffs,
       });
       this.index = states.length - 1;
@@ -44,14 +46,14 @@ export class History {
             getCursorOffsetBeforeDiff(newDiff) ===
               getCursorOffsetAfterDiff(lastCurrentDiff)
           ) {
-            currentState.cursorOffset = newState.cursorOffset;
+            currentState.cursorOffset = newState.selection.start;
             currentDiffs.push(newDiff);
             return;
           }
         }
       }
       states.push({
-        cursorOffset: newState.cursorOffset,
+        cursorOffset: newState.selection.start,
         diffs: newDiffs,
       });
       this.index = states.length - 1;
@@ -68,7 +70,10 @@ export class History {
 
       this.index = newIndex;
 
-      return { code: newCode, cursorOffset };
+      return {
+        code: newCode,
+        selection: { end: cursorOffset, start: cursorOffset },
+      };
     }
   }
 
@@ -85,7 +90,7 @@ export class History {
 
       return {
         code: prevCode,
-        cursorOffset: prevCursorOffset,
+        selection: { end: prevCursorOffset, start: prevCursorOffset },
       };
     }
   }

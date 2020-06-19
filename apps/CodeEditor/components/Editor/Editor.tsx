@@ -85,7 +85,7 @@ export const Editor: FC<Props> = ({
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
-      setSelection({ start: state.cursorOffset, end: state.cursorOffset });
+      setSelection(state.selection);
     },
     [onChange]
   );
@@ -96,11 +96,11 @@ export const Editor: FC<Props> = ({
     fileName: activeFileName,
     applyState,
   });
-  const { updateClientState, updateCursorOffset } = useSharedFile({
+  const { updateClientState, updateSelection } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
     code,
-    cursorOffset,
+    selection,
   });
   const activeFile = files.find(
     ({ name }) => name === activeFileName
@@ -120,9 +120,14 @@ export const Editor: FC<Props> = ({
         const deleteCount = INDENT.length;
 
         if (code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT) {
+          const newCursorOffset = cursorOffset - deleteCount;
+
           updateState({
             code: spliceString(code, cursorOffset - deleteCount, deleteCount),
-            cursorOffset: cursorOffset - deleteCount,
+            selection: {
+              end: newCursorOffset,
+              start: newCursorOffset,
+            },
           });
         }
       },
@@ -145,7 +150,10 @@ export const Editor: FC<Props> = ({
   useLayoutEffect(() => {
     applyState({
       code: activeFile.content,
-      cursorOffset: 0,
+      selection: {
+        end: 0,
+        start: 0,
+      },
     });
     if (textAreaElementRef.current !== null) {
       textAreaElementRef.current.focus();
@@ -205,8 +213,11 @@ export const Editor: FC<Props> = ({
     if (cursorColor !== state.cursorColor) {
       setCursorColor(state.cursorColor);
     }
-    if (cursorOffset !== state.cursorOffset) {
-      setSelection({ start: state.cursorOffset, end: state.cursorOffset });
+    if (
+      selection.start !== state.selection.start ||
+      selection.end !== state.selection.end
+    ) {
+      setSelection(state.selection);
     }
     if (cursors !== state.cursors) {
       setCursors(state.cursors);
@@ -283,10 +294,13 @@ export const Editor: FC<Props> = ({
       disableAutoCompletion();
     }
 
-    const currentState = { code, cursorOffset };
+    const currentState = { code, selection };
     const newState = autoEditChange(currentState, {
       code: newCode,
-      cursorOffset: newCursorOffset,
+      selection: {
+        end: newCursorOffset,
+        start: newCursorOffset,
+      },
     });
 
     if (newState !== undefined) {
@@ -323,10 +337,13 @@ export const Editor: FC<Props> = ({
     if (selectionStart === selection.start && selectionEnd === selection.end) {
       return;
     }
+
+    const newSelection = { end: selectionEnd, start: selectionStart };
+
     if (isSharedFileActive) {
-      updateCursorOffset(selectionStart);
+      updateSelection(newSelection);
     } else {
-      setSelection({ start: selectionStart, end: selectionEnd });
+      setSelection(newSelection);
     }
   }
 
@@ -336,7 +353,10 @@ export const Editor: FC<Props> = ({
   ): void {
     updateState({
       code: spliceString(code, cursorOffset, 0, text),
-      cursorOffset: newCursorOffset,
+      selection: {
+        end: newCursorOffset,
+        start: newCursorOffset,
+      },
     });
   }
 

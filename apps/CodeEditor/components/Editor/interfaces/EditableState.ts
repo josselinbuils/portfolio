@@ -1,4 +1,6 @@
+import { Selection } from './Selection';
+
 export interface EditableState {
   code: string;
-  cursorOffset: number;
+  selection: Selection;
 }

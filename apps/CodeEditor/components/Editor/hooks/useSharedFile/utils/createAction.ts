@@ -1,15 +1,16 @@
+import { Selection } from '../../../interfaces/Selection';
 import { Diff } from '../../../utils/diffs';
 import {
   ACTION_REDO,
   ACTION_UNDO,
   ACTION_UPDATE_CLIENT_STATE,
   ACTION_UPDATE_CODE,
-  ACTION_UPDATE_CURSOR_OFFSET,
+  ACTION_UPDATE_SELECTION,
   RedoAction,
   UndoAction,
   UpdateClientStateAction,
   UpdateCodeAction,
-  UpdateCursorOffsetAction,
+  UpdateSelectionAction,
 } from '../interfaces/actions';
 import { ClientState } from '../interfaces/ClientState';
 
@@ -24,18 +25,18 @@ export const createAction = {
   }),
   updateCode: (
     diffs: Diff[],
-    cursorOffset: number,
+    selection: Selection,
     safetyHash: number
   ): UpdateCodeAction => ({
     type: ACTION_UPDATE_CODE,
     payload: {
-      cursorOffset,
       diffs,
       safetyHash,
+      selection,
     },
   }),
-  updateCursorOffset: (cursorOffset: number): UpdateCursorOffsetAction => ({
-    type: ACTION_UPDATE_CURSOR_OFFSET,
-    payload: { cursorOffset },
+  updateSelection: (selection: Selection): UpdateSelectionAction => ({
+    type: ACTION_UPDATE_SELECTION,
+    payload: { selection },
   }),
 };
