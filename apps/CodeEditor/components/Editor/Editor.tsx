@@ -35,6 +35,7 @@ import { ClientCursor } from './hooks/useSharedFile/interfaces/ClientCursor';
 import { ClientState } from './hooks/useSharedFile/interfaces/ClientState';
 import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
+import { Selection } from './interfaces/Selection';
 import { autoEditChange } from './utils/autoEditChange';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
@@ -56,11 +57,11 @@ export const Editor: FC<Props> = ({
 }) => {
   const [active, setActive] = useState(false);
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
-  const [cursorOffset, setCursorOffset] = useState(0);
   const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
+  const [selection, setSelection] = useState<Selection>({ start: 0, end: 0 });
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
   const [
     activeFileName,
@@ -71,6 +72,7 @@ export const Editor: FC<Props> = ({
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
+  const cursorOffset = selection.start;
   const { complete, hasCompletionItems } = useAutoCompletion({
     active: autoCompleteActive,
     code,
@@ -83,7 +85,7 @@ export const Editor: FC<Props> = ({
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
-      setCursorOffset(state.cursorOffset);
+      setSelection({ start: state.cursorOffset, end: state.cursorOffset });
     },
     [onChange]
   );
@@ -204,7 +206,7 @@ export const Editor: FC<Props> = ({
       setCursorColor(state.cursorColor);
     }
     if (cursorOffset !== state.cursorOffset) {
-      setCursorOffset(state.cursorOffset);
+      setSelection({ start: state.cursorOffset, end: state.cursorOffset });
     }
     if (cursors !== state.cursors) {
       setCursors(state.cursors);
@@ -309,19 +311,22 @@ export const Editor: FC<Props> = ({
   }
 
   function handleSelect({ target }: SyntheticEvent): void {
-    const newCursorOffset = (target as HTMLTextAreaElement).selectionStart;
+    const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
 
-    if (!isCodePortionEnd(code, newCursorOffset)) {
+    if (
+      selectionEnd !== selectionStart ||
+      !isCodePortionEnd(code, selectionStart)
+    ) {
       setAutoCompleteActive(false);
     }
 
-    if (cursorOffset === newCursorOffset) {
+    if (selectionStart === selection.start && selectionEnd === selection.end) {
       return;
     }
     if (isSharedFileActive) {
-      updateCursorOffset(newCursorOffset);
+      updateCursorOffset(selectionStart);
     } else {
-      setCursorOffset(newCursorOffset);
+      setSelection({ start: selectionStart, end: selectionEnd });
     }
   }
 
