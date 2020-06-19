@@ -43,6 +43,7 @@ import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
+import { getLineOffset } from './utils/getLineOffset';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { openFile } from './utils/openFile';
 import { spliceString } from './utils/spliceString';
@@ -119,7 +120,22 @@ export const Editor: FC<Props> = ({
       'Shift+Tab': () => {
         const deleteCount = INDENT.length;
 
-        if (code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT) {
+        // TODO manage multiline
+        if (selection.end !== selection.start) {
+          const lineOffset = getLineOffset(code, selection.start);
+
+          if (code.slice(lineOffset, lineOffset + deleteCount) === INDENT) {
+            updateState({
+              code: spliceString(code, lineOffset, deleteCount),
+              selection: {
+                end: selection.end - deleteCount,
+                start: selection.start - deleteCount,
+              },
+            });
+          }
+        } else if (
+          code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT
+        ) {
           const newCursorOffset = cursorOffset - deleteCount;
 
           updateState({
@@ -134,8 +150,10 @@ export const Editor: FC<Props> = ({
       Tab: () => {
         if (hasCompletionItems) {
           complete();
-        } else {
+        } else if (selection.end === selection.start) {
           insertText(INDENT);
+        } else {
+          insertTextAtLineStart(INDENT);
         }
       },
     },
@@ -187,8 +205,11 @@ export const Editor: FC<Props> = ({
     if (textAreaElement !== null) {
       const { selectionEnd, selectionStart } = textAreaElement;
 
-      if (selectionEnd === selectionStart && selectionStart !== cursorOffset) {
-        textAreaElement.setSelectionRange(cursorOffset, cursorOffset);
+      if (
+        selectionStart !== selection.start ||
+        selectionEnd !== selection.end
+      ) {
+        textAreaElement.setSelectionRange(selection.start, selection.end);
       }
     }
   });
@@ -356,6 +377,16 @@ export const Editor: FC<Props> = ({
       selection: {
         end: newCursorOffset,
         start: newCursorOffset,
+      },
+    });
+  }
+
+  function insertTextAtLineStart(text: string): void {
+    updateState({
+      code: spliceString(code, getLineOffset(code, selection.start), 0, text),
+      selection: {
+        end: selection.end + text.length,
+        start: selection.start + text.length,
       },
     });
   }
