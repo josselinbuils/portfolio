@@ -10,6 +10,7 @@ import {
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
+import { getLineNumber } from '../getLineNumber';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
 import { spliceString } from '../spliceString';
@@ -122,16 +123,33 @@ export function autoEditChange(
       const lineBeforeCursor = getLineBeforeCursor(code, selection.start);
 
       if (REGEX_SPACES_ONLY.test(lineBeforeCursor)) {
-        const delCount = lineBeforeCursor.length + 1;
-        const cursorOffset = selection.start - delCount;
+        if (getLineNumber(code, selection.start) > 0) {
+          const delCount = lineBeforeCursor.length + 1;
+          const cursorOffset = selection.start - delCount;
 
-        result = {
-          code: spliceString(code, selection.start - delCount, delCount),
-          selection: {
-            end: cursorOffset,
-            start: cursorOffset,
-          },
-        };
+          result = {
+            code: spliceString(code, selection.start - delCount, delCount),
+            selection: {
+              end: cursorOffset,
+              start: cursorOffset,
+            },
+          };
+        } else if (
+          code.slice(selection.start - INDENT.length, selection.start) ===
+          INDENT
+        ) {
+          // TODO make this common with shift + tab
+          const delCount = INDENT.length;
+          const cursorOffset = selection.start - delCount;
+
+          result = {
+            code: spliceString(code, selection.start - delCount, delCount),
+            selection: {
+              end: cursorOffset,
+              start: cursorOffset,
+            },
+          };
+        }
       }
     }
   }
