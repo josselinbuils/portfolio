@@ -1,11 +1,5 @@
 import { EditableState } from '../../interfaces/EditableState';
-import {
-  applyDiff,
-  Diff,
-  getCursorOffsetBeforeDiff,
-  getDiffs,
-  revertDiff,
-} from '../../utils/diffs';
+import { applyDiff, Diff, getDiffs, revertDiff } from '../../utils/diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
 
@@ -13,7 +7,11 @@ export class History {
   private index = -1;
   private readonly states = [] as HistoryState[];
 
-  pushState(currentCode: string, newState: EditableState): void {
+  pushState(
+    currentCode: string,
+    cursorOffset: number,
+    newState: EditableState
+  ): void {
     const { index, states } = this;
     const newDiffs = getDiffs(currentCode, newState.code);
     const firstNewDiff = newDiffs[0];
@@ -34,15 +32,11 @@ export class History {
       ) {
         const currentDiffs = currentState.diffs;
         const lastCurrentDiff = currentDiffs[currentDiffs.length - 1];
-        const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(
-          firstNewDiff,
-          newState.selection.start
-        );
 
         if (
           !/\s/.test(firstNewDiff[2]) &&
           firstNewDiff[0] === lastCurrentDiff[0] &&
-          cursorOffsetBeforeDiff === lastStoredCursorOffset
+          cursorOffset === lastStoredCursorOffset
         ) {
           currentState.cursorOffset = newState.selection.start;
           currentDiffs.push(firstNewDiff);
@@ -51,18 +45,11 @@ export class History {
       }
     }
 
-    if (newDiffs.length === 1) {
-      const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(
-        firstNewDiff,
-        newState.selection.start
-      );
-
-      if (cursorOffsetBeforeDiff !== lastStoredCursorOffset) {
-        states.push({
-          cursorOffset: cursorOffsetBeforeDiff,
-          diffs: [],
-        });
-      }
+    if (newDiffs.length === 1 && cursorOffset !== lastStoredCursorOffset) {
+      states.push({
+        cursorOffset,
+        diffs: [],
+      });
     }
 
     states.push({

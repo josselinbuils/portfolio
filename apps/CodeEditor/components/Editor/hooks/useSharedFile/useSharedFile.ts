@@ -41,11 +41,13 @@ const reducer = ((clientState, action) =>
 export function useSharedFile({
   active,
   code,
+  cursorOffset,
   applyClientState,
   selection,
 }: {
   active: boolean;
   code: string;
+  cursorOffset: number;
   selection: Selection;
   applyClientState(clientState: ClientState): any;
 }): {
@@ -57,6 +59,7 @@ export function useSharedFile({
   const applyClientStateRef = useDynamicRef(applyClientState);
   const clientCodeRef = useRef(clientState.code);
   const codeRef = useDynamicRef(code);
+  const cursorOffsetRef = useDynamicRef(cursorOffset);
   const selectionRef = useDynamicRef(selection);
   const lastCursorOffsetSentRef = useRef<Selection>({ end: 0, start: 0 });
   const hashToWaitForRef = useRef<number>();
@@ -166,7 +169,12 @@ export function useSharedFile({
         end: newCursorOffset,
         start: newCursorOffset,
       };
-      const action = createAction.updateCode([diff], newSelection, currentHash);
+      const action = createAction.updateCode(
+        clientState.selection.start,
+        [diff],
+        newSelection,
+        currentHash
+      );
 
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = newSelection;
@@ -200,6 +208,7 @@ export function useSharedFile({
         updateQueue.length === 0
       ) {
         const action = createAction.updateCode(
+          cursorOffsetRef.current,
           diffs,
           newState.selection,
           currentHash
@@ -221,7 +230,7 @@ export function useSharedFile({
         updateQueue.push(diffs[0]);
       }
     },
-    [active, codeRef]
+    [active, codeRef, cursorOffsetRef]
   );
 
   const updateSelection = useCallback((newSelection: Selection) => {

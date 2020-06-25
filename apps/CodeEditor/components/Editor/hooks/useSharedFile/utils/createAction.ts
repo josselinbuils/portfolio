@@ -24,12 +24,14 @@ export const createAction = {
     payload: { state },
   }),
   updateCode: (
+    cursorOffsetBefore: number,
     diffs: Diff[],
     selection: Selection,
     safetyHash: number
   ): UpdateCodeAction => ({
     type: ACTION_UPDATE_CODE,
     payload: {
+      cursorOffsetBefore,
       diffs,
       safetyHash,
       selection,

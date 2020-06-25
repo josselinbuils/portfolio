@@ -7,11 +7,13 @@ import { History } from './History';
 export function useHistory({
   active,
   code,
+  cursorOffset,
   applyState,
   fileName,
 }: {
   active: boolean;
   code: string;
+  cursorOffset: number;
   fileName: string;
   applyState(state: EditableState): any;
 }): {
@@ -22,6 +24,7 @@ export function useHistory({
   }>({});
   const applyStateRef = useDynamicRef(applyState);
   const codeRef = useDynamicRef(code);
+  const cursorOffsetRef = useDynamicRef(cursorOffset);
 
   if (historyRef.current[fileName] === undefined) {
     historyRef.current[fileName] = new History();
@@ -51,7 +54,11 @@ export function useHistory({
 
   const pushState = useCallback(
     (newState: EditableState): void => {
-      fileHistoryRef.current.pushState(codeRef.current, newState);
+      fileHistoryRef.current.pushState(
+        codeRef.current,
+        cursorOffsetRef.current,
+        newState
+      );
     },
     [codeRef, fileHistoryRef]
   );

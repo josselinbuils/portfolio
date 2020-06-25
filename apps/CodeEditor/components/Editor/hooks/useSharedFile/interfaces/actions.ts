@@ -36,6 +36,7 @@ export interface UpdateClientStateAction {
 export interface UpdateCodeAction {
   type: typeof ACTION_UPDATE_CODE;
   payload: {
+    cursorOffsetBefore?: number;
     diffs: Diff[];
     safetyHash?: number;
     selection?: Selection;
