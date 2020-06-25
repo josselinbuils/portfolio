@@ -181,10 +181,9 @@ export const Editor: FC<Props> = ({
   }, [activeFile, applyState]);
 
   useLayoutEffect(() => {
-    highlightCode(code, activeFile.language).then((highlighted) => {
-      setHighlightedCode(highlighted);
-      ((textAreaElementRef.current as unknown) as HTMLTextAreaElement).scrollTop = 1e10;
-    });
+    highlightCode(code, activeFile.language).then((highlighted) =>
+      setHighlightedCode(highlighted)
+    );
   }, [activeFile.language, code]);
 
   useEffect(() => {
