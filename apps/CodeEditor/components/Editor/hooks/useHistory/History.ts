@@ -10,8 +10,6 @@ import {
 
 const HISTORY_SIZE_LIMIT = 50;
 
-// TODO manage selections
-
 export class History {
   private index = -1;
   private readonly states = [] as HistoryState[];
@@ -19,45 +17,53 @@ export class History {
   pushState(currentCode: string, newState: EditableState): void {
     const { index, states } = this;
     const newDiffs = getDiffs(currentCode, newState.code);
+    const firstNewDiff = newDiffs[0];
+    const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(firstNewDiff);
+    const currentState = states[states.length - 1];
+    let lastStoredCursorOffset = 0;
+
+    if (currentState !== undefined) {
+      const currentDiffs = currentState.diffs;
+      const lastCurrentDiff = currentDiffs[currentDiffs.length - 1] as Diff;
+      lastStoredCursorOffset = getCursorOffsetAfterDiff(lastCurrentDiff);
+    }
 
     if (index < states.length - 1) {
       states.length = index + 1;
-      states.push({
-        cursorOffset: newState.selection.start,
-        diffs: newDiffs,
-      });
-      this.index = states.length - 1;
     } else {
       if (states.length >= HISTORY_SIZE_LIMIT) {
         states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
       }
 
       if (states.length > 0) {
-        const currentState = states[states.length - 1];
         const currentDiffs = currentState.diffs;
         const lastCurrentDiff = currentDiffs[currentDiffs.length - 1] as Diff;
 
-        if (newDiffs.length === 1) {
-          const newDiff = newDiffs[0];
-
-          if (
-            !/\s/.test(newDiff[2]) &&
-            newDiff[0] === lastCurrentDiff[0] &&
-            getCursorOffsetBeforeDiff(newDiff) ===
-              getCursorOffsetAfterDiff(lastCurrentDiff)
-          ) {
-            currentState.cursorOffset = newState.selection.start;
-            currentDiffs.push(newDiff);
-            return;
-          }
+        if (
+          newDiffs.length === 1 &&
+          !/\s/.test(firstNewDiff[2]) &&
+          firstNewDiff[0] === lastCurrentDiff[0] &&
+          cursorOffsetBeforeDiff === lastStoredCursorOffset
+        ) {
+          currentState.cursorOffset = newState.selection.start;
+          currentDiffs.push(firstNewDiff);
+          return;
         }
       }
-      states.push({
-        cursorOffset: newState.selection.start,
-        diffs: newDiffs,
-      });
-      this.index = states.length - 1;
     }
+
+    if (cursorOffsetBeforeDiff !== lastStoredCursorOffset) {
+      states.push({
+        cursorOffset: cursorOffsetBeforeDiff,
+        diffs: [],
+      });
+    }
+
+    states.push({
+      cursorOffset: newState.selection.start,
+      diffs: newDiffs,
+    });
+    this.index = states.length - 1;
   }
 
   redo(currentCode: string): EditableState | undefined {
