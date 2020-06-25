@@ -4,7 +4,7 @@ import {
   applyDiff,
   Diff,
   DiffType,
-  getCursorOffsetAfterDiff,
+  getCursorOffsetBeforeDiff,
   getDiffs,
 } from '../diffs';
 import { getLine } from '../getLine';
@@ -32,7 +32,10 @@ export function autoEditChange(
 
   if (diffs.length > 0) {
     const intermediateDiff = diffs.pop() as Diff;
-    const cursorOffset = getCursorOffsetAfterDiff(intermediateDiff);
+    const cursorOffset = getCursorOffsetBeforeDiff(
+      [type, start, diff],
+      newState.selection.start
+    );
     currentState = {
       code: applyDiff(currentState.code, intermediateDiff),
       selection: {
@@ -51,7 +54,7 @@ export function autoEditChange(
 
   if (type === DiffType.Addition) {
     if (autoCloseChar !== undefined && allowAutoComplete) {
-      const cursorOffset = getCursorOffsetAfterDiff([type, start, diff]);
+      const cursorOffset = newState.selection.start;
 
       result = {
         code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),

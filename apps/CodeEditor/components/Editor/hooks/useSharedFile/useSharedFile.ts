@@ -158,7 +158,10 @@ export function useSharedFile({
 
       diff[1] = clientState.selection.start;
 
-      const newCursorOffset = getCursorOffsetAfterDiff(diff);
+      const newCursorOffset = getCursorOffsetAfterDiff(
+        diff,
+        clientState.selection.start
+      );
       const newSelection = {
         end: newCursorOffset,
         start: newCursorOffset,

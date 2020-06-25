@@ -2,7 +2,6 @@ import { EditableState } from '../../interfaces/EditableState';
 import {
   applyDiff,
   Diff,
-  getCursorOffsetAfterDiff,
   getCursorOffsetBeforeDiff,
   getDiffs,
   revertDiff,
@@ -18,15 +17,8 @@ export class History {
     const { index, states } = this;
     const newDiffs = getDiffs(currentCode, newState.code);
     const firstNewDiff = newDiffs[0];
-    const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(firstNewDiff);
     const currentState = states[states.length - 1];
-    let lastStoredCursorOffset = 0;
-
-    if (currentState !== undefined) {
-      const currentDiffs = currentState.diffs;
-      const lastCurrentDiff = currentDiffs[currentDiffs.length - 1] as Diff;
-      lastStoredCursorOffset = getCursorOffsetAfterDiff(lastCurrentDiff);
-    }
+    const lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
 
     if (index < states.length - 1) {
       states.length = index + 1;
@@ -35,12 +27,19 @@ export class History {
         states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
       }
 
-      if (states.length > 0) {
+      if (
+        states.length > 0 &&
+        newDiffs.length === 1 &&
+        currentState.diffs.length > 0
+      ) {
         const currentDiffs = currentState.diffs;
-        const lastCurrentDiff = currentDiffs[currentDiffs.length - 1] as Diff;
+        const lastCurrentDiff = currentDiffs[currentDiffs.length - 1];
+        const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(
+          firstNewDiff,
+          newState.selection.start
+        );
 
         if (
-          newDiffs.length === 1 &&
           !/\s/.test(firstNewDiff[2]) &&
           firstNewDiff[0] === lastCurrentDiff[0] &&
           cursorOffsetBeforeDiff === lastStoredCursorOffset
@@ -52,11 +51,18 @@ export class History {
       }
     }
 
-    if (cursorOffsetBeforeDiff !== lastStoredCursorOffset) {
-      states.push({
-        cursorOffset: cursorOffsetBeforeDiff,
-        diffs: [],
-      });
+    if (newDiffs.length === 1) {
+      const cursorOffsetBeforeDiff = getCursorOffsetBeforeDiff(
+        firstNewDiff,
+        newState.selection.start
+      );
+
+      if (cursorOffsetBeforeDiff !== lastStoredCursorOffset) {
+        states.push({
+          cursorOffset: cursorOffsetBeforeDiff,
+          diffs: [],
+        });
+      }
     }
 
     states.push({

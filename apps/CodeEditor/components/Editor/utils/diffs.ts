@@ -15,12 +15,22 @@ export function applyDiff(code: string, [type, start, diff]: Diff): string {
     : spliceString(code, start, diff.length);
 }
 
-export function getCursorOffsetAfterDiff([type, start, diff]: Diff): number {
-  return type === DiffType.Addition ? start + diff.length : start;
+// Provide cursorBeforeDiff and cursorOffsetAfterDiff is necessary as diff
+// offset may not match real cursor offset if multiple identical characters
+// follow each other
+
+export function getCursorOffsetAfterDiff(
+  diff: Diff,
+  cursorBeforeDiff: number
+): number {
+  return cursorBeforeDiff + diff[0] * diff[2].length;
 }
 
-export function getCursorOffsetBeforeDiff([type, start, diff]: Diff): number {
-  return type === DiffType.Addition ? start : start + diff.length;
+export function getCursorOffsetBeforeDiff(
+  diff: Diff,
+  cursorOffsetAfterDiff: number
+): number {
+  return cursorOffsetAfterDiff - diff[0] * diff[2].length;
 }
 
 export function getDiffs(a: string, b: string): Diff[] {
