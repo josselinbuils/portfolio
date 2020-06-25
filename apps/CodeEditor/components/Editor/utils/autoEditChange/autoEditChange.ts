@@ -75,7 +75,7 @@ export function autoEditChange(
         const cursorOffset = selection.start + indent + INDENT.length + 1;
 
         result = {
-          code: spliceString(code, cursorOffset, 0, insertion),
+          code: spliceString(code, selection.start, 0, insertion),
           selection: {
             end: cursorOffset,
             start: cursorOffset,
