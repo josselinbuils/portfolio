@@ -1,4 +1,5 @@
 import { EditableState } from '../../interfaces/EditableState';
+import { isIntoBrackets } from '../../utils/autoEditChange/utils/isIntoBrackets';
 import { applyDiff, Diff, getDiffs, revertDiff } from '../../utils/diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
@@ -15,8 +16,8 @@ export class History {
     const { index, states } = this;
     const newDiffs = getDiffs(currentCode, newState.code);
     const firstNewDiff = newDiffs[0];
-    const currentState = states[states.length - 1];
-    const lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
+    let currentState: HistoryState;
+    let lastStoredCursorOffset: number;
 
     if (index < states.length - 1) {
       states.length = index + 1;
@@ -24,6 +25,8 @@ export class History {
       if (states.length >= HISTORY_SIZE_LIMIT) {
         states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
       }
+      currentState = states[states.length - 1];
+      lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
 
       if (
         states.length > 0 &&
@@ -36,7 +39,8 @@ export class History {
         if (
           !/\s/.test(firstNewDiff[2]) &&
           firstNewDiff[0] === lastCurrentDiff[0] &&
-          cursorOffset === lastStoredCursorOffset
+          cursorOffset === lastStoredCursorOffset &&
+          !isIntoBrackets(currentCode, cursorOffset)
         ) {
           currentState.cursorOffset = newState.selection.start;
           currentDiffs.push(firstNewDiff);
@@ -44,6 +48,9 @@ export class History {
         }
       }
     }
+
+    currentState = states[states.length - 1];
+    lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
 
     if (newDiffs.length === 1 && cursorOffset !== lastStoredCursorOffset) {
       states.push({
