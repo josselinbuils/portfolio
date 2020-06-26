@@ -27,7 +27,6 @@ import { Cursor } from './components/Cursor';
 import { LineNumbers } from './components/LineNumbers';
 import { Tab } from './components/Tab';
 import { Tabs } from './components/Tabs';
-import { INDENT } from './constants';
 import { Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile';
@@ -43,7 +42,7 @@ import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
-import { getLineOffset } from './utils/getLineOffset';
+import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { openFile } from './utils/openFile';
 import { spliceString } from './utils/spliceString';
@@ -130,10 +129,8 @@ export const Editor: FC<Props> = ({
       Tab: () => {
         if (hasCompletionItems) {
           complete();
-        } else if (selection.end === selection.start) {
-          insertText(INDENT);
         } else {
-          insertTextAtLineStart(INDENT);
+          updateState(indent(code, selection));
         }
       },
     },
@@ -356,16 +353,6 @@ export const Editor: FC<Props> = ({
       selection: {
         start: newCursorOffset,
         end: newCursorOffset,
-      },
-    });
-  }
-
-  function insertTextAtLineStart(text: string): void {
-    updateState({
-      code: spliceString(code, getLineOffset(code, selection.start), 0, text),
-      selection: {
-        start: selection.start + text.length,
-        end: selection.end + text.length,
       },
     });
   }

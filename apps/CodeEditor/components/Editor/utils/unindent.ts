@@ -12,9 +12,8 @@ export function unindent(
 
   if (selection.end !== selection.start) {
     const firstLineOffset = getLineOffset(code, selection.start);
-    let lastLineOffset = getLineOffset(code, selection.end);
-
     const processedLineOffsets = [] as number[];
+    let lastLineOffset = getLineOffset(code, selection.end);
     let newCode = code;
 
     for (let i = firstLineOffset; i <= lastLineOffset; i++) {
