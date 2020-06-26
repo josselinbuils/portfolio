@@ -47,6 +47,7 @@ import { getLineOffset } from './utils/getLineOffset';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { openFile } from './utils/openFile';
 import { spliceString } from './utils/spliceString';
+import { unindent } from './utils/unindent';
 
 import styles from './Editor.module.scss';
 
@@ -120,52 +121,10 @@ export const Editor: FC<Props> = ({
         }
       },
       'Shift+Tab': () => {
-        const deleteCount = INDENT.length;
+        const newState = unindent(code, selection);
 
-        if (selection.end !== selection.start) {
-          const firstLineOffset = getLineOffset(code, selection.start);
-          let lastLineOffset = getLineOffset(code, selection.end);
-
-          function canUnindent(refCode: string, lineOffset: number): boolean {
-            return (
-              refCode.slice(lineOffset, lineOffset + deleteCount) === INDENT
-            );
-          }
-
-          const processedLineOffsets = [] as number[];
-          let newCode = code;
-
-          for (let i = firstLineOffset; i <= lastLineOffset; i++) {
-            const lineOffset = getLineOffset(newCode, i);
-
-            if (!processedLineOffsets.includes(lineOffset)) {
-              if (!canUnindent(newCode, lineOffset)) {
-                return;
-              }
-              newCode = spliceString(newCode, lineOffset, deleteCount);
-              processedLineOffsets.push(lineOffset);
-              lastLineOffset -= deleteCount;
-            }
-          }
-          updateState({
-            code: newCode,
-            selection: {
-              start: Math.max(selection.start - deleteCount, firstLineOffset),
-              end: selection.end - deleteCount * processedLineOffsets.length,
-            },
-          });
-        } else if (
-          code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT
-        ) {
-          const newCursorOffset = cursorOffset - deleteCount;
-
-          updateState({
-            code: spliceString(code, cursorOffset - deleteCount, deleteCount),
-            selection: {
-              start: newCursorOffset,
-              end: newCursorOffset,
-            },
-          });
+        if (newState !== undefined) {
+          updateState(newState);
         }
       },
       Tab: () => {

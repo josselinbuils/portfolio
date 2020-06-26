@@ -1,5 +1,6 @@
 import { INDENT } from '../../constants';
 import { EditableState } from '../../interfaces/EditableState';
+import { unindent } from '../../utils/unindent';
 import {
   applyDiff,
   Diff,
@@ -141,17 +142,7 @@ export function autoEditChange(
           code.slice(selection.start - INDENT.length, selection.start) ===
           INDENT
         ) {
-          // TODO make this common with shift + tab
-          const delCount = INDENT.length;
-          const cursorOffset = selection.start - delCount;
-
-          result = {
-            code: spliceString(code, selection.start - delCount, delCount),
-            selection: {
-              start: cursorOffset,
-              end: cursorOffset,
-            },
-          };
+          result = unindent(code, selection);
         }
       }
     }
