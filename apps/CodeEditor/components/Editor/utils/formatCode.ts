@@ -41,7 +41,7 @@ export async function formatCode(
   if (parserDescriptor === undefined) {
     return {
       code,
-      selection: { end: cursorOffset, start: cursorOffset },
+      selection: { start: cursorOffset, end: cursorOffset },
     };
   }
 
@@ -57,6 +57,9 @@ export async function formatCode(
 
   return {
     code: result.formatted,
-    selection: { end: result.cursorOffset, start: result.cursorOffset },
+    selection: {
+      start: result.cursorOffset,
+      end: result.cursorOffset,
+    },
   };
 }

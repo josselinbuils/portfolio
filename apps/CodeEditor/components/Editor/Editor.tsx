@@ -122,19 +122,38 @@ export const Editor: FC<Props> = ({
       'Shift+Tab': () => {
         const deleteCount = INDENT.length;
 
-        // TODO manage multiline
         if (selection.end !== selection.start) {
-          const lineOffset = getLineOffset(code, selection.start);
+          const firstLineOffset = getLineOffset(code, selection.start);
+          let lastLineOffset = getLineOffset(code, selection.end);
 
-          if (code.slice(lineOffset, lineOffset + deleteCount) === INDENT) {
-            updateState({
-              code: spliceString(code, lineOffset, deleteCount),
-              selection: {
-                end: selection.end - deleteCount,
-                start: selection.start - deleteCount,
-              },
-            });
+          function canUnindent(refCode: string, lineOffset: number): boolean {
+            return (
+              refCode.slice(lineOffset, lineOffset + deleteCount) === INDENT
+            );
           }
+
+          const processedLineOffsets = [] as number[];
+          let newCode = code;
+
+          for (let i = firstLineOffset; i <= lastLineOffset; i++) {
+            const lineOffset = getLineOffset(newCode, i);
+
+            if (!processedLineOffsets.includes(lineOffset)) {
+              if (!canUnindent(newCode, lineOffset)) {
+                return;
+              }
+              newCode = spliceString(newCode, lineOffset, deleteCount);
+              processedLineOffsets.push(lineOffset);
+              lastLineOffset -= deleteCount;
+            }
+          }
+          updateState({
+            code: newCode,
+            selection: {
+              start: Math.max(selection.start - deleteCount, firstLineOffset),
+              end: selection.end - deleteCount * processedLineOffsets.length,
+            },
+          });
         } else if (
           code.slice(cursorOffset - deleteCount, cursorOffset) === INDENT
         ) {
@@ -143,8 +162,8 @@ export const Editor: FC<Props> = ({
           updateState({
             code: spliceString(code, cursorOffset - deleteCount, deleteCount),
             selection: {
-              end: newCursorOffset,
               start: newCursorOffset,
+              end: newCursorOffset,
             },
           });
         }
@@ -171,8 +190,8 @@ export const Editor: FC<Props> = ({
     applyState({
       code: activeFile.content,
       selection: {
-        end: 0,
         start: 0,
+        end: 0,
       },
     });
     if (textAreaElementRef.current !== null) {
@@ -320,8 +339,8 @@ export const Editor: FC<Props> = ({
     const newState = autoEditChange(currentState, {
       code: newCode,
       selection: {
-        end: newCursorOffset,
         start: newCursorOffset,
+        end: newCursorOffset,
       },
     });
 
@@ -376,8 +395,8 @@ export const Editor: FC<Props> = ({
     updateState({
       code: spliceString(code, cursorOffset, 0, text),
       selection: {
-        end: newCursorOffset,
         start: newCursorOffset,
+        end: newCursorOffset,
       },
     });
   }
@@ -386,8 +405,8 @@ export const Editor: FC<Props> = ({
     updateState({
       code: spliceString(code, getLineOffset(code, selection.start), 0, text),
       selection: {
-        end: selection.end + text.length,
         start: selection.start + text.length,
+        end: selection.end + text.length,
       },
     });
   }

@@ -39,8 +39,8 @@ export function autoEditChange(
     currentState = {
       code: applyDiff(currentState.code, intermediateDiff),
       selection: {
-        end: cursorOffset,
         start: cursorOffset,
+        end: cursorOffset,
       },
     };
   }
@@ -59,8 +59,8 @@ export function autoEditChange(
       result = {
         code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),
         selection: {
-          end: cursorOffset,
           start: cursorOffset,
+          end: cursorOffset,
         },
       };
     } else if (
@@ -80,8 +80,8 @@ export function autoEditChange(
         result = {
           code: spliceString(code, selection.start, 0, insertion),
           selection: {
-            end: cursorOffset,
             start: cursorOffset,
+            end: cursorOffset,
           },
         };
       } else {
@@ -108,8 +108,8 @@ export function autoEditChange(
         result = {
           code: spliceString(code, selection.start, 0, insertion),
           selection: {
-            end: cursorOffset,
             start: cursorOffset,
+            end: cursorOffset,
           },
         };
       }
@@ -133,8 +133,8 @@ export function autoEditChange(
           result = {
             code: spliceString(code, selection.start - delCount, delCount),
             selection: {
-              end: cursorOffset,
               start: cursorOffset,
+              end: cursorOffset,
             },
           };
         } else if (
@@ -148,8 +148,8 @@ export function autoEditChange(
           result = {
             code: spliceString(code, selection.start - delCount, delCount),
             selection: {
-              end: cursorOffset,
               start: cursorOffset,
+              end: cursorOffset,
             },
           };
         }

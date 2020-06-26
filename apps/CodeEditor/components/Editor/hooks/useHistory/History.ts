@@ -71,7 +71,10 @@ export class History {
 
       return {
         code: newCode,
-        selection: { end: cursorOffset, start: cursorOffset },
+        selection: {
+          start: cursorOffset,
+          end: cursorOffset,
+        },
       };
     }
   }
@@ -89,7 +92,10 @@ export class History {
 
       return {
         code: prevCode,
-        selection: { end: prevCursorOffset, start: prevCursorOffset },
+        selection: {
+          start: prevCursorOffset,
+          end: prevCursorOffset,
+        },
       };
     }
   }

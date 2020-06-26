@@ -106,7 +106,7 @@ export class WSServer {
       const client = {
         cursorColor,
         id,
-        selection: { end: 0, start: 0 },
+        selection: { start: 0, end: 0 },
         ws: wsClient,
       };
       this.clients.push(client);
