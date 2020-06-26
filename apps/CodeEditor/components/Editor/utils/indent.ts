@@ -5,10 +5,8 @@ import { getLineOffset } from './getLineOffset';
 import { spliceString } from './spliceString';
 
 export function indent(code: string, selection: Selection): EditableState {
-  const addCount = INDENT.length;
-
   if (selection.end === selection.start) {
-    const newCursorOffset = selection.start + addCount;
+    const newCursorOffset = selection.start + INDENT.length;
 
     return {
       code: spliceString(code, selection.start, 0, INDENT),
@@ -29,15 +27,15 @@ export function indent(code: string, selection: Selection): EditableState {
       if (!processedLineOffsets.includes(lineOffset)) {
         newCode = spliceString(newCode, lineOffset, 0, INDENT);
         processedLineOffsets.push(lineOffset);
-        lastLineOffset += addCount;
+        lastLineOffset += INDENT.length;
       }
     }
 
     return {
       code: newCode,
       selection: {
-        start: selection.start + addCount,
-        end: selection.end + addCount * processedLineOffsets.length,
+        start: selection.start + INDENT.length,
+        end: selection.end + INDENT.length * processedLineOffsets.length,
       },
     };
   }

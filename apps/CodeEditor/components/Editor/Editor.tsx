@@ -36,6 +36,7 @@ import { EditableState } from './interfaces/EditableState';
 import { EditorFile } from './interfaces/EditorFile';
 import { Selection } from './interfaces/Selection';
 import { autoEditChange } from './utils/autoEditChange';
+import { comment } from './utils/comment';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
@@ -111,6 +112,13 @@ export const Editor: FC<Props> = ({
 
   useKeyMap(
     {
+      'Control+/,Control+Shift+/,Meta+/': () => {
+        const newState = comment(code, selection);
+
+        if (newState !== undefined) {
+          updateState(newState);
+        }
+      },
       'Control+N,Meta+N': createFile,
       'Control+O,Meta+O': () => open(undefined),
       'Control+S,Meta+S': format,

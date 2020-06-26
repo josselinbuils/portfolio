@@ -8,8 +8,6 @@ export function unindent(
   code: string,
   selection: Selection
 ): EditableState | undefined {
-  const deleteCount = INDENT.length;
-
   if (selection.end !== selection.start) {
     const firstLineOffset = getLineOffset(code, selection.start);
     const processedLineOffsets = [] as number[];
@@ -20,28 +18,28 @@ export function unindent(
       const lineOffset = getLineOffset(newCode, i);
 
       if (!processedLineOffsets.includes(lineOffset)) {
-        if (newCode.slice(lineOffset, lineOffset + deleteCount) !== INDENT) {
+        if (newCode.slice(lineOffset, lineOffset + INDENT.length) !== INDENT) {
           return;
         }
-        newCode = spliceString(newCode, lineOffset, deleteCount);
+        newCode = spliceString(newCode, lineOffset, INDENT.length);
         processedLineOffsets.push(lineOffset);
-        lastLineOffset -= deleteCount;
+        lastLineOffset -= INDENT.length;
       }
     }
     return {
       code: newCode,
       selection: {
-        start: Math.max(selection.start - deleteCount, firstLineOffset),
-        end: selection.end - deleteCount * processedLineOffsets.length,
+        start: Math.max(selection.start - INDENT.length, firstLineOffset),
+        end: selection.end - INDENT.length * processedLineOffsets.length,
       },
     };
   } else if (
-    code.slice(selection.start - deleteCount, selection.start) === INDENT
+    code.slice(selection.start - INDENT.length, selection.start) === INDENT
   ) {
-    const newCursorOffset = selection.start - deleteCount;
+    const newCursorOffset = selection.start - INDENT.length;
 
     return {
-      code: spliceString(code, selection.start - deleteCount, deleteCount),
+      code: spliceString(code, newCursorOffset, INDENT.length),
       selection: {
         start: newCursorOffset,
         end: newCursorOffset,

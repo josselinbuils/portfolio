@@ -4,6 +4,8 @@ import { applyDiff, Diff, getDiffs, revertDiff } from '../../utils/diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
 
+// TODO manage selections
+
 export class History {
   private index = -1;
   private readonly states = [] as HistoryState[];
