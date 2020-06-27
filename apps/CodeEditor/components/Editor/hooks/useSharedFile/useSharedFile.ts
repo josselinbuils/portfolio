@@ -20,7 +20,7 @@ import { handleAction } from './utils/handleAction';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
-const WS_URL = `${getWSBaseURL()}/api/CodeEditor/ws`;
+const WS_API_PATHNAME = '/api/CodeEditor/ws';
 
 const initialState = {
   id: -1,
@@ -79,7 +79,7 @@ export function useSharedFile({
     let ws: WebSocket;
 
     function openSocket(): void {
-      ws = new WebSocket(WS_URL);
+      ws = new WebSocket(`${getWSBaseURL()}${WS_API_PATHNAME}`);
       const readyDeferred = new Deferred<void>();
 
       dispatchToServerRef.current = async (action: Action) => {
