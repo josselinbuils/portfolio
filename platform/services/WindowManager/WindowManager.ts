@@ -1,8 +1,11 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
-import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
 import { WindowProps } from '~/platform/components/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import {
+  AppDescriptor,
+  isAppDescriptor,
+} from '~/platform/interfaces/AppDescriptor';
 import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {

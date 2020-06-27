@@ -1,5 +1,5 @@
-import { AppDescriptor } from '~/apps/AppDescriptor';
 import { APP_DESCRIPTORS } from '~/platform/constants';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export function getAppDescriptors(): { [name: string]: AppDescriptor } {
   const descriptors = {} as { [name: string]: AppDescriptor };

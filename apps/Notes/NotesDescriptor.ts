@@ -1,5 +1,5 @@
 import { faStickyNote } from '@fortawesome/free-solid-svg-icons/faStickyNote';
-import { AppDescriptor } from '../AppDescriptor';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const NotesDescriptor = {
   appName: 'Notes',

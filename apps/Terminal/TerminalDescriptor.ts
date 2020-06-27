@@ -1,5 +1,5 @@
 import { faTerminal } from '@fortawesome/free-solid-svg-icons/faTerminal';
-import { AppDescriptor } from '../AppDescriptor';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const TerminalDescriptor = {
   appName: 'Terminal',

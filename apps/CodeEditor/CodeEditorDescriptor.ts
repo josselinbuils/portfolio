@@ -1,5 +1,5 @@
 import { faCode } from '@fortawesome/free-solid-svg-icons/faCode';
-import { AppDescriptor } from '../AppDescriptor';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const CodeEditorDescriptor = {
   appName: 'CodeEditor',

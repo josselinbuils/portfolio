@@ -1,5 +1,5 @@
 import { FC, RefObject } from 'react';
-import { AppDescriptor } from '~/apps/AppDescriptor';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { Size } from '~/platform/interfaces/Size';
 import { Window, WindowProps } from './Window';
 
