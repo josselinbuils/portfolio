@@ -1,6 +1,4 @@
 import { BuiltInParserName, Plugin } from 'prettier';
-import 'prettier/parser-babel';
-import prettier from 'prettier/standalone';
 import { EditableState } from '../../../interfaces/EditableState';
 import { createSelection } from '../../../utils/createSelection';
 
@@ -47,6 +45,7 @@ export async function formatCode(
   }
 
   const { name, parserFactory } = parserDescriptor;
+  const prettier = (await import('prettier/standalone')).default;
   const parser = (await parserFactory()).default;
 
   const result = prettier.formatWithCursor(code, {
