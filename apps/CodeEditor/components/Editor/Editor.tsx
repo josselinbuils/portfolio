@@ -19,10 +19,11 @@ import React, {
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';
 import { useMemState } from '~/platform/hooks/useMemState';
-import { Toolbar } from '../../components/Toolbar';
-import { ToolButton } from '../../components/ToolButton';
 import { CursorPosition } from '../../interfaces/CursorPosition';
 import { highlightCode } from '../../utils/highlightCode';
+import { Shortcut } from '../Shortcut';
+import { Toolbar } from '../Toolbar';
+import { ToolButton } from '../ToolButton';
 import { Cursor } from './components/Cursor';
 import { LineNumbers } from './components/LineNumbers';
 import { Tab } from './components/Tab';
@@ -384,6 +385,45 @@ export const Editor: FC<Props> = ({
 
   return (
     <div className={cn(styles.editor, className)}>
+      <Toolbar className={styles.toolbar}>
+        <ToolButton
+          icon={faPlus}
+          onClick={createFile}
+          title={
+            <>
+              New
+              <Shortcut keys={['Ctrl', 'N']} />
+            </>
+          }
+        />
+        <ToolButton
+          icon={faFolderOpen}
+          onClick={() => open()}
+          title={
+            <>
+              Open
+              <Shortcut keys={['Ctrl', 'O']} />
+            </>
+          }
+        />
+        <ToolButton
+          disabled={code.length === 0 || !canFormat(activeFile.language)}
+          icon={faStream}
+          onClick={format}
+          title={
+            <>
+              Format
+              <Shortcut keys={['Ctrl', 'S']} />
+            </>
+          }
+        />
+        <ToolButton
+          disabled={code.length === 0}
+          icon={faCamera}
+          onClick={() => exportAsImage(code, highlightedCode)}
+          title="Export as image"
+        />
+      </Toolbar>
       <Tabs className={styles.tabs} label="Files">
         {files.map(({ name }, index) => (
           <Tab
@@ -449,42 +489,6 @@ export const Editor: FC<Props> = ({
       {displayDragOverlay && (
         <div className={styles.dragAndDropOverlay}>Drop to open</div>
       )}
-      <Toolbar className={styles.toolbar}>
-        <ToolButton
-          icon={faPlus}
-          onClick={createFile}
-          title={
-            <>
-              New<kbd>Ctrl</kbd>+<kbd>N</kbd>
-            </>
-          }
-        />
-        <ToolButton
-          icon={faFolderOpen}
-          onClick={() => open()}
-          title={
-            <>
-              Open<kbd>Ctrl</kbd>+<kbd>O</kbd>
-            </>
-          }
-        />
-        <ToolButton
-          disabled={code.length === 0 || !canFormat(activeFile.language)}
-          icon={faStream}
-          onClick={format}
-          title={
-            <>
-              Format<kbd>Ctrl</kbd>+<kbd>S</kbd>
-            </>
-          }
-        />
-        <ToolButton
-          disabled={code.length === 0}
-          icon={faCamera}
-          onClick={() => exportAsImage(code, highlightedCode)}
-          title="Export as image"
-        />
-      </Toolbar>
     </div>
   );
 };

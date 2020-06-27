@@ -6,6 +6,7 @@ import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';
 import { Toolbar } from '../../components/Toolbar';
 import { ToolButton } from '../../components/ToolButton';
+import { Shortcut } from '../Shortcut';
 import { Logs } from './components/Logs';
 import { Log } from './Log';
 import { decorateConsole } from './utils/decorateConsole';
@@ -50,7 +51,8 @@ export const Console: FC<Props> = ({ active, className, codeToExec = '' }) => {
           onClick={() => execCode(codeToExec)}
           title={
             <>
-              Execute<kbd>Ctrl</kbd>+<kbd>E</kbd>
+              Execute
+              <Shortcut keys={['Ctrl', 'E']} />
             </>
           }
         />
