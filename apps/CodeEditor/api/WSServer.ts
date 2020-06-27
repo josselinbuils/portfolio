@@ -166,13 +166,13 @@ export class WSServer {
 
       case ACTION_UPDATE_CODE: {
         const {
-          cursorOffsetBefore,
+          currentSelection,
           diffs,
+          newSelection,
           safetyHash,
-          selection,
         } = action.payload;
 
-        if (cursorOffsetBefore === undefined || selection === undefined) {
+        if (currentSelection === undefined || newSelection === undefined) {
           return;
         }
         const code = diffs.reduce(applyDiff, this.code);
@@ -187,14 +187,20 @@ export class WSServer {
         }
         this.dispatchAll(({ id }) =>
           id === client.id
-            ? createAction.updateCode(diffs, selection)
+            ? createAction.updateCode(diffs, newSelection)
             : createAction.updateCode(diffs)
         );
-        this.updateClientSelection(client, selection, true);
-        this.history.pushState(this.code, cursorOffsetBefore, {
-          code,
-          selection,
-        });
+        this.updateClientSelection(client, newSelection, true);
+        this.history.pushState(
+          {
+            code: this.code,
+            selection: currentSelection,
+          },
+          {
+            code,
+            selection: newSelection,
+          }
+        );
         this.updateCode(code);
       }
     }

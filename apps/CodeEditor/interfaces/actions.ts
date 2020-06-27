@@ -36,10 +36,10 @@ export interface UpdateClientStateAction {
 export interface UpdateCodeAction {
   type: typeof ACTION_UPDATE_CODE;
   payload: {
-    cursorOffsetBefore?: number;
+    currentSelection?: Selection;
     diffs: Diff[];
+    newSelection?: Selection;
     safetyHash?: number;
-    selection?: Selection;
   };
 }
 

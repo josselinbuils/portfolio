@@ -21,9 +21,9 @@ export const handleAction = {
   }),
 
   [ACTION_UPDATE_CODE]: (state: ClientState, action: UpdateCodeAction) => {
-    const { diffs, selection = state.selection } = action.payload;
+    const { diffs, newSelection = state.selection } = action.payload;
     const code = diffs.reduce(applyDiff, state.code);
-    return { ...state, code, selection };
+    return { ...state, code, selection: newSelection };
   },
 
   [ACTION_UPDATE_CURSORS]: (

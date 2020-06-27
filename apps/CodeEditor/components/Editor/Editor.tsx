@@ -97,15 +97,14 @@ export const Editor: FC<Props> = ({
   const { pushState } = useHistory({
     active: !isSharedFileActive,
     code,
-    cursorOffset,
     fileName: activeFileName,
+    selection,
     applyState,
   });
   const { updateClientState, updateSelection } = useSharedFile({
     active: isSharedFileActive,
     applyClientState,
     code,
-    cursorOffset,
     selection,
   });
   const activeFile = files.find(

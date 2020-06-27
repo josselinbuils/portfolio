@@ -1,26 +1,22 @@
 import { EditableState } from '../interfaces/EditableState';
+import { Selection } from '../interfaces/Selection';
 import { createSelection } from './createSelection';
 import { applyDiff, Diff, getDiffs, revertDiff } from './diffs';
 import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;
 
-// TODO manage selections
-
 export class History {
   private index = -1;
   private readonly states = [] as HistoryState[];
 
-  pushState(
-    currentCode: string,
-    cursorOffset: number,
-    newState: EditableState
-  ): void {
+  pushState(currentState: EditableState, newState: EditableState): void {
     const { index, states } = this;
-    const newDiffs = getDiffs(currentCode, newState.code);
+    const { code, selection } = currentState;
+    const newDiffs = getDiffs(code, newState.code);
     const firstNewDiff = newDiffs[0];
-    let currentState: HistoryState;
-    let lastStoredCursorOffset: number;
+    let lastStoredState: HistoryState;
+    let lastStoredSelection: Selection;
 
     if (index < states.length - 1) {
       states.length = index + 1;
@@ -28,43 +24,48 @@ export class History {
       if (states.length >= HISTORY_SIZE_LIMIT) {
         states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
       }
-      currentState = states[states.length - 1];
-      lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
+      lastStoredState = states[states.length - 1];
+      lastStoredSelection = lastStoredState?.selection ?? createSelection(0);
 
       if (
         states.length > 0 &&
         newDiffs.length === 1 &&
-        currentState.diffs.length > 0
+        lastStoredState.diffs.length > 0
       ) {
-        const currentDiffs = currentState.diffs;
+        const currentDiffs = lastStoredState.diffs;
         const lastCurrentDiff = currentDiffs[currentDiffs.length - 1];
 
         if (
           !/\s/.test(firstNewDiff[2]) &&
           firstNewDiff[0] === lastCurrentDiff[0] &&
-          cursorOffset === lastStoredCursorOffset &&
-          !isIntoBrackets(currentCode, cursorOffset)
+          selection.start === lastStoredSelection.start &&
+          selection.end === lastStoredSelection.end &&
+          selection.end === selection.start &&
+          !isIntoBrackets(code, selection.start)
         ) {
-          currentState.cursorOffset = newState.selection.start;
+          lastStoredState.selection = newState.selection;
           currentDiffs.push(firstNewDiff);
           return;
         }
       }
     }
 
-    currentState = states[states.length - 1];
-    lastStoredCursorOffset = currentState?.cursorOffset ?? 0;
+    lastStoredState = states[states.length - 1];
+    lastStoredSelection = lastStoredState?.selection ?? createSelection(0);
 
-    if (newDiffs.length === 1 && cursorOffset !== lastStoredCursorOffset) {
+    if (
+      selection.start !== lastStoredSelection.start &&
+      selection.end !== lastStoredSelection.end
+    ) {
       states.push({
-        cursorOffset,
         diffs: [],
+        selection,
       });
     }
 
     states.push({
-      cursorOffset: newState.selection.start,
       diffs: newDiffs,
+      selection: newState.selection,
     });
     this.index = states.length - 1;
   }
@@ -74,14 +75,14 @@ export class History {
 
     if (index < states.length - 1) {
       const newIndex = index + 1;
-      const { cursorOffset, diffs } = states[newIndex];
+      const { diffs, selection } = states[newIndex];
       const newCode = diffs.reduce(applyDiff, currentCode);
 
       this.index = newIndex;
 
       return {
         code: newCode,
-        selection: createSelection(cursorOffset),
+        selection,
       };
     }
   }
@@ -92,20 +93,20 @@ export class History {
     if (index > -1) {
       const newIndex = index - 1;
       const prevCode = states[index].diffs.reduceRight(revertDiff, currentCode);
-      const prevCursorOffset =
-        newIndex >= 0 ? states[newIndex].cursorOffset : 0;
+      const prevSelection =
+        newIndex >= 0 ? states[newIndex].selection : createSelection(0);
 
       this.index = newIndex;
 
       return {
         code: prevCode,
-        selection: createSelection(prevCursorOffset),
+        selection: prevSelection,
       };
     }
   }
 }
 
 export interface HistoryState {
-  cursorOffset: number;
   diffs: Diff[];
+  selection: Selection;
 }
