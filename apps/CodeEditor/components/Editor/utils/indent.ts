@@ -1,6 +1,7 @@
 import { INDENT } from '../constants';
 import { EditableState } from '../interfaces/EditableState';
 import { Selection } from '../interfaces/Selection';
+import { createSelection } from './createSelection';
 import { getLineOffset } from './getLineOffset';
 import { spliceString } from './spliceString';
 
@@ -10,10 +11,7 @@ export function indent(code: string, selection: Selection): EditableState {
 
     return {
       code: spliceString(code, selection.start, 0, INDENT),
-      selection: {
-        start: newCursorOffset,
-        end: newCursorOffset,
-      },
+      selection: createSelection(newCursorOffset),
     };
   } else {
     const firstLineOffset = getLineOffset(code, selection.start);
@@ -33,10 +31,10 @@ export function indent(code: string, selection: Selection): EditableState {
 
     return {
       code: newCode,
-      selection: {
-        start: selection.start + INDENT.length,
-        end: selection.end + INDENT.length * processedLineOffsets.length,
-      },
+      selection: createSelection(
+        selection.start + INDENT.length,
+        selection.end + INDENT.length * processedLineOffsets.length
+      ),
     };
   }
 }

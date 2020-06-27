@@ -13,10 +13,13 @@ import {
 import { ClientCursor } from '../components/Editor/hooks/useSharedFile/interfaces/ClientCursor';
 import { computeHash } from '../components/Editor/hooks/useSharedFile/utils/computeHash';
 import { Selection } from '../components/Editor/interfaces/Selection';
+import { createSelection } from '../components/Editor/utils/createSelection';
 import { applyDiff } from '../components/Editor/utils/diffs';
 import { STATE_PATH } from './constants';
 import { createAction } from './utils/createAction';
 import { ExecQueue } from './utils/ExecQueue';
+
+// TODO move shared stuff in root
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
@@ -106,7 +109,7 @@ export class WSServer {
       const client = {
         cursorColor,
         id,
-        selection: { start: 0, end: 0 },
+        selection: createSelection(0),
         ws: wsClient,
       };
       this.clients.push(client);

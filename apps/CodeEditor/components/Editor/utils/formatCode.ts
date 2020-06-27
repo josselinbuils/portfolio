@@ -2,6 +2,7 @@ import { BuiltInParserName, Plugin } from 'prettier';
 import 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import { EditableState } from '../interfaces/EditableState';
+import { createSelection } from './createSelection';
 
 const parserDescriptors = {
   css: {
@@ -41,7 +42,7 @@ export async function formatCode(
   if (parserDescriptor === undefined) {
     return {
       code,
-      selection: { start: cursorOffset, end: cursorOffset },
+      selection: createSelection(cursorOffset),
     };
   }
 
@@ -57,9 +58,6 @@ export async function formatCode(
 
   return {
     code: result.formatted,
-    selection: {
-      start: result.cursorOffset,
-      end: result.cursorOffset,
-    },
+    selection: createSelection(result.cursorOffset),
   };
 }

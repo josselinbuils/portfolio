@@ -1,5 +1,6 @@
 import { EditableState } from '../../interfaces/EditableState';
 import { isIntoBrackets } from '../../utils/autoEditChange/utils/isIntoBrackets';
+import { createSelection } from '../../utils/createSelection';
 import { applyDiff, Diff, getDiffs, revertDiff } from '../../utils/diffs';
 
 const HISTORY_SIZE_LIMIT = 50;
@@ -80,10 +81,7 @@ export class History {
 
       return {
         code: newCode,
-        selection: {
-          start: cursorOffset,
-          end: cursorOffset,
-        },
+        selection: createSelection(cursorOffset),
       };
     }
   }
@@ -101,10 +99,7 @@ export class History {
 
       return {
         code: prevCode,
-        selection: {
-          start: prevCursorOffset,
-          end: prevCursorOffset,
-        },
+        selection: createSelection(prevCursorOffset),
       };
     }
   }

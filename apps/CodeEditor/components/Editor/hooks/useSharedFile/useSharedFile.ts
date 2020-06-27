@@ -5,6 +5,7 @@ import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { EditableState } from '../../interfaces/EditableState';
 import { Selection } from '../../interfaces/Selection';
+import { createSelection } from '../../utils/createSelection';
 import {
   applyDiff,
   Diff,
@@ -26,10 +27,7 @@ const initialState = {
   code: '',
   cursorColor: 'transparent',
   cursors: [],
-  selection: {
-    end: 0,
-    start: 0,
-  },
+  selection: createSelection(0),
 } as ClientState;
 
 const reducer = ((clientState, action) =>

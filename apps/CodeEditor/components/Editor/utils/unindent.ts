@@ -1,6 +1,7 @@
 import { INDENT } from '../constants';
 import { EditableState } from '../interfaces/EditableState';
 import { Selection } from '../interfaces/Selection';
+import { createSelection } from './createSelection';
 import { getLineOffset } from './getLineOffset';
 import { spliceString } from './spliceString';
 
@@ -28,10 +29,10 @@ export function unindent(
     }
     return {
       code: newCode,
-      selection: {
-        start: Math.max(selection.start - INDENT.length, firstLineOffset),
-        end: selection.end - INDENT.length * processedLineOffsets.length,
-      },
+      selection: createSelection(
+        Math.max(selection.start - INDENT.length, firstLineOffset),
+        selection.end - INDENT.length * processedLineOffsets.length
+      ),
     };
   } else if (
     code.slice(selection.start - INDENT.length, selection.start) === INDENT
@@ -40,10 +41,7 @@ export function unindent(
 
     return {
       code: spliceString(code, newCursorOffset, INDENT.length),
-      selection: {
-        start: newCursorOffset,
-        end: newCursorOffset,
-      },
+      selection: createSelection(newCursorOffset),
     };
   }
 }

@@ -1,5 +1,6 @@
 import { INDENT } from '../../constants';
 import { EditableState } from '../../interfaces/EditableState';
+import { createSelection } from '../../utils/createSelection';
 import { unindent } from '../../utils/unindent';
 import {
   applyDiff,
@@ -39,10 +40,7 @@ export function autoEditChange(
     );
     currentState = {
       code: applyDiff(currentState.code, intermediateDiff),
-      selection: {
-        start: cursorOffset,
-        end: cursorOffset,
-      },
+      selection: createSelection(cursorOffset),
     };
   }
 
@@ -59,10 +57,7 @@ export function autoEditChange(
 
       result = {
         code: spliceString(newState.code, cursorOffset, 0, autoCloseChar),
-        selection: {
-          start: cursorOffset,
-          end: cursorOffset,
-        },
+        selection: createSelection(cursorOffset),
       };
     } else if (
       isIntoAutoCloseGroup(currentState.code, currentState.selection.start) &&
@@ -80,10 +75,7 @@ export function autoEditChange(
 
         result = {
           code: spliceString(code, selection.start, 0, insertion),
-          selection: {
-            start: cursorOffset,
-            end: cursorOffset,
-          },
+          selection: createSelection(cursorOffset),
         };
       } else {
         let indent = getLineIndent(code, selection.start);
@@ -108,10 +100,7 @@ export function autoEditChange(
 
         result = {
           code: spliceString(code, selection.start, 0, insertion),
-          selection: {
-            start: cursorOffset,
-            end: cursorOffset,
-          },
+          selection: createSelection(cursorOffset),
         };
       }
     }
@@ -133,10 +122,7 @@ export function autoEditChange(
 
           result = {
             code: spliceString(code, selection.start - delCount, delCount),
-            selection: {
-              start: cursorOffset,
-              end: cursorOffset,
-            },
+            selection: createSelection(cursorOffset),
           };
         } else if (
           code.slice(selection.start - INDENT.length, selection.start) ===

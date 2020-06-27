@@ -1,5 +1,6 @@
 import { EditableState } from '../interfaces/EditableState';
 import { Selection } from '../interfaces/Selection';
+import { createSelection } from './createSelection';
 import { getLine } from './getLine';
 import { getLineOffset } from './getLineOffset';
 import { spliceString } from './spliceString';
@@ -44,10 +45,10 @@ export function comment(
 
     return {
       code: newCode,
-      selection: {
-        start: selection.start - COMMENT.length,
-        end: selection.end - COMMENT.length * lineOffsetsToUncomment.length,
-      },
+      selection: createSelection(
+        selection.start - COMMENT.length,
+        selection.end - COMMENT.length * lineOffsetsToUncomment.length
+      ),
     };
   }
 
@@ -84,9 +85,9 @@ export function comment(
 
   return {
     code: newCode,
-    selection: {
-      start: selection.start + COMMENT.length,
-      end: selection.end + COMMENT.length * lineOffsetsToComment.length,
-    },
+    selection: createSelection(
+      selection.start + COMMENT.length,
+      selection.end + COMMENT.length * lineOffsetsToComment.length
+    ),
   };
 }

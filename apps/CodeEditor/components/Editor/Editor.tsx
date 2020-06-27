@@ -37,6 +37,7 @@ import { EditorFile } from './interfaces/EditorFile';
 import { Selection } from './interfaces/Selection';
 import { autoEditChange } from './utils/autoEditChange';
 import { comment } from './utils/comment';
+import { createSelection } from './utils/createSelection';
 import { exportAsImage } from './utils/exportAsImage';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
@@ -153,10 +154,7 @@ export const Editor: FC<Props> = ({
   useLayoutEffect(() => {
     applyState({
       code: activeFile.content,
-      selection: {
-        start: 0,
-        end: 0,
-      },
+      selection: createSelection(0),
     });
     if (textAreaElementRef.current !== null) {
       textAreaElementRef.current.focus();
@@ -302,10 +300,7 @@ export const Editor: FC<Props> = ({
     const currentState = { code, selection };
     const newState = autoEditChange(currentState, {
       code: newCode,
-      selection: {
-        start: newCursorOffset,
-        end: newCursorOffset,
-      },
+      selection: createSelection(newCursorOffset),
     });
 
     if (newState !== undefined) {
@@ -358,10 +353,7 @@ export const Editor: FC<Props> = ({
   ): void {
     updateState({
       code: spliceString(code, cursorOffset, 0, text),
-      selection: {
-        start: newCursorOffset,
-        end: newCursorOffset,
-      },
+      selection: createSelection(newCursorOffset),
     });
   }
 
