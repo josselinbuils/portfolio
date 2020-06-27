@@ -18,25 +18,15 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   return (
     <>
       {windowInstances.map(
-        ({
-          active,
-          id,
-          minimizedTopPosition,
-          ref,
-          windowComponent: WindowComponent,
-          zIndex,
-        }) => (
+        ({ id, windowComponent: WindowComponent, ...forwardedProps }) => (
           <WindowComponent
-            active={active}
             key={id}
             id={id}
-            minimizedTopPosition={minimizedTopPosition}
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
             visibleAreaSize={visibleAreaSize}
-            windowRef={ref}
-            zIndex={zIndex}
+            {...forwardedProps}
           />
         )
       )}

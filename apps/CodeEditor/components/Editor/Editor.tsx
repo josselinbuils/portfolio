@@ -42,7 +42,7 @@ import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange';
 import { comment } from './utils/comment';
 import { exportAsImage } from './utils/exportAsImage';
-import { fileSaver } from './utils/fileSaver';
+import { fileSaver, SHARED_FILENAME } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
@@ -94,7 +94,7 @@ export const Editor: FC<Props> = ({
     },
     [onChange]
   );
-  const isSharedFileActive = activeFileName === 'shared.js';
+  const isSharedFileActive = activeFileName === SHARED_FILENAME;
   const { pushState } = useHistory({
     active: !isSharedFileActive,
     code,

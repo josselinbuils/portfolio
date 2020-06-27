@@ -1,11 +1,15 @@
 import { RefObject } from 'react';
-import { Window, WindowComponent } from '~/platform/components/Window';
+import {
+  InjectedWindowProps,
+  Window,
+  WindowComponent,
+} from '~/platform/components/Window';
 
-export interface WindowInstance {
+export interface WindowInstance extends Partial<InjectedWindowProps> {
   active: boolean;
   id: number;
   minimizedTopPosition?: number;
-  ref: RefObject<Window>;
+  windowRef: RefObject<Window>;
   windowComponent: WindowComponent;
   zIndex: number;
 }

@@ -1,6 +1,7 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
 import { AppDescriptor, isAppDescriptor } from '~/apps/AppDescriptor';
+import { WindowProps } from '~/platform/components/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { WindowInstance } from './WindowInstance';
 
@@ -14,7 +15,9 @@ export class WindowManager {
   private id = -1;
 
   constructor() {
-    this.openWindow(WindowManager.defaultApp);
+    if (WindowManager.defaultApp !== undefined) {
+      this.openWindow(WindowManager.defaultApp);
+    }
   }
 
   closeWindow = (id: number): void => {
@@ -30,7 +33,7 @@ export class WindowManager {
   };
 
   hideWindow = (id: number): void => {
-    const componentInstance = this.getWindowInstance(id).ref.current;
+    const componentInstance = this.getWindowInstance(id).windowRef.current;
 
     if (componentInstance !== null) {
       componentInstance.hide();
@@ -47,20 +50,24 @@ export class WindowManager {
   }
 
   isWindowVisible(id: number): boolean {
-    const componentInstance = this.getWindowInstance(id).ref.current;
+    const componentInstance = this.getWindowInstance(id).windowRef.current;
     return componentInstance !== null ? componentInstance.visible : false;
   }
 
-  async openWindow(app: AppDescriptor | WindowComponent): Promise<void> {
+  async openWindow(
+    app: AppDescriptor | WindowComponent,
+    windowProps: Partial<WindowProps> = {}
+  ): Promise<void> {
     const windowComponent = isAppDescriptor(app)
       ? (await app.factory()).default
       : app;
 
     const windowInstance: WindowInstance = {
+      ...windowProps,
       active: false,
       id: ++this.id,
-      ref: createRef(),
       windowComponent,
+      windowRef: createRef(),
       zIndex: 0,
     };
 
@@ -74,7 +81,7 @@ export class WindowManager {
   }
 
   showWindow(id: number): void {
-    const componentInstance = this.getWindowInstance(id).ref.current;
+    const componentInstance = this.getWindowInstance(id).windowRef.current;
 
     if (componentInstance !== null) {
       componentInstance.show();

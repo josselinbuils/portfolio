@@ -1,5 +1,6 @@
 import { EditorFile } from '../interfaces/EditorFile';
 
+export const SHARED_FILENAME = 'shared.js';
 const STORAGE_KEY = 'codeEditor';
 
 const defaultFiles = [
@@ -11,7 +12,7 @@ const defaultFiles = [
   {
     content: '',
     language: 'javascript',
-    name: 'shared.js',
+    name: SHARED_FILENAME,
   },
 ];
 

@@ -12,7 +12,7 @@ const DOM_UPDATE_DELAY = 10;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
-export class Window extends Component<Props, State> {
+export class Window extends Component<WindowProps, State> {
   visible = true;
 
   private contentRatio?: number;
@@ -23,7 +23,7 @@ export class Window extends Component<Props, State> {
   } = {};
   private readonly windowRef = createRef<HTMLDivElement>();
 
-  constructor(props: Props) {
+  constructor(props: WindowProps) {
     super(props);
 
     const { minHeight, minWidth } = this.props;
@@ -40,7 +40,7 @@ export class Window extends Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Props): void {
+  componentDidUpdate(prevProps: WindowProps): void {
     if (!this.props.resizable && prevProps.resizable && this.state.maximized) {
       this.setState({ maximized: false });
       delete this.lastDisplayProperties.maximize;
@@ -59,11 +59,23 @@ export class Window extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { keepContentRatio, minHeight, minWidth } = this.props;
+    const { keepContentRatio, startMaximized } = this.props;
 
-    this.setSize(minWidth, minHeight);
-    this.setStyle('left', `calc((100% - ${minWidth / 10}rem) * 0.5)`);
-    this.setStyle('top', `calc((100% - ${minHeight / 10}rem) * 0.2)`);
+    if (startMaximized) {
+      this.lastDisplayProperties.maximize = {
+        ...this.getPosition(),
+        ...this.getSize(),
+      };
+      this.setPosition(0, 0);
+      this.setMaxSize();
+      this.setState({ maximized: true });
+    } else {
+      const { minHeight, minWidth } = this.props;
+
+      this.setSize(minWidth, minHeight);
+      this.setStyle('left', `calc((100% - ${minWidth / 10}rem) * 0.5)`);
+      this.setStyle('top', `calc((100% - ${minHeight / 10}rem) * 0.2)`);
+    }
 
     if (keepContentRatio) {
       const contentSize = this.getContentSize();
@@ -505,7 +517,7 @@ export class Window extends Component<Props, State> {
   }
 }
 
-interface Props {
+export interface WindowProps {
   active: boolean;
   background: string;
   keepContentRatio?: boolean;
@@ -516,6 +528,7 @@ interface Props {
   minimizedTopPosition?: number;
   minWidth: number;
   resizable?: boolean;
+  startMaximized?: boolean;
   title: string;
   titleBackground?: string;
   titleColor: string;

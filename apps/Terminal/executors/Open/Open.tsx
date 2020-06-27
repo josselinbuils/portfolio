@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
-import { AppDescriptor } from '~/apps/AppDescriptor';
-import { PINNED_APPS_DESCRIPTORS } from '~/platform/components/Desktop/components/TaskBar/constants';
 import { useInjector } from '~/platform/hooks/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
+import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 import { CommandHelp } from '../../components/CommandHelp';
 import { Executor } from '../Executor';
 
@@ -32,17 +31,3 @@ export const Open: Executor = ({ args }) => {
     />
   );
 };
-
-function getAppDescriptors(): { [name: string]: AppDescriptor } {
-  const descriptors = {} as { [name: string]: AppDescriptor };
-
-  PINNED_APPS_DESCRIPTORS.slice()
-    .sort((a, b) =>
-      a.appName.toLocaleLowerCase() > b.appName.toLowerCase() ? 1 : -1
-    )
-    .forEach((descriptor) => {
-      descriptors[descriptor.appName.toLocaleLowerCase()] = descriptor;
-    });
-
-  return descriptors;
-}

@@ -1,16 +1,15 @@
 import { FC, RefObject } from 'react';
 import { AppDescriptor } from '~/apps/AppDescriptor';
 import { Size } from '~/platform/interfaces/Size';
-import { Window } from './Window';
+import { Window, WindowProps } from './Window';
 
 export interface WindowComponent extends FC<InjectedWindowProps> {
   appDescriptor: AppDescriptor;
 }
 
-interface InjectedWindowProps {
+export interface InjectedWindowProps extends Partial<WindowProps> {
   active: boolean;
   id: number;
-  minimizedTopPosition?: number;
   visibleAreaSize: Size | undefined;
   windowRef: RefObject<Window>;
   zIndex: number;
