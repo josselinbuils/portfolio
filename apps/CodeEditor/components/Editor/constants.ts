@@ -1,6 +1,6 @@
+import { BRACKET_GROUPS } from '../../constants';
 import { createAutoCLoseMap } from './utils/createAutoCloseMap';
 
-export const BRACKET_GROUPS = ['{}', '()', '[]'];
 export const AUTO_CLOSE_GROUPS = [...BRACKET_GROUPS, '""', "''", '``'];
 export const AUTO_CLOSE_MAP = createAutoCLoseMap(AUTO_CLOSE_GROUPS);
 

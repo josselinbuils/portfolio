@@ -1,9 +1,9 @@
-import { EditableState } from '../interfaces/EditableState';
-import { Selection } from '../interfaces/Selection';
-import { createSelection } from './createSelection';
+import { EditableState } from '../../../interfaces/EditableState';
+import { Selection } from '../../../interfaces/Selection';
+import { createSelection } from '../../../utils/createSelection';
+import { spliceString } from '../../../utils/spliceString';
 import { getLine } from './getLine';
 import { getLineOffset } from './getLineOffset';
-import { spliceString } from './spliceString';
 
 const COMMENT = '// ';
 

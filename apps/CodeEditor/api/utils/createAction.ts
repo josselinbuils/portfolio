@@ -7,11 +7,11 @@ import {
   UpdateCodeAction,
   UpdateCursorsAction,
   UpdateSelectionAction,
-} from '../../components/Editor/hooks/useSharedFile/interfaces/actions';
-import { ClientCursor } from '../../components/Editor/hooks/useSharedFile/interfaces/ClientCursor';
-import { ClientState } from '../../components/Editor/hooks/useSharedFile/interfaces/ClientState';
-import { Selection } from '../../components/Editor/interfaces/Selection';
-import { Diff } from '../../components/Editor/utils/diffs';
+} from '../../interfaces/actions';
+import { ClientCursor } from '../../interfaces/ClientCursor';
+import { ClientState } from '../../interfaces/ClientState';
+import { Selection } from '../../interfaces/Selection';
+import { Diff } from '../../utils/diffs';
 
 export const createAction = {
   updateClientState: (

@@ -1,5 +1,4 @@
 import { Reducer } from 'react';
-import { applyDiff } from '~/apps/CodeEditor/components/Editor/utils/diffs';
 import {
   Action,
   ACTION_UPDATE_CLIENT_STATE,
@@ -10,9 +9,10 @@ import {
   UpdateCodeAction,
   UpdateCursorsAction,
   UpdateSelectionAction,
-} from '../interfaces/actions';
-import { ClientCursor } from '../interfaces/ClientCursor';
-import { ClientState } from '../interfaces/ClientState';
+} from '~/apps/CodeEditor/interfaces/actions';
+import { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
+import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 
 export const handleAction = {
   [ACTION_UPDATE_CLIENT_STATE]: (state, action: UpdateClientStateAction) => ({

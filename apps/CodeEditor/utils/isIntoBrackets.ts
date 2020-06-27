@@ -1,4 +1,4 @@
-import { BRACKET_GROUPS } from '../../../constants';
+import { BRACKET_GROUPS } from '../constants';
 
 export function isIntoBrackets(code: string, cursorOffset: number): boolean {
   return BRACKET_GROUPS.includes(

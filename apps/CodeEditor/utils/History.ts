@@ -1,7 +1,7 @@
-import { EditableState } from '../../interfaces/EditableState';
-import { isIntoBrackets } from '../../utils/autoEditChange/utils/isIntoBrackets';
-import { createSelection } from '../../utils/createSelection';
-import { applyDiff, Diff, getDiffs, revertDiff } from '../../utils/diffs';
+import { EditableState } from '../interfaces/EditableState';
+import { createSelection } from './createSelection';
+import { applyDiff, Diff, getDiffs, revertDiff } from './diffs';
+import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;
 

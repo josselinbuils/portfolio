@@ -1,24 +1,24 @@
-import { INDENT } from '../../constants';
-import { EditableState } from '../../interfaces/EditableState';
-import { createSelection } from '../../utils/createSelection';
-import { unindent } from '../../utils/unindent';
+import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import {
   applyDiff,
   Diff,
   DiffType,
   getCursorOffsetBeforeDiff,
   getDiffs,
-} from '../diffs';
+} from '~/apps/CodeEditor/utils/diffs';
+import { isIntoBrackets } from '~/apps/CodeEditor/utils/isIntoBrackets';
+import { spliceString } from '~/apps/CodeEditor/utils/spliceString';
+import { INDENT } from '../../constants';
+import { unindent } from '../../utils/unindent';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
 import { getLineNumber } from '../getLineNumber';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
-import { spliceString } from '../spliceString';
 import { getAutoCloseChar } from './utils/getAutoCloseChar';
 import { isAutoCloseChar } from './utils/isAutoCloseChar';
-import { isIntoBrackets } from './utils/isIntoBrackets';
 import { isOpenBracket } from './utils/isOpenBracket';
 
 const REGEX_BREAK = /^ *break; *$/;

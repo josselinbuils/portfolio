@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react';
+import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import { History } from '~/apps/CodeEditor/utils/History';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { EditableState } from '../../interfaces/EditableState';
-import { History } from './History';
 
 export function useHistory({
   active,

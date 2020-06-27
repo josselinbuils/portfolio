@@ -2,24 +2,22 @@ import fs from 'fs';
 import { IncomingMessage } from 'http';
 import WebSocket, { OPEN, Server } from 'ws';
 import { Logger } from '~/platform/api/Logger';
-import { History } from '../components/Editor/hooks/useHistory/History';
 import {
   Action,
   ACTION_REDO,
   ACTION_UNDO,
   ACTION_UPDATE_CODE,
   ACTION_UPDATE_SELECTION,
-} from '../components/Editor/hooks/useSharedFile/interfaces/actions';
-import { ClientCursor } from '../components/Editor/hooks/useSharedFile/interfaces/ClientCursor';
-import { computeHash } from '../components/Editor/hooks/useSharedFile/utils/computeHash';
-import { Selection } from '../components/Editor/interfaces/Selection';
-import { createSelection } from '../components/Editor/utils/createSelection';
-import { applyDiff } from '../components/Editor/utils/diffs';
+} from '../interfaces/actions';
+import { ClientCursor } from '../interfaces/ClientCursor';
+import { Selection } from '../interfaces/Selection';
+import { computeHash } from '../utils/computeHash';
+import { createSelection } from '../utils/createSelection';
+import { applyDiff } from '../utils/diffs';
+import { History } from '../utils/History';
 import { STATE_PATH } from './constants';
 import { createAction } from './utils/createAction';
 import { ExecQueue } from './utils/ExecQueue';
-
-// TODO move shared stuff in root
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 

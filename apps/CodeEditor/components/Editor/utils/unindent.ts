@@ -1,9 +1,9 @@
+import { EditableState } from '../../../interfaces/EditableState';
+import { Selection } from '../../../interfaces/Selection';
+import { createSelection } from '../../../utils/createSelection';
+import { spliceString } from '../../../utils/spliceString';
 import { INDENT } from '../constants';
-import { EditableState } from '../interfaces/EditableState';
-import { Selection } from '../interfaces/Selection';
-import { createSelection } from './createSelection';
 import { getLineOffset } from './getLineOffset';
-import { spliceString } from './spliceString';
 
 export function unindent(
   code: string,

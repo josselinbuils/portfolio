@@ -1,20 +1,20 @@
 import { Deferred } from '@josselinbuils/utils';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
-import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
-import { EditableState } from '../../interfaces/EditableState';
-import { Selection } from '../../interfaces/Selection';
-import { createSelection } from '../../utils/createSelection';
+import { Action } from '~/apps/CodeEditor/interfaces/actions';
+import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { computeHash } from '~/apps/CodeEditor/utils/computeHash';
+import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import {
   applyDiff,
   Diff,
   getCursorOffsetAfterDiff,
   getDiffs,
-} from '../../utils/diffs';
-import { Action } from './interfaces/actions';
-import { ClientState } from './interfaces/ClientState';
-import { computeHash } from './utils/computeHash';
+} from '~/apps/CodeEditor/utils/diffs';
+import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { createAction } from './utils/createAction';
 import { handleAction } from './utils/handleAction';
 

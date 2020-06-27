@@ -1,5 +1,3 @@
-import { Selection } from '../../../interfaces/Selection';
-import { Diff } from '../../../utils/diffs';
 import {
   ACTION_REDO,
   ACTION_UNDO,
@@ -11,8 +9,10 @@ import {
   UpdateClientStateAction,
   UpdateCodeAction,
   UpdateSelectionAction,
-} from '../interfaces/actions';
-import { ClientState } from '../interfaces/ClientState';
+} from '~/apps/CodeEditor/interfaces/actions';
+import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { Diff } from '~/apps/CodeEditor/utils/diffs';
 
 export const createAction = {
   redo: (): RedoAction => ({ type: ACTION_REDO }),

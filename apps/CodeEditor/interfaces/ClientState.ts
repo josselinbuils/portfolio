@@ -1,5 +1,5 @@
-import { EditableState } from '../../../interfaces/EditableState';
 import { ClientCursor } from './ClientCursor';
+import { EditableState } from './EditableState';
 
 export interface ClientState extends EditableState {
   cursorColor: string;

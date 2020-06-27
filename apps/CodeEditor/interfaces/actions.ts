@@ -1,7 +1,7 @@
-import { Selection } from '../../../interfaces/Selection';
-import { Diff } from '../../../utils/diffs';
+import { Diff } from '../utils/diffs';
 import { ClientCursor } from './ClientCursor';
 import { ClientState } from './ClientState';
+import { Selection } from './Selection';
 
 export const ACTION_REDO = 'REDO';
 export const ACTION_UNDO = 'UNDO';
