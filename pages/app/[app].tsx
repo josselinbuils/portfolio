@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
+import { Home } from '~/platform/components/Home';
 import { useInjector } from '~/platform/hooks/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
-import { Home } from '../Home';
 
 const App: FC = () => {
   const windowManager = useInjector(WindowManager);

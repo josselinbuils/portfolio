@@ -1,6 +1,6 @@
 import Terminal from '~/apps/Terminal';
+import { Home } from '~/platform/components/Home';
 import { WindowManager } from '~/platform/services/WindowManager';
-import { Home } from './Home';
 
 WindowManager.defaultApp = Terminal;
 
