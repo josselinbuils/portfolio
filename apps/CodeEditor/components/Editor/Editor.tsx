@@ -195,7 +195,7 @@ export const Editor: FC<Props> = ({
         textAreaElement.setSelectionRange(selection.start, selection.end);
       }
     }
-  });
+  }, [selection, textAreaElementRef]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -339,7 +339,10 @@ export const Editor: FC<Props> = ({
       return;
     }
 
-    const newSelection = { end: selectionEnd, start: selectionStart };
+    const newSelection = {
+      start: selectionStart,
+      end: selectionEnd,
+    };
 
     if (isSharedFileActive) {
       updateSelection(newSelection);

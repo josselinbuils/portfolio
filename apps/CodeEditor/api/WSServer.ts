@@ -78,8 +78,8 @@ export class WSServer {
     for (const client of this.clients) {
       if (client.selection.start > codeLength) {
         this.updateClientSelection(client, {
-          end: codeLength,
           start: codeLength,
+          end: codeLength,
         });
       }
     }
