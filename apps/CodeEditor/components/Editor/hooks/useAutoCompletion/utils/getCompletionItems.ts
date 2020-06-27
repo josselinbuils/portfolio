@@ -1,5 +1,8 @@
 import { CompletionItem } from '../CompletionItem';
-import { GLOBAL_COMPLETION_ITEMS, OBJECTS_COMPLETION_MAP } from '../dictionary';
+import {
+  getGlobalCompletionItems,
+  getObjectsCompletionMap,
+} from '../dictionary';
 
 export function getCompletionItems(
   partialKeyword: string
@@ -10,17 +13,18 @@ export function getCompletionItems(
   if (partialKeyword.includes('.')) {
     const objectName = partialKeyword.split('.').slice(0, -1).join('.');
     const objectPartialProperty = partialKeyword.split('.').pop() as string;
+    const objectsCompletionMap = getObjectsCompletionMap();
 
-    if (OBJECTS_COMPLETION_MAP[objectName] !== undefined) {
-      completionItems = OBJECTS_COMPLETION_MAP[
-        objectName
-      ].filter(({ keyword }) => keyword.startsWith(objectPartialProperty));
+    if (objectsCompletionMap[objectName] !== undefined) {
+      completionItems = objectsCompletionMap[objectName].filter(({ keyword }) =>
+        keyword.startsWith(objectPartialProperty)
+      );
       correctedPartialKeyword = objectPartialProperty;
     }
   } else {
     completionItems =
       partialKeyword.length > 1
-        ? GLOBAL_COMPLETION_ITEMS.filter(({ keyword }) =>
+        ? getGlobalCompletionItems().filter(({ keyword }) =>
             keyword.startsWith(partialKeyword)
           )
         : [];
