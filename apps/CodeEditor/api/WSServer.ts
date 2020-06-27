@@ -93,7 +93,7 @@ export class WSServer {
     return this.clients.map(({ cursorColor, id, selection }) => ({
       clientID: id,
       color: cursorColor,
-      offset: selection.start,
+      selection,
     }));
   }
 

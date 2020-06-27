@@ -1,7 +1,6 @@
 import React, { FC, useLayoutEffect, useState } from 'react';
 import { Position } from '~/platform/interfaces/Position';
-// Needs to import directly from getCursorPosition to avoid webpack crash
-import { getCursorPosition } from '../../utils/getCursorPosition';
+import { getOffsetPosition } from '../../utils/getOffsetPosition';
 
 import styles from './Cursor.module.scss';
 
@@ -9,7 +8,7 @@ export const Cursor: FC<Props> = ({ color, offset, parent }) => {
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   useLayoutEffect(() => {
-    setPosition(getCursorPosition(parent, offset));
+    setPosition(getOffsetPosition(parent, offset));
   }, [offset, parent]);
 
   return (

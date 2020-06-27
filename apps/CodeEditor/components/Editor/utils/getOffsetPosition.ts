@@ -35,7 +35,7 @@ const properties = [
 ];
 
 // Based on https://github.com/component/textarea-caret-position
-export function getCursorPosition(
+export function getOffsetPosition(
   element: HTMLTextAreaElement,
   cursorOffset: number
 ): Position<number> {

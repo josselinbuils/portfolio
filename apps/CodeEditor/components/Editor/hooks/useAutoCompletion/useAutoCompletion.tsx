@@ -1,8 +1,8 @@
 import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
-import { getCursorPosition } from '../../utils/getCursorPosition';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
+import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import { getCompletion } from './utils/getCompletion';
 import { getCompletionItems } from './utils/getCompletionItems';
 
@@ -49,7 +49,7 @@ export function useAutoCompletion({
       );
 
       if (completionItems.length > 0) {
-        const cursorPosition = getCursorPosition(
+        const cursorPosition = getOffsetPosition(
           textAreaElement,
           cursorOffset - correctedPartialKeyword.length
         );

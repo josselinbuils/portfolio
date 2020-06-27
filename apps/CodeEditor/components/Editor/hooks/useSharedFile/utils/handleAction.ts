@@ -10,7 +10,6 @@ import {
   UpdateCursorsAction,
   UpdateSelectionAction,
 } from '~/apps/CodeEditor/interfaces/actions';
-import { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 
@@ -44,7 +43,9 @@ export const handleAction = {
     const cursorToEdit = state.cursors.find(
       (cursor) => cursor.clientID === clientID
     );
-    (cursorToEdit as ClientCursor).offset = selection.start;
+    if (cursorToEdit !== undefined) {
+      cursorToEdit.selection = selection;
+    }
 
     return { ...state };
   },

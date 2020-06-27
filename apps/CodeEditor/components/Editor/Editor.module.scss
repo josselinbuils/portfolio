@@ -61,6 +61,7 @@
   font-size: $fontSize;
   line-height: $lineHeight;
   position: absolute;
+  z-index: 0;
   top: 2.7rem;
   left: 7rem;
   overflow-y: auto;
