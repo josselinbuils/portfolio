@@ -34,19 +34,28 @@ export function comment(
     );
 
     lineOffsetsToUncomment.forEach((lineOffset, index) => {
-      const correctedOffset = lineOffset - index * COMMENT.length;
+      const correctedLineOffset = lineOffset - index * COMMENT.length;
+      const lineCommentOffset = getLine(newCode, correctedLineOffset).indexOf(
+        COMMENT
+      );
 
       newCode = spliceString(
         newCode,
-        correctedOffset + getLine(newCode, correctedOffset).indexOf(COMMENT),
+        correctedLineOffset + lineCommentOffset,
         COMMENT.length
       );
     });
 
+    const firstLineCommentOffset = getLine(code, firstLineOffset).indexOf(
+      COMMENT
+    );
+
     return {
       code: newCode,
       selection: createSelection(
-        selection.start - COMMENT.length,
+        selection.start < firstLineOffset + firstLineCommentOffset
+          ? selection.start
+          : selection.start - COMMENT.length,
         selection.end - COMMENT.length * lineOffsetsToUncomment.length
       ),
     };
@@ -86,7 +95,9 @@ export function comment(
   return {
     code: newCode,
     selection: createSelection(
-      selection.start + COMMENT.length,
+      selection.start < firstLineOffset + commentOffset
+        ? selection.start
+        : selection.start + COMMENT.length,
       selection.end + COMMENT.length * lineOffsetsToComment.length
     ),
   };

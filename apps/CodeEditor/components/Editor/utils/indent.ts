@@ -32,7 +32,9 @@ export function indent(code: string, selection: Selection): EditableState {
     return {
       code: newCode,
       selection: createSelection(
-        selection.start + INDENT.length,
+        selection.start === firstLineOffset
+          ? selection.start
+          : selection.start + INDENT.length,
         selection.end + INDENT.length * processedLineOffsets.length
       ),
     };
