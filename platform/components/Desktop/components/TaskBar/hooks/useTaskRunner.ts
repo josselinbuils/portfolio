@@ -1,5 +1,5 @@
-import { useInjector } from '~/platform/hooks/useInjector';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 

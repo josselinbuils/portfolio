@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import { FC, useEffect } from 'react';
-import { Desktop } from '~/platform/components/Desktop';
-import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider/ContextMenuProvider';
-import { TooltipProvider } from '~/platform/providers/TooltipProvider/TooltipProvider';
-import { WindowManager } from '~/platform/services/WindowManager';
-import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
-import { useInjector } from '../hooks/useInjector';
+import { Desktop } from '../components/Desktop';
+import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
+import { useInjector } from '../providers/InjectorProvider/useInjector';
+import { TooltipProvider } from '../providers/TooltipProvider/TooltipProvider';
+import { WindowManager } from '../services/WindowManager';
+import { getAppDescriptors } from '../utils/getAppDescriptors';
 
 export const Home: FC<Props> = ({ app }) => {
   const windowManager = useInjector(WindowManager);

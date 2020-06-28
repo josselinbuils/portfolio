@@ -1,14 +1,15 @@
+import { FC } from 'react';
 import Terminal from '~/apps/Terminal';
 import { Home } from '~/platform/components/Home';
-import { InjectorContext } from '~/platform/hooks/useInjector';
+import { InjectorProvider } from '~/platform/providers/InjectorProvider/InjectorProvider';
 import { WindowManager } from '~/platform/services/WindowManager';
-
-console.log('index page');
 
 WindowManager.defaultApp = Terminal;
 
-export default () => (
-  <InjectorContext.Provider value={{}}>
+const Index: FC = () => (
+  <InjectorProvider>
     <Home />
-  </InjectorContext.Provider>
+  </InjectorProvider>
 );
+
+export default Index;

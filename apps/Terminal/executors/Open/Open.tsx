@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useInjector } from '~/platform/hooks/useInjector';
+import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 import { CommandHelp } from '../../components/CommandHelp';

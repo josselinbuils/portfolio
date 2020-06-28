@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useInjector } from '~/platform/hooks/useInjector';
 import { Size } from '~/platform/interfaces/Size';
+import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 
@@ -9,8 +9,6 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
     windowManager.getWindowInstances()
   );
-
-  console.log({ windowInstances });
 
   useEffect(
     () => windowManager.windowInstancesSubject.subscribe(setWindowInstances),
