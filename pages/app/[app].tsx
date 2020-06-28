@@ -5,6 +5,8 @@ import { useInjector } from '~/platform/hooks/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 
+console.log('app page');
+
 const App: FC = () => {
   const windowManager = useInjector(WindowManager);
   const router = useRouter();
