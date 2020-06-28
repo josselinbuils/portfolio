@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { Desktop } from '~/platform/components/Desktop';
 import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider/ContextMenuProvider';
 import { TooltipProvider } from '~/platform/providers/TooltipProvider/TooltipProvider';
+import { InjectorContext } from '../hooks/useInjector';
 
 export const Home: FC = () => (
   <>
@@ -50,10 +51,12 @@ export const Home: FC = () => (
         src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"
       />
     </Head>
-    <ContextMenuProvider>
-      <TooltipProvider>
-        <Desktop />
-      </TooltipProvider>
-    </ContextMenuProvider>
+    <InjectorContext.Provider value={{}}>
+      <ContextMenuProvider>
+        <TooltipProvider>
+          <Desktop />
+        </TooltipProvider>
+      </ContextMenuProvider>
+    </InjectorContext.Provider>
   </>
 );

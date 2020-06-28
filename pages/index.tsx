@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Terminal from '~/apps/Terminal';
 import { Desktop } from '~/platform/components/Desktop';
+import { InjectorContext } from '~/platform/hooks/useInjector';
 import { ContextMenuProvider } from '~/platform/providers/ContextMenuProvider/ContextMenuProvider';
 import { TooltipProvider } from '~/platform/providers/TooltipProvider/TooltipProvider';
 import { WindowManager } from '~/platform/services/WindowManager';
@@ -55,10 +56,12 @@ export default () => (
         src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"
       />
     </Head>
-    <ContextMenuProvider>
-      <TooltipProvider>
-        <Desktop />
-      </TooltipProvider>
-    </ContextMenuProvider>
+    <InjectorContext.Provider value={{}}>
+      <ContextMenuProvider>
+        <TooltipProvider>
+          <Desktop />
+        </TooltipProvider>
+      </ContextMenuProvider>
+    </InjectorContext.Provider>
   </>
 );

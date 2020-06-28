@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-const InjectorContext = createContext<{ [name: string]: any }>({});
+export const InjectorContext = createContext<{ [name: string]: any }>({});
 
 export function useInjector<T>(
   singletonCLass: (new () => T) & { injectionId: string }
