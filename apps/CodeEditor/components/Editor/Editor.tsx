@@ -195,7 +195,7 @@ export const Editor: FC<Props> = ({
         textAreaElement.setSelectionRange(selection.start, selection.end);
       }
     }
-  }, [selection, textAreaElementRef]);
+  }, [code, selection, textAreaElementRef]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
