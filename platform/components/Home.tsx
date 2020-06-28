@@ -15,7 +15,6 @@ export const Home: FC<Props> = ({ app }) => {
       const descriptor = getAppDescriptors()[app];
 
       if (descriptor !== undefined) {
-        console.log('open', descriptor);
         windowManager.openWindow(descriptor, { startMaximized: true });
       }
     }
@@ -53,13 +52,13 @@ export const Home: FC<Props> = ({ app }) => {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: `\
-    {
-      '@context': 'http://schema.org/',
-      '@type': 'Person',
-      jobTitle: 'Software Engineer',
-      name: 'Josselin BUILS',
-      nationality: 'French',
-    }`,
+{
+  "@context": "http://schema.org/",
+  "@type": "Person",
+  "jobTitle": "Software Engineer",
+  "name": "Josselin BUILS",
+  "nationality": "French"
+}`,
           }}
         />
         <script
