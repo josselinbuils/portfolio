@@ -7,12 +7,12 @@ const defaultFiles = [
   {
     content: '',
     language: 'javascript',
-    name: 'local.js',
+    name: SHARED_FILENAME,
   },
   {
     content: '',
     language: 'javascript',
-    name: SHARED_FILENAME,
+    name: 'local.js',
   },
 ];
 
