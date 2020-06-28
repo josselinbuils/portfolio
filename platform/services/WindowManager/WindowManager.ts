@@ -18,6 +18,7 @@ export class WindowManager {
   private id = -1;
 
   constructor() {
+    console.log('defaultApp', WindowManager.defaultApp);
     if (WindowManager.defaultApp !== undefined) {
       this.openWindow(WindowManager.defaultApp);
     }
