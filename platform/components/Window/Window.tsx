@@ -156,7 +156,7 @@ export class Window extends Component<WindowProps, State> {
         />
         <main
           className={cn(styles.content, {
-            [styles.frozen]: animated || frozen,
+            [styles.frozen]: frozen,
           })}
           ref={this.contentRef}
         >
@@ -497,14 +497,14 @@ export class Window extends Component<WindowProps, State> {
       },
     };
 
-    this.setState({ animated: true }, () =>
+    this.setState({ animated: true, frozen: true }, () =>
       setTimeout(() => {
         if (typeof ready === 'function') {
           ready();
         }
 
         setTimeout(() => {
-          this.setState({ animated: false });
+          this.setState({ animated: false, frozen: false });
 
           if (typeof finished === 'function') {
             finished();
