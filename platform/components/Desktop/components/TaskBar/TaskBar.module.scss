@@ -9,3 +9,9 @@
   color: $textColor;
   background: $backgroundColor;
 }
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .taskBar {
+    display: none;
+  }
+}
