@@ -44,8 +44,16 @@
     flex-direction: column;
   }
 
+  .help {
+    display: none;
+  }
+
   .info {
     margin: 0;
+
+    .social {
+      margin-bottom: 1rem;
+    }
   }
 
   .resume {
