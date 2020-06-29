@@ -71,6 +71,6 @@
 
 @media only screen and (max-width: $mobileBreakpoint) {
   .titlebar {
-    border-radius: 0 !important;
+    display: none;
   }
 }
