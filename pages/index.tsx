@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { NextPage } from 'next';
 import Terminal from '~/apps/Terminal';
 import { Home } from '~/platform/components/Home';
 import { InjectorProvider } from '~/platform/providers/InjectorProvider/InjectorProvider';
@@ -6,7 +6,7 @@ import { WindowManager } from '~/platform/services/WindowManager';
 
 WindowManager.defaultApp = Terminal;
 
-const Index: FC = () => (
+const Index: NextPage = () => (
   <InjectorProvider>
     <Home />
   </InjectorProvider>
