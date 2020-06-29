@@ -41,9 +41,14 @@ export class Window extends Component<WindowProps, State> {
   }
 
   componentDidUpdate(prevProps: WindowProps): void {
-    if (!this.props.resizable && prevProps.resizable && this.state.maximized) {
-      this.setState({ maximized: false });
-      delete this.lastDisplayProperties.maximize;
+    if (this.state.maximized) {
+      if (!this.props.resizable && prevProps.resizable) {
+        this.setState({ maximized: false });
+        delete this.lastDisplayProperties.maximize;
+      }
+      if (this.props.visibleAreaSize !== prevProps.visibleAreaSize) {
+        this.setMaxSize();
+      }
     }
     if (
       this.props.maxHeight !== prevProps.maxHeight ||
