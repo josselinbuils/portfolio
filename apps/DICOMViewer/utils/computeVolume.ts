@@ -1,25 +1,14 @@
-import { NormalizedImageFormat } from '../constants';
 import { SharedProperties } from '../interfaces/SharedProperties';
 import { Frame } from '../models/Frame';
 import { Volume } from '../models/Volume';
+import { isVolume } from './isVolume';
 import { V } from './math/Vector';
 
 export function computeVolume(
   frames: Frame[],
   sharedProperties: SharedProperties
 ): Volume | undefined {
-  const isVolume =
-    frames.length > 30 &&
-    frames.every((frame) => {
-      return (
-        frame.imageFormat === NormalizedImageFormat.Int16 &&
-        frame.dicom.imageOrientation !== undefined &&
-        frame.dicom.imagePosition !== undefined &&
-        frame.dicom.pixelSpacing !== undefined
-      );
-    });
-
-  if (!isVolume) {
+  if (!isVolume(frames)) {
     return undefined;
   }
 

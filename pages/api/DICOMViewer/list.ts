@@ -1,4 +1,4 @@
 import { getList } from '~/apps/DICOMViewer/api/getList';
-import { syncRoute } from '~/platform/api/syncRoute';
+import { asyncRoute } from '~/platform/api/asyncRoute';
 
-export default syncRoute(getList);
+export default asyncRoute(getList);

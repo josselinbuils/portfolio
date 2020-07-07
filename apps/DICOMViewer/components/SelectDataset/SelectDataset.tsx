@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
@@ -85,7 +86,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
       <div className={styles.container}>
         {datasetDescriptors.map((descriptor) => (
           <div
-            className={styles.dataset}
+            className={cn(styles.dataset, { [styles.thd]: descriptor.is3D })}
             key={descriptor.name}
             onClick={() => setDatasetDescriptor(descriptor)}
           >
