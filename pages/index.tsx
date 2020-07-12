@@ -7,7 +7,6 @@ import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
 
 WindowManager.defaultApp = {
   appDescriptor: TerminalDescriptor,
-  // Only there for preload
   windowComponent: Terminal,
 };
 

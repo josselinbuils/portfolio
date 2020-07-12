@@ -18,7 +18,8 @@ export class WindowManager {
 
   constructor() {
     if (WindowManager.defaultApp !== undefined) {
-      this.openWindow(WindowManager.defaultApp.appDescriptor);
+      const { appDescriptor, windowComponent } = WindowManager.defaultApp;
+      this.openWindow(appDescriptor, undefined, windowComponent);
     }
   }
 
@@ -58,9 +59,12 @@ export class WindowManager {
 
   async openWindow(
     appDescriptor: AppDescriptor,
-    windowProps: Partial<WindowProps> = {}
+    windowProps: Partial<WindowProps> = {},
+    windowComponent?: WindowComponent
   ): Promise<void> {
-    const windowComponent = (await appDescriptor.factory()).default;
+    if (windowComponent === undefined) {
+      windowComponent = (await appDescriptor.factory()).default;
+    }
 
     const windowInstance: WindowInstance = {
       ...windowProps,
