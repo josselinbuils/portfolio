@@ -1,4 +1,3 @@
-/* tslint:disable:ordered-imports */
 import Prism, { Environment, hooks, Token } from 'prismjs';
 import 'prismjs/components/prism-css.min';
 import 'prismjs/components/prism-javascript.min';

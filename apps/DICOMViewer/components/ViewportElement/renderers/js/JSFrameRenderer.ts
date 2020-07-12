@@ -15,6 +15,7 @@ import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
 export class JSFrameRenderer implements Renderer {
+  // eslint-disable-next-line react/static-property-placement
   private readonly context: CanvasRenderingContext2D;
   private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
@@ -42,7 +43,7 @@ export class JSFrameRenderer implements Renderer {
     validateCamera2D(frame, camera);
 
     switch (imageFormat) {
-      case NormalizedImageFormat.Int16:
+      case NormalizedImageFormat.Int16: {
         if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
           this.lut =
             viewport.lutComponents !== undefined
@@ -66,6 +67,7 @@ export class JSFrameRenderer implements Renderer {
           this.renderImagePixels(frame, renderingProperties);
         }
         break;
+      }
 
       case NormalizedImageFormat.RGB:
         this.renderRGB(frame, renderingProperties);

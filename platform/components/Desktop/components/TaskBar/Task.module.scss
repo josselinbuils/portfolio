@@ -22,6 +22,7 @@
   height: 6rem;
   cursor: default;
   text-align: center;
+  outline: none; // TODO work on focusable elements
 
   &:hover {
     background: lighten($backgroundColor, 15%);

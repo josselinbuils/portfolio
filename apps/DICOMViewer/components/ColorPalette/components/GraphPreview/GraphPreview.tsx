@@ -44,8 +44,8 @@ export const GraphPreview: FC<Props> = ({
       y0: number,
       x1: number,
       y1: number,
-      color: string = 'lightgrey',
-      active: boolean = false
+      color = 'lightgrey',
+      active = false
     ): void {
       if (context === null) {
         return;

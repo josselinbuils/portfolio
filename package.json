@@ -9,7 +9,7 @@
     "csscomb:staged": "exec-staged 'csscomb -tv' '\\.scss$'",
     "dev": "next",
     "build": "next build",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "eslint .",
     "lint:staged": "exec-staged 'yarn lint' '\\.tsx?$'",
     "prettier:staged": "exec-staged 'prettier --write' '\\.(js|tsx?|scss)$'",
     "start": "next start",
@@ -38,7 +38,6 @@
     "@types/ws": "^7.2.6",
     "add": "^2.0.6",
     "ansi_up": "^4.0.4",
-    "circular-dependency-plugin": "^5.2.0",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.29",
     "dicom-parser": "^1.8.5",
@@ -60,11 +59,20 @@
   },
   "devDependencies": {
     "@josselinbuils/exec-staged": "^0.1.1",
-    "@josselinbuils/tslint": "^5.1.0",
+    "@typescript-eslint/eslint-plugin": "^3.6.0",
+    "@typescript-eslint/parser": "^3.6.0",
     "@next/bundle-analyzer": "^9.4.4",
     "csscomb": "^4.3.0",
-    "husky": "^4.2.5",
-    "tslint": "^6.1.2"
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.7",
+    "husky": "^4.2.5"
   },
   "engines": {
     "node": ">=14"

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface JamendoTrack {
   album_id: string;
   album_image: string;

@@ -60,7 +60,7 @@ export class Frame extends Model {
   windowCenter = 30;
   windowWidth = 400;
 
-  constructor(config: object) {
+  constructor(config: { [key: string]: any }) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);

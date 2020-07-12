@@ -31,11 +31,7 @@ async function get(url: string): Promise<any> {
 
         res.on('end', () => {
           if (contentType.startsWith('application/json')) {
-            try {
-              resolve(JSON.parse(rawData));
-            } catch (error) {
-              throw error;
-            }
+            resolve(JSON.parse(rawData));
           } else {
             resolve(rawData);
           }

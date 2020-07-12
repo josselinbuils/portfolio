@@ -28,6 +28,7 @@ export const TitleBar: FC<Props> = ({
         className={cn(styles.button, styles.close)}
         onClick={onClose}
         style={{ color }}
+        type="button"
       >
         <FontAwesomeIcon icon={faTimes} />
       </button>
@@ -35,6 +36,7 @@ export const TitleBar: FC<Props> = ({
         className={cn(styles.button, styles.minimize)}
         onClick={onMinimise}
         style={{ color }}
+        type="button"
       >
         <FontAwesomeIcon icon={faMinus} />
       </button>
@@ -43,11 +45,13 @@ export const TitleBar: FC<Props> = ({
           className={cn(styles.button, styles.maximize)}
           onClick={onToggleMaximize}
           style={{ color }}
+          type="button"
         >
           <FontAwesomeIcon icon={faPlus} />
         </button>
       )}
     </div>
+    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
     <div
       className={styles.movingArea}
       onMouseDown={onMoveStart}

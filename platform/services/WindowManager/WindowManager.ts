@@ -1,16 +1,15 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
-import { WindowProps } from '~/platform/components/Window';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import {
-  AppDescriptor,
-  isAppDescriptor,
-} from '~/platform/interfaces/AppDescriptor';
+import { WindowComponent, WindowProps } from '~/platform/components/Window';
+import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   static injectionId = 'WindowManager';
-  static defaultApp: WindowComponent;
+  static defaultApp: {
+    appDescriptor: AppDescriptor;
+    windowComponent: WindowComponent;
+  };
 
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
@@ -19,7 +18,7 @@ export class WindowManager {
 
   constructor() {
     if (WindowManager.defaultApp !== undefined) {
-      this.openWindow(WindowManager.defaultApp);
+      this.openWindow(WindowManager.defaultApp.appDescriptor);
     }
   }
 
@@ -58,16 +57,15 @@ export class WindowManager {
   }
 
   async openWindow(
-    app: AppDescriptor | WindowComponent,
+    appDescriptor: AppDescriptor,
     windowProps: Partial<WindowProps> = {}
   ): Promise<void> {
-    const windowComponent = isAppDescriptor(app)
-      ? (await app.factory()).default
-      : app;
+    const windowComponent = (await appDescriptor.factory()).default;
 
     const windowInstance: WindowInstance = {
       ...windowProps,
       active: false,
+      appDescriptor,
       id: ++this.id,
       windowComponent,
       windowRef: createRef(),

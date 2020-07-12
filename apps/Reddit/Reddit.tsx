@@ -57,6 +57,4 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   );
 };
 
-Reddit.appDescriptor = RedditDescriptor;
-
 export default Reddit;

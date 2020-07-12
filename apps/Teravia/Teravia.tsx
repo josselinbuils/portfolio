@@ -37,6 +37,4 @@ const Teravia: WindowComponent = ({
   );
 };
 
-Teravia.appDescriptor = TeraviaDescriptor;
-
 export default Teravia;

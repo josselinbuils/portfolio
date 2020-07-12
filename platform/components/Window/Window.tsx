@@ -40,29 +40,6 @@ export class Window extends Component<WindowProps, State> {
     };
   }
 
-  componentDidUpdate(prevProps: WindowProps): void {
-    if (this.state.maximized) {
-      if (!this.props.resizable && prevProps.resizable) {
-        this.setState({ maximized: false });
-        delete this.lastDisplayProperties.maximize;
-      }
-      if (this.props.visibleAreaSize !== prevProps.visibleAreaSize) {
-        this.setMaxSize();
-      }
-    }
-    if (
-      this.props.maxHeight !== prevProps.maxHeight ||
-      this.props.maxWidth !== prevProps.maxWidth ||
-      this.props.minHeight !== prevProps.minHeight ||
-      this.props.minWidth !== prevProps.minWidth
-    ) {
-      this.startAnimation().ready(() => {
-        const { height, width } = this.getSize();
-        this.setSize(width, height);
-      });
-    }
-  }
-
   componentDidMount(): void {
     const { keepContentRatio, startMaximized } = this.props;
 
@@ -88,7 +65,35 @@ export class Window extends Component<WindowProps, State> {
     }
   }
 
+  componentDidUpdate(prevProps: WindowProps): void {
+    const { props, state } = this;
+
+    if (state.maximized) {
+      if (!props.resizable && prevProps.resizable) {
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({ maximized: false });
+        delete this.lastDisplayProperties.maximize;
+      }
+      if (props.visibleAreaSize !== prevProps.visibleAreaSize) {
+        this.setMaxSize();
+      }
+    }
+    if (
+      props.maxHeight !== prevProps.maxHeight ||
+      props.maxWidth !== prevProps.maxWidth ||
+      props.minHeight !== prevProps.minHeight ||
+      props.minWidth !== prevProps.minWidth
+    ) {
+      this.startAnimation().ready(() => {
+        const { height, width } = this.getSize();
+        this.setSize(width, height);
+      });
+    }
+  }
+
   hide(): void {
+    const { props } = this;
+
     if (this.visible && this.windowRef.current !== null) {
       this.startAnimation()
         .ready(() => {
@@ -98,11 +103,13 @@ export class Window extends Component<WindowProps, State> {
           };
           this.setState({ minimized: true });
           this.setSize(0, 0, true);
-          if (this.props.minimizedTopPosition !== undefined) {
-            this.setPosition(60, this.props.minimizedTopPosition);
+          if (props.minimizedTopPosition !== undefined) {
+            this.setPosition(60, props.minimizedTopPosition);
           }
         })
-        .finished(() => (this.visible = false));
+        .finished(() => {
+          this.visible = false;
+        });
     }
   }
 
@@ -141,11 +148,13 @@ export class Window extends Component<WindowProps, State> {
     });
 
     return (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <div
         className={className}
         onMouseDown={() => onSelect(id)}
         ref={this.windowRef}
         style={{ background, height, left, top, width, zIndex }}
+        role="dialog"
       >
         <TitleBar
           background={titleBackground}
@@ -168,7 +177,12 @@ export class Window extends Component<WindowProps, State> {
           {children}
         </main>
         {resizable && (
-          <div className={styles.resize} onMouseDown={this.startResize} />
+          // eslint-disable-next-line jsx-a11y/control-has-associated-label,jsx-a11y/interactive-supports-focus
+          <div
+            className={styles.resize}
+            onMouseDown={this.startResize}
+            role="button"
+          />
         )}
       </div>
     );
@@ -191,7 +205,9 @@ export class Window extends Component<WindowProps, State> {
             this.setPosition(left, top, true);
           }
         })
-        .finished(() => (this.visible = true));
+        .finished(() => {
+          this.visible = true;
+        });
     }
   }
 
@@ -216,9 +232,11 @@ export class Window extends Component<WindowProps, State> {
       ) {
         return;
       }
+      const { state } = this;
+
       lastMoveEvent = moveEvent;
 
-      if (!this.state.frozen) {
+      if (!state.frozen) {
         this.setState({ frozen: true });
         return;
       }
@@ -280,11 +298,12 @@ export class Window extends Component<WindowProps, State> {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
+    const { state } = this;
 
     downEvent.preventDefault();
     downEvent.persist();
 
-    if (this.state.maximized) {
+    if (state.maximized) {
       return;
     }
 
@@ -294,7 +313,7 @@ export class Window extends Component<WindowProps, State> {
       const width = startSize.width + moveEvent.clientX - downEvent.clientX;
       const height = startSize.height + moveEvent.clientY - downEvent.clientY;
 
-      if (!this.state.frozen) {
+      if (!state.frozen) {
         this.setState({ frozen: true });
         return;
       }
@@ -315,11 +334,12 @@ export class Window extends Component<WindowProps, State> {
   };
 
   toggleMaximize = (
-    keepPosition: boolean = false,
+    keepPosition = false,
     onReady: () => void = () => {},
     onFinished: () => void = () => {}
   ): void => {
-    if (this.props.resizable === false) {
+    const { props, state } = this;
+    if (props.resizable === false) {
       return;
     }
     this.startAnimation()
@@ -327,7 +347,7 @@ export class Window extends Component<WindowProps, State> {
         onReady();
 
         if (
-          this.state.maximized &&
+          state.maximized &&
           this.lastDisplayProperties.maximize !== undefined
         ) {
           const {
@@ -410,7 +430,7 @@ export class Window extends Component<WindowProps, State> {
     }
   }
 
-  private setPosition(x: number, y: number, force: boolean = false): void {
+  private setPosition(x: number, y: number, force = false): void {
     const { visibleAreaSize } = this.props;
     const { frozen } = this.state;
 
@@ -439,7 +459,7 @@ export class Window extends Component<WindowProps, State> {
     }
   }
 
-  private setSize(width: number, height: number, force: boolean = false): void {
+  private setSize(width: number, height: number, force = false): void {
     const { maxHeight, maxWidth, minHeight, minWidth, onResize } = this.props;
     const { frozen } = this.state;
 

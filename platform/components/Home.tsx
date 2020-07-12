@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { FC, useEffect } from 'react';
-import { Desktop } from '../components/Desktop';
+import { Desktop } from './Desktop';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
 import { useInjector } from '../providers/InjectorProvider/useInjector';
 import { TooltipProvider } from '../providers/TooltipProvider/TooltipProvider';

@@ -38,7 +38,7 @@ export const Highlight: FC<Props> = ({
       }
     }
     setSegments(newSegments);
-  }, [endOffset, parent, startOffset]);
+  }, [code, endOffset, parent, startOffset]);
 
   return (
     <>

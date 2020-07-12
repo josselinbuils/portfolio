@@ -57,10 +57,14 @@ export const Task: FC<Props> = ({
 
   return (
     <WithContextMenu descriptor={getTaskContextMenuDescriptor}>
+      {/* TODO use button instead */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div
         className={cn(styles.task, { [styles.active]: active })}
         onClick={runTask}
         ref={taskRef}
+        role="button"
+        tabIndex={0}
       >
         <FontAwesomeIcon
           className={cn({ [styles.loading]: loading })}

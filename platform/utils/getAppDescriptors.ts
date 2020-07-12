@@ -1,4 +1,4 @@
-import { APP_DESCRIPTORS } from '~/platform/constants';
+import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export function getAppDescriptors(): { [name: string]: AppDescriptor } {

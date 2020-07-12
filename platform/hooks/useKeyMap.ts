@@ -4,7 +4,7 @@ export function useKeyMap(
   keyMap: {
     [keyStr: string]: (event: KeyboardEvent) => false | any;
   },
-  active: boolean = true
+  active = true
 ): void {
   useEventListener(
     'keydown',

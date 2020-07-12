@@ -4,6 +4,7 @@ import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks/useElementSize';
 import { Size } from '~/platform/interfaces/Size';
+import { ViewportStats } from '../../interfaces/ViewportStats';
 import { Viewport } from '../../models/Viewport';
 import { JSFrameRenderer } from './renderers/js/JSFrameRenderer';
 import { JSVolumeRenderer } from './renderers/js/JSVolumeRenderer';
@@ -128,7 +129,10 @@ export const ViewportElement: FC<Props> = ({
     return () => {
       cancelAnimationFrame(requestID);
       clearInterval(statsInterval);
-      renderer.destroy?.();
+
+      if (renderer.destroy) {
+        renderer.destroy();
+      }
     };
   }, [canvasElementRef, onError, onStatsUpdate, viewport]);
 
@@ -172,5 +176,5 @@ interface Props {
   onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;
   onResize?(size: Size): void;
-  onStatsUpdate?(stats: { fps: number; meanRenderDuration?: number }): void;
+  onStatsUpdate?(stats: ViewportStats): void;
 }

@@ -96,9 +96,9 @@ const Terminal: WindowComponent = ({
   useEffect(() => {
     const terminal = terminalRef.current as HTMLElement;
 
-    const observer = new MutationObserver(
-      () => (terminal.scrollTop = terminal.scrollHeight)
-    );
+    const observer = new MutationObserver(() => {
+      terminal.scrollTop = terminal.scrollHeight;
+    });
 
     observer.observe(terminal, {
       childList: true,
@@ -208,7 +208,7 @@ const Terminal: WindowComponent = ({
       execution.queryUserHandler = (
         str: string,
         callback: (userInput: string) => void,
-        hideAnswer: boolean = false
+        hideAnswer = false
       ) => {
         execution.query = { callback, hideAnswer, str };
         executionManager.update();
@@ -224,6 +224,7 @@ const Terminal: WindowComponent = ({
   }
 
   function navigate(event: KeyboardEvent): void {
+    // eslint-disable-next-line default-case
     switch (event.key) {
       case 'ArrowDown':
       case 'Down':
@@ -363,8 +364,6 @@ const Terminal: WindowComponent = ({
     </Window>
   );
 };
-
-Terminal.appDescriptor = TerminalDescriptor;
 
 export default Terminal;
 

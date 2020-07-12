@@ -13,8 +13,10 @@ export async function decodeFrames(
   } else if (fileBuffers.length > 0) {
     frames = [];
 
-    for (const fileBuffer of fileBuffers) {
-      const instanceFrames = await loadInstance(fileBuffer);
+    const instanceFramesList = await Promise.all(
+      fileBuffers.map((fileBuffer) => loadInstance(fileBuffer))
+    );
+    for (const instanceFrames of instanceFramesList) {
       frames.push(...instanceFrames);
     }
 
@@ -32,14 +34,14 @@ export async function decodeFrames(
 
 function findWindowingInFunctionalGroup(
   functionalGroup: any,
-  index: number = 0
+  index = 0
 ): Windowing | undefined {
   if (functionalGroup !== undefined) {
     const voiLUT = functionalGroup.items[index].dataSet.elements.x00289132;
 
     if (voiLUT !== undefined) {
       const dataset = voiLUT.items[0].dataSet;
-      const elements = dataset.elements;
+      const { elements } = dataset;
 
       if (
         elements.x00281050 !== undefined &&

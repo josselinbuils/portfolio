@@ -31,6 +31,10 @@ export function startTool(
 
     case MouseButton.Right:
       tool = activeRightTool;
+      break;
+
+    default:
+      throw new Error('Unknown mouse button');
   }
 
   if (tool === undefined) {

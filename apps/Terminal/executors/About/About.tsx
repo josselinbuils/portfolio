@@ -22,7 +22,7 @@ export const About: Executor = () => (
     />
     <div className={styles.info}>
       <p className={styles.resume}>
-        Hey, I'm Josselin, a full-stack JavaScript developer :)
+        Hey, I&apos;m Josselin, a full-stack JavaScript developer :)
       </p>
       <p className={styles.social}>
         {socialLinks.map(({ icon, url }) => (

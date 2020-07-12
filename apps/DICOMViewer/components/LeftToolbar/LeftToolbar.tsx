@@ -58,6 +58,7 @@ export const LeftToolbar: FC<Props> = ({
             event.preventDefault();
             onToolSelected(tool, MouseButton.Right);
           }}
+          type="button"
         >
           <FontAwesomeIcon icon={icon} />
         </button>

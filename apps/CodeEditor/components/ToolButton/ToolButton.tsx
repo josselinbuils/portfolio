@@ -13,7 +13,11 @@ export const ToolButton: FC<Props> = ({
   ...forwardedProps
 }) => (
   <WithTooltip className={styles.tooltip} title={title}>
-    <button className={cn(styles.toolButton, className)} {...forwardedProps}>
+    <button
+      className={cn(styles.toolButton, className)}
+      type="button"
+      {...forwardedProps}
+    >
       <FontAwesomeIcon icon={icon} />
     </button>
   </WithTooltip>

@@ -41,6 +41,4 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   );
 };
 
-MP3Player.appDescriptor = MP3PlayerDescriptor;
-
 export default MP3Player;

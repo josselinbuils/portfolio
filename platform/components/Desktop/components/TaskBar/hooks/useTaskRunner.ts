@@ -11,7 +11,7 @@ export function useTaskRunner(
 
   return async function run(): Promise<void> {
     if (windowInstance !== undefined) {
-      const id = windowInstance.id;
+      const { id } = windowInstance;
 
       if (windowManager.isWindowVisible(id)) {
         if (windowManager.isWindowSelected(id)) {

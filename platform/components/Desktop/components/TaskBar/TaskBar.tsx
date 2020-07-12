@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { FC, useRef } from 'react';
-import { APP_DESCRIPTORS } from '~/platform/constants';
+import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
 import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { Task } from './Task';
 import { getTaskKey } from './utils/getTaskKey';

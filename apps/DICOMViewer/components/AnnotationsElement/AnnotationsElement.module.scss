@@ -3,16 +3,22 @@
 $overlay-margin: 1rem;
 
 .annotation {
+  font: inherit;
   overflow: hidden;
   max-width: 22ch;
   margin: 0;
+  padding: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: transparent;
   text-shadow: #000 0 0 0.1rem;
 
   filter: drop-shadow(0 0 0.1rem #000);
 
-  & + p {
+  & + & {
     margin-top: 0.5rem;
   }
 }

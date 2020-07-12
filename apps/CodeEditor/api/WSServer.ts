@@ -50,7 +50,7 @@ export class WSServer {
     this.server.handleUpgrade(
       req,
       req.socket,
-      new Buffer([]),
+      Buffer.from([]),
       (ws: WebSocket) => this.server.emit('connection', ws, req)
     );
   }
@@ -202,7 +202,11 @@ export class WSServer {
           }
         );
         this.updateCode(code);
+        break;
       }
+
+      default:
+        throw new Error('Unknown action');
     }
   }
 
@@ -232,7 +236,7 @@ export class WSServer {
   private updateClientSelection(
     client: Client,
     selection: Selection,
-    excludeClient: boolean = false
+    excludeClient = false
   ): void {
     client.selection = selection;
     this.dispatchAll(({ id }) => {

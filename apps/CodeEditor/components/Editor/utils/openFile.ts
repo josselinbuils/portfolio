@@ -37,12 +37,10 @@ export async function openFile(file?: File): Promise<EditorFile | undefined> {
 
       if (file === undefined) {
         resolve(undefined);
+      } else if (file.size > MAX_FILE_SIZE_BYTES) {
+        reject(new Error('File too large to be loaded'));
       } else {
-        if (file.size > MAX_FILE_SIZE_BYTES) {
-          reject(new Error('File too large to be loaded'));
-        } else {
-          resolve(readFile(file));
-        }
+        resolve(readFile(file));
       }
     });
 

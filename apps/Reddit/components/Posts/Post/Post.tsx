@@ -40,9 +40,12 @@ export const Post: FC<Props> = ({
   };
 
   return (
-    <article
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+    <div
       className={cn(styles.post, { [styles.outdated]: outdated })}
       onClick={clickHandler}
+      role="button"
+      tabIndex={0}
     >
       <aside className={styles.aside}>
         <span>{formatNumber(score)}</span>
@@ -63,7 +66,7 @@ export const Post: FC<Props> = ({
           <span className={styles.comments}>{formatNumber(numComments)}</span>
         </div>
       </main>
-    </article>
+    </div>
   );
 };
 

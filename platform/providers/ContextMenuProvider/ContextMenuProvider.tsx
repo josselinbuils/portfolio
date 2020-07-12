@@ -32,6 +32,7 @@ export const ContextMenuProvider: FC = ({ children }) => {
       )}
       {descriptor && (
         <>
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div className={styles.overlay} onMouseDown={hideContextMenu} />
           <ContextMenu {...descriptor} onHide={hideContextMenu} />
         </>

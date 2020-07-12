@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+// TODO fix that
 import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
@@ -48,7 +50,9 @@ export const ContextMenu: FC<Props> = ({
     ArrowUp: () =>
       setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
     Enter: () => {
-      items[activeIndex]?.onClick();
+      if (items[activeIndex]) {
+        items[activeIndex].onClick();
+      }
       onHide();
     },
   });

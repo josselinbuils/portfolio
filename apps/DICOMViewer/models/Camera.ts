@@ -79,7 +79,7 @@ export class Camera extends Renderable implements CoordinateSpace {
         .dot(direction);
       const correctionVector = V(direction).mul(correctionVectorNorm);
 
-      lookPoint = lookPoint = V(lookPoint).add(correctionVector).smooth();
+      lookPoint = V(lookPoint).add(correctionVector).smooth();
     }
 
     const eyePoint = V(lookPoint).sub(direction);

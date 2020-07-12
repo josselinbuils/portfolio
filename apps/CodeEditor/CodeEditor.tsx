@@ -48,6 +48,4 @@ const CodeEditor: WindowComponent = ({
   );
 };
 
-CodeEditor.appDescriptor = CodeEditorDescriptor;
-
 export default CodeEditor;

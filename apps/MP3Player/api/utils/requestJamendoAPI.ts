@@ -21,8 +21,7 @@ export async function requestJamendoAPI<T>(
 
   if (headers.status === 'success') {
     return results;
-  } else {
-    const { code, error_message } = headers;
-    throw new Error(`Jamendo API error: code ${code}: ${error_message}`);
   }
+  const { code, error_message: errorMessage } = headers;
+  throw new Error(`Jamendo API error: code ${code}: ${errorMessage}`);
 }

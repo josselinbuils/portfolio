@@ -23,7 +23,7 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
           (fileName) => !fileName.startsWith('.') && !fileName.endsWith('.gz')
         )
         .map(async (fileName) => {
-          const name = path.parse(fileName).name;
+          const { name } = path.parse(fileName);
           const url = `${DATASETS_URL}/${fileName}`;
           const preview = (await fs.readdir(PREVIEWS_PATH)).find((p) =>
             p.includes(name)

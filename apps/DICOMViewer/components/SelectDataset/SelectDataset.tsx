@@ -85,17 +85,18 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
       <h1>Select the dataset</h1>
       <div className={styles.container}>
         {datasetDescriptors.map((descriptor) => (
-          <div
+          <button
             className={cn(styles.dataset, { [styles.thd]: descriptor.is3D })}
             key={descriptor.name}
             onClick={() => setDatasetDescriptor(descriptor)}
+            type="button"
           >
             {descriptor.previewURL ? (
               <img alt={descriptor.name} src={descriptor.previewURL} />
             ) : (
               <span>{descriptor.name}</span>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>

@@ -4,8 +4,8 @@ import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';
-import { Toolbar } from '../../components/Toolbar';
-import { ToolButton } from '../../components/ToolButton';
+import { Toolbar } from '../Toolbar';
+import { ToolButton } from '../ToolButton';
 import { Shortcut } from '../Shortcut';
 import { Logs } from './components/Logs';
 import { Log } from './Log';
@@ -28,10 +28,9 @@ export const Console: FC<Props> = ({ active, className, codeToExec = '' }) => {
   useLayoutEffect(() => {
     const logsElement = logsElementRef.current as HTMLElement;
 
-    return observeMutations(
-      logsElement,
-      () => (logsElement.scrollTop = logsElement.scrollHeight)
-    );
+    return observeMutations(logsElement, () => {
+      logsElement.scrollTop = logsElement.scrollHeight;
+    });
   }, []);
 
   useKeyMap(

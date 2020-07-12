@@ -42,9 +42,7 @@ export class Vector extends Array<number> {
   distance(point: number[]): number {
     const [x1, y1, z1] = this;
     const [x2, y2, z2] = point;
-    return Math.sqrt(
-      Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2)
-    );
+    return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2);
   }
 
   div(factor: number): Vector {

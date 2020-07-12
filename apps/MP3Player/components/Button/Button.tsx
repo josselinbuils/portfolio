@@ -10,8 +10,9 @@ export const Button: FC<Props> = ({
   ...forwardedProps
 }) => (
   <button
-    {...forwardedProps}
     className={cn(styles.button, className, { [styles.checked]: checked })}
+    type="button"
+    {...forwardedProps}
   >
     {children}
   </button>

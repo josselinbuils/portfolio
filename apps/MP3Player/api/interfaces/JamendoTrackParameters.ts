@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { JamendoBoost } from './JamendoBoost';
 import { JamendoOrder } from './JamendoOrder';
 

@@ -34,9 +34,8 @@ export function unindent(
         selection.end - INDENT.length * processedLineOffsets.length
       ),
     };
-  } else if (
-    code.slice(selection.start - INDENT.length, selection.start) === INDENT
-  ) {
+  }
+  if (code.slice(selection.start - INDENT.length, selection.start) === INDENT) {
     const newCursorOffset = selection.start - INDENT.length;
 
     return {

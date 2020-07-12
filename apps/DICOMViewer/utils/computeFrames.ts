@@ -18,7 +18,7 @@ enum DicomImageFormat {
 
 export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
   const firstFrame = dicomFrames[0];
-  let spacingBetweenSlices = firstFrame.spacingBetweenSlices;
+  let { spacingBetweenSlices } = firstFrame;
 
   if (spacingBetweenSlices === undefined) {
     const isComputable =

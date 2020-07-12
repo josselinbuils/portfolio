@@ -31,7 +31,7 @@ export class DicomFrame extends Model {
   windowCenter?: number;
   windowWidth?: number;
 
-  constructor(config: object) {
+  constructor(config: { [key: string]: any }) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);

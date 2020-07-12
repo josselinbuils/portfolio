@@ -1,5 +1,4 @@
 /* eslint-disable no-eval */
-/* tslint:disable:no-eval */
 
 export function execCode(code: string): void {
   if (code.length > 0) {

@@ -108,7 +108,11 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
 
   return (
     <div className={cn(styles.colorPalette, { [styles.open]: open })}>
-      <button className={styles.button} onClick={() => setOpen(!open)}>
+      <button
+        className={styles.button}
+        onClick={() => setOpen(!open)}
+        type="button"
+      >
         <FontAwesomeIcon icon={faPalette} />
       </button>
       {open && (

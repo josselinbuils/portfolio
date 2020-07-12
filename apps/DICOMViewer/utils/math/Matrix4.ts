@@ -30,8 +30,7 @@ export class Matrix4 extends Array<number[]> {
     let det = 0;
 
     for (let x = 0; x < 4; x++) {
-      det +=
-        Math.pow(-1, x) * this[0][x] * M3(Matrix4.getSubMatrix(this, x)).det();
+      det += (-1) ** x * this[0][x] * M3(Matrix4.getSubMatrix(this, x)).det();
     }
     return det;
   }
@@ -82,8 +81,8 @@ export class Matrix4 extends Array<number[]> {
       }
 
       for (let j = 0; j < dim; j++) {
-        C[i][j] = C[i][j] / e;
-        I[i][j] = I[i][j] / e;
+        C[i][j] /= e;
+        I[i][j] /= e;
       }
 
       for (let ii = 0; ii < dim; ii++) {

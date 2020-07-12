@@ -11,6 +11,8 @@ export const Logs = forwardRef<HTMLDivElement, Props>(
     <div className={cn(styles.logs, className)} ref={ref}>
       {logs.map(({ level, message }, index) =>
         level === LogLevel.Error ? (
+          // TODO generate a GUID
+          // eslint-disable-next-line react/no-array-index-key
           <div className={cn(styles.log, styles[level])} key={index}>
             <span className={styles.errorMessage}>
               <FontAwesomeIcon icon={faBomb} /> {message.split('\n')[0]}
@@ -24,6 +26,7 @@ export const Logs = forwardRef<HTMLDivElement, Props>(
           <div
             dangerouslySetInnerHTML={{ __html: message }}
             className={cn(styles.log, styles[level])}
+            // eslint-disable-next-line react/no-array-index-key
             key={index}
           />
         )

@@ -25,8 +25,8 @@ export const AnnotationsElement: FC<Props> = ({
     zoom,
   } = annotations;
   const { showContextMenu } = useContextMenu();
-  const rendererElementRef = useRef<HTMLSpanElement>(null);
-  const viewTypeElementRef = useRef<HTMLParagraphElement>(null);
+  const rendererElementRef = useRef<HTMLButtonElement>(null);
+  const viewTypeElementRef = useRef<HTMLButtonElement>(null);
 
   function getMenuItemIcon(isItemActive: boolean): IconDefinition | undefined {
     return isItemActive ? faCheck : undefined;
@@ -73,20 +73,26 @@ export const AnnotationsElement: FC<Props> = ({
     <>
       <div className={styles.overlayTopLeft}>
         <p className={styles.annotation}>{datasetName || '-'}</p>
-        <p
+        <button
           className={styles.annotation}
           onClick={showViewTypeMenu}
           ref={viewTypeElementRef}
+          type="button"
         >
           {viewType}
-        </p>
+        </button>
       </div>
       <div className={styles.overlayTopRight}>
         <p className={styles.annotation}>
           renderer:{' '}
-          <span onClick={showRendererTypeMenu} ref={rendererElementRef}>
+          <button
+            className={styles.annotation}
+            onClick={showRendererTypeMenu}
+            ref={rendererElementRef}
+            type="button"
+          >
             {rendererType || '-'}
-          </span>
+          </button>
         </p>
         <p className={styles.annotation}>
           framerate: {fps ? `${fps}fps` : '-'}

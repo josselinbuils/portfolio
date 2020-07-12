@@ -57,9 +57,9 @@ export function getGlobalCompletionItems(): CompletionItem[] {
 }
 
 export function getObjectsCompletionMap(): { [key: string]: CompletionItem[] } {
-  if (objectCompletionMap === undefined) {
-    let antiCircularCache = [] as any[];
+  let antiCircularCache = [] as any[];
 
+  if (objectCompletionMap === undefined) {
     objectCompletionMap = {};
 
     mapObject('', window);
@@ -70,34 +70,37 @@ export function getObjectsCompletionMap(): { [key: string]: CompletionItem[] } {
 
     // Forces garbage collection
     antiCircularCache.length = 0;
+  }
 
-    function mapObject(path: string, obj: any): void {
-      if (
-        isFunction(obj) ||
-        isPrimitive(obj) ||
-        antiCircularCache.includes(obj)
-      ) {
-        return;
+  return objectCompletionMap;
+
+  function mapObject(path: string, obj: any): void {
+    if (
+      isFunction(obj) ||
+      isPrimitive(obj) ||
+      antiCircularCache.includes(obj)
+    ) {
+      return;
+    }
+    antiCircularCache.push(obj);
+
+    try {
+      const items = Object.getOwnPropertyNames(obj)
+        .filter(createPropFilter(obj))
+        .sort()
+        .map(createObjectMapper(obj));
+
+      items.forEach(({ keyword }) =>
+        mapObject(`${path && `${path}.`}${keyword}`, obj[keyword])
+      );
+
+      if (path.length > 0 && items.length > 0) {
+        objectCompletionMap[path] = items;
       }
-      antiCircularCache.push(obj);
-
-      try {
-        const items = Object.getOwnPropertyNames(obj)
-          .filter(createPropFilter(obj))
-          .sort()
-          .map(createObjectMapper(obj));
-
-        items.forEach(({ keyword }) =>
-          mapObject(`${path && `${path}.`}${keyword}`, obj[keyword])
-        );
-
-        if (path.length > 0 && items.length > 0) {
-          objectCompletionMap[path] = items;
-        }
-      } catch (error) {}
+    } catch (error) {
+      // nothing
     }
   }
-  return objectCompletionMap;
 }
 
 function createObjectMapper(obj: any): (keyword: string) => CompletionItem {
@@ -130,7 +133,7 @@ function createPropFilter(parent: any): (name: string) => boolean {
   };
 }
 
-function hasStatics(func: Function, blackList: string[]): boolean {
+function hasStatics(func: () => any, blackList: string[]): boolean {
   return (
     Object.getOwnPropertyNames(func).filter((key) => !blackList.includes(key))
       .length > 0

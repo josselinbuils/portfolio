@@ -15,6 +15,7 @@ export const Tab: FC<Props> = ({
     aria-selected={selected}
     className={cn(styles.tab, className)}
     role="tab"
+    type="button"
     {...forwardedProps}
   >
     <FontAwesomeIcon className={styles.icon} icon={faJsSquare} />

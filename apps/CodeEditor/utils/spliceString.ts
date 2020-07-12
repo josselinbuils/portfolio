@@ -1,8 +1,8 @@
 export function spliceString(
   str: string,
   start: number,
-  deleteCount: number = 0,
-  strToInsert: string = ''
+  deleteCount = 0,
+  strToInsert = ''
 ): string {
   const chars = str.split('');
   chars.splice(start, deleteCount, strToInsert);

@@ -83,10 +83,12 @@ export function getRenderingProperties(
 
     imageWidth = imageDimensions.width;
     imageHeight = imageDimensions.height;
-    viewportSpaceImageX0 = imageDimensions.viewportSpaceImageX0;
-    viewportSpaceImageY0 = imageDimensions.viewportSpaceImageY0;
-    viewportSpaceImageWidth = imageDimensions.viewportSpaceImageWidth;
-    viewportSpaceImageHeight = imageDimensions.viewportSpaceImageHeight;
+    ({
+      viewportSpaceImageHeight,
+      viewportSpaceImageWidth,
+      viewportSpaceImageX0,
+      viewportSpaceImageY0,
+    } = imageDimensions);
   }
 
   const viewportSpace = computeViewportSpaceCoordinates(

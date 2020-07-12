@@ -146,8 +146,8 @@ export const BuildManager: AsyncExecutor = ({
   }, [args, command, logManager, onQueryUser, onRelease]);
 
   useEffect(() => {
-    if (!alive) {
-      bmClient?.stop();
+    if (!alive && bmClient) {
+      bmClient.stop();
     }
   }, [alive, bmClient]);
 
@@ -238,7 +238,8 @@ export const BuildManager: AsyncExecutor = ({
         ))}
       </>
     );
-  } else if (command === Command.Logs && !alive) {
+  }
+  if (command === Command.Logs && !alive) {
     return <p className={styles.p}>No log to display</p>;
   }
 

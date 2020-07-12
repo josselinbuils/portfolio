@@ -46,7 +46,7 @@ export class AudioController {
       newIndex = 0;
     }
 
-    const paused = this.paused;
+    const { paused } = this;
 
     this.loadMusic(this.playlist[newIndex]);
 
@@ -93,7 +93,7 @@ export class AudioController {
       newIndex = this.playlist.length - 1;
     }
 
-    const paused = this.paused;
+    const { paused } = this;
 
     this.loadMusic(this.playlist[newIndex]);
 
@@ -106,7 +106,7 @@ export class AudioController {
    * @param value 0 -> 1
    */
   setCurrentTime = (value: number): void => {
-    const duration = this.audioElement.duration;
+    const { duration } = this.audioElement;
 
     this.audioElement.currentTime = Math.min(
       Math.round(value * duration),
@@ -165,7 +165,7 @@ export class AudioController {
 
   private readonly rand = async (): Promise<void> => {
     const newIndex = Math.round(this.playlist.length * Math.random());
-    const paused = this.audioElement.paused;
+    const { paused } = this.audioElement;
 
     this.loadMusic(this.playlist[newIndex]);
 

@@ -35,8 +35,7 @@ function getTaskDescriptors(
 
   windowInstances.forEach((windowInstance) => {
     const pinnedTaskDescriptor = pinnedTaskDescriptors.find(
-      (task) =>
-        task.appDescriptor === windowInstance.windowComponent.appDescriptor
+      (task) => task.appDescriptor === windowInstance.appDescriptor
     );
 
     if (
@@ -45,7 +44,7 @@ function getTaskDescriptors(
     ) {
       pinnedTaskDescriptor.windowInstance = windowInstance;
     } else {
-      const { appDescriptor } = windowInstance.windowComponent;
+      const { appDescriptor } = windowInstance;
 
       taskDescriptors.push({
         appDescriptor,

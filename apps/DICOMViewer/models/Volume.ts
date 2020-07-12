@@ -43,7 +43,7 @@ export class Volume extends Model {
   // mm
   voxelSpacing!: number[];
 
-  constructor(config: object) {
+  constructor(config: { [key: string]: any }) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);

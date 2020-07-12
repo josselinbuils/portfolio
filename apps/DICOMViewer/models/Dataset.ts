@@ -1,5 +1,5 @@
 import { CoordinateSpace } from '../interfaces/CoordinateSpace';
-import { DicomFrame } from '../models/DicomFrame';
+import { DicomFrame } from './DicomFrame';
 import { computeFrames } from '../utils/computeFrames';
 import { computeSharedProperties } from '../utils/computeSharedProperties';
 import { computeVolume } from '../utils/computeVolume';
@@ -55,6 +55,7 @@ export class Dataset extends Model implements CoordinateSpace {
     return this.frames[index];
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getWorldBasis(): number[][] {
     return [
       [1, 0, 0],
@@ -117,6 +118,7 @@ export class Dataset extends Model implements CoordinateSpace {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getWorldOrigin(): number[] {
     return [0, 0, 0];
   }

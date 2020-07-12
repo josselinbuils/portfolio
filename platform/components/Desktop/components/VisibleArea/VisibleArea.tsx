@@ -38,6 +38,7 @@ export const VisibleArea: FC = () => {
   };
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className={styles.visibleArea}
       onMouseDown={mouseDownHandler}

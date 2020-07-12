@@ -26,6 +26,7 @@ const skinLUTComponents = [
 
 export class JSVolumeRenderer implements Renderer {
   private background = 0;
+  // eslint-disable-next-line react/static-property-placement
   private readonly context: CanvasRenderingContext2D;
   private lut?: { table: number[] | number[][]; windowWidth: number };
   private readonly renderingContext: CanvasRenderingContext2D;
@@ -149,7 +150,6 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      // tslint:disable-next-line:prefer-conditional-expression
       if (viewport.lutComponents !== undefined) {
         this.lut = loadVOILUT(viewport.lutComponents, windowWidth);
       } else if (viewport.viewType === ViewType.VolumeSkin) {
@@ -202,7 +202,7 @@ export class JSVolumeRenderer implements Renderer {
     leftLimit: number,
     rightLimit: number,
     rawValue: number,
-    baseAlpha: number = 255
+    baseAlpha = 255
   ): number {
     const color = (this.lut as VOILUT).table[
       Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
@@ -216,7 +216,7 @@ export class JSVolumeRenderer implements Renderer {
     leftLimit: number,
     rightLimit: number,
     rawValue: number,
-    baseAlpha: number = 255
+    baseAlpha = 255
   ): number {
     let intensity = 250;
 

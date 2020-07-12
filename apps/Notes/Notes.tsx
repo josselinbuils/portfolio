@@ -45,8 +45,6 @@ const Notes: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   );
 };
 
-Notes.appDescriptor = NotesDescriptor;
-
 export default Notes;
 
 function getDefaultNotes(): string {

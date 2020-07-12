@@ -2,13 +2,13 @@ import { useContext } from 'react';
 import { InjectorContext } from './InjectorContext';
 
 export function useInjector<T>(
-  singletonCLass: (new () => T) & { injectionId: string }
+  SingletonCLass: (new () => T) & { injectionId: string }
 ): T {
   const injectorStore = useContext(InjectorContext);
-  const name = singletonCLass.injectionId;
+  const name = SingletonCLass.injectionId;
 
   if (injectorStore[name] === undefined) {
-    injectorStore[name] = new singletonCLass();
+    injectorStore[name] = new SingletonCLass();
   }
   return injectorStore[name] as T;
 }

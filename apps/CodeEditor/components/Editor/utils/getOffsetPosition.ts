@@ -52,7 +52,7 @@ export function getOffsetPosition(
   div.id = 'input-textarea-caret-position-mirror-div';
   document.body.appendChild(div);
 
-  const style = div.style;
+  const { style } = div;
   const computed = window.getComputedStyle
     ? window.getComputedStyle(element)
     : (element as any).currentStyle;
@@ -78,7 +78,6 @@ export function getOffsetPosition(
 
         const targetHeight = outerHeight + parseInt(computed.lineHeight, 10);
 
-        // tslint:disable-next-line:prefer-conditional-expression
         if (height > targetHeight) {
           style.lineHeight = `${height - outerHeight}px`;
         } else if (height === targetHeight) {
@@ -113,8 +112,8 @@ export function getOffsetPosition(
   div.appendChild(span);
 
   const position = {
-    x: span.offsetLeft + parseInt(computed.borderLeftWidth, 0),
-    y: span.offsetTop + parseInt(computed.borderTopWidth, 0),
+    x: span.offsetLeft + parseInt(computed.borderLeftWidth, 10),
+    y: span.offsetTop + parseInt(computed.borderTopWidth, 10),
   };
 
   document.body.removeChild(div);

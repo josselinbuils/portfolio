@@ -28,7 +28,7 @@ export class WebGLRenderer implements Renderer {
   }
 
   destroy(): void {
-    const gl = this.gl;
+    const { gl } = this;
 
     if (this.texture !== undefined) {
       gl.deleteTexture(this.texture.instance);
@@ -42,7 +42,7 @@ export class WebGLRenderer implements Renderer {
   }
 
   render(viewport: Viewport): void {
-    const gl = this.gl;
+    const { gl } = this;
     const {
       dataset,
       camera,
@@ -148,7 +148,7 @@ export class WebGLRenderer implements Renderer {
   }
 
   private createProgram(imageFormat: NormalizedImageFormat): WebGLProgram {
-    const gl = this.gl;
+    const { gl } = this;
     const program = gl.createProgram();
 
     if (program === null) {
@@ -173,7 +173,7 @@ export class WebGLRenderer implements Renderer {
     fragmentShader: WebGLShader;
     vertexShader: WebGLShader;
   } {
-    const gl = this.gl;
+    const { gl } = this;
     const fragmentShaderSrc = getFragmentShaderSrc(imageFormat);
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -198,7 +198,7 @@ export class WebGLRenderer implements Renderer {
   }
 
   private createTexture(image: Frame): WebGLTexture {
-    const gl = this.gl;
+    const { gl } = this;
     const texture = gl.createTexture();
 
     if (texture === null) {

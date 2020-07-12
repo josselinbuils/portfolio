@@ -49,7 +49,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  constructor(config: object) {
+  constructor(config: { [key: string]: any }) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
@@ -61,7 +61,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  clone(properties: object): Viewport {
+  clone(properties: { [key: string]: any }): Viewport {
     const {
       camera,
       dataset,

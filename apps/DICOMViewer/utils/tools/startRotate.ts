@@ -72,7 +72,7 @@ function computeTrackball(
   }
 
   const fromCenterNormSquared = V(fromCenter).dot(fromCenter);
-  const radiusSquared = Math.pow(radius, 2);
+  const radiusSquared = radius ** 2;
 
   fromCenter[2] = !areFloatEquals(fromCenterNormSquared, radiusSquared)
     ? -Math.sqrt(radiusSquared - fromCenterNormSquared)

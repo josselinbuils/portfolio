@@ -15,6 +15,7 @@ import { ViewportElement } from './components/ViewportElement';
 import { MouseTool, RendererType, ViewType } from './constants';
 import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { Annotations } from './interfaces/Annotations';
+import { ViewportStats } from './interfaces/ViewportStats';
 import { Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
 import { getAvailableViewTypes } from './utils/getAvailableViewTypes';
@@ -42,7 +43,7 @@ const DICOMViewer: WindowComponent = ({
     DEFAULT_RENDERER_TYPE
   );
   const [viewport, setViewport] = useState<Viewport>();
-  const [viewportStats, setViewportStats] = useState<object>();
+  const [viewportStats, setViewportStats] = useState<ViewportStats>();
 
   useLayoutEffect(() => {
     if (dataset !== undefined) {
@@ -221,7 +222,7 @@ const DICOMViewer: WindowComponent = ({
             }));
             break;
 
-          case MouseTool.Windowing:
+          case MouseTool.Windowing: {
             const { windowCenter, windowWidth } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({
@@ -230,14 +231,20 @@ const DICOMViewer: WindowComponent = ({
               windowWidth,
             }));
             break;
+          }
 
-          case MouseTool.Zoom:
+          case MouseTool.Zoom: {
             const { zoom } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({
               ...previousAnnotations,
               zoom,
             }));
+            break;
+          }
+
+          default:
+            throw new Error('Unknown mouse tool');
         }
       }
     );
@@ -277,7 +284,7 @@ const DICOMViewer: WindowComponent = ({
     >
       <div className={styles.dicomViewer}>
         {dataset && (
-          <button className={styles.button} onClick={back}>
+          <button className={styles.button} onClick={back} type="button">
             Back
           </button>
         )}
@@ -287,7 +294,5 @@ const DICOMViewer: WindowComponent = ({
     </Window>
   );
 };
-
-DICOMViewer.appDescriptor = DICOMViewerDescriptor;
 
 export default DICOMViewer;

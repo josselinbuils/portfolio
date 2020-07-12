@@ -18,5 +18,10 @@ export function cancelable<T>(
       }
     });
 
-  return [promise, () => (active = false)];
+  return [
+    promise,
+    () => {
+      active = false;
+    },
+  ];
 }

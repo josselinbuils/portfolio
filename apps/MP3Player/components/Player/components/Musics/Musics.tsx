@@ -70,6 +70,7 @@ export const Musics: FC<Props> = ({ musicList }) => {
         <table className={styles.header}>
           <thead>
             <tr>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th className={styles.colPreview} scope="col" />
               <th scope="col">Title</th>
               <th className={styles.colArtist} scope="col">

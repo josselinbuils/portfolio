@@ -7,17 +7,17 @@ export const Skills: Executor = () => (
   <p className={styles.skills}>
     <span className={styles.orange}>let</span>
     <span> skills = [</span>
-    <span className={styles.green}>'JavaScript'</span>
+    <span className={styles.green}>&apos;JavaScript&apos;</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'TypeScript'</span>
+    <span className={styles.green}>&apos;TypeScript&apos;</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'React'</span>
+    <span className={styles.green}>&apos;React&apos;</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'Node.js'</span>
+    <span className={styles.green}>&apos;Node.js&apos;</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'Git'</span>
+    <span className={styles.green}>&apos;Git&apos;</span>
     <span className={styles.orange}>, </span>
-    <span className={styles.green}>'Docker'</span>
+    <span className={styles.green}>&apos;Docker&apos;</span>
     <span>]</span>
     <span className={styles.orange}>;</span>
   </p>

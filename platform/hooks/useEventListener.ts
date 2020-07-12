@@ -5,7 +5,7 @@ import { useDynamicRef } from './useDynamicRef';
 export function useEventListener<EventType extends keyof WindowEventMap>(
   eventType: EventType,
   handler: EventHandler<EventType>,
-  active: boolean = true
+  active = true
 ): void {
   const handlerRef = useDynamicRef(handler);
 
