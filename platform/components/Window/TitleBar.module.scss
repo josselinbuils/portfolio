@@ -9,16 +9,20 @@
   outline: none;
   background: none;
 
-  &.close:hover {
+  &.close:hover,
+  &.close:focus {
     background: #e20000;
   }
 
   &.minimize:hover,
-  &.maximize:hover {
+  &.minimize:focus,
+  &.maximize:hover,
+  &.maximize:focus {
     background: $primaryColor;
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     color: #f0f0f0 !important;
   }
 
