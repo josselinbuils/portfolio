@@ -1,36 +1,45 @@
 @import '../../constants';
 
-.item {
-  line-height: 2rem;
-  height: 2rem;
+.button {
+  font: inherit;
+  line-height: 2.6rem;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.6rem;
   padding: 0.3rem 1rem 0.3rem 0;
   list-style: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: inherit;
 
-  &,
-  * {
-    cursor: pointer;
+  &[aria-current='true'],
+  &:focus {
+    background: lighten($backgroundColor, 15%);
   }
+}
+
+.icon {
+  display: inline-block;
+  width: 2.5rem;
+  padding-left: 0.3rem;
+  text-align: center;
+}
+
+.item {
+  list-style: none;
 
   &:first-child {
     margin-top: 0.4rem;
   }
 
-  &[aria-current='true'] {
-    background: lighten($backgroundColor, 15%);
-  }
-
   &:last-child {
     margin-bottom: 0.4rem;
   }
+}
 
-  .icon {
-    display: inline-block;
-    width: 2.5rem;
-    padding-left: 0.3rem;
-    text-align: center;
-  }
-
-  .title {
-    display: inline-block;
-  }
+.title {
+  display: inline-block;
 }

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
@@ -12,18 +11,21 @@ export const ContextMenuItem: FC<Props> = ({
   icon,
   title,
 }) => (
-  // TODO use button instead
-  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-  <li
-    aria-current={active}
-    className={styles.item}
-    onClick={onClick}
-    onMouseMove={onMouseMove}
-    role="button"
-    tabIndex={0}
-  >
-    <div className={styles.icon}>{icon && <FontAwesomeIcon icon={icon} />}</div>
-    <div className={styles.title}>{title}</div>
+  <li className={styles.item} role="none">
+    <button
+      aria-current={active}
+      className={styles.button}
+      onClick={onClick}
+      onMouseMove={onMouseMove}
+      role="menuitem"
+      tabIndex={-1}
+      type="button"
+    >
+      <div className={styles.icon}>
+        {icon && <FontAwesomeIcon icon={icon} />}
+      </div>
+      <div className={styles.title}>{title}</div>
+    </button>
   </li>
 );
 

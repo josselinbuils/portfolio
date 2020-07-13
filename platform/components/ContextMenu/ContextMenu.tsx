@@ -80,6 +80,7 @@ export const ContextMenu: FC<Props> = ({
         top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
       }}
       ref={listElementRef}
+      role="menu"
     >
       {items.map(({ icon, id, onClick, title }, index) => (
         <ContextMenuItem
