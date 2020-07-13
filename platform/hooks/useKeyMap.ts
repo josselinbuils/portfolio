@@ -8,7 +8,7 @@ export function useKeyMap(
 ): void {
   useEventListener(
     'keydown',
-    async (event) => {
+    (event) => {
       const eventKeyStr = getEventKeyStr(event);
 
       for (const [keyStr, handler] of Object.entries(keyMap)) {
