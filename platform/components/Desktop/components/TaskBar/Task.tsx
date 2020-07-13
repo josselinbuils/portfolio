@@ -18,7 +18,7 @@ export const Task: FC<Props> = ({
   taskBarRef,
   windowInstance,
 }) => {
-  const taskRef = useRef<HTMLDivElement>(null);
+  const taskRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState(false);
   const getTaskContextMenuDescriptor = useTaskContextMenu(
     appDescriptor,
@@ -57,14 +57,11 @@ export const Task: FC<Props> = ({
 
   return (
     <WithContextMenu descriptor={getTaskContextMenuDescriptor}>
-      {/* TODO use button instead */}
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-      <div
+      <button
         className={cn(styles.task, { [styles.active]: active })}
         onClick={runTask}
         ref={taskRef}
-        role="button"
-        tabIndex={0}
+        type="button"
       >
         <FontAwesomeIcon
           className={cn({ [styles.loading]: loading })}
@@ -72,7 +69,7 @@ export const Task: FC<Props> = ({
           style={{ fontSize: `${iconScale}em` }}
         />
         {running && <div className={styles.runIndicator} />}
-      </div>
+      </button>
     </WithContextMenu>
   );
 };

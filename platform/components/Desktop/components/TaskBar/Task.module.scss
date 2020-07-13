@@ -20,18 +20,20 @@
   display: inline-block;
   width: 6rem;
   height: 6rem;
-  cursor: default;
   text-align: center;
-  outline: none; // TODO work on focusable elements
 
-  &:hover {
+  all: unset;
+
+  &:hover,
+  &:focus {
     background: lighten($backgroundColor, 15%);
   }
 
   &.active {
     background: lighten($backgroundColor, 20%);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: lighten($backgroundColor, 25%);
     }
   }
