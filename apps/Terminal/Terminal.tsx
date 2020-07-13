@@ -84,7 +84,7 @@ const Terminal: WindowComponent = ({
           );
           setCaretIndex((index) => index + 1);
         } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
-          navigate(event);
+          return navigate(event);
         } else {
           return false;
         }
@@ -223,13 +223,11 @@ const Terminal: WindowComponent = ({
     }
   }
 
-  function navigate(event: KeyboardEvent): void {
+  function navigate(event: KeyboardEvent): false | void {
     // eslint-disable-next-line default-case
     switch (event.key) {
       case 'ArrowDown':
       case 'Down':
-        event.preventDefault();
-
         if (!query && commandIndex < commands.length) {
           const newIndex = commandIndex + 1;
           const newCommand =
@@ -242,8 +240,6 @@ const Terminal: WindowComponent = ({
 
       case 'ArrowLeft':
       case 'Left':
-        event.preventDefault();
-
         if (caretIndex > 0) {
           setCaretIndex(caretIndex - 1);
         }
@@ -251,8 +247,6 @@ const Terminal: WindowComponent = ({
 
       case 'ArrowRight':
       case 'Right':
-        event.preventDefault();
-
         if (caretIndex < userInput.length) {
           setCaretIndex(caretIndex + 1);
         }
@@ -260,8 +254,6 @@ const Terminal: WindowComponent = ({
 
       case 'ArrowUp':
       case 'Up':
-        event.preventDefault();
-
         if (!query && commandIndex > 0) {
           const newIndex = commandIndex - 1;
           const newCommand = commands[newIndex];
@@ -272,8 +264,6 @@ const Terminal: WindowComponent = ({
         break;
 
       case 'Backspace':
-        event.preventDefault();
-
         if (caretIndex > 0) {
           setUserInput(
             userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex)
@@ -283,16 +273,12 @@ const Terminal: WindowComponent = ({
         break;
 
       case 'Enter':
-        event.preventDefault();
         setUserInput('');
         setCaretIndex(0);
-
         exec(userInput);
         break;
 
       case 'Tab':
-        event.preventDefault();
-
         if (!query && userInput.length > 0) {
           const command = Object.keys(executors).find(
             (c) => c.indexOf(userInput) === 0
@@ -302,6 +288,8 @@ const Terminal: WindowComponent = ({
             setUserInput(command);
             setCaretIndex(command.length);
           }
+        } else {
+          return false;
         }
     }
   }
