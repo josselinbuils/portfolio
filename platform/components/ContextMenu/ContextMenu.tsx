@@ -1,17 +1,17 @@
-/* eslint-disable react/no-array-index-key */
-// TODO fix that
 import cn from 'classnames';
 import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { createGUID } from '~/platform/utils/createGUID';
 import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import { ContextMenuItem } from './ContextMenuItem';
+import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 
 import styles from './ContextMenu.module.scss';
 
 export const ContextMenu: FC<Props> = ({
   className,
-  items,
+  items: itemsWithoutID,
   onHide,
   makeFirstItemActive = false,
   onActivate = () => {},
@@ -20,18 +20,20 @@ export const ContextMenu: FC<Props> = ({
 }) => {
   const defaultActiveIndex = makeFirstItemActive ? 0 : -1;
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+  const [items, setItems] = useState<
+    (ContextMenuItemDescriptor & { id: string })[]
+  >([]);
   const listElementRef = useRef<HTMLUListElement>(null);
 
   useLayoutEffect(() => {
     const listElement = listElementRef.current;
 
-    if (listElement === null) {
+    if (listElement === null || listElement.firstElementChild === null) {
       return;
     }
 
     const listHeight = listElement.clientHeight;
-    const itemHeight = (listElement.firstElementChild as HTMLElement)
-      .clientHeight;
+    const itemHeight = listElement.firstElementChild.clientHeight;
     const maxScrollTop = activeIndex * itemHeight;
     const minScrollTop = maxScrollTop + itemHeight - listHeight;
 
@@ -43,6 +45,10 @@ export const ContextMenu: FC<Props> = ({
   }, [activeIndex]);
 
   useEffect(() => onActivate(activeIndex), [activeIndex, onActivate]);
+
+  useLayoutEffect(() => {
+    setItems(itemsWithoutID.map((item) => ({ ...item, id: createGUID() })));
+  }, [itemsWithoutID]);
 
   useKeyMap({
     ArrowDown: () =>
@@ -75,10 +81,10 @@ export const ContextMenu: FC<Props> = ({
       }}
       ref={listElementRef}
     >
-      {items.map(({ onClick, icon, title }, index) => (
+      {items.map(({ icon, id, onClick, title }, index) => (
         <ContextMenuItem
           active={index === activeIndex}
-          key={index}
+          key={id}
           icon={icon}
           onMouseMove={() => {
             if (activeIndex !== index) {
