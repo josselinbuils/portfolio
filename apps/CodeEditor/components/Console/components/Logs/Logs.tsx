@@ -9,11 +9,9 @@ import styles from './Logs.module.scss';
 export const Logs = forwardRef<HTMLDivElement, Props>(
   ({ className, logs }, ref) => (
     <div className={cn(styles.logs, className)} ref={ref}>
-      {logs.map(({ level, message }, index) =>
+      {logs.map(({ id, level, message }) =>
         level === LogLevel.Error ? (
-          // TODO generate a GUID
-          // eslint-disable-next-line react/no-array-index-key
-          <div className={cn(styles.log, styles[level])} key={index}>
+          <div className={cn(styles.log, styles[level])} key={id}>
             <span className={styles.errorMessage}>
               <FontAwesomeIcon icon={faBomb} /> {message.split('\n')[0]}
               {'\n'}
@@ -26,8 +24,7 @@ export const Logs = forwardRef<HTMLDivElement, Props>(
           <div
             dangerouslySetInnerHTML={{ __html: message }}
             className={cn(styles.log, styles[level])}
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
+            key={id}
           />
         )
       )}

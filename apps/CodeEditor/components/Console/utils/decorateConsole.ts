@@ -1,4 +1,5 @@
 import { ListManager } from '~/platform/hooks/useList';
+import { createGUID } from '~/platform/utils/createGUID';
 import { highlightCode } from '../../../utils/highlightCode';
 import { Log, LogLevel } from '../Log';
 
@@ -16,11 +17,13 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
       const formattedPosition = position ? `\n    at ${position[1]}` : '';
 
       logManager.push({
+        id: createGUID(),
         level: LogLevel.Error,
         message: `${error.message}${formattedPosition}`,
       });
     } else if (error) {
       logManager.push({
+        id: createGUID(),
         level: LogLevel.Error,
         message: error.toString(),
       });
@@ -34,6 +37,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
 
     Promise.all(args.map(highlight)).then((parts) => {
       logManager.push({
+        id: createGUID(),
         level: LogLevel.Info,
         message: parts.join(' '),
       });

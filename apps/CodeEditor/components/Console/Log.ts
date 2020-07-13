@@ -1,6 +1,7 @@
 export interface Log {
-  message: string;
+  id: string;
   level: LogLevel;
+  message: string;
 }
 
 export enum LogLevel {
