@@ -6,9 +6,13 @@ import React, { FC } from 'react';
 import styles from './Select.module.scss';
 
 export const Select: FC<Props> = ({ children, className, onChange, value }) => (
-  <div className={cn(styles.select, className)}>
+  <div className={cn(styles.container, className)}>
     <FontAwesomeIcon className={styles.icon} icon={faArrowDown} />
-    <select onChange={(event) => onChange(event.target.value)} value={value}>
+    <select
+      className={styles.select}
+      onChange={(event) => onChange(event.target.value)}
+      value={value}
+    >
       {children}
     </select>
   </div>

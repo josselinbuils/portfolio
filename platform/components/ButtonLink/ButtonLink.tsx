@@ -9,9 +9,9 @@ export const ButtonLink: FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({
   ...forwardedProps
 }) => (
   <button
-    {...forwardedProps}
     className={cn(styles.buttonLink, className)}
     type="button"
+    {...forwardedProps}
   >
     {children}
   </button>

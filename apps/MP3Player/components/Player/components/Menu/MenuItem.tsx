@@ -17,6 +17,7 @@ export const MenuItem: FC<Props> = ({
       className={cn(styles.item, { [styles.checked]: isActiveMusicList })}
       disabled={isActiveMusicList}
       onClick={() => onClickPlaylist(musicList)}
+      role="menuitem"
     >
       {musicList.name}
     </ButtonLink>

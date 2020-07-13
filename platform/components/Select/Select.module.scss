@@ -1,5 +1,13 @@
 @import '../../constants';
 
+.container {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: 13rem;
+  margin-left: auto;
+}
+
 .icon {
   line-height: 2.1rem;
   position: absolute;
@@ -9,27 +17,16 @@
 }
 
 .select {
-  $line-height: 2.1rem;
-
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  width: 13rem;
-  margin-left: auto;
+  font-size: 1.3rem;
+  line-height: 2.1rem;
+  width: 100%;
+  padding: 0.6rem 3rem 0.6rem 1rem;
+  color: inherit;
   border: 0.1rem solid;
   border-radius: 0.5rem;
+  outline: none;
+  background: transparent;
 
-  select {
-    font-size: 1.3rem;
-    line-height: $line-height;
-    width: 100%;
-    padding: 0.6rem 3rem 0.6rem 1rem;
-    color: inherit;
-    border: none;
-    outline: none;
-    background: transparent;
-
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
