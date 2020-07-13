@@ -3,3 +3,11 @@ $backgroundColor: rgba(0, 0, 0, 0.9);
 $mobileBreakpoint: 1024px;
 $primaryColor: #007ad8;
 $textColor: #efefef;
+
+@mixin clearButton {
+  text-align: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: inherit;
+}

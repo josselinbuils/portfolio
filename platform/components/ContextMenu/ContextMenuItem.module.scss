@@ -1,19 +1,14 @@
 @import '../../constants';
 
 .button {
+  @include clearButton;
+
   font: inherit;
-  line-height: 2.6rem;
+  line-height: 2rem;
   box-sizing: border-box;
   width: 100%;
   height: 2.6rem;
   padding: 0.3rem 1rem 0.3rem 0;
-  list-style: none;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  border: none;
-  outline: none;
-  background: inherit;
 
   &[aria-current='true'],
   &:focus {

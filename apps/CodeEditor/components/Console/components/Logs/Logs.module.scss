@@ -30,7 +30,7 @@
 }
 
 .logs {
-  @include scrollbar();
+  @include scrollbar;
 
   font-size: 1.2rem;
   overflow-y: auto;
