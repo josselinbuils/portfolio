@@ -1,5 +1,5 @@
 import React from 'react';
-import { Executor } from '../Executor';
+import { Executor } from './Executor';
 
 export const UserQuery: Executor = ({ args }) => (
   <p>

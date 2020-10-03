@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import Terminal from '~/apps/Terminal';
+import Terminal from '~/apps/Terminal/Terminal';
 import { Home } from '~/platform/components/Home';
 import { InjectorProvider } from '~/platform/providers/InjectorProvider/InjectorProvider';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
