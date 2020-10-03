@@ -4,7 +4,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
-import { ColorPicker } from './ColorPicker';
+import { ColorPicker } from './ColorPicker/ColorPicker';
 
 import styles from './LUTComponentList.module.scss';
 

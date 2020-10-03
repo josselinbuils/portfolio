@@ -4,7 +4,7 @@ import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
-import { ProgressRing } from './ProgressRing';
+import { ProgressRing } from './ProgressRing/ProgressRing';
 import { loadDatasetList } from './utils/loadDatasetList';
 import { loadFrames } from './utils/loadFrames';
 

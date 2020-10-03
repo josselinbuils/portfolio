@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC, useEffect, useState } from 'react';
 import { LUTComponent } from '../../interfaces/LUTComponent';
-import { BarPreview } from './components/BarPreview';
-import { GraphPreview } from './components/GraphPreview';
-import { LUTComponentList } from './components/LUTComponentList';
+import { BarPreview } from './components/BarPreview/BarPreview';
+import { GraphPreview } from './components/GraphPreview/GraphPreview';
+import { LUTComponentList } from './components/LUTComponentList/LUTComponentList';
 
 import styles from './ColorPalette.module.scss';
 
