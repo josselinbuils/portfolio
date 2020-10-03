@@ -1,6 +1,6 @@
 import { ListManager } from '~/platform/hooks/useList';
 import { createGUID } from '~/platform/utils/createGUID';
-import { highlightCode } from '../../../utils/highlightCode';
+import { highlightCode } from '../../../utils/highlightCode/highlightCode';
 import { Log, LogLevel } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {
