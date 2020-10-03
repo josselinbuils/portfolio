@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useLayoutEffect, useRef, useState } from 'react';
+import { FC, useLayoutEffect, useRef, useState } from 'react';
 
 import styles from './LineNumbers.module.scss';
 

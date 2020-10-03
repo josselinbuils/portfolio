@@ -1,7 +1,7 @@
 import { faComment } from '@fortawesome/free-regular-svg-icons/faComment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, MouseEvent } from 'react';
+import { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../../interfaces/RedditPost';
 import { PostDetails } from './PostDetails';
 import { formatNumber } from './utils/formatNumber';

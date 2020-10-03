@@ -1,6 +1,6 @@
 import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { createRef, FC, useContext } from 'react';
+import { createRef, FC, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider';
 import { Button } from '../Button';

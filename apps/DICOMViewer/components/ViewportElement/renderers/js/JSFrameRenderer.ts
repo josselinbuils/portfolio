@@ -111,6 +111,11 @@ export class JSFrameRenderer implements Renderer {
     renderingProperties: RenderingProperties
   ): void {
     const { columns, pixelData, rescaleIntercept, rescaleSlope } = frame;
+
+    if (pixelData === undefined) {
+      return;
+    }
+
     const {
       boundedViewportSpace,
       leftLimit,
@@ -156,6 +161,11 @@ export class JSFrameRenderer implements Renderer {
     renderingProperties: RenderingProperties
   ): void {
     const { columns, pixelData, rows } = frame;
+
+    if (pixelData === undefined) {
+      return;
+    }
+
     const { viewportSpace } = renderingProperties;
 
     const pixelDataLength = pixelData.length;
@@ -187,6 +197,11 @@ export class JSFrameRenderer implements Renderer {
     zoom: number
   ): void {
     const { columns, pixelData, rescaleIntercept, rescaleSlope } = frame;
+
+    if (pixelData === undefined) {
+      return;
+    }
+
     const {
       boundedViewportSpace,
       leftLimit,

@@ -48,7 +48,7 @@ export class Frame extends Model {
   imagePosition!: number[];
   patientName!: string;
   photometricInterpretation!: PhotometricInterpretation;
-  pixelData!: Int16Array | Uint8Array;
+  pixelData?: Int16Array | Uint8Array;
   pixelRepresentation!: PixelRepresentation;
   pixelSpacing!: number[];
   rescaleIntercept = 0;

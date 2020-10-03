@@ -1,7 +1,7 @@
 import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { cancelable } from '~/platform/utils/cancelable';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
 

@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useContext } from 'react';
+import { FC, useContext } from 'react';
 import { AudioContext } from '../AudioProvider';
 import { Controls } from '../Controls';
 import { MusicPreview } from '../MusicPreview';

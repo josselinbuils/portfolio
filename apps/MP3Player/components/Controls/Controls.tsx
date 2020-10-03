@@ -6,7 +6,7 @@ import { faStepBackward } from '@fortawesome/free-solid-svg-icons/faStepBackward
 import { faStepForward } from '@fortawesome/free-solid-svg-icons/faStepForward';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, useContext } from 'react';
+import { FC, useContext } from 'react';
 import { AudioContext } from '../AudioProvider';
 import { Button } from '../Button';
 

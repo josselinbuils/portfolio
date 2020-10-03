@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import { FC, useContext } from 'react';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
 import { Controls } from '../../../Controls';
 import { MusicPreview } from '../../../MusicPreview';

@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
 
 import styles from './Button.module.scss';
 

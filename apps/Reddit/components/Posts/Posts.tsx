@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner';
 import { RedditFilter } from '../../interfaces/RedditFilter';
 import { RedditPost } from '../../interfaces/RedditPost';

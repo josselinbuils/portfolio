@@ -1,7 +1,7 @@
 import { faJsSquare } from '@fortawesome/free-brands-svg-icons/faJsSquare';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, FC } from 'react';
 
 import styles from './Tab.module.scss';
 

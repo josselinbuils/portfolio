@@ -21,7 +21,18 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      {
+        classes: false,
+        enums: true,
+        functions: false,
+        typedefs: false,
+        variables: true,
+      },
+    ],
     'consistent-return': 'off',
     'import/extensions': [
       'error',
@@ -39,10 +50,8 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-plusplus': 'off',
     'no-restricted-syntax': 'off',
-    'no-use-before-define': [
-      'error',
-      { classes: false, functions: false, variables: true },
-    ],
+    'no-shadow': 'off',
+    'no-use-before-define': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
     'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
     'react/jsx-props-no-spreading': 'off',

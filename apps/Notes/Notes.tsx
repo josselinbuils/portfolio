@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { NotesDescriptor } from './NotesDescriptor';
 

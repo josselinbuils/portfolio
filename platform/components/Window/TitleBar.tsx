@@ -3,7 +3,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, MouseEvent } from 'react';
+import { FC, MouseEvent } from 'react';
 
 import styles from './TitleBar.module.scss';
 

@@ -5,7 +5,7 @@ import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, {
+import {
   ChangeEvent,
   DragEvent,
   FC,

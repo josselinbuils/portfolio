@@ -132,6 +132,10 @@ function getDicomImageFormat(
 }
 
 function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
+  if (frame.pixelData === undefined) {
+    throw new Error('Frame does not contain pixel data');
+  }
+
   const {
     bitsAllocated,
     photometricInterpretation,

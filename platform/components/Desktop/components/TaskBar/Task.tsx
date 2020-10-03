@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
+import { FC, RefObject, useEffect, useRef, useState } from 'react';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider/WithContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useEventListener } from '~/platform/hooks/useEventListener';
 import { Position } from '~/platform/interfaces/Position';
 

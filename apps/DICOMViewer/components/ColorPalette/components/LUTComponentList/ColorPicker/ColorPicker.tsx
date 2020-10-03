@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { throttle } from '~/platform/utils/throttle';
 import { hexToRGB } from './utils/hexToRGB';
 import { rgbToHex } from './utils/rgbToHex';

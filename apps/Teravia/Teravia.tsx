@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { PROD_HOSTNAME } from '~/platform/constants';
 import { TeraviaDescriptor } from './TeraviaDescriptor';

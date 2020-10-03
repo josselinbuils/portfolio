@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  useCallback,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { ReactElement, useCallback, useLayoutEffect, useState } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { MouseButton } from '~/platform/constants';

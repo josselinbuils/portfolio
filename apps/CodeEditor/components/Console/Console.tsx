@@ -1,7 +1,7 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import cn from 'classnames';
-import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
+import { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';
 import { Toolbar } from '../Toolbar';

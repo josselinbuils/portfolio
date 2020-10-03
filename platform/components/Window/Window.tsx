@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { Component, createRef, ReactElement } from 'react';
+import { Component, createRef, ReactElement } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';

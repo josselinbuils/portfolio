@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { MusicList } from '../../interfaces/MusicList';
 import { musicLists } from '../../musicLists';
 import { Footer } from './components/Footer';

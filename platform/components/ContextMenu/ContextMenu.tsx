@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { createGUID } from '~/platform/utils/createGUID';
 import { ROOT_FONT_SIZE_PX } from '../../constants';

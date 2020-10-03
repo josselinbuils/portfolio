@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { AudioProvider } from './components/AudioProvider';
 import { MiniPlayer } from './components/MiniPlayer';

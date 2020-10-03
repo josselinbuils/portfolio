@@ -79,7 +79,7 @@ export class JSVolumeRenderer implements Renderer {
     );
     const frame = dataset.frames[index];
 
-    if (frame === undefined) {
+    if (frame === undefined || frame.pixelData === undefined) {
       return -Number.MAX_SAFE_INTEGER;
     }
 

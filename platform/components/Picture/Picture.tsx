@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 export const Picture: FC<Props> = ({ alt, className, src, webpSrc }) => (
   <picture className={className}>

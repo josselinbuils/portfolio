@@ -197,7 +197,11 @@ export class WebGLRenderer implements Renderer {
     return { fragmentShader, vertexShader };
   }
 
-  private createTexture(image: Frame): WebGLTexture {
+  private createTexture(frame: Frame): WebGLTexture {
+    if (frame.pixelData === undefined) {
+      throw new Error('Frame does not contain pixel data');
+    }
+
     const { gl } = this;
     const texture = gl.createTexture();
 
@@ -213,11 +217,11 @@ export class WebGLRenderer implements Renderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-    const { columns, imageFormat, rows } = image;
+    const { columns, imageFormat, rows } = frame;
     const format = getTextureFormat(gl, imageFormat);
     const pixelData = new Uint8Array(
-      image.pixelData.buffer,
-      image.pixelData.byteOffset
+      frame.pixelData.buffer,
+      frame.pixelData.byteOffset
     );
 
     // Upload the image into the texture.

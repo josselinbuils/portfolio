@@ -19,7 +19,7 @@ export class DicomFrame extends Model {
   imagePosition?: number[];
   patientName!: string;
   photometricInterpretation!: PhotometricInterpretation;
-  pixelData!: Uint8Array;
+  pixelData?: Uint8Array;
   pixelRepresentation!: PixelRepresentation;
   pixelSpacing?: number[];
   rescaleIntercept?: number;

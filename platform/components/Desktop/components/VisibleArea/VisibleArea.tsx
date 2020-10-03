@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useEventListener } from '~/platform/hooks/useEventListener';
 import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';

@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import { Position } from '~/platform/interfaces/Position';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 

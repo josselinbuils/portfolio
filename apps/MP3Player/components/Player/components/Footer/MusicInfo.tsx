@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Music } from '~/apps/MP3Player/interfaces/Music';
 
 import styles from './MusicInfo.module.scss';

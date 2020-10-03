@@ -1,5 +1,5 @@
 import { Deferred } from '@josselinbuils/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Window, WindowComponent } from '~/platform/components/Window';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useList } from '~/platform/hooks/useList';

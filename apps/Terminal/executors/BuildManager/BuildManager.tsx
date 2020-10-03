@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 import { useList } from '~/platform/hooks/useList';
 import { CommandHelp } from '../../components/CommandHelp';
 import { AsyncExecutor } from '../AsyncExecutor';

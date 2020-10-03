@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ROOT_FONT_SIZE_PX } from '~/platform/constants';
 import { TooltipDescriptor } from './TooltipDescriptor';
 

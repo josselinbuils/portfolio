@@ -2,7 +2,7 @@ import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { AudioContext } from '~/apps/MP3Player/components/AudioProvider';
 import { Music } from '~/apps/MP3Player/interfaces/Music';
 import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';

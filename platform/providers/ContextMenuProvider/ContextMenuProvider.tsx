@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, {
+import {
   Children,
   cloneElement,
   FC,

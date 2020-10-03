@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager';
