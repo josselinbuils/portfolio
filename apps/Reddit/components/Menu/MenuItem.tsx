@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { FC, useLayoutEffect, useState } from 'react';
 import { ButtonLink } from '~/platform/components/ButtonLink/ButtonLink';
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
-import { Icon } from '../Icon';
+import { Icon } from '../Icon/Icon';
 
 import styles from './MenuItem.module.scss';
 

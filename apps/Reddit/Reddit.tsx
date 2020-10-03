@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import { Header } from './components/Header';
-import { Logo } from './components/Logo';
-import { Menu } from './components/Menu';
-import { Posts } from './components/Posts';
+import { Header } from './components/Header/Header';
+import { Logo } from './components/Logo/Logo';
+import { Menu } from './components/Menu/Menu';
+import { Posts } from './components/Posts/Posts';
 import { RedditFilter } from './interfaces/RedditFilter';
 import { RedditDescriptor } from './RedditDescriptor';
 

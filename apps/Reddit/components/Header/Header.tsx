@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { RedditFilter } from '../../interfaces/RedditFilter';
-import { Icon } from '../Icon';
+import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
 
 import styles from './Header.module.scss';
