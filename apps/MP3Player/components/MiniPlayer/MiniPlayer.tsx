@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import { FC, useContext } from 'react';
-import { AudioContext } from '../AudioProvider';
-import { Controls } from '../Controls';
-import { MusicPreview } from '../MusicPreview';
-import { SeekBar } from '../SeekBar';
+import { AudioContext } from '../AudioProvider/AudioProvider';
+import { Controls } from '../Controls/Controls';
+import { MusicPreview } from '../MusicPreview/MusicPreview';
+import { SeekBar } from '../SeekBar/SeekBar';
 
 import styles from './MiniPlayer.module.scss';
 

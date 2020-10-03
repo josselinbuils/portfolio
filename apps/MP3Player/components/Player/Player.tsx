@@ -2,11 +2,11 @@ import cn from 'classnames';
 import { FC, useState } from 'react';
 import { MusicList } from '../../interfaces/MusicList';
 import { musicLists } from '../../musicLists';
-import { Footer } from './components/Footer';
-import { JamendoLink } from './components/JamendoLink';
-import { Logo } from './components/Logo';
-import { Menu } from './components/Menu';
-import { Musics } from './components/Musics';
+import { Footer } from './components/Footer/Footer';
+import { JamendoLink } from './components/JamendoLink/JamendoLink';
+import { Logo } from './components/Logo/Logo';
+import { Menu } from './components/Menu/Menu';
+import { Musics } from './components/Musics/Musics';
 
 import styles from './Player.module.scss';
 

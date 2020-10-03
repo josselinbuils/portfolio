@@ -2,8 +2,8 @@ import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createRef, FC, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
-import { AudioContext } from '../AudioProvider';
-import { Button } from '../Button';
+import { AudioContext } from '../AudioProvider/AudioProvider';
+import { Button } from '../Button/Button';
 import { ProgressBar } from './ProgressBar';
 
 import styles from './SeekBar.module.scss';
