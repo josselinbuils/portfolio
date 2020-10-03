@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Window, WindowComponent } from '~/platform/components/Window';
+import { Window } from '~/platform/components/Window/Window';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { AudioProvider } from './components/AudioProvider';
 import { MiniPlayer } from './components/MiniPlayer';
 import { Player } from './components/Player';

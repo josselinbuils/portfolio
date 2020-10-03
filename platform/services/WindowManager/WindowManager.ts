@@ -1,6 +1,7 @@
 import { Subject } from '@josselinbuils/utils';
 import { createRef } from 'react';
-import { WindowComponent, WindowProps } from '~/platform/components/Window';
+import { WindowProps } from '~/platform/components/Window/Window';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { WindowInstance } from './WindowInstance';
 

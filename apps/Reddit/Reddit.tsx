@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { Window, WindowComponent } from '~/platform/components/Window';
+import { Window } from '~/platform/components/Window/Window';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { Header } from './components/Header';
 import { Logo } from './components/Logo';
 import { Menu } from './components/Menu';

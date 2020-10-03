@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { Window, WindowComponent } from '~/platform/components/Window';
+import { Window } from '~/platform/components/Window/Window';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { PROD_HOSTNAME } from '~/platform/constants';
 import { TeraviaDescriptor } from './TeraviaDescriptor';
 

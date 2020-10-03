@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
+import { Window } from '~/platform/components/Window/Window';
 import {
   InjectedWindowProps,
-  Window,
   WindowComponent,
-} from '~/platform/components/Window';
+} from '~/platform/components/Window/WindowComponent';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export interface WindowInstance extends Partial<InjectedWindowProps> {

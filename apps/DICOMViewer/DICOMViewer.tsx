@@ -1,6 +1,7 @@
 import { ReactElement, useCallback, useLayoutEffect, useState } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
-import { Window, WindowComponent } from '~/platform/components/Window';
+import { Window } from '~/platform/components/Window/Window';
+import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { MouseButton } from '~/platform/constants';
 import { AnnotationsElement } from './components/AnnotationsElement';
 import { ColorPalette } from './components/ColorPalette';

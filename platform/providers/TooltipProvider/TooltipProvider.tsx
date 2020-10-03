@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Tooltip } from '../../components/Tooltip';
+import { Tooltip } from '~/platform/components/Tooltip/Tooltip';
 import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 

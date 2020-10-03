@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { FC, useEffect, useLayoutEffect, useState } from 'react';
-import { Spinner } from '~/platform/components/Spinner';
+import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';

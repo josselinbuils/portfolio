@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
-import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 import { CommandHelp } from '../../components/CommandHelp';
 import { Executor } from '../Executor';

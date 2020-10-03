@@ -2,7 +2,7 @@ import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useEventListener } from '~/platform/hooks/useEventListener';
 import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
-import { WindowManager } from '~/platform/services/WindowManager';
+import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { getRefElementSize } from '~/platform/utils/getRefElementSize';
 import { Selection } from './Selection';
 import { Windows } from './Windows';

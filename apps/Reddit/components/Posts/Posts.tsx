@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Spinner } from '~/platform/components/Spinner';
+import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { RedditFilter } from '../../interfaces/RedditFilter';
 import { RedditPost } from '../../interfaces/RedditPost';
 import { getPosts } from './getPosts';

@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { FC, useEffect } from 'react';
-import { Desktop } from './Desktop';
+import { Desktop } from './Desktop/Desktop';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
 import { useInjector } from '../providers/InjectorProvider/useInjector';
 import { TooltipProvider } from '../providers/TooltipProvider/TooltipProvider';
-import { WindowManager } from '../services/WindowManager';
+import { WindowManager } from '../services/WindowManager/WindowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 
 export const Home: FC<Props> = ({ app }) => {
