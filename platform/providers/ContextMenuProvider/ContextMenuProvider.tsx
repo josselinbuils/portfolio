@@ -7,9 +7,9 @@ import {
   useCallback,
   useState,
 } from 'react';
-import { ContextMenu } from '~/platform/components/ContextMenu/ContextMenu';
-import { ContextMenuDescriptor } from '~/platform/components/ContextMenu/ContextMenuDescriptor';
+import { ContextMenu } from './ContextMenu/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
+import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 
 import styles from './ContextMenuProvider.module.scss';
 

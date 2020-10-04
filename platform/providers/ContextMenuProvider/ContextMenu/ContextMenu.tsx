@@ -2,10 +2,10 @@ import cn from 'classnames';
 import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { createGUID } from '~/platform/utils/createGUID';
-import { ROOT_FONT_SIZE_PX } from '../../constants';
-import { ContextMenuDescriptor } from './ContextMenuDescriptor';
+import { ROOT_FONT_SIZE_PX } from '../../../constants';
+import { ContextMenuDescriptor } from '../ContextMenuDescriptor';
+import { ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
 import { ContextMenuItem } from './ContextMenuItem';
-import { ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 
 import styles from './ContextMenu.module.scss';
 
