@@ -55,12 +55,7 @@ export const ContextMenu: FC<Props> = ({
       setActiveIndex(activeIndex < items.length - 1 ? activeIndex + 1 : 0),
     ArrowUp: () =>
       setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
-    Enter: () => {
-      if (items[activeIndex]) {
-        items[activeIndex].onClick();
-      }
-      onHide();
-    },
+    Escape: onHide,
   });
 
   if (position === undefined) {
@@ -96,6 +91,11 @@ export const ContextMenu: FC<Props> = ({
             onClick();
             onHide();
           }}
+          tabIndex={
+            index === activeIndex || (activeIndex === -1 && index === 0)
+              ? 0
+              : -1
+          }
           title={title}
         />
       ))}
