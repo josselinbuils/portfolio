@@ -17,7 +17,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn type-check && yarn lint:staged && yarn prettier:staged && yarn csscomb:staged && yarn add:staged"
+      "pre-commit": "yarn lint:staged && yarn prettier:staged && yarn csscomb:staged && yarn add:staged"
     }
   },
   "dependencies": {
