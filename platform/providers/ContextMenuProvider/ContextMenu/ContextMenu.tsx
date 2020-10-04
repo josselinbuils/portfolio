@@ -50,12 +50,21 @@ export const ContextMenu: FC<Props> = ({
     setItems(itemsWithoutID.map((item) => ({ ...item, id: createGUID() })));
   }, [itemsWithoutID]);
 
+  function clickOnActiveItem(): void {
+    if (items[activeIndex]) {
+      items[activeIndex].onClick();
+      onHide();
+    }
+  }
+
   useKeyMap({
     ArrowDown: () =>
       setActiveIndex(activeIndex < items.length - 1 ? activeIndex + 1 : 0),
     ArrowUp: () =>
       setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
+    Enter: clickOnActiveItem,
     Escape: onHide,
+    ' ': clickOnActiveItem,
   });
 
   if (position === undefined) {
@@ -91,11 +100,6 @@ export const ContextMenu: FC<Props> = ({
             onClick();
             onHide();
           }}
-          tabIndex={
-            index === activeIndex || (activeIndex === -1 && index === 0)
-              ? 0
-              : -1
-          }
           title={title}
         />
       ))}

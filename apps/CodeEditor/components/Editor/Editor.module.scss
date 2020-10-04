@@ -12,18 +12,18 @@
   border-radius: 0.1rem;
   background: #505254;
 
-  li {
+  li:first-child,
+  li:last-child {
+    margin: 0;
+  }
+
+  button {
     font-family: $fontFamily;
     font-size: 1.2rem;
     line-height: 1.4rem;
-    height: 1.4rem;
+    height: 2rem;
     padding: 0.3rem 0.6rem;
     color: #b8babc;
-
-    &:first-child,
-    &:last-child {
-      margin: 0;
-    }
 
     &[aria-current='true'] {
       background: #5b5d61;
