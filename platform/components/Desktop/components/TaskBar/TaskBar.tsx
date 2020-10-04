@@ -6,13 +6,21 @@ import { Task } from './Task';
 import { getTaskKey } from './utils/getTaskKey';
 
 import styles from './TaskBar.module.scss';
+import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
+import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 
 export const TaskBar: FC<Props> = ({ className }) => {
+  const windowManager = useInjector(WindowManager);
   const taskBarRef = useRef(null);
   const taskDescriptors = useTaskDescriptors(APP_DESCRIPTORS);
 
   return (
-    <div className={cn(styles.taskBar, className)} ref={taskBarRef}>
+    <div
+      className={cn(styles.taskBar, className)}
+      onMouseDown={() => windowManager.unselectAllWindows()}
+      ref={taskBarRef}
+      role="toolbar"
+    >
       {taskDescriptors.map(({ appDescriptor, windowInstance }, index) => (
         <Task
           appDescriptor={appDescriptor}
