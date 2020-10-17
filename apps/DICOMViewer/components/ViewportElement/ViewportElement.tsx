@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { FC, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks/useElementSize';

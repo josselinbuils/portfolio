@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { FC, useLayoutEffect, useRef, useState } from 'react';
+import React, { FC, useLayoutEffect, useRef, useState } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { applyPolynomialInterpolation } from '~/apps/DICOMViewer/utils/math/applyPolynomialInterpolation';
 import { scaleLUTComponents } from '~/apps/DICOMViewer/utils/scaleLUTComponents';
