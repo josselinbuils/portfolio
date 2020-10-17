@@ -8,21 +8,23 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
-import { WithContextMenu } from '~/platform/providers/ContextMenuProvider/WithContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import { noop } from '~/platform/utils/noop';
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
 
 import styles from './Task.module.scss';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
 export const Task: FC<Props> = ({
   appDescriptor,
+  onClick = noop,
   taskBarRef,
   taskButtonActive,
   windowInstance,
@@ -30,6 +32,11 @@ export const Task: FC<Props> = ({
 }) => {
   const taskRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState(false);
+  const {
+    hideContextMenu,
+    isContextMenuDisplayed,
+    showContextMenu,
+  } = useContextMenu();
   const getTaskContextMenuDescriptor = useTaskContextMenu(
     appDescriptor,
     taskBarRef,
@@ -56,10 +63,21 @@ export const Task: FC<Props> = ({
 
   useKeyMap(
     {
+      ArrowRight: () =>
+        showContextMenu({
+          ...getTaskContextMenuDescriptor(),
+          makeFirstItemActive: true,
+        }),
       Enter: runTask,
       ' ': runTask,
     },
     taskButtonActive
+  );
+
+  useKeyMap(
+    { ArrowLeft: hideContextMenu },
+    taskButtonActive && isContextMenuDisplayed,
+    2
   );
 
   async function runTask(): Promise<void> {
@@ -74,26 +92,31 @@ export const Task: FC<Props> = ({
   }
 
   return (
-    <WithContextMenu descriptor={getTaskContextMenuDescriptor}>
-      <button
-        className={cn(styles.task, {
-          [styles.taskButtonActive]: taskButtonActive,
-          [styles.windowInstanceActive]: windowInstanceActive,
-        })}
-        onClick={runTask}
-        ref={taskRef}
-        tabIndex={-1}
-        type="button"
-        {...forwardedProps}
-      >
-        <FontAwesomeIcon
-          className={cn({ [styles.loading]: loading })}
-          icon={icon}
-          style={{ fontSize: `${iconScale}em` }}
-        />
-        {running && <div className={styles.runIndicator} />}
-      </button>
-    </WithContextMenu>
+    <button
+      className={cn(styles.task, {
+        [styles.taskButtonActive]: taskButtonActive,
+        [styles.windowInstanceActive]: windowInstanceActive,
+      })}
+      onClick={(event) => {
+        runTask();
+        onClick(event);
+      }}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        showContextMenu(getTaskContextMenuDescriptor());
+      }}
+      ref={taskRef}
+      tabIndex={-1}
+      type="button"
+      {...forwardedProps}
+    >
+      <FontAwesomeIcon
+        className={cn({ [styles.loading]: loading })}
+        icon={icon}
+        style={{ fontSize: `${iconScale}em` }}
+      />
+      {running && <div className={styles.runIndicator} />}
+    </button>
   );
 };
 

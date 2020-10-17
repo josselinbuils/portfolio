@@ -57,15 +57,19 @@ export const ContextMenu: FC<Props> = ({
     }
   }
 
-  useKeyMap({
-    ArrowDown: () =>
-      setActiveIndex(activeIndex < items.length - 1 ? activeIndex + 1 : 0),
-    ArrowUp: () =>
-      setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
-    Enter: clickOnActiveItem,
-    Escape: onHide,
-    ' ': clickOnActiveItem,
-  });
+  useKeyMap(
+    {
+      ArrowDown: () =>
+        setActiveIndex(activeIndex < items.length - 1 ? activeIndex + 1 : 0),
+      ArrowUp: () =>
+        setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
+      Enter: clickOnActiveItem,
+      Escape: onHide,
+      ' ': clickOnActiveItem,
+    },
+    true,
+    2
+  );
 
   if (position === undefined) {
     if (activeIndex !== defaultActiveIndex) {

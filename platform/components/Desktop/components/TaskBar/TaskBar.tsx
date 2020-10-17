@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
 import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { Task } from './Task';
@@ -16,6 +16,12 @@ export const TaskBar: FC<Props> = ({ className }) => {
   const windowManager = useInjector(WindowManager);
   const taskBarRef = useRef(null);
   const taskDescriptors = useTaskDescriptors(APP_DESCRIPTORS);
+
+  useEffect(() => {
+    if (activeIndex >= taskDescriptors.length) {
+      setActiveIndex(taskDescriptors.length - 1);
+    }
+  }, [activeIndex, taskDescriptors.length]);
 
   useKeyMap(
     {
@@ -34,7 +40,8 @@ export const TaskBar: FC<Props> = ({ className }) => {
   return (
     <div
       aria-activedescendant={
-        focused
+        // taskDescriptors[activeIndex] can be undefined if a window is closed
+        focused && taskDescriptors[activeIndex]
           ? getTaskId(taskDescriptors[activeIndex], activeIndex)
           : undefined
       }
@@ -55,6 +62,7 @@ export const TaskBar: FC<Props> = ({ className }) => {
             appDescriptor={appDescriptor}
             id={id}
             key={id}
+            onClick={() => setFocused(false)}
             onMouseEnter={() => setActiveIndex(index)}
             taskBarRef={taskBarRef}
             taskButtonActive={focused && index === activeIndex}

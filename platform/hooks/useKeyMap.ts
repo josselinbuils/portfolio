@@ -1,14 +1,31 @@
+import { useEffect } from 'react';
 import { useEventListener } from './useEventListener';
+
+const priorities = [] as number[];
 
 export function useKeyMap(
   keyMap: {
     [keyStr: string]: (event: KeyboardEvent) => false | any;
   },
-  active = true
+  active = true,
+  priority = 1
 ): void {
+  useEffect(() => {
+    if (active) {
+      priorities.push(priority);
+    }
+    return () => {
+      priorities.splice(priorities.indexOf(priority));
+    };
+  }, [active, priority]);
+
   useEventListener(
     'keydown',
     (event) => {
+      if (Math.max(...priorities) > priority) {
+        return;
+      }
+
       const eventKeyStr = getEventKeyStr(event);
 
       for (const [keyStr, handler] of Object.entries(keyMap)) {
