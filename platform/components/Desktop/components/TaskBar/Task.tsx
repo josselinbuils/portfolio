@@ -1,6 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import { FC, RefObject, useEffect, useRef, useState } from 'react';
+import {
+  ButtonHTMLAttributes,
+  FC,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { WithContextMenu } from '~/platform/providers/ContextMenuProvider/WithContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
@@ -10,13 +17,16 @@ import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
 
 import styles from './Task.module.scss';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
 export const Task: FC<Props> = ({
   appDescriptor,
   taskBarRef,
+  taskButtonActive,
   windowInstance,
+  ...forwardedProps
 }) => {
   const taskRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState(false);
@@ -28,7 +38,7 @@ export const Task: FC<Props> = ({
   );
   const run = useTaskRunner(appDescriptor, windowInstance);
   const windowManager = useInjector(WindowManager);
-  const active = windowInstance && windowInstance.active;
+  const windowInstanceActive = windowInstance && windowInstance.active;
   const running = !!windowInstance || loading;
   const { icon, iconScale = 1 } = appDescriptor;
 
@@ -44,6 +54,14 @@ export const Task: FC<Props> = ({
     }
   }, [taskBarRef, windowInstance, windowManager]);
 
+  useKeyMap(
+    {
+      Enter: runTask,
+      ' ': runTask,
+    },
+    taskButtonActive
+  );
+
   async function runTask(): Promise<void> {
     // Delay loader apparition to avoid displaying it when app already loaded
     const displayLoaderTimeout = setTimeout(
@@ -58,10 +76,15 @@ export const Task: FC<Props> = ({
   return (
     <WithContextMenu descriptor={getTaskContextMenuDescriptor}>
       <button
-        className={cn(styles.task, { [styles.active]: active })}
+        className={cn(styles.task, {
+          [styles.taskButtonActive]: taskButtonActive,
+          [styles.windowInstanceActive]: windowInstanceActive,
+        })}
         onClick={runTask}
         ref={taskRef}
+        tabIndex={-1}
         type="button"
+        {...forwardedProps}
       >
         <FontAwesomeIcon
           className={cn({ [styles.loading]: loading })}
@@ -74,8 +97,9 @@ export const Task: FC<Props> = ({
   );
 };
 
-interface Props {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   appDescriptor: AppDescriptor;
   taskBarRef: RefObject<HTMLDivElement>;
+  taskButtonActive: boolean;
   windowInstance?: WindowInstance;
 }

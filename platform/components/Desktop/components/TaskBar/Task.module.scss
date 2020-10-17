@@ -25,16 +25,16 @@
   text-align: center;
 
   &:hover,
-  &:focus {
-    background: lighten($backgroundColor, 15%);
+  &.taskButtonActive {
+    background: lighten($backgroundColor, 20%);
   }
 
-  &.active {
-    background: lighten($backgroundColor, 20%);
+  &.windowInstanceActive {
+    background: lighten($backgroundColor, 25%);
 
     &:hover,
-    &:focus {
-      background: lighten($backgroundColor, 25%);
+    &.taskButtonActive {
+      background: lighten($backgroundColor, 30%);
     }
   }
 }
