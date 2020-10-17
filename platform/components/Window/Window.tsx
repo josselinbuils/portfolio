@@ -298,7 +298,7 @@ export class Window extends Component<WindowProps, State> {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
-    const { state } = this;
+    let { state } = this;
 
     downEvent.preventDefault();
     downEvent.persist();
@@ -312,6 +312,7 @@ export class Window extends Component<WindowProps, State> {
     const moveHandler = (moveEvent: MouseEvent) => {
       const width = startSize.width + moveEvent.clientX - downEvent.clientX;
       const height = startSize.height + moveEvent.clientY - downEvent.clientY;
+      ({ state } = this); // State reference will change if not yet frozen
 
       if (!state.frozen) {
         this.setState({ frozen: true });
