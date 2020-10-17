@@ -22,7 +22,7 @@ class InlineStylesHead extends Head {
 export default class CustomDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <InlineStylesHead />
         <body>
           <Main />

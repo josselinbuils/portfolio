@@ -179,9 +179,9 @@ export class Window extends Component<WindowProps, State> {
         {resizable && (
           // eslint-disable-next-line jsx-a11y/control-has-associated-label,jsx-a11y/interactive-supports-focus
           <div
+            aria-hidden
             className={styles.resize}
             onMouseDown={this.startResize}
-            role="button"
           />
         )}
       </div>
