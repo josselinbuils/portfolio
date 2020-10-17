@@ -1,3 +1,4 @@
+@import '../../../../../platform/constants';
 @import '../../../../constants';
 
 .loading {
@@ -26,15 +27,15 @@
 
   &:hover,
   &.taskButtonActive {
-    background: lighten($backgroundColor, 20%);
+    background: lighten($backgroundColor, $lightenAmountLevel1);
   }
 
   &.windowInstanceActive {
-    background: lighten($backgroundColor, 25%);
+    background: lighten($backgroundColor, $lightenAmountLevel2);
 
     &:hover,
     &.taskButtonActive {
-      background: lighten($backgroundColor, 30%);
+      background: lighten($backgroundColor, $lightenAmountLevel3);
     }
   }
 }

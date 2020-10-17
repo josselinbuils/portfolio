@@ -37,5 +37,5 @@
 // Modifiers
 
 .active {
-  background: lighten($backgroundColor, 15%);
+  background: lighten($backgroundColor, $lightenAmountLevel1);
 }

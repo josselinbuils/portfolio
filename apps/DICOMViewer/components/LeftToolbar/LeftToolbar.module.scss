@@ -1,3 +1,4 @@
+@import '../../../../platform/constants';
 @import '../../constants';
 
 .mouseTool {
@@ -14,11 +15,11 @@
   background: transparentize($backgroundColor, 0.4);
 
   &:active:hover {
-    background: lighten($backgroundColor, 25%);
+    background: lighten($backgroundColor, $lightenAmountLevel2);
   }
 
   &:hover {
-    background: lighten($backgroundColor, 15%);
+    background: lighten($backgroundColor, $lightenAmountLevel1);
   }
 
   &:first-child {

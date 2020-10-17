@@ -1,3 +1,4 @@
+@import '../../../../platform/constants';
 @import '../../constants';
 
 .button {
@@ -21,7 +22,7 @@
 
   &:not(:disabled) {
     &:hover {
-      color: lighten($textColor, 15%);
+      color: lighten($textColor, $lightenAmountLevel1);
     }
 
     &:active {
@@ -31,7 +32,7 @@
     &:active,
     &.checked {
       &:hover {
-        color: lighten($primaryColor, 15%);
+        color: lighten($primaryColor, $lightenAmountLevel1);
       }
     }
   }
