@@ -23,7 +23,10 @@ export const TitleBar: FC<Props> = ({
     className={cn(styles.titlebar, { [styles.maximized]: maximized })}
     style={{ background, color }}
   >
-    <div className={cn(styles.buttons, { [styles.frozen]: frozen })}>
+    <div
+      className={cn(styles.buttons, { [styles.frozen]: frozen })}
+      role="toolbar"
+    >
       <button
         className={cn(styles.button, styles.close)}
         onClick={onClose}
@@ -51,14 +54,14 @@ export const TitleBar: FC<Props> = ({
         </button>
       )}
     </div>
-    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-    <div
-      className={styles.movingArea}
+    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+    <h2
+      className={styles.title}
       onMouseDown={onMoveStart}
       onDoubleClick={onToggleMaximize}
     >
       {title}
-    </div>
+    </h2>
   </header>
 );
 

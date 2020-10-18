@@ -17,15 +17,27 @@
   bottom: -0.2rem;
   width: 1rem;
   height: 1rem;
+  padding: 0;
   cursor: nwse-resize;
   user-select: none;
+  border: none;
+  background: transparent;
+
+  appearance: none;
 }
 
 .window {
   position: absolute;
+  right: auto;
+  bottom: auto;
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
   opacity: 0.9;
+  color: inherit;
+  border: none;
+  outline: none;
 
   &:not(.maximized) {
     border-radius: 0.6rem; /* Needed by box shadow */

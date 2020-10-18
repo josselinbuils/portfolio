@@ -21,7 +21,7 @@ export class Window extends Component<WindowProps, State> {
     maximize?: { height: number; left: number; top: number; width: number };
     minimize?: { height: number; left: number; top: number; width: number };
   } = {};
-  private readonly windowRef = createRef<HTMLDivElement>();
+  private readonly windowRef = createRef<HTMLDialogElement>();
 
   constructor(props: WindowProps) {
     super(props);
@@ -91,6 +91,10 @@ export class Window extends Component<WindowProps, State> {
     }
   }
 
+  focus(): void {
+    this.windowRef.current?.focus();
+  }
+
   hide(): void {
     const { props } = this;
 
@@ -149,12 +153,12 @@ export class Window extends Component<WindowProps, State> {
 
     return (
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-      <div
+      <dialog
+        aria-label={`Window: ${title}`}
         className={className}
         onMouseDown={() => onSelect(id)}
         ref={this.windowRef}
         style={{ background, height, left, top, width, zIndex }}
-        role="dialog"
       >
         <TitleBar
           background={titleBackground}
@@ -168,23 +172,23 @@ export class Window extends Component<WindowProps, State> {
           onMoveStart={this.startMove}
           onToggleMaximize={() => this.toggleMaximize()}
         />
-        <main
-          className={cn(styles.content, {
-            [styles.frozen]: frozen,
-          })}
+        <article
+          className={cn(styles.content, { [styles.frozen]: frozen })}
           ref={this.contentRef}
         >
           {children}
-        </main>
+        </article>
         {resizable && (
-          // eslint-disable-next-line jsx-a11y/control-has-associated-label,jsx-a11y/interactive-supports-focus
-          <div
+          <button
             aria-hidden
+            aria-label="Window resize corner"
             className={styles.resize}
             onMouseDown={this.startResize}
+            tabIndex={-1}
+            type="button"
           />
         )}
-      </div>
+      </dialog>
     );
   }
 
