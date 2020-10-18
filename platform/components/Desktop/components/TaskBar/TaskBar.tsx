@@ -1,19 +1,16 @@
 import cn from 'classnames';
 import { FC, useEffect, useRef, useState } from 'react';
 import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
+import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { Task } from './Task';
 import { getTaskId } from './utils/getTaskId';
 
 import styles from './TaskBar.module.scss';
-import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
-import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
 
 export const TaskBar: FC<Props> = ({ className }) => {
   const [focused, setFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const windowManager = useInjector(WindowManager);
   const taskBarRef = useRef(null);
   const taskDescriptors = useTaskDescriptors(APP_DESCRIPTORS);
 
@@ -48,7 +45,6 @@ export const TaskBar: FC<Props> = ({ className }) => {
       className={cn(styles.taskBar, className)}
       onBlur={() => setFocused(false)}
       onFocus={() => setFocused(true)}
-      onMouseDown={() => windowManager.unselectAllWindows()}
       ref={taskBarRef}
       role="toolbar"
       tabIndex={0}

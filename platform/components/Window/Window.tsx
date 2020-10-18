@@ -119,6 +119,16 @@ export class Window extends Component<WindowProps, State> {
 
   render(): ReactElement {
     const {
+      contentRef,
+      props,
+      startMove,
+      startResize,
+      state,
+      toggleMaximize,
+      unselectIfNoChildFocused,
+      windowRef,
+    } = this;
+    const {
       active,
       background,
       children,
@@ -131,7 +141,7 @@ export class Window extends Component<WindowProps, State> {
       titleBackground,
       titleColor,
       zIndex,
-    } = this.props;
+    } = props;
     const {
       animated,
       frozen,
@@ -141,7 +151,7 @@ export class Window extends Component<WindowProps, State> {
       minimized,
       top,
       width,
-    } = this.state;
+    } = state;
 
     const className = cn(styles.window, {
       [styles.active]: active,
@@ -156,8 +166,10 @@ export class Window extends Component<WindowProps, State> {
       <dialog
         aria-label={`Window: ${title}`}
         className={className}
+        onBlur={unselectIfNoChildFocused}
+        onFocus={() => onSelect(id)}
         onMouseDown={() => onSelect(id)}
-        ref={this.windowRef}
+        ref={windowRef}
         style={{ background, height, left, top, width, zIndex }}
       >
         <TitleBar
@@ -169,12 +181,13 @@ export class Window extends Component<WindowProps, State> {
           maximized={maximized}
           onClose={() => onClose(id)}
           onMinimise={() => onMinimise(id)}
-          onMoveStart={this.startMove}
-          onToggleMaximize={() => this.toggleMaximize()}
+          onMoveStart={startMove}
+          // Don't know why but cannot remove the arrow function there
+          onToggleMaximize={() => toggleMaximize()}
         />
         <article
           className={cn(styles.content, { [styles.frozen]: frozen })}
-          ref={this.contentRef}
+          ref={contentRef}
         >
           {children}
         </article>
@@ -183,7 +196,7 @@ export class Window extends Component<WindowProps, State> {
             aria-hidden
             aria-label="Window resize corner"
             className={styles.resize}
-            onMouseDown={this.startResize}
+            onMouseDown={startResize}
             tabIndex={-1}
             type="button"
           />
@@ -545,6 +558,16 @@ export class Window extends Component<WindowProps, State> {
 
     return windowAnimation;
   }
+
+  private unselectIfNoChildFocused = (): void => {
+    // Waits for next element to take focus
+    setTimeout(() => {
+      if (!this.windowRef.current?.contains(document.activeElement)) {
+        const { id, onUnselect } = this.props;
+        onUnselect(id);
+      }
+    }, 0);
+  };
 }
 
 export interface WindowProps {
@@ -568,6 +591,7 @@ export interface WindowProps {
   onMinimise(id: number): void;
   onResize?(size: Size): void;
   onSelect(id: number): void;
+  onUnselect(id: number): void;
 }
 
 interface State {

@@ -25,6 +25,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
             onSelect={windowManager.selectWindow}
+            onUnselect={windowManager.unselectWindow}
             visibleAreaSize={visibleAreaSize}
             {...forwardedProps}
           />

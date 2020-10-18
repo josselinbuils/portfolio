@@ -13,4 +13,5 @@ export interface InjectedWindowProps extends Partial<WindowProps> {
   onClose(id: number): void;
   onMinimise(id: number): void;
   onSelect(id: number): void;
+  onUnselect(id: number): void;
 }
