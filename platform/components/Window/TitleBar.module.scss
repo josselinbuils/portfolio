@@ -9,21 +9,21 @@
   outline: none;
   background: none;
 
+  &:hover,
+  &.active {
+    color: #f0f0f0 !important;
+  }
+
   &.close:hover,
-  &.close:focus {
+  &.close.active {
     background: #e20000;
   }
 
-  &.minimize:hover,
-  &.minimize:focus,
   &.maximize:hover,
-  &.maximize:focus {
+  &.maximize.active,
+  &.minimize:hover,
+  &.minimize.active {
     background: $primaryColor;
-  }
-
-  &:hover,
-  &:focus {
-    color: #f0f0f0 !important;
   }
 
   i {
@@ -77,6 +77,21 @@
 
 .frozen {
   pointer-events: none;
+}
+
+:global(.keyboardFocused) .button {
+  &:focus {
+    color: #f0f0f0 !important;
+  }
+
+  &.close:focus {
+    background: #e20000;
+  }
+
+  &.maximize:focus,
+  &.minimize:focus {
+    background: $primaryColor;
+  }
 }
 
 @media only screen and (max-width: $mobileBreakpoint) {

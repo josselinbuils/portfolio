@@ -1,63 +1,110 @@
-import React, { useState } from 'react';
+import {
+  createRef,
+  RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
+import { useEventListener } from '~/platform/hooks/useEventListener';
 
-export function useToolbar(): {
+export function useToolbar(
+  orientation: 'horizontal' | 'vertical' = 'horizontal'
+): {
   toolbarProps: ToolbarProps;
-  getToolProps(toolId: string): ToolProps;
+  getToolProps<T extends HTMLElement>(toolId: string): ToolProps<T>;
+  isToolActive(toolId: string): boolean;
 } {
   const [focused, setFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [toolIds] = useState<string[]>([]);
+  const [toolRefs] = useState<{ [id: string]: RefObject<HTMLElement> }>({});
+  const isKeyboardFocusRef = useRef(false);
+  const isHorizontal = orientation === 'horizontal';
+
+  toolIds.length = 0;
+
+  useLayoutEffect(() => {
+    toolRefs[toolIds[activeIndex]]?.current?.focus();
+  }, [activeIndex, toolIds, toolRefs]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (activeIndex >= toolIds.length) {
+      setActiveIndex(toolIds.length - 1);
+    }
+  });
 
   useKeyMap(
     {
-      ArrowDown: () =>
-        setActiveIndex(activeIndex < toolIds.length - 1 ? activeIndex + 1 : 0),
-      ArrowUp: () =>
+      [isHorizontal ? 'ArrowLeft' : 'ArrowUp']: () =>
         setActiveIndex(activeIndex > 0 ? activeIndex - 1 : toolIds.length - 1),
+      [isHorizontal ? 'ArrowRight' : 'ArrowDown']: () =>
+        setActiveIndex(activeIndex < toolIds.length - 1 ? activeIndex + 1 : 0),
     },
     focused
   );
 
-  return {
-    getToolProps: (toolId: string): ToolProps => {
-      if (toolIds.includes(toolId)) {
-        // New rendering of the toolbar component
-        toolIds.length = 0;
-      }
-      toolIds.push(toolId);
+  useEventListener('mousedown', () => {
+    isKeyboardFocusRef.current = false;
 
-      setTimeout(() => {
-        if (activeIndex >= toolIds.length) {
-          setActiveIndex(toolIds.length - 1);
-        }
-      }, 0);
+    if (focused) {
+      setFocused(false);
+    }
+  });
+
+  useEventListener('keydown', () => {
+    isKeyboardFocusRef.current = true;
+  });
+
+  function addToolId(toolId: string): void {
+    if (toolRefs[toolId] === undefined) {
+      toolRefs[toolId] = createRef();
+    }
+    if (!toolIds.includes(toolId)) {
+      toolIds.push(toolId);
+    }
+  }
+
+  return {
+    getToolProps: <T extends HTMLElement>(toolId: string): ToolProps<T> => {
+      addToolId(toolId);
 
       return {
-        onMouseEnter: () => setActiveIndex(toolIds.indexOf(toolId)),
-        toolbarButtonActive: focused && toolIds.indexOf(toolId) === activeIndex,
+        ref: toolRefs[toolId] as RefObject<T>,
+        tabIndex: toolIds.indexOf(toolId) === activeIndex ? 0 : -1,
       };
     },
+    isToolActive: (toolId: string): boolean => {
+      addToolId(toolId);
+      return focused && toolIds.indexOf(toolId) === activeIndex;
+    },
     toolbarProps: {
-      // childrenArray[activeIndex] can be undefined if a child disappears
-      'aria-activedescendant': focused ? toolIds?.[activeIndex] : undefined,
-      onBlur: () => setFocused(false),
-      onFocus: () => setFocused(true),
+      className: focused ? 'keyboardFocused' : undefined,
+      onBlur: () => {
+        if (focused) {
+          setFocused(false);
+        }
+      },
+      onFocus: () => {
+        if (isKeyboardFocusRef.current) {
+          setFocused(true);
+        }
+      },
       role: 'toolbar',
-      tabIndex: 0,
     },
   };
 }
 
-interface ToolProps {
-  toolbarButtonActive: boolean;
-  onMouseEnter(event: React.MouseEvent): void;
+interface ToolProps<T extends HTMLElement> {
+  ref: RefObject<T>;
+  tabIndex: number;
 }
 
 interface ToolbarProps {
-  'aria-activedescendant': string | undefined;
+  className: string | undefined;
+  role: string;
   onBlur(): void;
   onFocus(): void;
-  role: string;
-  tabIndex: number;
 }
