@@ -45,18 +45,18 @@ export class WindowManager {
     }
   };
 
-  getWindowInstances(): WindowInstance[] {
+  getWindowInstances = (): WindowInstance[] => {
     return this.windowInstances;
-  }
+  };
 
-  isWindowSelected(id: number): boolean {
+  isWindowSelected = (id: number): boolean => {
     return this.getWindowInstance(id).active;
-  }
+  };
 
-  isWindowVisible(id: number): boolean {
+  isWindowVisible = (id: number): boolean => {
     const componentInstance = this.getWindowInstance(id).windowRef.current;
     return componentInstance !== null ? componentInstance.visible : false;
-  }
+  };
 
   async openWindow(
     appDescriptor: AppDescriptor,
@@ -81,19 +81,19 @@ export class WindowManager {
     this.selectWindow(windowInstance.id);
   }
 
-  setMinimizedTopPosition(id: number, topPosition: number): void {
+  setMinimizedTopPosition = (id: number, topPosition: number): void => {
     this.getWindowInstance(id).minimizedTopPosition = topPosition;
     this.publishWindowInstances();
-  }
+  };
 
-  showWindow(id: number): void {
+  showWindow = (id: number): void => {
     const componentInstance = this.getWindowInstance(id).windowRef.current;
 
     if (componentInstance !== null) {
       componentInstance.show();
       this.selectWindow(id);
     }
-  }
+  };
 
   selectWindow = (id: number): void => {
     const windowInstance = this.getWindowInstance(id);
@@ -111,12 +111,13 @@ export class WindowManager {
 
       windowInstance.active = true;
       windowInstance.zIndex = ++i;
+      windowInstance.windowRef.current?.focus();
 
       this.publishWindowInstances();
     }
   };
 
-  unselectAllWindows(): void {
+  unselectAllWindows = (): void => {
     const isThereWindowSelected = this.windowInstances.some(
       ({ active }) => active
     );
@@ -127,16 +128,16 @@ export class WindowManager {
       });
       this.publishWindowInstances();
     }
-  }
+  };
 
-  unselectWindow(id: number): void {
+  unselectWindow = (id: number): void => {
     const windowInstance = this.getWindowInstance(id);
 
     if (windowInstance.active) {
       windowInstance.active = false;
       this.publishWindowInstances();
     }
-  }
+  };
 
   private getWindowInstance(id: number): WindowInstance {
     const windowInstance = this.windowInstances.find(
