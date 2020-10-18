@@ -9,23 +9,17 @@ import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance
 
 export function useTaskContextMenu(
   appDescriptor: AppDescriptor,
-  taskBarRef: RefObject<HTMLDivElement>,
   taskRef: RefObject<HTMLElement>,
   windowInstance?: WindowInstance
 ): () => ContextMenuDescriptor {
   const windowManager = useInjector(WindowManager);
 
   return function getTaskContextMenuDescriptor(): ContextMenuDescriptor {
-    if (taskBarRef.current === null) {
-      throw new Error('Unable to retrieve taskbar html element');
-    }
     if (taskRef.current === null) {
       throw new Error('Unable to retrieve task html element');
     }
 
-    const x = taskBarRef.current.getBoundingClientRect().right;
-    const y = taskRef.current.getBoundingClientRect().top;
-
+    const { right: x, top: y } = taskRef.current.getBoundingClientRect();
     const items: ContextMenuItemDescriptor[] = [
       {
         icon: appDescriptor.icon,

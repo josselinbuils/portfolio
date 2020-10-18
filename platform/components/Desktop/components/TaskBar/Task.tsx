@@ -1,13 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import {
-  ButtonHTMLAttributes,
-  FC,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ButtonHTMLAttributes, FC, useEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
@@ -25,8 +18,7 @@ const LOADER_APPARITION_DELAY_MS = 200;
 export const Task: FC<Props> = ({
   appDescriptor,
   onClick = noop,
-  taskBarRef,
-  taskButtonActive,
+  toolbarButtonActive,
   windowInstance,
   ...forwardedProps
 }) => {
@@ -39,7 +31,6 @@ export const Task: FC<Props> = ({
   } = useContextMenu();
   const getTaskContextMenuDescriptor = useTaskContextMenu(
     appDescriptor,
-    taskBarRef,
     taskRef,
     windowInstance
   );
@@ -50,16 +41,12 @@ export const Task: FC<Props> = ({
   const { icon, iconScale = 1 } = appDescriptor;
 
   useEffect(() => {
-    if (
-      taskBarRef.current !== null &&
-      taskRef.current !== null &&
-      windowInstance !== undefined
-    ) {
+    if (taskRef.current !== null && windowInstance !== undefined) {
       const taskClientRect = taskRef.current.getBoundingClientRect();
       const y = Math.round(taskClientRect.top + taskClientRect.height / 3);
       windowManager.setMinimizedTopPosition(windowInstance.id, y);
     }
-  }, [taskBarRef, windowInstance, windowManager]);
+  }, [windowInstance, windowManager]);
 
   useKeyMap(
     {
@@ -71,12 +58,12 @@ export const Task: FC<Props> = ({
       Enter: runTask,
       ' ': runTask,
     },
-    taskButtonActive
+    toolbarButtonActive
   );
 
   useKeyMap(
     { ArrowLeft: hideContextMenu },
-    taskButtonActive && isContextMenuDisplayed,
+    toolbarButtonActive && isContextMenuDisplayed,
     2
   );
 
@@ -94,7 +81,7 @@ export const Task: FC<Props> = ({
   return (
     <button
       className={cn(styles.task, {
-        [styles.taskButtonActive]: taskButtonActive,
+        [styles.taskButtonActive]: toolbarButtonActive,
         [styles.windowInstanceActive]: windowInstanceActive,
       })}
       onClick={(event) => {
@@ -122,7 +109,6 @@ export const Task: FC<Props> = ({
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   appDescriptor: AppDescriptor;
-  taskBarRef: RefObject<HTMLDivElement>;
-  taskButtonActive: boolean;
+  toolbarButtonActive: boolean;
   windowInstance?: WindowInstance;
 }
