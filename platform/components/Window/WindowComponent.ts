@@ -2,7 +2,7 @@ import { FC, RefObject } from 'react';
 import { Size } from '~/platform/interfaces/Size';
 import { Window, WindowProps } from './Window';
 
-export type WindowComponent = FC<InjectedWindowProps>;
+export type WindowComponent<T = unknown> = FC<T & InjectedWindowProps>;
 
 export interface InjectedWindowProps extends Partial<WindowProps> {
   active: boolean;

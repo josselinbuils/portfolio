@@ -1,9 +1,16 @@
-let config = {
+let nextConfig = {
   experimental: {
     productionBrowserSourceMaps: true,
   },
   images: {
     imageSizes: [202],
+  },
+  webpack: (webpackConfig) => {
+    webpackConfig.module.rules.push({
+      test: /\.md$/,
+      use: 'raw-loader',
+    });
+    return webpackConfig;
   },
 };
 
@@ -13,7 +20,7 @@ if (process.env.ANALYZE === 'true') {
   const withBundleAnalyzer = bundleAnalyzer({
     enabled: process.env.ANALYZE === 'true',
   });
-  config = withBundleAnalyzer(config);
+  nextConfig = withBundleAnalyzer(nextConfig);
 }
 
-module.exports = config;
+module.exports = nextConfig;

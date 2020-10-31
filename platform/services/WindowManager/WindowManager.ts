@@ -7,10 +7,7 @@ import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   static injectionId = 'WindowManager';
-  static defaultApp: {
-    appDescriptor: AppDescriptor;
-    windowComponent: WindowComponent;
-  };
+  static defaultApp: DefaultApp;
 
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
@@ -19,8 +16,12 @@ export class WindowManager {
 
   constructor() {
     if (WindowManager.defaultApp !== undefined) {
-      const { appDescriptor, windowComponent } = WindowManager.defaultApp;
-      this.openWindow(appDescriptor, undefined, windowComponent);
+      const {
+        appDescriptor,
+        windowComponent,
+        windowProps,
+      } = WindowManager.defaultApp;
+      this.openApp(appDescriptor, windowProps, windowComponent);
     }
   }
 
@@ -58,9 +59,9 @@ export class WindowManager {
     return componentInstance !== null ? componentInstance.visible : false;
   };
 
-  async openWindow(
+  async openApp<T extends Partial<WindowProps>>(
     appDescriptor: AppDescriptor,
-    windowProps: Partial<WindowProps> = {},
+    windowProps: Partial<T> = {},
     windowComponent?: WindowComponent
   ): Promise<void> {
     if (windowComponent === undefined) {
@@ -153,4 +154,10 @@ export class WindowManager {
   private publishWindowInstances(): void {
     this.windowInstancesSubject.next([...this.windowInstances]);
   }
+}
+
+export interface DefaultApp<T = unknown> {
+  appDescriptor: AppDescriptor;
+  windowComponent: WindowComponent;
+  windowProps?: T & Partial<WindowProps>;
 }
