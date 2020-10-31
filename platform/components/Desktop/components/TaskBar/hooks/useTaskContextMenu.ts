@@ -24,7 +24,7 @@ export function useTaskContextMenu(
       {
         icon: appDescriptor.icon,
         title: appDescriptor.appName,
-        onClick: () => windowManager.openWindow(appDescriptor),
+        onClick: () => windowManager.openApp(appDescriptor),
       },
     ];
 

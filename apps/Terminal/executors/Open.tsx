@@ -14,7 +14,7 @@ export const Open: Executor = ({ args }) => {
 
   useEffect(() => {
     if (exists) {
-      windowManager.openWindow(appDescriptor);
+      windowManager.openApp(appDescriptor);
     }
   }, [appDescriptor, exists, windowManager]);
 

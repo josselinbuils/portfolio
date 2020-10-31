@@ -23,7 +23,7 @@ export function useTaskRunner(
         windowManager.showWindow(id);
       }
     } else {
-      await windowManager.openWindow(appDescriptor);
+      await windowManager.openApp(appDescriptor);
     }
   };
 }

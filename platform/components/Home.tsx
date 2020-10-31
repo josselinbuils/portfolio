@@ -15,7 +15,7 @@ export const Home: FC<Props> = ({ app }) => {
       const descriptor = getAppDescriptors()[app];
 
       if (descriptor !== undefined) {
-        windowManager.openWindow(descriptor, { startMaximized: true });
+        windowManager.openApp(descriptor, { startMaximized: true });
       }
     }
   }, [app, windowManager]);
