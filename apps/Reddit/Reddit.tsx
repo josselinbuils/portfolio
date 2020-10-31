@@ -28,13 +28,13 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      {...injectedWindowProps}
       background="#fbfbfb"
-      titleColor="#ff4501"
-      minWidth={850}
       minHeight={600}
+      minWidth={850}
       ref={windowRef}
       title={RedditDescriptor.appName}
+      titleColor="#ff4501"
+      {...injectedWindowProps}
     >
       <div className={styles.reddit}>
         <aside className={styles.sidebar}>

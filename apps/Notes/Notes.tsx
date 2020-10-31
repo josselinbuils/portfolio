@@ -29,13 +29,13 @@ const Notes: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      {...injectedWindowProps}
       background="#fff59c"
       minHeight={350}
       minWidth={400}
       ref={windowRef}
       title={NotesDescriptor.appName}
       titleColor="black"
+      {...injectedWindowProps}
     >
       <textarea
         className={styles.textarea}

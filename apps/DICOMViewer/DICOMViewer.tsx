@@ -270,13 +270,13 @@ const DICOMViewer: WindowComponent = ({
 
   return (
     <Window
-      {...injectedWindowProps}
       background="black"
-      titleColor="#efefef"
-      minWidth={880}
       minHeight={534}
+      minWidth={880}
       ref={windowRef}
       title={DICOMViewerDescriptor.appName}
+      titleColor="#efefef"
+      {...injectedWindowProps}
     >
       <div className={styles.dicomViewer}>
         {dataset && (

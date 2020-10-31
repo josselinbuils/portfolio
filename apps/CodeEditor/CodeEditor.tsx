@@ -23,7 +23,6 @@ const CodeEditor: WindowComponent = ({
   return (
     <Window
       active={active}
-      {...injectedWindowProps}
       background="#45484a"
       minHeight={600}
       minWidth={800}
@@ -31,6 +30,7 @@ const CodeEditor: WindowComponent = ({
       title={CodeEditorDescriptor.appName}
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"
+      {...injectedWindowProps}
     >
       <div className={styles.codeEditor}>
         <Editor

@@ -23,7 +23,6 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      {...injectedWindowProps}
       background="#111625"
       maxHeight={min ? height : Infinity}
       maxWidth={min ? width : Infinity}
@@ -33,6 +32,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       resizable={!min}
       title={min ? '' : MP3PlayerDescriptor.appName}
       titleColor="#efefef"
+      {...injectedWindowProps}
     >
       <AudioProvider>
         <MiniPlayer min={min} onClickTogglePlaylist={() => setMin(false)} />

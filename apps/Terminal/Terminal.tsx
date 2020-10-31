@@ -297,7 +297,6 @@ const Terminal: WindowComponent = ({
 
   return (
     <Window
-      {...injectedWindowProps}
       active={active}
       background="rgba(30, 30, 30, 0.9)"
       minHeight={400}
@@ -306,6 +305,7 @@ const Terminal: WindowComponent = ({
       title={TerminalDescriptor.appName}
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"
+      {...injectedWindowProps}
     >
       <div className={styles.terminal} ref={terminalRef}>
         {executions.map(

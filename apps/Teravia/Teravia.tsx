@@ -13,7 +13,6 @@ const Teravia: WindowComponent = ({
 }) => {
   return (
     <Window
-      {...injectedWindowProps}
       active={active}
       background="#1a1d1e"
       keepContentRatio
@@ -24,6 +23,7 @@ const Teravia: WindowComponent = ({
       ref={windowRef}
       title={TeraviaDescriptor.appName}
       titleColor="#2b5158"
+      {...injectedWindowProps}
     >
       <iframe
         allow="fullscreen"

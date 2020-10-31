@@ -10,7 +10,6 @@ const Blog: WindowComponent<BlogProps> = ({
   ...injectedWindowProps
 }) => (
   <Window
-    {...injectedWindowProps}
     background="#fbfbfb"
     minHeight={600}
     minWidth={800}
@@ -18,6 +17,7 @@ const Blog: WindowComponent<BlogProps> = ({
     startMaximized
     title={BlogDescriptor.appName}
     titleColor="black"
+    {...injectedWindowProps}
   >
     <>
       Hello {article?.slug}
