@@ -14,6 +14,7 @@ export const About: Executor = () => (
       height={269}
       loading="eager"
       priority
+      sizes="202px"
       src="/me.png"
       width={202}
     />

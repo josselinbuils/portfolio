@@ -2,6 +2,9 @@ let config = {
   experimental: {
     productionBrowserSourceMaps: true,
   },
+  images: {
+    imageSizes: [202],
+  },
 };
 
 if (process.env.ANALYZE === 'true') {
