@@ -1,11 +1,4 @@
-import {
-  createRef,
-  RefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { createRef, RefObject, useEffect, useRef, useState } from 'react';
 import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { useEventListener } from '~/platform/hooks/useEventListener';
 
@@ -25,7 +18,7 @@ export function useToolbar(
 
   toolIds.length = 0;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     toolRefs[toolIds[activeIndex]]?.current?.focus();
   }, [activeIndex, toolIds, toolRefs]);
 
