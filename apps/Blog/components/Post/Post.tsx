@@ -9,6 +9,15 @@ export const Post: FC<Props> = ({ post }) => (
 [🔙](/blog)
 
 ${post.content}
+
+## History
+
+${post.history
+  .map(
+    ({ commitDate, commitHash, commitSubject }) =>
+      `- ${commitDate}: [${commitSubject}](https://github.com/josselinbuils/portfolio/commit/${commitHash})`
+  )
+  .join('\n')}
 `}</Markdown>
 );
 
