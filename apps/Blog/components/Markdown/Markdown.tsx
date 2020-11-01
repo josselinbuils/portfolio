@@ -21,7 +21,9 @@ const renderers = {
         <a>{children}</a>
       </Link>
     ) : (
-      <a href={href}>{children}</a>
+      <a href={href} rel="noreferrer" target="_blank">
+        {children}
+      </a>
     ),
 };
 
