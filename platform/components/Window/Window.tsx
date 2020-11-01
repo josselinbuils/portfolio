@@ -31,12 +31,12 @@ export class Window extends Component<WindowProps, State> {
     this.state = {
       animated: false,
       frozen: false,
-      height: `${minHeight / 10}rem`,
-      left: `calc((100% - ${minWidth / 10}rem) * 0.5)`,
+      height: `min(${minHeight / 10}rem, 100%)`,
+      left: `max((100% - ${minWidth / 10}rem) * 0.5, 0rem)`,
       maximized: false,
       minimized: false,
-      top: `calc((100% - ${minHeight / 10}rem) * 0.2)`,
-      width: `${minWidth / 10}rem`,
+      top: `max((100% - ${minHeight / 10}rem) * 0.2, 0rem)`,
+      width: `min(${minWidth / 10}rem, 100%)`,
     };
   }
 
@@ -53,10 +53,7 @@ export class Window extends Component<WindowProps, State> {
       this.setState({ maximized: true });
     } else {
       const { minHeight, minWidth } = this.props;
-
       this.setSize(minWidth, minHeight);
-      this.setStyle('left', `calc((100% - ${minWidth / 10}rem) * 0.5)`);
-      this.setStyle('top', `calc((100% - ${minHeight / 10}rem) * 0.2)`);
     }
 
     if (keepContentRatio) {
@@ -185,12 +182,12 @@ export class Window extends Component<WindowProps, State> {
           // Don't know why but cannot remove the arrow function there
           onToggleMaximize={() => toggleMaximize()}
         />
-        <article
+        <main
           className={cn(styles.content, { [styles.frozen]: frozen })}
           ref={contentRef}
         >
           {children}
-        </article>
+        </main>
         {resizable && (
           <button
             aria-hidden
@@ -478,8 +475,19 @@ export class Window extends Component<WindowProps, State> {
   }
 
   private setSize(width: number, height: number, force = false): void {
-    const { maxHeight, maxWidth, minHeight, minWidth, onResize } = this.props;
+    const {
+      maxHeight,
+      maxWidth,
+      minHeight,
+      minWidth,
+      onResize,
+      visibleAreaSize,
+    } = this.props;
     const { frozen } = this.state;
+
+    if (visibleAreaSize === undefined) {
+      return;
+    }
 
     if (!force) {
       width = Math.max(width, minWidth);
@@ -492,6 +500,9 @@ export class Window extends Component<WindowProps, State> {
       if (maxHeight !== undefined) {
         height = Math.min(height, maxHeight);
       }
+
+      width = Math.min(width, visibleAreaSize.width);
+      height = Math.min(height, visibleAreaSize.height);
 
       if (typeof this.contentRatio === 'number') {
         const size = this.getSize();

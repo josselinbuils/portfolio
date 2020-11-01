@@ -1,56 +1,22 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import Blog, { BlogProps } from '~/apps/Blog/Blog';
-import { BlogDescriptor } from '~/apps/Blog/BlogDescriptor';
-import { Home } from '~/platform/components/Home';
-import { InjectorProvider } from '~/platform/providers/InjectorProvider/InjectorProvider';
-import {
-  DefaultApp,
-  WindowManager,
-} from '~/platform/services/WindowManager/WindowManager';
-import { BlogArticle } from '~/apps/Blog/interfaces/BlogArticle';
+import { Post } from '~/apps/Blog/components/Post/Post';
+import { BlogPost } from '~/apps/Blog/interfaces/BlogPost';
+import { getBlogPost } from '~/apps/Blog/utils/getBlogPost';
+import { getBlogPosts } from '~/apps/Blog/utils/getBlogPosts';
 
-const Article: NextPage<Props> = ({ article }) => {
-  WindowManager.defaultApp = {
-    appDescriptor: BlogDescriptor,
-    windowComponent: Blog,
-    windowProps: {
-      article,
-      startMaximized: true,
-    },
-  } as DefaultApp<BlogProps>;
+const PostPage: NextPage<Props> = ({ post }) => <Post post={post} />;
 
-  return (
-    <InjectorProvider>
-      <Home />
-    </InjectorProvider>
-  );
-};
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: getBlogPosts().map(({ slug }) => ({ params: { slug } })),
+  fallback: false,
+});
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const articleSlugs = require
-    .context('~/apps/Blog/posts', false, /\.md$/)
-    .keys()
-    .map((key) => key.replace(/^.*[\\/]/g, '').slice(0, -3));
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => ({
+  props: { post: getBlogPost(params?.slug as string) },
+});
 
-  return {
-    paths: articleSlugs.map((slug) => ({ params: { slug } })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  const slug = params?.slug as string;
-  const content = (await import(`~/apps/Blog/posts/${slug}.md`)).default;
-
-  return {
-    props: {
-      article: { content, slug },
-    },
-  };
-};
-
-export default Article;
+export default PostPage;
 
 interface Props {
-  article: BlogArticle;
+  post: BlogPost;
 }

@@ -1,5 +1,3 @@
 # Hello World
 
-## First :)
-
-Here is a test
+Hello World :)

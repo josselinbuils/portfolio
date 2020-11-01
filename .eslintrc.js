@@ -44,6 +44,7 @@ module.exports = {
     ],
     'import/prefer-default-export': 'off',
     'lines-between-class-members': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
     'no-bitwise': 'off',
     'no-console': 'off',
     'no-continue': 'off',
