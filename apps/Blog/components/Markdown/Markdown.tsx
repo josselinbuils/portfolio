@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import Image from 'next/image';
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -10,6 +11,9 @@ import styles from './Markdown.module.scss';
 const renderers = {
   code: ({ language, value }: { language: string; value: string }) => (
     <Highlight code={value} language={language} />
+  ),
+  image: ({ alt, src }: { alt: string; src: string }) => (
+    <Image alt={alt} src={src} unsized />
   ),
   link: ({ children, href }: { children: ReactNode; href: string }) =>
     href.startsWith('/') ? (

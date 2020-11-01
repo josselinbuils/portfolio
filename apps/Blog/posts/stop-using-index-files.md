@@ -107,7 +107,7 @@ Here is a probably incomplete list:
 
 - **They prevent Webpack from splitting chunks correctly.**
 
-  ![Boom!](https://media.giphy.com/media/HhTXt43pk1I1W/giphy.gif)
+  ![Boom!](/boom.jpg)
 
   This is really annoying issue that is quite easy to demonstrate, let's do it
   in the next section.
@@ -164,7 +164,7 @@ occurrences of their names to make them big enough to represent some standard
 components.
 
 If you want to reproduce the following experiments yourself,
-[here](https://github.com/josselinbuils/index-tests) is the repository
+[here is the repository](https://github.com/josselinbuils/index-tests)
 containing the demonstration code.
 
 ### First case: usage of an index file

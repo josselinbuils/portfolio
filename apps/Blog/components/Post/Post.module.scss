@@ -3,5 +3,11 @@
   width: min(83rem, 100%);
   max-width: 100%;
   margin: 0 auto;
-  padding: 4rem;
+  padding: 1rem;
+}
+
+@media (min-width: 600px) {
+  .post {
+    padding: 4rem;
+  }
 }
