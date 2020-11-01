@@ -101,7 +101,7 @@ Here is a probably incomplete list:
 
   I had the opportunity to validate this in personal projects.
 
-- **It can lead to compilation errors.**
+- **They can lead to compilation errors.**
 
   This one is a bit specific but if you are working on JavaScript code that can
   be rendered in both server and client side (i.e. a Next.js application), you
