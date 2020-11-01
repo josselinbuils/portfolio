@@ -570,7 +570,15 @@ export class Window extends Component<WindowProps, State> {
     return windowAnimation;
   }
 
-  private unselectIfNoChildFocused = (): void => {
+  private unselectIfNoChildFocused = ({
+    currentTarget,
+  }: React.FocusEvent): void => {
+    const windowRef = this.windowRef.current;
+
+    if (currentTarget === windowRef || windowRef?.contains(currentTarget)) {
+      return;
+    }
+
     // Waits for next element to take focus
     setTimeout(() => {
       if (!this.windowRef.current?.contains(document.activeElement)) {
