@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'JetBrainsMono';
+  font-weight: 400;
+  font-style: normal;
+
+  src: url('/JetBrainsMono-Regular.woff2') format('woff2');
+}
+
 a,
 a:hover,
 a:focus,
@@ -19,3 +27,7 @@ img {
 
   -webkit-user-drag: none;
 }
+
+//*:focus {
+//  outline: 4px solid red !important;
+//}

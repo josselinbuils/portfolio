@@ -1,13 +1,17 @@
 import cn from 'classnames';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Highlight } from './Hightlight/Hightlight';
 
 import styles from './Markdown.module.scss';
 
 const renderers = {
-  link: ({ href, children }: any) =>
+  code: ({ language, value }: { language: string; value: string }) => (
+    <Highlight code={value} language={language} />
+  ),
+  link: ({ children, href }: { children: ReactNode; href: string }) =>
     href.startsWith('/') ? (
       <Link href={href}>
         <a>{children}</a>

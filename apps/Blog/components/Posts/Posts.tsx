@@ -6,7 +6,13 @@ import styles from './Posts.module.scss';
 
 export const Posts: FC<Props> = ({ posts }) => (
   <Markdown className={styles.posts}>{`\
-# Posts
+# Opinionated
+
+Hey, I'm Josselin, a full-stack JavaScript developer 😄
+
+Here are some posts where I give my opinion on code stuff 👨‍💻
+
+## Posts
 
 ${posts.map(({ slug, title }) => `- [${title}](/blog/${slug})`).join('\\n')}
 `}</Markdown>
