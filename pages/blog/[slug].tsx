@@ -15,6 +15,7 @@ const PostPage: NextPage<Props> = ({ post }) => (
         href="/JetBrainsMono-Regular.woff2"
         as="font"
         type="font/woff2"
+        crossOrigin="anonymous"
       />
     </Head>
     <Post post={post} />
