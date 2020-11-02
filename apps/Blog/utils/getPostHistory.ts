@@ -1,16 +1,12 @@
 import childProcess from 'child_process';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import path from 'path';
-
-dayjs.extend(relativeTime);
 
 export function getPostHistory(
   filename: string
 ): {
-  commitDate: string;
   commitHash: string;
   commitSubject: string;
+  commitTimestamp: number;
 }[] {
   try {
     return childProcess
@@ -30,7 +26,7 @@ export function getPostHistory(
         return {
           commitHash: result[0],
           commitSubject: result.slice(2).join(' '),
-          commitDate: dayjs(parseInt(result[1], 10) * 1000).fromNow(),
+          commitTimestamp: parseInt(result[1], 10) * 1000,
         };
       });
   } catch (error) {
