@@ -14,6 +14,7 @@ export function generateSources({
     .filter(Boolean)
     .join(',')
     .split(',')
+    .map((source) => source.trim())
     .filter(Boolean);
   const groupedSources = {} as { [mimeType: string]: string[] };
 
@@ -28,7 +29,7 @@ export function generateSources({
   });
 
   return Object.entries(groupedSources).map(([mimeType, extensionSources]) => ({
-    srcSet: extensionSources.join(','),
+    srcSet: extensionSources.join(', '),
     type: mimeType,
   }));
 }

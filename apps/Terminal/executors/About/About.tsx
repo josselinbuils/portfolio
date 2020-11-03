@@ -14,7 +14,7 @@ export const About: Executor = () => (
       fallbackSrc="/me-1x.jpg"
       height={269}
       loading="eager"
-      src="/me-1x.webp"
+      srcSet="/me-1x.webp, /me-2x.webp 2x"
       width={202}
     />
     <div className={styles.info}>
