@@ -12,9 +12,9 @@ Hey, I'm Josselin, a full-stack JavaScript developer 😄
 
 Here are some posts where I give my opinion on code stuff 👨‍💻
 
-[![{ "alt": "LinkedIn", "height": 32, "loading": "eager", "width": 32 }](/blog/linkedin.svg)](https://www.linkedin.com/in/josselinbuils)
-[![{ "alt": "Twitter", "height": 32, "loading": "eager", "style": { "marginLeft": "1.5rem" }, "width": 32 }](/blog/twitter.svg)](https://twitter.com/josselinbuils)
-[![{ "alt": "Twitter", "height": 32, "loading": "eager", "style": { "marginLeft": "1.5rem" }, "width": 32 }](/blog/github.svg)](https://github.com/josselinbuils)
+[![{ "alt": "LinkedIn", "height": 40, "loading": "eager", "width": 40 }](/blog/linkedin.svg)](https://www.linkedin.com/in/josselinbuils)
+[![{ "alt": "Twitter", "height": 40, "loading": "eager", "style": { "marginLeft": "2rem" }, "width": 40 }](/blog/twitter.svg)](https://twitter.com/josselinbuils)
+[![{ "alt": "Twitter", "height": 40, "loading": "eager", "style": { "marginLeft": "2rem" }, "width": 40 }](/blog/github.svg)](https://github.com/josselinbuils)
 
 ## Posts
 
