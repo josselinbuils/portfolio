@@ -1,9 +1,15 @@
 import { FC, useRef } from 'react';
 import { useLazy } from '~/platform/hooks/useLazy';
-import { generatePreload } from './generatePreload';
+import { ImageProps } from './ImageProps';
+import { generatePreload } from './utils/generatePreload';
+import { generateSources } from './utils/generateSources';
 
-export const Image: FC<Props> = ({
+const PLACE_HOLDER =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+export const Image: FC<ImageProps> = ({
   alt,
+  fallbackSrc,
   loading = 'lazy',
   sizes,
   src,
@@ -13,27 +19,32 @@ export const Image: FC<Props> = ({
   const isLazy = loading === 'lazy';
   const imageElementRef = useRef<HTMLImageElement>(null);
   const { isDisplayed } = useLazy(imageElementRef, isLazy);
-  const sourceAttributes = isDisplayed
-    ? { src, srcSet }
-    : {
-        'data-src': src,
-        'data-srcset': srcSet,
-        src:
-          'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\n',
-      };
+  const sources = isDisplayed
+    ? generateSources({ fallbackSrc, src, srcSet })
+    : [];
+  const img = (
+    <img
+      alt={alt}
+      ref={imageElementRef}
+      sizes={sizes}
+      src={isDisplayed ? fallbackSrc || src : PLACE_HOLDER}
+      {...forwardedProps}
+    />
+  );
 
   return (
     <>
       {!isLazy && generatePreload({ sizes, src, srcSet })}
-      <img
-        alt={alt}
-        ref={imageElementRef}
-        sizes={sizes}
-        {...sourceAttributes}
-        {...forwardedProps}
-      />
+      {sources.length > 0 ? (
+        <picture>
+          {sources.map((sourceProps) => (
+            <source key={sourceProps.srcSet} {...sourceProps} />
+          ))}
+          {img}
+        </picture>
+      ) : (
+        img
+      )}
     </>
   );
 };
-
-type Props = JSX.IntrinsicElements['img'] & { alt: string };

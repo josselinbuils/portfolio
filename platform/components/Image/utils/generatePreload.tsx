@@ -1,14 +1,12 @@
 import { ReactElement } from 'react';
 import Head from 'next/head';
+import { ImageProps } from '../ImageProps';
 
 export function generatePreload({
   src,
   srcSet,
   sizes,
-}: Pick<
-  JSX.IntrinsicElements['img'],
-  'sizes' | 'src' | 'srcSet'
->): ReactElement {
+}: Pick<ImageProps, 'sizes' | 'src' | 'srcSet'>): ReactElement {
   return (
     <Head>
       <link

@@ -9,7 +9,14 @@ import styles from './About.module.scss';
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <Image alt="me" height={269} loading="eager" src="/me-1x.jpg" width={202} />
+    <Image
+      alt="me"
+      fallbackSrc="/me-1x.jpg"
+      height={269}
+      loading="eager"
+      src="/me-1x.webp"
+      width={202}
+    />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I&apos;m Josselin, a full-stack JavaScript developer :)
