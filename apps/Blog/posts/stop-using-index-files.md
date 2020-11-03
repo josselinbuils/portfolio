@@ -115,7 +115,7 @@ Here is a probably incomplete list:
 
 - **They prevent Webpack from splitting chunks correctly.**
 
-  ![Boom!](/boom.jpg)
+  ![{ "alt": "Boom!", "height": 180, "width": 292 }](/boom.jpg)
 
   This is really annoying issue that is quite easy to demonstrate, let's do it
   in the next section.

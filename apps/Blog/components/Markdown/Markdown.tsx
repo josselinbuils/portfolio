@@ -1,9 +1,9 @@
 import cn from 'classnames';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Image } from '~/platform/components/Image/Image';
 import { Highlight } from './Hightlight/Hightlight';
 
 import styles from './Markdown.module.scss';
@@ -12,9 +12,17 @@ const renderers = {
   code: ({ language, value }: { language: string; value: string }) => (
     <Highlight code={value} language={language} />
   ),
-  image: ({ alt, src }: { alt: string; src: string }) => (
-    <Image alt={alt} src={src} unsized />
-  ),
+  image: ({ alt, src }: { alt: string; src: string }) => {
+    let props = { alt };
+
+    try {
+      props = JSON.parse(alt);
+    } catch (e) {
+      // Ignored
+    }
+
+    return <Image src={src} {...props} />;
+  },
   link: ({ children, href }: { children: ReactNode; href: string }) =>
     href.startsWith('/') ? (
       <Link href={href}>

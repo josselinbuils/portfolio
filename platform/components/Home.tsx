@@ -43,7 +43,7 @@ export const Home: FC<Props> = ({ app }) => {
         />
         <script
           async
-          src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"
+          src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CResizeObserver"
         />
       </Head>
       <ContextMenuProvider>
