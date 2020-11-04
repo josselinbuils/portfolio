@@ -8,8 +8,8 @@ const observerCallbackEntries = [] as ObserverCallbackEntry[];
 export function useLazy<T extends HTMLElement>(
   elementRef: RefObject<T>,
   enabled = true
-): { isDisplayed: boolean } {
-  const [isDisplayed, setIsDisplayed] = useState(!enabled);
+): { hasBeenDisplayed: boolean } {
+  const [hasBeenDisplayed, setHasBeenDisplayed] = useState(!enabled);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -17,33 +17,30 @@ export function useLazy<T extends HTMLElement>(
     if (element && enabled) {
       const observer = getObserver();
 
-      if (observer) {
-        const callbackEntry = [
-          element,
-          () => {
-            observer.unobserve(element);
-            setIsDisplayed(true);
-          },
-        ] as ObserverCallbackEntry;
-
-        observer.observe(element);
-        observerCallbackEntries.push(callbackEntry);
-
-        return () => {
+      const callbackEntry = [
+        element,
+        () => {
           observer.unobserve(element);
-          observerCallbackEntries.splice(
-            observerCallbackEntries.indexOf(callbackEntry)
-          );
-        };
-      }
-      setIsDisplayed(true);
+          setHasBeenDisplayed(true);
+        },
+      ] as ObserverCallbackEntry;
+
+      observer.observe(element);
+      observerCallbackEntries.push(callbackEntry);
+
+      return () => {
+        observer.unobserve(element);
+        observerCallbackEntries.splice(
+          observerCallbackEntries.indexOf(callbackEntry)
+        );
+      };
     }
   }, [elementRef, enabled]);
 
-  return { isDisplayed };
+  return { hasBeenDisplayed };
 }
 
-function getObserver(): IntersectionObserver | undefined {
+function getObserver(): IntersectionObserver {
   if (cachedObserver === undefined) {
     cachedObserver = new IntersectionObserver(
       (entries) => {

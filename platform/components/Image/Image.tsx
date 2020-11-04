@@ -18,8 +18,8 @@ export const Image: FC<ImageProps> = ({
 }) => {
   const isLazy = loading === 'lazy';
   const imageElementRef = useRef<HTMLImageElement>(null);
-  const { isDisplayed } = useLazy(imageElementRef, isLazy);
-  const sources = isDisplayed
+  const { hasBeenDisplayed } = useLazy(imageElementRef, isLazy);
+  const sources = hasBeenDisplayed
     ? generateSources({ fallbackSrc, src, srcSet })
     : [];
   const img = (
@@ -27,7 +27,7 @@ export const Image: FC<ImageProps> = ({
       alt={alt}
       ref={imageElementRef}
       sizes={sizes}
-      src={isDisplayed ? fallbackSrc || src : PLACE_HOLDER}
+      src={hasBeenDisplayed ? fallbackSrc || src : PLACE_HOLDER}
       {...forwardedProps}
     />
   );
