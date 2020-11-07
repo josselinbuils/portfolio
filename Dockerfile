@@ -5,7 +5,6 @@ COPY . portfolio
 WORKDIR portfolio
 
 RUN yarn install --emoji --frozen-lockfile --no-progress && \
-    yarn build && \
-    yarn install --emoji --frozen-lockfile --no-progress --production
+    yarn build
 
 CMD ["yarn", "start"]
