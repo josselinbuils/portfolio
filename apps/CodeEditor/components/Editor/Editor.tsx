@@ -166,9 +166,7 @@ export const Editor: FC<Props> = ({
   }, [activeFile, applyState]);
 
   useLayoutEffect(() => {
-    highlightCode(code, activeFile.language).then((highlighted) =>
-      setHighlightedCode(highlighted)
-    );
+    setHighlightedCode(highlightCode(code, activeFile.language));
   }, [activeFile.language, code]);
 
   useEffect(() => {

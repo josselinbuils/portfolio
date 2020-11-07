@@ -35,12 +35,10 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   console.log = (...args: any[]) => {
     originalConsoleLog(...args);
 
-    Promise.all(args.map(highlight)).then((parts) => {
-      logManager.push({
-        id: createGUID(),
-        level: LogLevel.Info,
-        message: parts.join(' '),
-      });
+    logManager.push({
+      id: createGUID(),
+      level: LogLevel.Info,
+      message: args.map(highlight).join(' '),
     });
   };
 
@@ -50,7 +48,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   };
 }
 
-async function highlight(code: string): Promise<string> {
+function highlight(code: string): string {
   return highlightCode(prettify(code), 'javascript');
 }
 

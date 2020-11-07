@@ -12,10 +12,7 @@ import 'prismjs/components/prism-yaml.min';
 
 import styles from './darcula.module.scss';
 
-export async function highlightCode(
-  code: string,
-  language: string
-): Promise<string> {
+export function highlightCode(code: string, language: string): string {
   if (Prism.languages[language] === undefined) {
     return escapeHtml(code);
   }
