@@ -31,7 +31,8 @@ export function useLazy<T extends HTMLElement>(
       return () => {
         observer.unobserve(element);
         observerCallbackEntries.splice(
-          observerCallbackEntries.indexOf(callbackEntry)
+          observerCallbackEntries.indexOf(callbackEntry),
+          1
         );
       };
     }
@@ -47,7 +48,7 @@ function getObserver(): IntersectionObserver {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             observerCallbackEntries.find(
-              ([image]) => image === entry.target
+              ([element]) => element === entry.target
             )?.[1]();
           }
         });
