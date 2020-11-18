@@ -1,4 +1,7 @@
-let nextConfig = {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withTM = require('next-transpile-modules')(['@josselinbuils/utils']);
+
+let nextConfig = withTM({
   experimental: {
     productionBrowserSourceMaps: true,
   },
@@ -12,7 +15,7 @@ let nextConfig = {
     });
     return webpackConfig;
   },
-};
+});
 
 if (process.env.ANALYZE === 'true') {
   // eslint-disable-next-line import/no-extraneous-dependencies,@typescript-eslint/no-var-requires,global-require

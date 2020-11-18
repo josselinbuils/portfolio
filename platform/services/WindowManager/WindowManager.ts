@@ -1,4 +1,4 @@
-import { Subject } from '@josselinbuils/utils';
+import { Subject } from '@josselinbuils/utils/Subject';
 import { createRef } from 'react';
 import { WindowProps } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';

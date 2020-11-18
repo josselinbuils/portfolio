@@ -1,4 +1,4 @@
-import { Deferred } from '@josselinbuils/utils';
+import { Deferred } from '@josselinbuils/utils/Deferred';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { Action } from '~/apps/CodeEditor/interfaces/actions';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';

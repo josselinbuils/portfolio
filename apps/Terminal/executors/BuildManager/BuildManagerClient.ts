@@ -1,4 +1,4 @@
-import { Deferred } from '@josselinbuils/utils';
+import { Deferred } from '@josselinbuils/utils/Deferred';
 import { PROD_HOSTNAME } from '~/platform/constants';
 import { noop } from '~/platform/utils/noop';
 

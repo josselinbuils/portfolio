@@ -1,4 +1,4 @@
-import { Deferred } from '@josselinbuils/utils';
+import { Deferred } from '@josselinbuils/utils/Deferred';
 
 export function cancelable<T>(
   basePromise: Promise<T>

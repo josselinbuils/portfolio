@@ -1,4 +1,4 @@
-import { Subject } from '@josselinbuils/utils';
+import { Subject } from '@josselinbuils/utils/Subject';
 import dayjs from 'dayjs';
 import { Music } from '../../interfaces/Music';
 
