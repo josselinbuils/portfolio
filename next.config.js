@@ -1,5 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const withTM = require('next-transpile-modules')(['@josselinbuils/utils']);
+const withTM = require('next-transpile-modules')([
+  '@josselinbuils/hooks',
+  '@josselinbuils/utils',
+]);
 
 let nextConfig = withTM({
   experimental: {
