@@ -371,5 +371,5 @@ interface Execution {
     callback: (userInput: string) => void,
     hideAnswer?: boolean
   ): void;
-  releaseHandler?(): void;
+  releaseHandler?(error: Error | undefined): void;
 }
