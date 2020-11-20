@@ -211,6 +211,11 @@
   resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-0.1.1.tgz#c003c68874ddc3deea993792f395b7224aa32e64"
   integrity sha512-xU/FBe5FGvtm5ncW5ftG3svsERD/mZZhSZfwoKlPLPtknjrTZc9WAeZzRKRF9nZXn+fEjg34dtZhDNQoAwz8Bw==
 
+"@josselinbuils/hooks@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/hooks/-/hooks-0.1.1.tgz#682745eaaa5fb47514c26ceabc0a9f857a366195"
+  integrity sha512-5uPX5Qb8/dK4QaCysIM6R2HlHCxm75HuOB/W3y7lP2VOElKM+Z3V27/urJZGKZyOq3iHJ3OGWeLK6R3Xb4sWKQ==
+
 "@josselinbuils/utils@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@josselinbuils/utils/-/utils-0.2.3.tgz#4148cb12f7debec776148e523bcfddf9a45b1408"

@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import cn from 'classnames';
 import {
   ButtonHTMLAttributes,
@@ -8,7 +9,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';

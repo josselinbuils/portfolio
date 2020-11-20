@@ -1,6 +1,6 @@
+import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import { MutableRefObject, useEffect, useState } from 'react';
-import { useList } from '~/platform/hooks/useList';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { AsyncExecutor } from '../AsyncExecutor';
 import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';

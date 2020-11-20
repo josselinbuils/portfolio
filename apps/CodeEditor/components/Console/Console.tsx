@@ -1,9 +1,9 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
+import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import { FC, useEffect, useLayoutEffect, useRef } from 'react';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { useList } from '~/platform/hooks/useList';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Shortcut } from '../Shortcut/Shortcut';

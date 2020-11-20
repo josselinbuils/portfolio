@@ -4,6 +4,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
+import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import {
   ChangeEvent,
@@ -16,8 +18,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { useList } from '~/platform/hooks/useList';
 import { useMemState } from '~/platform/hooks/useMemState';
 import { highlightCode } from '~/platform/utils/highlightCode/highlightCode';
 import { ClientCursor } from '../../interfaces/ClientCursor';

@@ -1,3 +1,5 @@
+import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { Action } from '~/apps/CodeEditor/interfaces/actions';
@@ -12,8 +14,6 @@ import {
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
-import { useDynamicRef } from '~/platform/hooks/useDynamicRef';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
 import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { createAction } from './utils/createAction';
 import { handleAction } from './utils/handleAction';

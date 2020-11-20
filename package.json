@@ -10,7 +10,7 @@
     "dev": "next",
     "build": "next build",
     "lint": "eslint .",
-    "lint:staged": "exec-staged 'yarn lint' '\\.tsx?$'",
+    "lint:staged": "exec-staged 'eslint' '\\.(js|tsx?)$'",
     "prettier:staged": "exec-staged 'prettier --write' '\\.(js|md|tsx?|scss)$'",
     "start": "next start",
     "type-check": "tsc"
@@ -26,6 +26,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.12",
+    "@josselinbuils/hooks": "^0.1.1",
     "@josselinbuils/utils": "^0.2.3",
     "ansi_up": "^4.0.4",
     "classnames": "^2.2.6",

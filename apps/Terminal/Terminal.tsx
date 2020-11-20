@@ -1,9 +1,9 @@
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
+import { useList } from '@josselinbuils/hooks/useList';
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { useList } from '~/platform/hooks/useList';
 import { About } from './executors/About/About';
 import { AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';

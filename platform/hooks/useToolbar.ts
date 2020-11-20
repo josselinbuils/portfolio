@@ -1,6 +1,6 @@
+import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
+import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { createRef, RefObject, useEffect, useRef, useState } from 'react';
-import { useKeyMap } from '~/platform/hooks/useKeyMap';
-import { useEventListener } from '~/platform/hooks/useEventListener';
 
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal'

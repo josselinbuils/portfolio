@@ -1,5 +1,5 @@
+import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { FC, useEffect, useState } from 'react';
-import { useEventListener } from '~/platform/hooks/useEventListener';
 import { Position } from '~/platform/interfaces/Position';
 
 import styles from './Selection.module.scss';

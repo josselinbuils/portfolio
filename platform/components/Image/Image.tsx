@@ -1,5 +1,5 @@
+import { useLazy } from '@josselinbuils/hooks/useLazy';
 import { FC, useRef } from 'react';
-import { useLazy } from '~/platform/hooks/useLazy';
 import { ImageProps } from './ImageProps';
 import { generatePreload } from './utils/generatePreload';
 import { generateSources } from './utils/generateSources';

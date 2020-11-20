@@ -1,4 +1,4 @@
-import { ListManager } from '~/platform/hooks/useList';
+import { ListManager } from '@josselinbuils/hooks/useList';
 import { createGUID } from '~/platform/utils/createGUID';
 import { highlightCode } from '~/platform/utils/highlightCode/highlightCode';
 import { Log, LogLevel } from '../Log';

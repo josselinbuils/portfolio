@@ -1,5 +1,5 @@
+import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
-import { useEventListener } from '~/platform/hooks/useEventListener';
 import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
