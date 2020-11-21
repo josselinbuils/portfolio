@@ -206,15 +206,15 @@
     eslint-plugin-import "^2.22.1"
     eslint-plugin-prettier "^3.1.4"
 
-"@josselinbuils/exec-staged@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-0.1.1.tgz#c003c68874ddc3deea993792f395b7224aa32e64"
-  integrity sha512-xU/FBe5FGvtm5ncW5ftG3svsERD/mZZhSZfwoKlPLPtknjrTZc9WAeZzRKRF9nZXn+fEjg34dtZhDNQoAwz8Bw==
+"@josselinbuils/exec-staged@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/exec-staged/-/exec-staged-1.0.2.tgz#a95328a7996ee4f58967da66d2bea66fa8aab475"
+  integrity sha512-ER55S59KrAwQvdcQlI/uI0ODWA7dAL3X7jjbCML8WqcMsJmeaTuw+PsQVMyhVfu8M6ZeltP4bVMWfOEpgAQOaw==
 
-"@josselinbuils/hooks@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@josselinbuils/hooks/-/hooks-0.1.1.tgz#682745eaaa5fb47514c26ceabc0a9f857a366195"
-  integrity sha512-5uPX5Qb8/dK4QaCysIM6R2HlHCxm75HuOB/W3y7lP2VOElKM+Z3V27/urJZGKZyOq3iHJ3OGWeLK6R3Xb4sWKQ==
+"@josselinbuils/hooks@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@josselinbuils/hooks/-/hooks-0.1.2.tgz#99b1eff25f409060033205d27929eb9ef7137650"
+  integrity sha512-VvoYcuZfSah8MbCSrRhclLhQSs1wnAjGgKnUF2kpJ6zgY707DImmlysSiMy+a4GHKOxFLjGtwYXeUXcRt8klYw==
 
 "@josselinbuils/utils@^0.2.3":
   version "0.2.3"
@@ -2400,10 +2400,10 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-2.0.0.tgz#21fdc8fbcd9c795cc0321f0563702095751511a8"
   integrity sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
 
-eslint@^7.13.0:
-  version "7.13.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.13.0.tgz#7f180126c0dcdef327bfb54b211d7802decc08da"
-  integrity sha512-uCORMuOO8tUzJmsdRtrvcGq5qposf7Rw0LwkTJkoDbOycVQtQjmnhZSuLQnozLE4TmAzlMVV45eCHmQ1OpDKUQ==
+eslint@^7.14.0:
+  version "7.14.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.14.0.tgz#2d2cac1d28174c510a97b377f122a5507958e344"
+  integrity sha512-5YubdnPXrlrYAFCKybPuHIAH++PINe1pmKNc5wQRB9HSbqIK1ywAnntE3Wwua4giKu0bjligf1gLF6qxMGOYRA==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@eslint/eslintrc" "^0.2.1"

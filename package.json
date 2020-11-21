@@ -2,23 +2,13 @@
   "name": "portfolio",
   "homepage": "https://josselinbuils.me",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
-    "add:staged": "exec-staged 'git add' '\\.(js|md|tsx?|scss)$'",
     "analyze": "ANALYZE=true yarn build",
-    "csscomb:staged": "exec-staged 'csscomb -tv' '\\.scss$'",
     "dev": "next",
     "build": "next build",
     "lint": "eslint .",
-    "lint:staged": "exec-staged 'eslint' '\\.(js|tsx?)$'",
-    "prettier:staged": "exec-staged 'prettier --write' '\\.(js|md|tsx?|scss)$'",
     "start": "next start",
     "type-check": "tsc"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint:staged && yarn prettier:staged && yarn csscomb:staged && yarn add:staged"
-    }
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -26,7 +16,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.12",
-    "@josselinbuils/hooks": "^0.1.1",
+    "@josselinbuils/hooks": "^0.1.2",
     "@josselinbuils/utils": "^0.2.3",
     "ansi_up": "^4.0.4",
     "classnames": "^2.2.6",
@@ -53,7 +43,7 @@
   },
   "devDependencies": {
     "@josselinbuils/eslint-config-react": "^0.1.0",
-    "@josselinbuils/exec-staged": "^0.1.1",
+    "@josselinbuils/exec-staged": "^1.0.2",
     "@next/bundle-analyzer": "^10.0.2",
     "@types/classnames": "^2.2.11",
     "@types/diff-match-patch": "^1.0.32",
@@ -66,7 +56,7 @@
     "@types/webpack-env": "^1.15.3",
     "@types/ws": "^7.4.0",
     "csscomb": "^4.3.0",
-    "eslint": "^7.13.0",
+    "eslint": "^7.14.0",
     "husky": "^4.3.0"
   },
   "engines": {
