@@ -5,19 +5,13 @@ const withTM = require('next-transpile-modules')([
 ]);
 
 let nextConfig = withTM({
-  experimental: {
-    productionBrowserSourceMaps: true,
+  future: {
+    webpack5: true,
   },
   images: {
     imageSizes: [202],
   },
-  webpack: (webpackConfig) => {
-    webpackConfig.module.rules.push({
-      test: /\.md$/,
-      use: 'raw-loader',
-    });
-    return webpackConfig;
-  },
+  productionBrowserSourceMaps: true,
 });
 
 if (process.env.ANALYZE === 'true') {
