@@ -9,7 +9,6 @@ import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { MouseTool, RendererType, ViewType } from './constants';
-import { DICOMViewerDescriptor } from './DICOMViewerDescriptor';
 import { Annotations } from './interfaces/Annotations';
 import { ViewportStats } from './interfaces/ViewportStats';
 import { Dataset } from './models/Dataset';
@@ -274,7 +273,7 @@ const DICOMViewer: WindowComponent = ({
       minHeight={534}
       minWidth={880}
       ref={windowRef}
-      title={DICOMViewerDescriptor.appName}
+      title="DICOMViewer"
       titleColor="#efefef"
       {...injectedWindowProps}
     >

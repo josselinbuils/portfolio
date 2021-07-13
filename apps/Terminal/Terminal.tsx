@@ -15,7 +15,6 @@ import { Open } from './executors/Open';
 import { Skills } from './executors/Skills/Skills';
 import { UserQuery } from './executors/UserQuery';
 import { Work } from './executors/Work/Work';
-import { TerminalDescriptor } from './TerminalDescriptor';
 
 import styles from './Terminal.module.scss';
 
@@ -302,7 +301,7 @@ const Terminal: WindowComponent = ({
       minHeight={400}
       minWidth={800}
       ref={windowRef}
-      title={TerminalDescriptor.appName}
+      title="Terminal"
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"
       {...injectedWindowProps}

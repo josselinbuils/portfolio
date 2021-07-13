@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import { CodeEditorDescriptor } from './CodeEditorDescriptor';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
 import { StatusBar } from './components/StatusBar/StatusBar';
@@ -27,7 +26,7 @@ const CodeEditor: WindowComponent = ({
       minHeight={600}
       minWidth={800}
       ref={windowRef}
-      title={CodeEditorDescriptor.appName}
+      title="CodeEditor"
       titleBackground="#f0f0f0"
       titleColor="#2f2f2f"
       {...injectedWindowProps}

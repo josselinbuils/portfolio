@@ -27,8 +27,8 @@ export function computeVolume(
     V(orient).mul(dimensionsVoxels[index])
   );
 
-  const getCorner = (x: number, y: number, z: number): number[] => {
-    return V(firstVoxelCenter)
+  const getCorner = (x: number, y: number, z: number): number[] =>
+    V(firstVoxelCenter)
       .add(V(orientedDimensionsMm[0]).mul(x))
       .add(V(orientedDimensionsMm[1]).mul(y))
       .add(V(orientedDimensionsMm[2]).mul(z))
@@ -37,7 +37,6 @@ export function computeVolume(
         V(voxelSpacing).mul(y).dot(orientation[1]),
         V(voxelSpacing).mul(z).dot(orientation[2]),
       ]);
-  };
 
   const corners = {
     x0y0z0: getCorner(0, 0, 0),

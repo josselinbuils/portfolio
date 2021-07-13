@@ -6,46 +6,44 @@ export const CommandHelp: FC<Props> = ({
   command,
   description,
   parameters,
-}) => {
-  return (
-    <div className={styles.help}>
-      <p>
-        Usage: {command}{' '}
-        {parameters
-          .map(({ name, optional = false }) =>
-            optional ? `[${name}]` : `<${name}>`
-          )
-          .join(' ')}
-      </p>
-      {description && <p className={styles.description}>{description}</p>}
+}) => (
+  <div className={styles.help}>
+    <p>
+      Usage: {command}{' '}
       {parameters
-        .filter((parameter) => parameter.values)
-        .map(({ name, values = [] }) => (
-          <div key={name}>
-            <p>
-              {capitalize(name)}
-              {name.slice(-1) !== 's' && 's'}:
-            </p>
-            <div className={styles.values}>
-              {values.map(({ value }) => (
-                <p className={styles.value} key={value}>
-                  {!value.startsWith('-') && '- '}
-                  {value}
-                </p>
-              ))}
-            </div>
-            <div className={styles.descriptions}>
-              {values.map(({ description: valueDescription = '', value }) => (
-                <p className={styles.description} key={value}>
-                  {valueDescription}
-                </p>
-              ))}
-            </div>
+        .map(({ name, optional = false }) =>
+          optional ? `[${name}]` : `<${name}>`
+        )
+        .join(' ')}
+    </p>
+    {description && <p className={styles.description}>{description}</p>}
+    {parameters
+      .filter((parameter) => parameter.values)
+      .map(({ name, values = [] }) => (
+        <div key={name}>
+          <p>
+            {capitalize(name)}
+            {name.slice(-1) !== 's' && 's'}:
+          </p>
+          <div className={styles.values}>
+            {values.map(({ value }) => (
+              <p className={styles.value} key={value}>
+                {!value.startsWith('-') && '- '}
+                {value}
+              </p>
+            ))}
           </div>
-        ))}
-    </div>
-  );
-};
+          <div className={styles.descriptions}>
+            {values.map(({ description: valueDescription = '', value }) => (
+              <p className={styles.description} key={value}>
+                {valueDescription}
+              </p>
+            ))}
+          </div>
+        </div>
+      ))}
+  </div>
+);
 
 interface Props {
   command: string;

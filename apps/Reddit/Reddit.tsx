@@ -6,7 +6,6 @@ import { Logo } from './components/Logo/Logo';
 import { Menu } from './components/Menu/Menu';
 import { Posts } from './components/Posts/Posts';
 import { RedditFilter } from './interfaces/RedditFilter';
-import { RedditDescriptor } from './RedditDescriptor';
 
 import styles from './Reddit.module.scss';
 
@@ -32,7 +31,7 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       minHeight={600}
       minWidth={850}
       ref={windowRef}
-      title={RedditDescriptor.appName}
+      title="Reddit"
       titleColor="#ff4501"
       {...injectedWindowProps}
     >

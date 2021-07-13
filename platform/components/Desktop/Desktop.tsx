@@ -4,11 +4,9 @@ import { VisibleArea } from './components/VisibleArea/VisibleArea';
 
 import styles from './Desktop.module.scss';
 
-export const Desktop: FC = () => {
-  return (
-    <div className={styles.desktop}>
-      <TaskBar />
-      <VisibleArea />
-    </div>
-  );
-};
+export const Desktop: FC = () => (
+  <div className={styles.desktop}>
+    <TaskBar />
+    <VisibleArea />
+  </div>
+);

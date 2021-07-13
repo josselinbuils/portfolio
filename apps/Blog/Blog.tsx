@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import { BlogDescriptor } from './BlogDescriptor';
 
 import styles from './Blog.module.scss';
 
@@ -16,7 +15,7 @@ const Blog: WindowComponent = ({
     minHeight={700}
     minWidth={830}
     ref={windowRef}
-    title={BlogDescriptor.appName}
+    title="Blog"
     titleColor="black"
     {...injectedWindowProps}
   >
@@ -25,7 +24,7 @@ const Blog: WindowComponent = ({
       className={cn(styles.iframe, { [styles.inactive]: !active })}
       height="100%"
       src="/blog"
-      title={BlogDescriptor.appName}
+      title="Blog"
       width="100%"
     />
   </Window>

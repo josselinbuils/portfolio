@@ -4,7 +4,6 @@ import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
 import { MiniPlayer } from './components/MiniPlayer/MiniPlayer';
 import { Player } from './components/Player/Player';
-import { MP3PlayerDescriptor } from './MP3PlayerDescriptor';
 
 const size = {
   min: {
@@ -30,7 +29,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       minWidth={width}
       ref={windowRef}
       resizable={!min}
-      title={min ? '' : MP3PlayerDescriptor.appName}
+      title={min ? '' : 'MP3Player'}
       titleColor="#efefef"
       {...injectedWindowProps}
     >

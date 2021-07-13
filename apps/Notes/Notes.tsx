@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import { NotesDescriptor } from './NotesDescriptor';
 
 import styles from './Notes.module.scss';
 
@@ -33,7 +32,7 @@ const Notes: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       minHeight={350}
       minWidth={400}
       ref={windowRef}
-      title={NotesDescriptor.appName}
+      title="Notes"
       titleColor="black"
       {...injectedWindowProps}
     >

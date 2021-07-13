@@ -16,11 +16,8 @@ export class WindowManager {
 
   constructor() {
     if (WindowManager.defaultApp !== undefined) {
-      const {
-        appDescriptor,
-        windowComponent,
-        windowProps,
-      } = WindowManager.defaultApp;
+      const { appDescriptor, windowComponent, windowProps } =
+        WindowManager.defaultApp;
       this.openApp(appDescriptor, windowProps, windowComponent);
     }
   }
@@ -46,13 +43,9 @@ export class WindowManager {
     }
   };
 
-  getWindowInstances = (): WindowInstance[] => {
-    return this.windowInstances;
-  };
+  getWindowInstances = (): WindowInstance[] => this.windowInstances;
 
-  isWindowSelected = (id: number): boolean => {
-    return this.getWindowInstance(id).active;
-  };
+  isWindowSelected = (id: number): boolean => this.getWindowInstance(id).active;
 
   isWindowVisible = (id: number): boolean => {
     const componentInstance = this.getWindowInstance(id).windowRef.current;
