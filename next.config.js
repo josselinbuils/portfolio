@@ -5,8 +5,8 @@ const withTM = require('next-transpile-modules')([
 ]);
 
 let nextConfig = withTM({
-  future: {
-    webpack5: true,
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   images: {
     imageSizes: [202],
