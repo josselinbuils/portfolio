@@ -3,21 +3,9 @@ import { EditableState } from '../../../interfaces/EditableState';
 import { createSelection } from '../../../utils/createSelection';
 
 const parserDescriptors = {
-  css: {
-    name: 'css',
-    parserFactory: () => import('prettier/parser-postcss'),
-  },
   javascript: {
     name: 'babel',
     parserFactory: () => import('prettier/parser-babel'),
-  },
-  json: {
-    name: 'json',
-    parserFactory: () => import('prettier/parser-babel'),
-  },
-  scss: {
-    name: 'scss',
-    parserFactory: () => import('prettier/parser-postcss'),
   },
 } as {
   [language: string]: {

@@ -12,6 +12,15 @@ let nextConfig = withTM({
     imageSizes: [202],
   },
   productionBrowserSourceMaps: true,
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /parser-((?!babel).)+/,
+        contextRegExp: /prettier$/,
+      })
+    );
+    return config;
+  },
 });
 
 if (process.env.ANALYZE === 'true') {
