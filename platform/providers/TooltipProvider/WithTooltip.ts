@@ -33,22 +33,32 @@ export const WithTooltip: FC<TooltipDescriptor> = ({
       child.props.onClick(event);
     },
     onMouseEnter: (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
+      const target = event.currentTarget as HTMLElement;
 
       if (descriptor.id === undefined) {
         descriptor.id = Date.now().toString();
       }
 
       if (descriptor.position === undefined) {
-        const { right: x, y } = target.getBoundingClientRect();
-        descriptor.position = { x, y };
+        const { right: x, y, height } = target.getBoundingClientRect();
+        descriptor.position = { x, y: Math.round(y + height / 2) };
       }
+
+      descriptor.style = {
+        transformOrigin: 'left',
+        transition: 'transform 0.1s ease-out',
+        ...descriptor.style,
+        transform: `${descriptor.style?.transform || ''} translateY(-50%)`,
+      };
 
       setFullDescriptor(descriptor);
 
       setTooltipDescriptor({
         ...descriptor,
-        style: { transform: 'scaleX(0)' },
+        style: {
+          ...descriptor.style,
+          transform: `${descriptor.style.transform} scaleX(0)`,
+        },
       });
     },
     onMouseLeave: close,

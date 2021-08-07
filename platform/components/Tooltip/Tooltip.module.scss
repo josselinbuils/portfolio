@@ -5,13 +5,10 @@
   font-size: 1.3rem;
   position: fixed;
   z-index: 1000;
-  display: flex;
   align-content: center;
   margin: 0;
   padding: 0.3rem 0.5rem;
   user-select: none;
-  transition: transform 0.1s ease-out;
-  transform-origin: left;
   color: $textColor;
   border-radius: 0.4rem;
   background: $backgroundColor;

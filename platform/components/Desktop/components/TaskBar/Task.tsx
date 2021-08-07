@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
+import { WithTooltip } from '~/platform/providers/TooltipProvider/WithTooltip';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 import { noop } from '~/platform/utils/noop';
@@ -33,13 +34,10 @@ export const Task: FC<Props> = forwardRef(
     },
     ref
   ) => {
-    const taskRef = (ref as unknown) as RefObject<HTMLButtonElement>;
+    const taskRef = ref as unknown as RefObject<HTMLButtonElement>;
     const [loading, setLoading] = useState(false);
-    const {
-      hideContextMenu,
-      isContextMenuDisplayed,
-      showContextMenu,
-    } = useContextMenu();
+    const { hideContextMenu, isContextMenuDisplayed, showContextMenu } =
+      useContextMenu();
     const getTaskContextMenuDescriptor = useTaskContextMenu(
       appDescriptor,
       taskRef,
@@ -87,32 +85,41 @@ export const Task: FC<Props> = forwardRef(
       setLoading(false);
     }
 
+    const tooltip = (
+      <>
+        <header>{appDescriptor.name}</header>
+        <p className={styles.tooltipBody}>{appDescriptor.description}</p>
+      </>
+    );
+
     return (
-      <button
-        className={cn(styles.task, {
-          [styles.taskButtonActive]: taskButtonActive,
-          [styles.windowInstanceActive]: windowInstanceActive,
-        })}
-        onClick={(event) => {
-          runTask();
-          onClick(event);
-        }}
-        onContextMenu={(event) => {
-          event.preventDefault();
-          showContextMenu(getTaskContextMenuDescriptor());
-        }}
-        ref={taskRef}
-        tabIndex={-1}
-        type="button"
-        {...forwardedProps}
-      >
-        <FontAwesomeIcon
-          className={cn({ [styles.loading]: loading })}
-          icon={icon}
-          style={{ fontSize: `${iconScale}em` }}
-        />
-        {running && <div className={styles.runIndicator} />}
-      </button>
+      <WithTooltip className={styles.tooltip} title={tooltip}>
+        <button
+          className={cn(styles.task, {
+            [styles.taskButtonActive]: taskButtonActive,
+            [styles.windowInstanceActive]: windowInstanceActive,
+          })}
+          onClick={(event) => {
+            runTask();
+            onClick(event);
+          }}
+          onContextMenu={(event) => {
+            event.preventDefault();
+            showContextMenu(getTaskContextMenuDescriptor());
+          }}
+          ref={taskRef}
+          tabIndex={-1}
+          type="button"
+          {...forwardedProps}
+        >
+          <FontAwesomeIcon
+            className={cn({ [styles.loading]: loading })}
+            icon={icon}
+            style={{ fontSize: `${iconScale}em` }}
+          />
+          {running && <div className={styles.runIndicator} />}
+        </button>
+      </WithTooltip>
     );
   }
 );

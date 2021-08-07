@@ -19,11 +19,11 @@ export function useTaskContextMenu(
       throw new Error('Unable to retrieve task html element');
     }
 
-    const { right: x, top: y } = taskRef.current.getBoundingClientRect();
+    const { right: x, y } = taskRef.current.getBoundingClientRect();
     const items: ContextMenuItemDescriptor[] = [
       {
         icon: appDescriptor.icon,
-        title: appDescriptor.appName,
+        title: appDescriptor.name,
         onClick: () => windowManager.openApp(appDescriptor),
       },
     ];

@@ -6,8 +6,9 @@ type AppFactory = <T extends WindowComponent>() => Promise<{
 }>;
 
 export interface AppDescriptor {
-  appName: string;
+  description: string;
   factory: AppFactory;
   icon: IconDefinition;
   iconScale?: number;
+  name: string;
 }

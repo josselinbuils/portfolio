@@ -6,5 +6,5 @@ export function getTaskId(
   index: number
 ): string {
   const instanceKey = windowInstance !== undefined ? windowInstance.id : '';
-  return `${appDescriptor.appName}${index}${instanceKey}`;
+  return `${appDescriptor.name}${index}${instanceKey}`;
 }

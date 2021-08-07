@@ -27,7 +27,7 @@
 
   &:hover,
   &.taskButtonActive {
-    background: lighten($backgroundColor, $lightenAmountLevel1);
+    background: lighten(rgba($backgroundColor, 1), $lightenAmountLevel1);
   }
 
   &.taskButtonActive {
@@ -42,6 +42,21 @@
       background: lighten($backgroundColor, $lightenAmountLevel3);
     }
   }
+}
+
+div.tooltip {
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 6rem;
+  padding: 0.7rem 1rem 0.7rem 0.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background: lighten(rgba($backgroundColor, 1), $lightenAmountLevel1);
+}
+
+.tooltipBody {
+  margin: 0.9rem 0;
+  color: darken($textColor, $lightenAmountLevel1);
 }
 
 @keyframes loading {
