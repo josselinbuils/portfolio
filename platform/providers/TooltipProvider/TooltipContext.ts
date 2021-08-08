@@ -1,10 +1,19 @@
 import { createContext } from 'react';
 import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 
-export const TooltipContext = createContext<TooltipDescriptorSetter>(() => {
+function throwError(): void {
   throw new Error('TooltipContext not initialized');
-});
+}
 
-export type TooltipDescriptorSetter = (
-  descriptor: TooltipDescriptor | undefined
-) => void;
+export const TooltipContext = createContext<{
+  onEnterTooltipParent(
+    descriptor: TooltipDescriptor,
+    updateDescriptorOnDisplay?: () => TooltipDescriptor
+  ): void;
+  onLeaveTooltipParent(): void;
+  onMoveTooltipParent(): void;
+}>({
+  onEnterTooltipParent: throwError,
+  onLeaveTooltipParent: throwError,
+  onMoveTooltipParent: throwError,
+});

@@ -1,43 +1,23 @@
-import {
-  Children,
-  cloneElement,
-  FC,
-  ReactElement,
-  useContext,
-  useState,
-} from 'react';
-import { TooltipDescriptor } from '~/platform/components/Tooltip/TooltipDescriptor';
+import { Children, cloneElement, FC, ReactElement, useContext } from 'react';
+import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
-
-const TOOLTIP_DELAY_MS = 500;
 
 export const WithTooltip: FC<TooltipDescriptor> = ({
   children,
-  ...descriptor
+  ...baseDescriptor
 }) => {
-  const [fullDescriptor, setFullDescriptor] = useState<TooltipDescriptor>();
-  const [timeoutID, setTimeoutID] = useState<number>();
-  const setTooltipDescriptor = useContext(TooltipContext);
+  const { onEnterTooltipParent, onLeaveTooltipParent, onMoveTooltipParent } =
+    useContext(TooltipContext);
   const child = Children.only(children) as ReactElement;
-
-  function close(): void {
-    window.clearTimeout(timeoutID);
-    setFullDescriptor(undefined);
-    setTimeoutID(undefined);
-    setTooltipDescriptor(undefined);
-  }
 
   return cloneElement(child, {
     onClick: (event: MouseEvent) => {
-      close();
+      onLeaveTooltipParent();
       child.props.onClick(event);
     },
     onMouseEnter: (event: MouseEvent) => {
       const target = event.currentTarget as HTMLElement;
-
-      if (descriptor.id === undefined) {
-        descriptor.id = Date.now().toString();
-      }
+      const descriptor = { ...baseDescriptor };
 
       if (descriptor.position === undefined) {
         const { right: x, y, height } = target.getBoundingClientRect();
@@ -48,30 +28,20 @@ export const WithTooltip: FC<TooltipDescriptor> = ({
         transformOrigin: 'left',
         transition: 'transform 0.1s ease-out',
         ...descriptor.style,
-        transform: `${descriptor.style?.transform || ''} translateY(-50%)`,
+        transform: `${
+          descriptor.style?.transform || ''
+        } translateY(-50%) scaleX(0)`,
       };
 
-      setFullDescriptor(descriptor);
-
-      setTooltipDescriptor({
+      onEnterTooltipParent(descriptor, () => ({
         ...descriptor,
         style: {
           ...descriptor.style,
-          transform: `${descriptor.style.transform} scaleX(0)`,
+          transform: descriptor.style?.transform?.replace(' scaleX(0)', ''),
         },
-      });
+      }));
     },
-    onMouseLeave: close,
-    onMouseMove: () => {
-      if (timeoutID !== undefined) {
-        clearTimeout(timeoutID);
-      }
-      setTimeoutID(
-        window.setTimeout(
-          () => setTooltipDescriptor(fullDescriptor),
-          TOOLTIP_DELAY_MS
-        )
-      );
-    },
+    onMouseLeave: onLeaveTooltipParent,
+    onMouseMove: onMoveTooltipParent,
   });
 };
