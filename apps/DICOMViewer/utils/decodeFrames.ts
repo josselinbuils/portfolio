@@ -173,7 +173,7 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
     }
 
     return frames;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Unable to load DICOM instance: ${error.stack}`);
   }
 }
@@ -181,7 +181,7 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
 function parseDicom(data: Uint8Array): ParsedDicomFile {
   try {
     return dicomParser.parseDicom(data);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Unable to parse DICOM: ${error.message || error}`);
   }
 }

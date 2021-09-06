@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { serveStatic } from 'next/dist/next-server/server/serve-static';
+import { serveStatic } from 'next/dist/server/serve-static';
 import path from 'path';
 import { HTTP_NOT_FOUND } from '~/platform/api/constants';
 import { DATASETS_PATH, MAX_AGE } from './constants';

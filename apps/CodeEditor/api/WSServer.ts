@@ -133,7 +133,7 @@ export class WSServer {
         try {
           const action = JSON.parse(message) as Action;
           this.reduce(wsClient, action);
-        } catch (error) {
+        } catch (error: any) {
           Logger.error(error.stack);
         }
       });
@@ -165,12 +165,8 @@ export class WSServer {
         break;
 
       case ACTION_UPDATE_CODE: {
-        const {
-          currentSelection,
-          diffs,
-          newSelection,
-          safetyHash,
-        } = action.payload;
+        const { currentSelection, diffs, newSelection, safetyHash } =
+          action.payload;
 
         if (currentSelection === undefined || newSelection === undefined) {
           return;

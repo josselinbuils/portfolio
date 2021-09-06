@@ -37,7 +37,7 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
           return { is3D, name, previewURL, url };
         })
     );
-  } catch (error) {
+  } catch (error: any) {
     Logger.error(`Unable to compute datasets descriptors: ${error.stack}`);
     return [];
   }

@@ -25,11 +25,8 @@ let nextConfig = withTM({
 
 if (process.env.ANALYZE === 'true') {
   // eslint-disable-next-line import/no-extraneous-dependencies,@typescript-eslint/no-var-requires,global-require
-  const bundleAnalyzer = require('@next/bundle-analyzer');
-  const withBundleAnalyzer = bundleAnalyzer({
-    enabled: process.env.ANALYZE === 'true',
-  });
-  nextConfig = withBundleAnalyzer(nextConfig);
+  const withNextBundleAnalyzer = require('next-bundle-analyzer')();
+  nextConfig = withNextBundleAnalyzer(nextConfig);
 }
 
 module.exports = nextConfig;

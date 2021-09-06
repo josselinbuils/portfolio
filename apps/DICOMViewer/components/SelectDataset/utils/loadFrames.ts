@@ -24,7 +24,7 @@ async function getDICOMFile(
   try {
     const response = await fetch(url).then(onFetchProgress(onProgress));
     return response.arrayBuffer();
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Unable to retrieve DICOM file: ${error.stack}`);
   }
 }
