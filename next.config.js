@@ -5,13 +5,10 @@ const withTM = require('next-transpile-modules')([
 ]);
 
 let nextConfig = withTM({
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    imageSizes: [202],
-  },
+  eslint: { ignoreDuringBuilds: true },
+  images: { imageSizes: [202] },
   productionBrowserSourceMaps: true,
+  swcMinify: true,
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.IgnorePlugin({

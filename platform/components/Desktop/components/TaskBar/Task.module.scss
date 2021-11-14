@@ -44,13 +44,16 @@
   }
 }
 
-div.tooltip {
+.tooltip {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 1.3rem;
   overflow: hidden;
   box-sizing: border-box;
   height: 6rem;
+  margin: 0;
   padding: 0.7rem 1rem 0.7rem 0.5rem;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  color: $textColor;
+  border-radius: 0 0.4rem 0.4rem 0;
   background: lighten(rgba($backgroundColor, 1), $lightenAmountLevel1);
 }
 

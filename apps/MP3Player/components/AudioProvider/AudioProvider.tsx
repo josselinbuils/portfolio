@@ -14,18 +14,20 @@ export const AudioProvider: FC = ({ children }) => {
   const [audioState, setAudioState] = useState<AudioState>();
 
   useEffect(() => {
-    const unsubscribe = audioController.audioStateSubject.subscribe(
-      setAudioState
-    );
+    const unsubscribe =
+      audioController.audioStateSubject.subscribe(setAudioState);
     return () => {
       unsubscribe();
       audioController.clear();
     };
   }, [audioController]);
 
+  const value = useMemo(
+    () => ({ audioController, audioState }),
+    [audioController, audioState]
+  );
+
   return (
-    <AudioContext.Provider value={{ audioController, audioState }}>
-      {children}
-    </AudioContext.Provider>
+    <AudioContext.Provider value={value}>{children}</AudioContext.Provider>
   );
 };

@@ -1,9 +1,12 @@
-import AnsiUp from 'ansi_up';
 import { Log } from '../Log';
 
 let logId = -1;
 
-export function formatLogs(logs: Log[], stepClass: string): Log[] {
+export async function formatLogs(
+  logs: Log[],
+  stepClass: string
+): Promise<Log[]> {
+  const AnsiUp = (await import('ansi_up')).default;
   const ansiUp = new AnsiUp();
 
   return logs.map(({ data, level, time }) => ({

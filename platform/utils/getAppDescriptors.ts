@@ -1,3 +1,5 @@
+// Open executor dynamically imported in Terminal so no cycle
+// eslint-disable-next-line import/no-cycle
 import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 

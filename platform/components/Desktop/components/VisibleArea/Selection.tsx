@@ -1,37 +1,25 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Position } from '~/platform/interfaces/Position';
 
 import styles from './Selection.module.scss';
 
-export const Selection: FC<Props> = ({ visible }) => {
+export const Selection: FC = () => {
   const [cursorPosition, setCursorPosition] = useState<Position<number>>();
-  const [cursorStartPosition, setCursorStartPosition] = useState<
-    Position<number>
-  >();
+  const [cursorStartPosition, setCursorStartPosition] =
+    useState<Position<number>>();
 
-  useEffect(() => {
-    if (!visible) {
-      setCursorPosition(undefined);
-      setCursorStartPosition(undefined);
+  useEventListener('mousemove', (moveEvent: MouseEvent) => {
+    const position = {
+      x: moveEvent.clientX,
+      y: moveEvent.clientY,
+    };
+
+    if (cursorStartPosition === undefined) {
+      setCursorStartPosition(position);
     }
-  }, [visible]);
-
-  useEventListener(
-    'mousemove',
-    (moveEvent: MouseEvent) => {
-      const position = {
-        x: moveEvent.clientX,
-        y: moveEvent.clientY,
-      };
-
-      if (cursorStartPosition === undefined) {
-        setCursorStartPosition(position);
-      }
-      setCursorPosition(position);
-    },
-    visible
-  );
+    setCursorPosition(position);
+  });
 
   return cursorPosition !== undefined && cursorStartPosition !== undefined ? (
     <div
@@ -45,7 +33,3 @@ export const Selection: FC<Props> = ({ visible }) => {
     />
   ) : null;
 };
-
-interface Props {
-  visible: boolean;
-}

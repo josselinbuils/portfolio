@@ -65,9 +65,10 @@ export const BuildManager: AsyncExecutor = ({
         client
           .onError(errorHandler)
           .onClose(onRelease)
-          .onMessage(({ type, value }) => {
+          .onMessage(async ({ type, value }) => {
             if (type === MessageType.Logs) {
-              logManager.push(...formatLogs(value, styles.stepNumber));
+              const formattedLogs = await formatLogs(value, styles.stepNumber);
+              logManager.push(...formattedLogs);
             }
           })
           .waitUntilReady()
@@ -121,10 +122,11 @@ export const BuildManager: AsyncExecutor = ({
         client
           .onError(errorHandler)
           .onClose(onRelease)
-          .onMessage(({ value: lastLogs }) => {
+          .onMessage(async ({ value: lastLogs }) => {
             const follow = hasOption(args, 'follow');
+            const formattedLogs = await formatLogs(lastLogs, styles.stepNumber);
 
-            logManager.push(...formatLogs(lastLogs, styles.stepNumber));
+            logManager.push(...formattedLogs);
 
             if (!follow) {
               onRelease();

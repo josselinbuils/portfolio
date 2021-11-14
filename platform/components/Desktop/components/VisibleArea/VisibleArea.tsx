@@ -1,13 +1,15 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
+import dynamic from 'next/dynamic';
 import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { getRefElementSize } from '~/platform/utils/getRefElementSize';
-import { Selection } from './Selection';
 import { Windows } from './Windows';
 
 import styles from './VisibleArea.module.scss';
+
+const Selection = dynamic(async () => (await import('./Selection')).Selection);
 
 export const VisibleArea: FC = () => {
   const [selectionVisible, setSelectionVisible] = useState(false);
@@ -45,7 +47,7 @@ export const VisibleArea: FC = () => {
       ref={visibleAreaRef}
     >
       <Windows visibleAreaSize={visibleAreaSize} />
-      <Selection visible={selectionVisible} />
+      {selectionVisible && <Selection />}
     </div>
   );
 };

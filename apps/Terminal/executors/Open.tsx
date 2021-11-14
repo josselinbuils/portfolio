@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
+// Open executor dynamically imported in Terminal so no cycle
+// eslint-disable-next-line import/no-cycle
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 import { CommandHelp } from '../components/CommandHelp/CommandHelp';
 import { Executor } from './Executor';

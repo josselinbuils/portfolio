@@ -1,7 +1,11 @@
-import { FC, useRef, useState } from 'react';
-import { Tooltip } from '../../components/Tooltip/Tooltip';
+import dynamic from 'next/dynamic';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
+
+const Tooltip = dynamic(
+  async () => (await import('../../components/Tooltip/Tooltip')).Tooltip
+);
 
 const TOOLTIP_CLOSE_DELAY_MS = 50;
 const TOOLTIP_OPEN_DELAY_MS = 500;
@@ -14,62 +18,68 @@ export const TooltipProvider: FC = ({ children }) => {
   const closeTimeoutRef = useRef<number>();
   const openTimeoutRef = useRef<number>();
 
-  function onEnterTooltipParent(
-    newDescriptor: TooltipDescriptor,
-    updateDescriptorOnDisplay?: () => TooltipDescriptor
-  ) {
-    window.clearTimeout(closeTimeoutRef.current);
-    setDescriptor(newDescriptor);
+  const onTooltipDOMReady = useCallback(() => {
+    if (displayCallback) {
+      setTimeout(() => setDescriptor(displayCallback()), 0);
+    }
+  }, [displayCallback]);
 
-    if (updateDescriptorOnDisplay) {
-      if (displayed) {
-        setDescriptor(updateDescriptorOnDisplay());
-        setDisplayCallback(undefined);
-      } else {
-        setDisplayCallback(() => updateDescriptorOnDisplay);
+  const value = useMemo(() => {
+    function onEnterTooltipParent(
+      newDescriptor: TooltipDescriptor,
+      updateDescriptorOnDisplay?: () => TooltipDescriptor
+    ) {
+      window.clearTimeout(closeTimeoutRef.current);
+      setDescriptor(newDescriptor);
+
+      if (updateDescriptorOnDisplay) {
+        if (displayed) {
+          setDescriptor(updateDescriptorOnDisplay());
+          setDisplayCallback(undefined);
+        } else {
+          setDisplayCallback(() => updateDescriptorOnDisplay);
+        }
       }
     }
-  }
 
-  function onLeaveTooltipParent() {
-    window.clearTimeout(closeTimeoutRef.current);
-
-    closeTimeoutRef.current = window.setTimeout(() => {
+    function onLeaveTooltipParent() {
       window.clearTimeout(closeTimeoutRef.current);
+
+      closeTimeoutRef.current = window.setTimeout(() => {
+        window.clearTimeout(closeTimeoutRef.current);
+        window.clearTimeout(openTimeoutRef.current);
+
+        closeTimeoutRef.current = undefined;
+        openTimeoutRef.current = undefined;
+
+        setDescriptor(undefined);
+        setDisplayed(false);
+      }, TOOLTIP_CLOSE_DELAY_MS);
+    }
+
+    function onMoveTooltipParent() {
       window.clearTimeout(openTimeoutRef.current);
 
-      closeTimeoutRef.current = undefined;
-      openTimeoutRef.current = undefined;
-
-      setDescriptor(undefined);
-      setDisplayed(false);
-    }, TOOLTIP_CLOSE_DELAY_MS);
-  }
-
-  function onMoveTooltipParent() {
-    window.clearTimeout(openTimeoutRef.current);
-
-    if (!displayed) {
-      openTimeoutRef.current = window.setTimeout(() => {
-        setDisplayed(true);
-
-        if (displayCallback) {
-          setTimeout(() => setDescriptor(displayCallback()), 0);
-        }
-      }, TOOLTIP_OPEN_DELAY_MS);
+      if (!displayed) {
+        openTimeoutRef.current = window.setTimeout(() => {
+          setDisplayed(true);
+        }, TOOLTIP_OPEN_DELAY_MS);
+      }
     }
-  }
+
+    return {
+      onEnterTooltipParent,
+      onLeaveTooltipParent,
+      onMoveTooltipParent,
+    };
+  }, [displayed]);
 
   return (
-    <TooltipContext.Provider
-      value={{
-        onEnterTooltipParent,
-        onLeaveTooltipParent,
-        onMoveTooltipParent,
-      }}
-    >
+    <TooltipContext.Provider value={value}>
       {children}
-      {descriptor && displayed && <Tooltip {...descriptor} />}
+      {descriptor && displayed && (
+        <Tooltip {...descriptor} onDOMReady={onTooltipDOMReady} />
+      )}
     </TooltipContext.Provider>
   );
 };

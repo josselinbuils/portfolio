@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import cn from 'classnames';
 import {
   Children,
@@ -5,24 +6,33 @@ import {
   FC,
   ReactElement,
   useCallback,
+  useMemo,
   useState,
 } from 'react';
-import { ContextMenu } from './ContextMenu/ContextMenu';
 import { ContextMenuContext } from './ContextMenuContext';
-import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 
+import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import styles from './ContextMenuProvider.module.scss';
+
+const ContextMenu = dynamic(
+  async () => (await import('./ContextMenu/ContextMenu')).ContextMenu
+);
 
 export const ContextMenuProvider: FC = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
   const hideContextMenu = useCallback(() => setDescriptor(undefined), []);
-  const isContextMenuDisplayed = descriptor !== undefined;
-  const showContextMenu = setDescriptor;
+
+  const value = useMemo(
+    () => ({
+      hideContextMenu,
+      isContextMenuDisplayed: descriptor !== undefined,
+      showContextMenu: setDescriptor,
+    }),
+    [descriptor, hideContextMenu]
+  );
 
   return (
-    <ContextMenuContext.Provider
-      value={{ hideContextMenu, isContextMenuDisplayed, showContextMenu }}
-    >
+    <ContextMenuContext.Provider value={value}>
       {Children.map(children as ReactElement[], (child) =>
         cloneElement(child, {
           className: cn(child.props.className, {

@@ -1,15 +1,8 @@
 @import '../../constants';
 
 .tooltip {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-  font-size: 1.3rem;
   position: fixed;
   z-index: 1000;
   align-content: center;
-  margin: 0;
-  padding: 0.3rem 0.5rem;
   user-select: none;
-  color: $textColor;
-  border-radius: 0.4rem;
-  background: $backgroundColor;
 }

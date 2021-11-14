@@ -3,6 +3,7 @@ import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const TerminalDescriptor = {
   description: 'Command-line interface.',
+  // Factory with dynamic import so no cycle
   // eslint-disable-next-line import/no-cycle
   factory: () => import('./Terminal'),
   icon: faTerminal,

@@ -7,26 +7,24 @@ import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { About } from './executors/About/About';
 import { AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';
-import { BuildManager } from './executors/BuildManager/BuildManager';
 import { Command } from './executors/Command/Command';
 import { Executor } from './executors/Executor';
-import { Help } from './executors/Help/Help';
-import { Open } from './executors/Open';
-import { Skills } from './executors/Skills/Skills';
 import { UserQuery } from './executors/UserQuery';
-import { Work } from './executors/Work/Work';
 
 import styles from './Terminal.module.scss';
 
 const USER = 'guest';
 
-const executors: { [name: string]: Executor | AsyncExecutor } = {
-  about: About,
-  bm: BuildManager,
-  help: Help,
-  open: Open,
-  skills: Skills,
-  work: Work,
+const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
+  about: async () => About,
+  bm: async () =>
+    (await import('./executors/BuildManager/BuildManager')).BuildManager,
+  help: async () => (await import('./executors/Help/Help')).Help,
+  // Factory with dynamic import so no cycle
+  // eslint-disable-next-line import/no-cycle
+  open: async () => (await import('./executors/Open')).Open,
+  skills: async () => (await import('./executors/Skills/Skills')).Skills,
+  work: async () => (await import('./executors/Work/Work')).Work,
 };
 
 const initialExecutions: Execution[] = [
@@ -37,7 +35,7 @@ const initialExecutions: Execution[] = [
   },
   {
     args: [],
-    executor: executors.about,
+    executor: About,
     id: 1,
   },
 ];
@@ -169,7 +167,8 @@ const Terminal: WindowComponent = ({
       if (command === 'clear') {
         executionManager.clear();
       } else if (executors[command] !== undefined) {
-        await loadExecutor(executors[command], args.slice(1));
+        const executor = await executors[command]();
+        await loadExecutor(executor, args.slice(1));
       } else {
         await loadExecutor(BashError, [command]);
       }
