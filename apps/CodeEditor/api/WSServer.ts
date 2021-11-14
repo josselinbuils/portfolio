@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { IncomingMessage } from 'http';
-import WebSocket, { OPEN, Server } from 'ws';
+import WebSocket, { OPEN, WebSocketServer } from 'ws';
 import { Logger } from '~/platform/api/Logger';
 import {
   Action,
@@ -31,7 +31,7 @@ export class WSServer {
   private readonly codeUpdateQueue = new ExecQueue();
   private readonly history = new History();
   private readonly requestQueue = new ExecQueue();
-  private readonly server: Server;
+  private readonly server: WebSocketServer;
 
   static create(): WSServer {
     return new WSServer();
@@ -42,7 +42,7 @@ export class WSServer {
   }
 
   private constructor() {
-    this.server = new Server({ noServer: true });
+    this.server = new WebSocketServer({ noServer: true });
     this.server.on('connection', this.handleConnection.bind(this));
   }
 
