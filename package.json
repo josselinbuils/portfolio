@@ -25,7 +25,7 @@
     "ansi_up": "5.1.0",
     "classnames": "2.3.1",
     "dayjs": "1.10.7",
-    "dicom-parser": "1.8.11",
+    "dicom-parser": "1.8.8",
     "diff-match-patch": "1.0.5",
     "js-untar": "2.0.0",
     "jsonschema": "1.4.0",
