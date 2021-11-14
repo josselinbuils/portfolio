@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { IncomingMessage } from 'http';
-import WebSocket, { OPEN, WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { Logger } from '~/platform/api/Logger';
 import {
   Action,
@@ -61,7 +61,7 @@ export class WSServer {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
     this.server.clients.forEach((wsClient) => {
-      if (wsClient.readyState === OPEN) {
+      if (wsClient.readyState === WebSocket.OPEN) {
         const client = this.getClientFromWS(wsClient);
         const clientAction = actionCreator(client);
 
