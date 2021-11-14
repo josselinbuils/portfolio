@@ -43,14 +43,14 @@ export const BuildManager: AsyncExecutor = ({
       return;
     }
 
-    const errorHandler = (error?: BMError) => {
+    const errorHandler = (error: unknown) => {
       console.error(error);
 
-      if (error?.code === CODE_UNAUTHORIZED) {
+      if ((error as BMError)?.code === CODE_UNAUTHORIZED) {
         authTokenRef.current = undefined;
       }
 
-      setErrorMessage(error?.message || DEFAULT_ERROR_MESSAGE);
+      setErrorMessage((error as BMError)?.message || DEFAULT_ERROR_MESSAGE);
       onRelease();
     };
 

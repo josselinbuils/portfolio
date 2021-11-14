@@ -14,7 +14,7 @@ export enum MessageType {
 
 export class BuildManagerClient {
   private closeHandler = noop as () => void;
-  private errorHandler = noop as (error?: BMError) => void;
+  private errorHandler = noop as (error: unknown) => void;
   private messageHandler = noop as (message: BMMessage) => void;
   private readonly readyDeferred = new Deferred<BuildManagerClient>();
   private readonly ws: WebSocket;
@@ -28,10 +28,10 @@ export class BuildManagerClient {
       this.closeHandler();
     };
 
-    ws.onerror = () => {
+    ws.onerror = (event) => {
       this.clearRetryTimeout();
       this.readyDeferred.reject();
-      this.errorHandler();
+      this.errorHandler(event);
     };
 
     ws.onmessage = (event) => {
@@ -46,7 +46,7 @@ export class BuildManagerClient {
           this.messageHandler(message);
         }
       } catch (error) {
-        this.errorHandler();
+        this.errorHandler(error);
       }
     };
 
@@ -60,7 +60,7 @@ export class BuildManagerClient {
     return this;
   }
 
-  onError(errorHandler: (error?: BMError) => void): BuildManagerClient {
+  onError(errorHandler: (error: unknown) => void): BuildManagerClient {
     this.errorHandler = errorHandler;
     return this;
   }
