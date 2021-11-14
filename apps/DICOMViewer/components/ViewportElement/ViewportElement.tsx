@@ -6,10 +6,7 @@ import { useElementSize } from '~/platform/hooks/useElementSize';
 import { Size } from '~/platform/interfaces/Size';
 import { ViewportStats } from '../../interfaces/ViewportStats';
 import { Viewport } from '../../models/Viewport';
-import { JSFrameRenderer } from './renderers/js/JSFrameRenderer';
-import { JSVolumeRenderer } from './renderers/js/JSVolumeRenderer';
 import { Renderer } from './renderers/Renderer';
-import { WebGLRenderer } from './renderers/webgl/WebGLRenderer';
 
 import styles from './ViewportElement.module.scss';
 
@@ -32,108 +29,123 @@ export const ViewportElement: FC<Props> = ({
   const [viewportWidth, viewportHeight] = useElementSize(canvasElementRef);
 
   useEffect(() => {
-    if (!viewport) {
-      return;
-    }
-    const canvasElement = canvasElementRef.current as HTMLCanvasElement;
-    let renderer: Renderer;
-    let frameDurations: number[] = [];
-    let renderDurations: number[] = [];
-    let lastTime = 0;
-    let requestID: number;
-
-    try {
-      switch (viewport.rendererType) {
-        case RendererType.JavaScript:
-          renderer =
-            viewport.viewType === ViewType.Native
-              ? new JSFrameRenderer(canvasElement)
-              : new JSVolumeRenderer(canvasElement);
-          break;
-
-        case RendererType.WebGL:
-          renderer = new WebGLRenderer(canvasElement);
-          break;
-
-        default:
-          throw new Error('Unknown renderer type');
-      }
-    } catch (error) {
-      onError(`Unable to instantiate ${viewport.rendererType} renderer`);
-      console.error(error);
-    }
-
-    const render = () => {
-      if (!canvasElementRef.current || !renderer || !viewport) {
+    (async () => {
+      if (!viewport) {
         return;
       }
+      const canvasElement = canvasElementRef.current as HTMLCanvasElement;
+      let renderer: Renderer;
+      let frameDurations: number[] = [];
+      let renderDurations: number[] = [];
+      let lastTime = 0;
+      let requestID: number;
 
-      if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
-        const t = performance.now();
-
-        try {
-          renderer.render(viewport);
-          viewport.makeClean();
-          renderDurations.push(performance.now() - t);
-
-          if (lastTime > 0) {
-            frameDurations.push(t - lastTime);
+      try {
+        switch (viewport.rendererType) {
+          case RendererType.JavaScript: {
+            if (viewport.viewType === ViewType.Native) {
+              const { JSFrameRenderer } = await import(
+                './renderers/js/JSFrameRenderer'
+              );
+              renderer = new JSFrameRenderer(canvasElement);
+            } else {
+              const { JSVolumeRenderer } = await import(
+                './renderers/js/JSVolumeRenderer'
+              );
+              renderer = new JSVolumeRenderer(canvasElement);
+            }
+            break;
           }
-          lastTime = t;
-        } catch (error) {
-          onError('Unable to render viewport');
-          console.error(error);
+
+          case RendererType.WebGL: {
+            const { WebGLRenderer } = await import(
+              './renderers/webgl/WebGLRenderer'
+            );
+            renderer = new WebGLRenderer(canvasElement);
+            break;
+          }
+
+          default:
+            throw new Error('Unknown renderer type');
+        }
+      } catch (error) {
+        onError(`Unable to instantiate ${viewport.rendererType} renderer`);
+        console.error(error);
+      }
+
+      const render = () => {
+        if (!canvasElementRef.current || !renderer || !viewport) {
           return;
         }
-      }
 
-      requestID = window.requestAnimationFrame(render);
-    };
+        if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
+          const t = performance.now();
 
-    const statsInterval = window.setInterval(() => {
-      if (viewport === undefined) {
-        return;
-      }
-      let fps: number;
-      let meanRenderDuration: number;
+          try {
+            renderer.render(viewport);
+            viewport.makeClean();
+            renderDurations.push(performance.now() - t);
 
-      if (frameDurations.length > 1) {
-        const meanFrameDuration =
-          frameDurations.reduce((sum, d) => sum + d, 0) / frameDurations.length;
-        fps = Math.round(1000 / meanFrameDuration);
-        frameDurations = [];
-      } else {
-        fps = 0;
-      }
+            if (lastTime > 0) {
+              frameDurations.push(t - lastTime);
+            }
+            lastTime = t;
+          } catch (error) {
+            onError('Unable to render viewport');
+            console.error(error);
+            return;
+          }
+        }
 
-      if (renderDurations.length > 0) {
-        meanRenderDuration =
-          renderDurations.reduce((sum, d) => sum + d, 0) /
-          renderDurations.length;
-        renderDurations = [];
-      } else {
-        meanRenderDuration = 0;
-      }
+        requestID = window.requestAnimationFrame(render);
+      };
 
-      const stats: { fps: number; meanRenderDuration?: number } = { fps };
+      const statsInterval = window.setInterval(() => {
+        if (viewport === undefined) {
+          return;
+        }
+        let fps: number;
+        let meanRenderDuration: number;
 
-      if (meanRenderDuration !== 0) {
-        stats.meanRenderDuration = meanRenderDuration;
-      }
+        if (frameDurations.length > 1) {
+          const meanFrameDuration =
+            frameDurations.reduce((sum, d) => sum + d, 0) /
+            frameDurations.length;
+          fps = Math.round(1000 / meanFrameDuration);
+          frameDurations = [];
+        } else {
+          fps = 0;
+        }
 
-      onStatsUpdate(stats);
-    }, ANNOTATIONS_REFRESH_DELAY);
+        if (renderDurations.length > 0) {
+          meanRenderDuration =
+            renderDurations.reduce((sum, d) => sum + d, 0) /
+            renderDurations.length;
+          renderDurations = [];
+        } else {
+          meanRenderDuration = 0;
+        }
 
-    render();
+        const stats: { fps: number; meanRenderDuration?: number } = { fps };
 
-    return () => {
-      cancelAnimationFrame(requestID);
-      clearInterval(statsInterval);
+        if (meanRenderDuration !== 0) {
+          stats.meanRenderDuration = meanRenderDuration;
+        }
 
-      if (renderer.destroy) {
-        renderer.destroy();
-      }
-    };
+        onStatsUpdate(stats);
+      }, ANNOTATIONS_REFRESH_DELAY);
+
+      render();
+
+      return () => {
+        cancelAnimationFrame(requestID);
+        clearInterval(statsInterval);
+
+        if (renderer.destroy) {
+          renderer.destroy();
+        }
+      };
+    })();
   }, [canvasElementRef, onError, onStatsUpdate, viewport]);
 
   useLayoutEffect(() => {

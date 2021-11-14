@@ -6,16 +6,14 @@ import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';
 import { loadDatasetList } from './utils/loadDatasetList';
-import { loadFrames } from './utils/loadFrames';
 
 import styles from './SelectDataset.module.scss';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
 export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
-  const [datasetDescriptor, setDatasetDescriptor] = useState<
-    DatasetDescriptor
-  >();
+  const [datasetDescriptor, setDatasetDescriptor] =
+    useState<DatasetDescriptor>();
   const [datasetDescriptors, setDatasetDescriptors] = useState<
     DatasetDescriptor[]
   >([]);
@@ -45,7 +43,9 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
     setLoadingProgress(0);
 
     const [framesPromise, cancelFramesPromise] = cancelable(
-      loadFrames(datasetDescriptor, setLoadingProgress)
+      import('./utils/loadFrames').then(async ({ loadFrames }) =>
+        loadFrames(datasetDescriptor, setLoadingProgress)
+      )
     );
     framesPromise
       .then((dicomFrames) => {

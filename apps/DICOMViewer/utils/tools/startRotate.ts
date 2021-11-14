@@ -41,8 +41,9 @@ export function startRotate(
     const { angle, axis } = computeRotation(previousVector, currentVector);
     const { camera } = viewport;
     rotateCamera(camera, axis, angle);
-    camera.baseFieldOfView = (viewport.dataset
-      .volume as Volume).getOrientedDimensionMm(camera.upVector);
+    camera.baseFieldOfView = (
+      viewport.dataset.volume as Volume
+    ).getOrientedDimensionMm(camera.upVector);
     previousVector = currentVector;
 
     onRotate();

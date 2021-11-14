@@ -44,9 +44,8 @@ export function useAutoCompletion({
 
   useLayoutEffect(() => {
     if (textAreaElement) {
-      const { completionItems, correctedPartialKeyword } = getCompletionItems(
-        partialKeyword
-      );
+      const { completionItems, correctedPartialKeyword } =
+        getCompletionItems(partialKeyword);
 
       if (completionItems.length > 0) {
         const cursorPosition = getOffsetPosition(

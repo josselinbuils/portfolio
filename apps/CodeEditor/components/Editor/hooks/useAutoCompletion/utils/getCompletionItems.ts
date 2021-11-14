@@ -4,9 +4,10 @@ import {
   getObjectsCompletionMap,
 } from '../dictionary';
 
-export function getCompletionItems(
-  partialKeyword: string
-): { completionItems: CompletionItem[]; correctedPartialKeyword: string } {
+export function getCompletionItems(partialKeyword: string): {
+  completionItems: CompletionItem[];
+  correctedPartialKeyword: string;
+} {
   let correctedPartialKeyword = partialKeyword;
   let completionItems = [] as CompletionItem[];
 

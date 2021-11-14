@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash.clonedeep';
 import {
   NormalizedImageFormat,
   PhotometricInterpretation,
@@ -51,7 +50,7 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
     delete frame.pixelData;
 
     return new Frame({
-      ...cloneDeep(frame),
+      ...JSON.parse(JSON.stringify(frame)),
       dicom,
       dimensionsMm,
       id,
@@ -136,11 +135,8 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
     throw new Error('Frame does not contain pixel data');
   }
 
-  const {
-    bitsAllocated,
-    photometricInterpretation,
-    pixelRepresentation,
-  } = frame;
+  const { bitsAllocated, photometricInterpretation, pixelRepresentation } =
+    frame;
   const dicomImageFormat = getDicomImageFormat(
     bitsAllocated,
     photometricInterpretation,

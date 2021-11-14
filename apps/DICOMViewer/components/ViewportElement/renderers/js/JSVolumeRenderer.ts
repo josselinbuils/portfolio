@@ -60,11 +60,8 @@ export class JSVolumeRenderer implements Renderer {
   }
 
   private static getRawValue(dataset: Dataset, pointLPS: number[]): number {
-    const {
-      firstVoxelCenter,
-      orientation,
-      voxelSpacing,
-    } = dataset.volume as Volume;
+    const { firstVoxelCenter, orientation, voxelSpacing } =
+      dataset.volume as Volume;
 
     const vector = [
       (pointLPS[0] - firstVoxelCenter[0]) / voxelSpacing[0],
@@ -388,14 +385,8 @@ export class JSVolumeRenderer implements Renderer {
       rightLimit,
       viewportSpace,
     } = renderingProperties;
-    const {
-      imageHeight,
-      imageWidth,
-      imageX0,
-      imageX1,
-      imageY0,
-      imageY1,
-    } = boundedViewportSpace as BoundedViewportSpaceCoordinates;
+    const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
+      boundedViewportSpace as BoundedViewportSpaceCoordinates;
     const { displayWidth, displayHeight } = imageSpace as ImageSpaceCoordinates;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;

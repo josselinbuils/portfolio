@@ -44,7 +44,6 @@ import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
-import { exportAsImage } from './utils/exportAsImage/exportAsImage';
 import { fileSaver, SHARED_FILENAME } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
@@ -52,7 +51,6 @@ import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
 import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
-import { openFile } from './utils/openFile';
 import { unindent } from './utils/unindent';
 
 import styles from './Editor.module.scss';
@@ -71,11 +69,8 @@ export const Editor: FC<Props> = ({
   const [highlightedCode, setHighlightedCode] = useState('');
   const [selection, setSelection] = useState<Selection>({ start: 0, end: 0 });
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
-  const [
-    activeFileName,
-    previouslyActiveFileName,
-    setActiveFileName,
-  ] = useMemState<string>(files[0].name);
+  const [activeFileName, previouslyActiveFileName, setActiveFileName] =
+    useMemState<string>(files[0].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
@@ -268,6 +263,13 @@ export const Editor: FC<Props> = ({
     }
   }
 
+  async function exportCodeSnippet(): Promise<void> {
+    const { exportAsImage } = await import(
+      './utils/exportAsImage/exportAsImage'
+    );
+    await exportAsImage(code, highlightedCode);
+  }
+
   async function format(): Promise<void> {
     try {
       const { language } = activeFile;
@@ -364,6 +366,7 @@ export const Editor: FC<Props> = ({
 
   async function open(file?: File): Promise<void> {
     try {
+      const { openFile } = await import('./utils/openFile');
       const editorFile = await openFile(file);
 
       if (editorFile !== undefined) {
@@ -424,7 +427,7 @@ export const Editor: FC<Props> = ({
         <ToolButton
           disabled={code.length === 0}
           icon={faCamera}
-          onClick={() => exportAsImage(code, highlightedCode)}
+          onClick={exportCodeSnippet}
           title="Export as image"
         />
       </Toolbar>

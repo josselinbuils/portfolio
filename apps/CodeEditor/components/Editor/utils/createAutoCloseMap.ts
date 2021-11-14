@@ -1,6 +1,6 @@
-export function createAutoCLoseMap(
-  groups: string[]
-): { [openChar: string]: string } {
+export function createAutoCLoseMap(groups: string[]): {
+  [openChar: string]: string;
+} {
   const map = {} as { [openChar: string]: string };
 
   groups.forEach((group) => {

@@ -1,18 +1,18 @@
-import { BuiltInParserName, Plugin } from 'prettier';
+import type { BuiltInParserName, Plugin } from 'prettier';
 import { EditableState } from '../../../interfaces/EditableState';
 import { createSelection } from '../../../utils/createSelection';
+
+interface Parser {
+  name: string;
+  parserFactory(): Promise<{ default: Plugin }>;
+}
 
 const parserDescriptors = {
   javascript: {
     name: 'babel',
     parserFactory: () => import('prettier/parser-babel'),
   },
-} as {
-  [language: string]: {
-    name: string;
-    parserFactory(): Promise<{ default: Plugin }>;
-  };
-};
+} as { [language: string]: Parser };
 
 export function canFormat(language: string): boolean {
   return parserDescriptors[language] !== undefined;

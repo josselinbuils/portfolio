@@ -64,9 +64,7 @@ export class Dataset extends Model implements CoordinateSpace {
     ];
   }
 
-  getLimitsAlongAxe(
-    axe: number[]
-  ): {
+  getLimitsAlongAxe(axe: number[]): {
     max: { point: number[]; positionOnAxe: number };
     min: { point: number[]; positionOnAxe: number };
   } {

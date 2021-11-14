@@ -1,5 +1,4 @@
 import dicomParser from 'dicom-parser';
-import cloneDeep from 'lodash.clonedeep';
 import { PhotometricInterpretation } from '../constants';
 import { DicomFrame } from '../models/DicomFrame';
 
@@ -143,7 +142,7 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
       }
 
       for (let i = 0; i < numberOfFrames; i++) {
-        const frame = cloneDeep(instance);
+        const frame = JSON.parse(JSON.stringify(instance));
         const byteOffset =
           pixelData.byteOffset + frameLength * pixelData.BYTES_PER_ELEMENT * i;
 

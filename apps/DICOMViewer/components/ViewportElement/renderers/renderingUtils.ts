@@ -99,14 +99,8 @@ export function getRenderingProperties(
     viewportSpaceImageY0
   );
 
-  const {
-    imageX0,
-    imageY0,
-    imageX1,
-    imageY1,
-    lastPixelX,
-    lastPixelY,
-  } = viewportSpace;
+  const { imageX0, imageY0, imageX1, imageY1, lastPixelX, lastPixelY } =
+    viewportSpace;
   const isImageInViewport =
     imageY0 <= lastPixelY &&
     imageX0 <= lastPixelX &&
@@ -117,9 +111,8 @@ export function getRenderingProperties(
     return undefined;
   }
 
-  const boundedViewportSpace = computeBoundedViewportSpaceCoordinates(
-    viewportSpace
-  );
+  const boundedViewportSpace =
+    computeBoundedViewportSpaceCoordinates(viewportSpace);
   const imageSpace = computeImageSpace(imageWidth, imageHeight, viewportSpace);
 
   return {
@@ -255,9 +248,7 @@ function computeViewportSpaceCoordinates(
   };
 }
 
-function getImageDimensions(
-  viewport: Viewport
-):
+function getImageDimensions(viewport: Viewport):
   | {
       height: number;
       heightMm: number;

@@ -116,12 +116,8 @@ export class JSFrameRenderer implements Renderer {
       return;
     }
 
-    const {
-      boundedViewportSpace,
-      leftLimit,
-      rightLimit,
-      imageSpace,
-    } = renderingProperties;
+    const { boundedViewportSpace, leftLimit, rightLimit, imageSpace } =
+      renderingProperties;
     const {
       displayHeight,
       displayWidth,
@@ -202,20 +198,10 @@ export class JSFrameRenderer implements Renderer {
       return;
     }
 
-    const {
-      boundedViewportSpace,
-      leftLimit,
-      rightLimit,
-      viewportSpace,
-    } = renderingProperties;
-    const {
-      imageHeight,
-      imageWidth,
-      imageX0,
-      imageX1,
-      imageY0,
-      imageY1,
-    } = boundedViewportSpace as BoundedViewportSpaceCoordinates;
+    const { boundedViewportSpace, leftLimit, rightLimit, viewportSpace } =
+      renderingProperties;
+    const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
+      boundedViewportSpace as BoundedViewportSpaceCoordinates;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;

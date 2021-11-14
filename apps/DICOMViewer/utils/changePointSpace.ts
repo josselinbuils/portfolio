@@ -12,16 +12,17 @@ export function changePointSpace(
   originalSpace: CoordinateSpace,
   finalSpace: CoordinateSpace
 ): number[] {
-  const originalSpaceToWorldMatrix = getWorldTransformationMatrix(originalSpace)
-    .to;
+  const originalSpaceToWorldMatrix =
+    getWorldTransformationMatrix(originalSpace).to;
   const worldPoint = M4(originalSpaceToWorldMatrix).mulVec([...point, 1]);
   const worldToFinalSpaceMatrix = getWorldTransformationMatrix(finalSpace).from;
   return M4(worldToFinalSpaceMatrix).mulVec(worldPoint).slice(0, 3);
 }
 
-function getWorldTransformationMatrix(
-  space: CoordinateSpace
-): { from: number[][]; to: number[][] } {
+function getWorldTransformationMatrix(space: CoordinateSpace): {
+  from: number[][];
+  to: number[][];
+} {
   const basis = space.getWorldBasis();
   const origin = space.getWorldOrigin();
   const cacheKey = `${basis}${origin}`;

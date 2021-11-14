@@ -15,9 +15,9 @@ export async function requestJamendoAPI<T>(
 
   Logger.info(`-> GET ${url}`);
 
-  const { headers, results } = (await httpClient.get(url)) as JamendoResponse<
-    T
-  >;
+  const { headers, results } = (await httpClient.get(
+    url
+  )) as JamendoResponse<T>;
 
   if (headers.status === 'success') {
     return results;

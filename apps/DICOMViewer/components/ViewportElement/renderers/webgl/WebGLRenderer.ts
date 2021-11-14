@@ -43,14 +43,8 @@ export class WebGLRenderer implements Renderer {
 
   render(viewport: Viewport): void {
     const { gl } = this;
-    const {
-      dataset,
-      camera,
-      height,
-      width,
-      windowCenter,
-      windowWidth,
-    } = viewport;
+    const { dataset, camera, height, width, windowCenter, windowWidth } =
+      viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { id, imageFormat, rescaleIntercept, rescaleSlope } = frame;
 
@@ -167,9 +161,7 @@ export class WebGLRenderer implements Renderer {
     return program;
   }
 
-  private createShaders(
-    imageFormat: NormalizedImageFormat
-  ): {
+  private createShaders(imageFormat: NormalizedImageFormat): {
     fragmentShader: WebGLShader;
     vertexShader: WebGLShader;
   } {

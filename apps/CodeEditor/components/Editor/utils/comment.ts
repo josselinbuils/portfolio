@@ -63,9 +63,9 @@ export function comment(
 
   const commentOffset = lineOffsets.reduce(
     (currentCommentOffset, lineOffset) => {
-      const lineCommentOffset = Array.from(
-        getLine(code, lineOffset)
-      ).findIndex((char) => /\S/.test(char));
+      const lineCommentOffset = Array.from(getLine(code, lineOffset)).findIndex(
+        (char) => /\S/.test(char)
+      );
 
       return lineCommentOffset >= 0
         ? Math.min(currentCommentOffset, lineCommentOffset)

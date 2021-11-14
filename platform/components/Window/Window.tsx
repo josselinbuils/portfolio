@@ -139,16 +139,8 @@ export class Window extends Component<WindowProps, State> {
       titleColor,
       zIndex,
     } = props;
-    const {
-      animated,
-      frozen,
-      height,
-      left,
-      maximized,
-      minimized,
-      top,
-      width,
-    } = state;
+    const { animated, frozen, height, left, maximized, minimized, top, width } =
+      state;
 
     const className = cn(styles.window, {
       [styles.active]: active,
@@ -207,12 +199,8 @@ export class Window extends Component<WindowProps, State> {
       this.startAnimation()
         .ready(() => {
           if (this.lastDisplayProperties.minimize !== undefined) {
-            const {
-              left,
-              top,
-              width,
-              height,
-            } = this.lastDisplayProperties.minimize;
+            const { left, top, width, height } =
+              this.lastDisplayProperties.minimize;
 
             this.setState({ minimized: false });
             this.setSize(width, height);
@@ -365,12 +353,8 @@ export class Window extends Component<WindowProps, State> {
           state.maximized &&
           this.lastDisplayProperties.maximize !== undefined
         ) {
-          const {
-            height,
-            left,
-            top,
-            width,
-          } = this.lastDisplayProperties.maximize;
+          const { height, left, top, width } =
+            this.lastDisplayProperties.maximize;
 
           this.setState({ maximized: false });
 

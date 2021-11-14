@@ -1,20 +1,15 @@
 import { MouseButton } from '~/platform/constants';
 import { MouseTool } from '../constants';
 import { Viewport } from '../models/Viewport';
-import { startPaging } from './tools/startPaging';
-import { startPan } from './tools/startPan';
-import { startRotate } from './tools/startRotate';
-import { startWindowing } from './tools/startWindowing';
-import { startZoom } from './tools/startZoom';
 
-export function startTool(
+export async function startTool(
   downEvent: MouseEvent,
   viewport: Viewport,
   activeLeftTool: MouseTool,
   activeMiddleTool?: MouseTool,
   activeRightTool?: MouseTool,
   onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {}
-): void {
+): Promise<void> {
   downEvent.preventDefault();
 
   const isMacOS = navigator.platform.indexOf('Mac') !== -1;
@@ -46,21 +41,36 @@ export function startTool(
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
-    case MouseTool.Paging:
+    case MouseTool.Paging: {
+      const { startPaging } = await import('./tools/startPaging');
       moveListener = startPaging(viewport, downEvent);
       break;
-    case MouseTool.Pan:
+    }
+
+    case MouseTool.Pan: {
+      const { startPan } = await import('./tools/startPan');
       moveListener = startPan(viewport, downEvent);
       break;
-    case MouseTool.Rotate:
+    }
+
+    case MouseTool.Rotate: {
+      const { startRotate } = await import('./tools/startRotate');
       moveListener = startRotate(viewport, downEvent, handleToolUpdate);
       break;
-    case MouseTool.Windowing:
+    }
+
+    case MouseTool.Windowing: {
+      const { startWindowing } = await import('./tools/startWindowing');
       moveListener = startWindowing(viewport, downEvent, handleToolUpdate);
       break;
-    case MouseTool.Zoom:
+    }
+
+    case MouseTool.Zoom: {
+      const { startZoom } = await import('./tools/startZoom');
       moveListener = startZoom(viewport, downEvent, handleToolUpdate);
       break;
+    }
+
     default:
       throw new Error('Unknown tool');
   }
