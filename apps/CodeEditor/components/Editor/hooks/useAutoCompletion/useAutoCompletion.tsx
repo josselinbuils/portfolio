@@ -79,7 +79,7 @@ export function useAutoCompletion({
           },
           position: {
             x: x + cursorPosition.x,
-            y: y + cursorPosition.y,
+            y: y + cursorPosition.y - textAreaElement.scrollTop,
           },
         });
 
