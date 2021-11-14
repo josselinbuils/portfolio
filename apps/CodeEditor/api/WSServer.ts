@@ -128,10 +128,10 @@ export class WSServer {
       this.sendCursors();
     });
 
-    wsClient.on('message', (message: string) => {
+    wsClient.on('message', (data) => {
       this.requestQueue.enqueue(() => {
         try {
-          const action = JSON.parse(message) as Action;
+          const action = JSON.parse(data.toString()) as Action;
           this.reduce(wsClient, action);
         } catch (error: any) {
           Logger.error(error.stack);
