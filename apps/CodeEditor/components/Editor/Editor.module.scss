@@ -1,6 +1,6 @@
 @import '../../constants';
 
-.autoCompletionMenu {
+ul.autoCompletionMenu {
   @include scrollbar;
 
   overflow: auto;
