@@ -4,8 +4,9 @@ const withTM = require('next-transpile-modules')([
 ]);
 
 let nextConfig = withTM({
+  cleanDistDir: false,
   eslint: { ignoreDuringBuilds: true },
-  images: { imageSizes: [202] },
+  images: { imageSizes: [202, 404] },
   productionBrowserSourceMaps: true,
 });
 

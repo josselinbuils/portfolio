@@ -2,21 +2,15 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Image } from '~/platform/components/Image/Image';
+import Image from 'next/image';
 import { Executor } from '../Executor';
+import me from './me.png';
 
 import styles from './About.module.scss';
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <Image
-      alt="me"
-      fallbackSrc="/me-1x.jpg"
-      height={269}
-      loading="eager"
-      srcSet="/me-1x.webp, /me-2x.webp 2x"
-      width={202}
-    />
+    <Image alt="me" height={269} layout="fixed" priority src={me} width={202} />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I&apos;m Josselin, a full-stack JavaScript developer :)

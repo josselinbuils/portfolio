@@ -1,9 +1,14 @@
 /* eslint-disable max-classes-per-file */
 import fs from 'fs';
-import Document, { Head, Html, Main, NextScript } from 'next/document';
+import Document, {
+  Head as NextHead,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document';
 import path from 'path';
 
-class InlineStylesHead extends Head {
+class Head extends NextHead {
   getCssLinks({ allFiles }: DocumentFiles): JSX.Element[] | null {
     return allFiles
       .filter((file) => file.endsWith('.css'))
@@ -17,13 +22,17 @@ class InlineStylesHead extends Head {
         />
       ));
   }
+  // eslint-disable-next-line class-methods-use-this
+  getPolyfillScripts(): JSX.Element[] {
+    return [];
+  }
 }
 
 export default class CustomDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <InlineStylesHead />
+        <Head />
         <body>
           <Main />
           <NextScript />
