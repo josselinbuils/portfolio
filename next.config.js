@@ -7,7 +7,6 @@ let nextConfig = withTM({
   eslint: { ignoreDuringBuilds: true },
   images: { imageSizes: [202] },
   productionBrowserSourceMaps: true,
-  swcMinify: true,
 });
 
 if (process.env.ANALYZE === 'true') {
