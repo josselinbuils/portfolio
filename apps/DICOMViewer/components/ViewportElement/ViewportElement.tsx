@@ -29,123 +29,117 @@ export const ViewportElement: FC<Props> = ({
   const [viewportWidth, viewportHeight] = useElementSize(canvasElementRef);
 
   useEffect(() => {
-    (async () => {
-      if (!viewport) {
-        return;
-      }
-      const canvasElement = canvasElementRef.current as HTMLCanvasElement;
-      let renderer: Renderer;
-      let frameDurations: number[] = [];
-      let renderDurations: number[] = [];
-      let lastTime = 0;
-      let requestID: number;
+    if (!viewport) {
+      return;
+    }
+    const canvasElement = canvasElementRef.current as HTMLCanvasElement;
+    let renderer: Renderer | undefined;
+    let frameDurations: number[] = [];
+    let renderDurations: number[] = [];
+    let lastTime = 0;
+    let requestID: number;
 
-      try {
+    Promise.resolve()
+      .then<new (canvas: HTMLCanvasElement) => Renderer>(() => {
         switch (viewport.rendererType) {
-          case RendererType.JavaScript: {
+          case RendererType.JavaScript:
             if (viewport.viewType === ViewType.Native) {
-              const { JSFrameRenderer } = await import(
-                './renderers/js/JSFrameRenderer'
+              return import('./renderers/js/JSFrameRenderer').then(
+                (m) => m.JSFrameRenderer
               );
-              renderer = new JSFrameRenderer(canvasElement);
-            } else {
-              const { JSVolumeRenderer } = await import(
-                './renderers/js/JSVolumeRenderer'
-              );
-              renderer = new JSVolumeRenderer(canvasElement);
             }
-            break;
-          }
-
-          case RendererType.WebGL: {
-            const { WebGLRenderer } = await import(
-              './renderers/webgl/WebGLRenderer'
+            return import('./renderers/js/JSVolumeRenderer').then(
+              (m) => m.JSVolumeRenderer
             );
-            renderer = new WebGLRenderer(canvasElement);
-            break;
-          }
+
+          case RendererType.WebGL:
+            return import('./renderers/webgl/WebGLRenderer').then(
+              (m) => m.WebGLRenderer
+            );
 
           default:
             throw new Error('Unknown renderer type');
         }
-      } catch (error) {
+      })
+      .then((ViewportRenderer) => {
+        renderer = new ViewportRenderer(canvasElement);
+      })
+      .catch((error) => {
         onError(`Unable to instantiate ${viewport.rendererType} renderer`);
         console.error(error);
+      });
+
+    const render = () => {
+      if (!canvasElementRef.current || !renderer || !viewport) {
+        return;
       }
 
-      const render = () => {
-        if (!canvasElementRef.current || !renderer || !viewport) {
-          return;
-        }
+      if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
+        const t = performance.now();
 
-        if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
-          const t = performance.now();
+        try {
+          renderer.render(viewport);
+          viewport.makeClean();
+          renderDurations.push(performance.now() - t);
 
-          try {
-            renderer.render(viewport);
-            viewport.makeClean();
-            renderDurations.push(performance.now() - t);
-
-            if (lastTime > 0) {
-              frameDurations.push(t - lastTime);
-            }
-            lastTime = t;
-          } catch (error) {
-            onError('Unable to render viewport');
-            console.error(error);
-            return;
+          if (lastTime > 0) {
+            frameDurations.push(t - lastTime);
           }
-        }
-
-        requestID = window.requestAnimationFrame(render);
-      };
-
-      const statsInterval = window.setInterval(() => {
-        if (viewport === undefined) {
+          lastTime = t;
+        } catch (error) {
+          onError('Unable to render viewport');
+          console.error(error);
           return;
         }
-        let fps: number;
-        let meanRenderDuration: number;
+      }
 
-        if (frameDurations.length > 1) {
-          const meanFrameDuration =
-            frameDurations.reduce((sum, d) => sum + d, 0) /
-            frameDurations.length;
-          fps = Math.round(1000 / meanFrameDuration);
-          frameDurations = [];
-        } else {
-          fps = 0;
-        }
+      requestID = window.requestAnimationFrame(render);
+    };
 
-        if (renderDurations.length > 0) {
-          meanRenderDuration =
-            renderDurations.reduce((sum, d) => sum + d, 0) /
-            renderDurations.length;
-          renderDurations = [];
-        } else {
-          meanRenderDuration = 0;
-        }
+    const statsInterval = window.setInterval(() => {
+      if (viewport === undefined) {
+        return;
+      }
+      let fps: number;
+      let meanRenderDuration: number;
 
-        const stats: { fps: number; meanRenderDuration?: number } = { fps };
+      if (frameDurations.length > 1) {
+        const meanFrameDuration =
+          frameDurations.reduce((sum, d) => sum + d, 0) / frameDurations.length;
+        fps = Math.round(1000 / meanFrameDuration);
+        frameDurations = [];
+      } else {
+        fps = 0;
+      }
 
-        if (meanRenderDuration !== 0) {
-          stats.meanRenderDuration = meanRenderDuration;
-        }
+      if (renderDurations.length > 0) {
+        meanRenderDuration =
+          renderDurations.reduce((sum, d) => sum + d, 0) /
+          renderDurations.length;
+        renderDurations = [];
+      } else {
+        meanRenderDuration = 0;
+      }
 
-        onStatsUpdate(stats);
-      }, ANNOTATIONS_REFRESH_DELAY);
+      const stats: { fps: number; meanRenderDuration?: number } = { fps };
 
-      render();
+      if (meanRenderDuration !== 0) {
+        stats.meanRenderDuration = meanRenderDuration;
+      }
 
-      return () => {
-        cancelAnimationFrame(requestID);
-        clearInterval(statsInterval);
+      onStatsUpdate(stats);
+    }, ANNOTATIONS_REFRESH_DELAY);
 
-        if (renderer.destroy) {
-          renderer.destroy();
-        }
-      };
-    })();
+    render();
+
+    return () => {
+      cancelAnimationFrame(requestID);
+      clearInterval(statsInterval);
+
+      if (renderer?.destroy) {
+        renderer.destroy();
+      }
+    };
   }, [canvasElementRef, onError, onStatsUpdate, viewport]);
 
   useLayoutEffect(() => {
