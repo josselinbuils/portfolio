@@ -70,11 +70,14 @@ export const ViewportElement: FC<Props> = ({
       });
 
     const render = () => {
-      if (!canvasElementRef.current || !renderer || !viewport) {
-        return;
-      }
-
-      if (viewport.isDirty() && viewport.width > 0 && viewport.height > 0) {
+      if (
+        canvasElementRef.current &&
+        renderer &&
+        viewport &&
+        viewport.isDirty() &&
+        viewport.width > 0 &&
+        viewport.height > 0
+      ) {
         const t = performance.now();
 
         try {
