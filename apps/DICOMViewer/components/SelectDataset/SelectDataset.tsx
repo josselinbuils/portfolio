@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { FC, useEffect, useLayoutEffect, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
+import { preloadImage } from '~/platform/utils/preloadImage';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';
@@ -25,6 +26,12 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
       loadDatasetList()
     );
     datasetsPromise
+      .then(async (descriptors) => {
+        await Promise.all(
+          descriptors.map(({ previewURL }) => preloadImage(previewURL))
+        );
+        return descriptors;
+      })
       .then(setDatasetDescriptors)
       .catch((error) => {
         onError('Unable to retrieve datasets');
