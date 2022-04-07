@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { serveStatic } from 'next/dist/server/serve-static';
 import path from 'path';
 import { HTTP_NOT_FOUND } from '~/platform/api/constants';
 import { DATASETS_PATH, MAX_AGE } from './constants';
@@ -17,23 +16,32 @@ export async function getDataset(
     return;
   }
 
+  const compressedAssetPath = `${assetPath}.gz`;
+  const isCompressed = fs.existsSync(compressedAssetPath);
+
   res.setHeader('Cache-Control', `public, max-age=${MAX_AGE}, immutable`);
+  res.setHeader('Content-Type', 'application/octet-stream');
 
-  if (fs.existsSync(`${assetPath}.gz`)) {
-    const { size } = fs.statSync(assetPath);
-
+  if (isCompressed) {
     res.setHeader(
       'Access-Control-Expose-Headers',
       'Content-Length-Uncompressed'
     );
     res.setHeader('Content-Encoding', 'gzip');
-    res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Length-Uncompressed', size.toString());
-
-    return serveStatic(req, res, `${assetPath}.gz`);
+    res.setHeader(
+      'Content-Length-Uncompressed',
+      fs.statSync(assetPath).size.toString()
+    );
   }
 
-  res.setHeader('Access-Control-Expose-Headers', 'Content-Length');
+  const assetToSendPath = isCompressed ? compressedAssetPath : assetPath;
 
-  return serveStatic(req, res, assetPath);
+  res.setHeader('Content-Length', fs.statSync(assetToSendPath).size.toString());
+
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(assetToSendPath)
+      .on('error', reject)
+      .on('finish', resolve)
+      .pipe(res);
+  });
 }

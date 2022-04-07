@@ -17,7 +17,6 @@ const MANDATORY_FIELDS = [
   'columns',
   'imageOrientation',
   'imagePosition',
-  'patientName',
   'photometricInterpretation',
   'pixelData',
   'pixelRepresentation',
@@ -46,7 +45,7 @@ export class Frame extends Model {
   columns!: number;
   imageOrientation!: number[][];
   imagePosition!: number[];
-  patientName!: string;
+  patientName?: string;
   photometricInterpretation!: PhotometricInterpretation;
   pixelData?: Int16Array | Uint8Array;
   pixelRepresentation!: PixelRepresentation;

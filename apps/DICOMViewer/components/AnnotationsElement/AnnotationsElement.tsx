@@ -1,5 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, RefObject, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
@@ -79,7 +81,7 @@ export const AnnotationsElement: FC<Props> = ({
           ref={viewTypeElementRef}
           type="button"
         >
-          {viewType}
+          {viewType} <FontAwesomeIcon icon={faSquareCaretDown} />
         </button>
       </div>
       <div className={styles.overlayTopRight}>
@@ -91,7 +93,7 @@ export const AnnotationsElement: FC<Props> = ({
             ref={rendererElementRef}
             type="button"
           >
-            {rendererType || '-'}
+            {rendererType || '-'} <FontAwesomeIcon icon={faSquareCaretDown} />
           </button>
         </p>
         <p className={styles.annotation}>

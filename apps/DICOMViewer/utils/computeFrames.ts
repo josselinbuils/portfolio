@@ -124,7 +124,9 @@ function getDicomImageFormat(
     const isSigned = pixelRepresentation === PixelRepresentation.Signed;
     format = `${isSigned ? '' : 'u'}int${bitsAllocated <= 8 ? '8' : '16'}`;
   } else {
-    throw new Error('Unsupported photometric interpretation');
+    throw new Error(
+      `Unsupported photometric interpretation: ${photometricInterpretation}`
+    );
   }
 
   return format as DicomImageFormat;

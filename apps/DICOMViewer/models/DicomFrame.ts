@@ -4,7 +4,6 @@ import { Model } from './Model';
 const MANDATORY_FIELDS = [
   'bitsAllocated',
   'columns',
-  'patientName',
   'photometricInterpretation',
   'pixelData',
   'pixelRepresentation',
@@ -17,7 +16,7 @@ export class DicomFrame extends Model {
   columns!: number;
   imageOrientation?: number[][];
   imagePosition?: number[];
-  patientName!: string;
+  patientName?: string;
   photometricInterpretation!: PhotometricInterpretation;
   pixelData?: Uint8Array;
   pixelRepresentation!: PixelRepresentation;
