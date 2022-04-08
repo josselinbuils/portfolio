@@ -262,24 +262,20 @@ export class JSVolumeRenderer implements Renderer {
     const { dimensionsVoxels } = dataset.volume as Volume;
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
-    let pointLPS = JSVolumeRenderer.getPointLPS(
-      imageWorldOrigin,
-      xAxis,
-      yAxis,
-      displayX0,
-      displayY0
-    );
 
     for (let y = displayY0; y <= displayY1; y++) {
       for (let x = displayX0; x <= displayX1; x++) {
-        const newPointLPS = pointLPS.slice();
+        const pointLPS = JSVolumeRenderer.getPointLPS(
+          imageWorldOrigin,
+          xAxis,
+          yAxis,
+          x,
+          y
+        );
         let pixelValue;
 
         for (let i = 0; i < dimensionsVoxels[1]; i++) {
-          const rawPixelValue = JSVolumeRenderer.getRawValue(
-            dataset,
-            newPointLPS
-          );
+          const rawPixelValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
 
           if (rawPixelValue > targetValue) {
             pixelValue = getPixelValue(
@@ -289,24 +285,13 @@ export class JSVolumeRenderer implements Renderer {
 
             break;
           }
-          newPointLPS[0] += direction[0];
-          newPointLPS[1] += direction[1];
-          newPointLPS[2] += direction[2];
+          pointLPS[0] += direction[0];
+          pointLPS[1] += direction[1];
+          pointLPS[2] += direction[2];
         }
 
         imageData32[dataIndex++] = pixelValue || 0 | 0;
-
-        pointLPS[0] += xAxis[0];
-        pointLPS[1] += xAxis[1];
-        pointLPS[2] += xAxis[2];
       }
-      pointLPS = JSVolumeRenderer.getPointLPS(
-        imageWorldOrigin,
-        xAxis,
-        yAxis,
-        displayX0,
-        y
-      );
     }
 
     drawImageData(
