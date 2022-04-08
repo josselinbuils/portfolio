@@ -110,6 +110,10 @@ const DICOMViewer: WindowComponent = ({
     [viewportStats]
   );
 
+  useLayoutEffect(() => {
+    setErrorMessage(undefined);
+  }, [dataset, viewport, rendererType]);
+
   const handleViewportResize = useCallback(() => {
     if (viewport !== undefined) {
       setAnnotations((previousAnnotations) => ({
@@ -120,8 +124,6 @@ const DICOMViewer: WindowComponent = ({
   }, [viewport]);
 
   function back(): void {
-    setErrorMessage(undefined);
-
     if (dataset) {
       dataset.destroy();
       setAnnotations({});
