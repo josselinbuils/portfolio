@@ -1,4 +1,5 @@
 import dicomParser from 'dicom-parser';
+import { extendError } from '~/platform/utils/extendError';
 import { PhotometricInterpretation } from '../constants';
 import { DicomFrame } from '../models/DicomFrame';
 
@@ -88,7 +89,7 @@ function floatStringsToArray(
 async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
   try {
     const dicomData = new Uint8Array(dicomBuffer);
-    const parsedFile = parseDicom(dicomData);
+    const parsedFile: ParsedDicomFile = dicomParser.parseDicom(dicomData);
 
     /**
      * DICOM fields
@@ -173,17 +174,7 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
 
     return frames;
   } catch (error: unknown) {
-    console.error(error);
-    throw new Error('Unable to load DICOM instance');
-  }
-}
-
-function parseDicom(data: Uint8Array): ParsedDicomFile {
-  try {
-    return dicomParser.parseDicom(data);
-  } catch (error: unknown) {
-    console.error(error);
-    throw new Error('Unable to parse DICOM');
+    throw extendError('Unable to load DICOM instance', error);
   }
 }
 

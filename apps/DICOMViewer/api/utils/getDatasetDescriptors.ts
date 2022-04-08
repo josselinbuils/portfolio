@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { decodeFrames } from '~/apps/DICOMViewer/utils/decodeFrames';
 import { Logger } from '~/platform/api/Logger';
+import { extendError } from '~/platform/utils/extendError';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { computeFrames } from '../../utils/computeFrames';
+import { decodeFrames } from '../../utils/decodeFrames';
 import { isVolume } from '../../utils/isVolume';
 import {
   DATASETS_PATH,
@@ -44,10 +45,17 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
 }
 
 async function is3DDataset(fileName: string): Promise<boolean> {
-  const buffer = await fs.readFile(path.join(DATASETS_PATH, fileName));
-  const fileBuffers = /\.tar$/.test(fileName)
-    ? (await untar(buffer)).map((res: any) => res.buffer)
-    : [buffer];
-  const frames = computeFrames(await decodeFrames(fileBuffers));
-  return isVolume(frames);
+  try {
+    const buffer = await fs.readFile(path.join(DATASETS_PATH, fileName));
+    const fileBuffers = /\.tar$/.test(fileName)
+      ? (await untar(buffer)).map((res: any) => res.buffer)
+      : [buffer];
+    const frames = computeFrames(await decodeFrames(fileBuffers));
+    return isVolume(frames);
+  } catch (error) {
+    throw extendError(
+      `Unable to determine if "${fileName}" is a 3D dataset`,
+      error
+    );
+  }
 }
