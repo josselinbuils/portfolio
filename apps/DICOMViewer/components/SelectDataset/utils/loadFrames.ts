@@ -1,18 +1,16 @@
-import untar from 'js-untar';
 import { onFetchProgress } from '~/platform/utils/onFetchProgress';
 import { DatasetDescriptor } from '../../../interfaces/DatasetDescriptor';
 import { DicomFrame } from '../../../models/DicomFrame';
 import { decodeFrames } from '../../../utils/decodeFrames';
+import { untar } from '../../../utils/untar';
 
 export async function loadFrames(
   descriptor: DatasetDescriptor,
   onProgress: (progress: number) => void
 ): Promise<DicomFrame[]> {
-  const { url } = descriptor;
-  const buffer = await getDICOMFile(url, onProgress);
-  const fileBuffers = /\.tar$/.test(url)
-    ? (await untar(buffer)).map((res: any) => res.buffer)
-    : [buffer];
+  const { name, url } = descriptor;
+  const content = await getDICOMFile(url, onProgress);
+  const fileBuffers = /\.tar$/.test(url) ? untar(content) : [{ name, content }];
 
   return decodeFrames(fileBuffers);
 }

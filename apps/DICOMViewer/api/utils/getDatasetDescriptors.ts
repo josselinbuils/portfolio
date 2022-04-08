@@ -6,13 +6,13 @@ import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { computeFrames } from '../../utils/computeFrames';
 import { decodeFrames } from '../../utils/decodeFrames';
 import { isVolume } from '../../utils/isVolume';
+import { untar } from '../../utils/untar';
 import {
   DATASETS_PATH,
   DATASETS_URL,
   PREVIEWS_PATH,
   PREVIEWS_URL,
 } from '../constants';
-import { untar } from './untar';
 
 export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
   Logger.info(`Loads datasets from ${DATASETS_PATH}`);
@@ -46,11 +46,13 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
 
 async function is3DDataset(fileName: string): Promise<boolean> {
   try {
-    const buffer = await fs.readFile(path.join(DATASETS_PATH, fileName));
-    const fileBuffers = /\.tar$/.test(fileName)
-      ? (await untar(buffer)).map((res: any) => res.buffer)
-      : [buffer];
-    const frames = computeFrames(await decodeFrames(fileBuffers));
+    const { buffer: content } = await fs.readFile(
+      path.join(DATASETS_PATH, fileName)
+    );
+    const files = /\.tar$/.test(fileName)
+      ? untar(content)
+      : [{ name: fileName, content }];
+    const frames = computeFrames(await decodeFrames(files));
     return isVolume(frames);
   } catch (error) {
     throw extendError(

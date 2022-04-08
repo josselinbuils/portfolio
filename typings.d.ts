@@ -1,5 +1,4 @@
 declare module 'dicom-parser';
-declare module 'js-untar';
 
 declare class ResizeObserver {
   disconnect: () => void;

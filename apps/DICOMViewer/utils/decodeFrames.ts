@@ -1,20 +1,19 @@
 import dicomParser from 'dicom-parser';
 import { extendError } from '~/platform/utils/extendError';
 import { PhotometricInterpretation } from '../constants';
+import { File } from '../interfaces/File';
 import { DicomFrame } from '../models/DicomFrame';
 
-export async function decodeFrames(
-  fileBuffers: ArrayBuffer[]
-): Promise<DicomFrame[]> {
+export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
   let frames: DicomFrame[];
 
-  if (fileBuffers.length === 1) {
-    frames = await loadInstance(fileBuffers[0]);
-  } else if (fileBuffers.length > 0) {
+  if (files.length === 1) {
+    frames = await loadInstance(files[0]);
+  } else if (files.length > 0) {
     frames = [];
 
     const instanceFramesList = await Promise.all(
-      fileBuffers.map((fileBuffer) => loadInstance(fileBuffer))
+      files.map((file) => loadInstance(file))
     );
     for (const instanceFrames of instanceFramesList) {
       frames.push(...instanceFrames);
@@ -86,9 +85,9 @@ function floatStringsToArray(
   return undefined;
 }
 
-async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
+async function loadInstance(file: File): Promise<DicomFrame[]> {
   try {
-    const dicomData = new Uint8Array(dicomBuffer);
+    const dicomData = new Uint8Array(file.content);
     const parsedFile: ParsedDicomFile = dicomParser.parseDicom(dicomData);
 
     /**
@@ -174,7 +173,10 @@ async function loadInstance(dicomBuffer: ArrayBuffer): Promise<DicomFrame[]> {
 
     return frames;
   } catch (error: unknown) {
-    throw extendError('Unable to load DICOM instance', error);
+    throw extendError(
+      `Unable to load DICOM instance from "${file.name}"`,
+      error
+    );
   }
 }
 
