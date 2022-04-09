@@ -559,7 +559,11 @@ export class Window extends Component<WindowProps, State> {
   }: React.FocusEvent): void => {
     const windowRef = this.windowRef.current;
 
-    if (currentTarget === windowRef || windowRef?.contains(currentTarget)) {
+    if (
+      !windowRef ||
+      currentTarget === windowRef ||
+      windowRef?.contains(currentTarget)
+    ) {
       return;
     }
 
