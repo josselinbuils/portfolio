@@ -1,4 +1,5 @@
 import { getBaseURL } from '~/platform/utils/getBaseURL';
+import { preloadImage } from '~/platform/utils/preloadImage';
 import { Music } from '../interfaces/Music';
 
 export async function loadMusics(
@@ -10,5 +11,7 @@ export async function loadMusics(
       jamendoTag ? `&tag=${jamendoTag}` : ''
     }`
   );
-  return response.json();
+  const musics = (await response.json()) as Music[];
+  await Promise.all(musics.map(({ image }) => preloadImage(image)));
+  return musics;
 }
