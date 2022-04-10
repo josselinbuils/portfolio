@@ -10,11 +10,11 @@ import { requestJamendoAPI } from './utils/requestJamendoAPI';
 export async function getTracks(req: NextApiRequest): Promise<Music[]> {
   const { order, tag } = req.query;
 
-  const jamendoParameters = {
+  const jamendoParameters: JamendoTrackParameters = {
     client_id: config.jamendo.clientId,
     format: 'json',
     limit: '50',
-  } as JamendoTrackParameters;
+  };
 
   if (tag) {
     jamendoParameters.tags = tag as string;

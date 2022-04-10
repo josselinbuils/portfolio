@@ -2,11 +2,9 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https from 'https';
 import { URL } from 'url';
 
-const protocolClientMap = {
+const protocolClientMap: { [protocol: string]: HTTPClient } = {
   'http:': http,
   'https:': https,
-} as {
-  [protocol: string]: HTTPClient;
 };
 
 export const httpClient = { get };

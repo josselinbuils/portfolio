@@ -7,12 +7,12 @@ interface Parser {
   parserFactory(): Promise<{ default: Plugin }>;
 }
 
-const parserDescriptors = {
+const parserDescriptors: { [language: string]: Parser } = {
   javascript: {
     name: 'babel',
     parserFactory: () => import('prettier/parser-babel'),
   },
-} as { [language: string]: Parser };
+};
 
 export function canFormat(language: string): boolean {
   return parserDescriptors[language] !== undefined;

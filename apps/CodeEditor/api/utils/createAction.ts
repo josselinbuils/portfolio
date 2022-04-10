@@ -21,10 +21,10 @@ export const createAction = {
     payload: { state },
   }),
   updateCode: (diffs: Diff[], newSelection?: Selection): UpdateCodeAction => {
-    const action = {
+    const action: UpdateCodeAction = {
       type: ACTION_UPDATE_CODE,
       payload: { diffs },
-    } as UpdateCodeAction;
+    };
 
     if (newSelection !== undefined) {
       action.payload.newSelection = newSelection;

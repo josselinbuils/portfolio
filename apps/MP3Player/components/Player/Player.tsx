@@ -18,8 +18,6 @@ export const Player: FC<Props> = ({ min, onClickTogglePlaylist }) => {
   );
   const [showSidebar, setShowSidebar] = useState(!isMobile);
 
-  console.log({ isMobile });
-
   useLayoutEffect(() => {
     setShowSidebar(!isMobile);
   }, [isMobile]);

@@ -19,9 +19,9 @@ enum Command {
   Logs = 'logs',
 }
 
-const authTokenRef = { current: undefined } as MutableRefObject<
-  string | undefined
->;
+const authTokenRef: MutableRefObject<string | undefined> = {
+  current: undefined,
+};
 
 export const BuildManager: AsyncExecutor = ({
   alive,

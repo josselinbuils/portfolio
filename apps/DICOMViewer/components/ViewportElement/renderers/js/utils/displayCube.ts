@@ -30,7 +30,7 @@ export function displayCube(
     ['x0y1z0', 'x0y1z1'],
   ];
 
-  const cornersDisplay = { ...volume.corners } as { [key: string]: number[] };
+  const cornersDisplay: { [key: string]: number[] } = { ...volume.corners };
 
   for (const [name, corner] of Object.entries<number[]>(volume.corners)) {
     cornersDisplay[name] = changePointSpace(corner, viewport.dataset, viewport);

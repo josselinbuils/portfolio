@@ -1,9 +1,10 @@
 import { faBlog } from '@fortawesome/free-solid-svg-icons/faBlog';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
-export const BlogDescriptor = {
+export const BlogDescriptor: AppDescriptor = {
   description: 'Stuff I want to share.',
   factory: () => import('./Blog'),
   icon: faBlog,
+  isMobileFriendly: true,
   name: 'Blog',
-} as AppDescriptor;
+};

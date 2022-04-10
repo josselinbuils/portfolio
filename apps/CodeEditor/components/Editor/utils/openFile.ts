@@ -1,6 +1,6 @@
 import { EditorFile } from '../interfaces/EditorFile';
 
-const LANGUAGE = {
+const LANGUAGE: { [language: string]: string } = {
   css: 'css',
   html: 'xml',
   js: 'javascript',
@@ -16,7 +16,7 @@ const LANGUAGE = {
   xml: 'xml',
   yaml: 'yaml',
   yml: 'yaml',
-} as { [language: string]: string };
+};
 
 const MAX_FILE_SIZE_BYTES = 50000;
 

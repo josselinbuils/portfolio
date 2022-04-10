@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WithTooltip } from '~/platform/providers/TooltipProvider/WithTooltip';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
@@ -19,7 +20,6 @@ import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
 
 import styles from './Task.module.scss';
-import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
@@ -47,7 +47,7 @@ export const Task: FC<Props> = forwardRef(
     const windowManager = useInjector(WindowManager);
     const windowInstanceActive = windowInstance && windowInstance.active;
     const running = !!windowInstance || loading;
-    const { icon, iconScale = 1 } = appDescriptor;
+    const { icon, iconScale = 1, isMobileFriendly } = appDescriptor;
 
     useEffect(() => {
       if (taskRef.current !== null && windowInstance !== undefined) {
@@ -96,6 +96,7 @@ export const Task: FC<Props> = forwardRef(
       <WithTooltip className={styles.tooltip} title={tooltip}>
         <button
           className={cn(styles.task, {
+            [styles.notMobileFriendly]: !isMobileFriendly,
             [styles.taskButtonActive]: taskButtonActive,
             [styles.windowInstanceActive]: windowInstanceActive,
           })}

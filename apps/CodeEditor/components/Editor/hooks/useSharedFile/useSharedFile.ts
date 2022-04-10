@@ -22,13 +22,13 @@ const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
 const WS_API_PATHNAME = '/api/CodeEditor/ws';
 
-const initialState = {
+const initialState: ClientState = {
   id: -1,
   code: '',
   cursorColor: 'transparent',
   cursors: [],
   selection: createSelection(0),
-} as ClientState;
+};
 
 const reducer = ((clientState, action) =>
   handleAction[action.type]?.(clientState, action) || clientState) as Reducer<
