@@ -8,8 +8,6 @@ export function useMobile(): boolean {
     function resizeListener(): void {
       const newIsMobile = isMobileScreen();
 
-      console.log({ newIsMobile, isMobile });
-
       if (isMobile !== newIsMobile) {
         setIsMobile(newIsMobile);
       }
