@@ -7,7 +7,11 @@ import { SeekBar } from '../SeekBar/SeekBar';
 
 import styles from './MiniPlayer.module.scss';
 
-export const MiniPlayer: FC<Props> = ({ min, onClickTogglePlaylist }) => {
+interface Props {
+  onClickTogglePlaylist(): void;
+}
+
+export const MiniPlayer: FC<Props> = ({ onClickTogglePlaylist }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {
@@ -17,7 +21,7 @@ export const MiniPlayer: FC<Props> = ({ min, onClickTogglePlaylist }) => {
   const { currentMusic } = audioState;
 
   return (
-    <div className={cn(styles.miniPlayer, { [styles.hidden]: !min })}>
+    <div className={cn(styles.miniPlayer, { [styles.hidden]: false })}>
       <div className={styles.header}>
         <Controls className={styles.controls} size={50} />
         <MusicPreview music={currentMusic} size={56} />
@@ -33,8 +37,3 @@ export const MiniPlayer: FC<Props> = ({ min, onClickTogglePlaylist }) => {
     </div>
   );
 };
-
-interface Props {
-  min: boolean;
-  onClickTogglePlaylist(): void;
-}

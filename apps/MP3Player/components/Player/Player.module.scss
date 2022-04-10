@@ -1,18 +1,26 @@
+@import '../../../../platform/constants';
 @import '../../constants';
-@import 'constants';
 
-$navBarHeight: 7.5rem;
+$footerHeight: 7.7rem;
 
 .body {
   display: flex;
   overflow: hidden;
-  flex: 0 1 auto;
-  height: calc(100% - #{$navBarHeight});
+  flex: 0 1 100%;
+}
+
+.footer {
+  flex: 0 0 $footerHeight;
+}
+
+.musics {
+  flex: 1 1 auto;
 }
 
 .player {
   font-family: $fontFamily;
   font-size: 1.3rem;
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -26,12 +34,23 @@ $navBarHeight: 7.5rem;
 }
 
 .sidebar {
-  width: $sidebarWidth;
+  flex: 0 0 12rem;
   padding: 1.5rem;
+  background-color: $backgroundColor;
 }
 
 // Modifiers
 
 .hidden {
   display: none;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .sidebar {
+    position: absolute;
+    z-index: 1;
+    top: 4rem;
+    bottom: $footerHeight;
+    left: 0;
+  }
 }

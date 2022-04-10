@@ -1,15 +1,17 @@
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC, useContext, useEffect, useState } from 'react';
-import { AudioContext } from '~/apps/MP3Player/components/AudioProvider/AudioProvider';
 import { Music } from '~/apps/MP3Player/interfaces/Music';
 import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '~/apps/MP3Player/utils/loadMusics';
 import { Select } from '~/platform/components/Select/Select';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
+import { AudioContext } from '../../../AudioProvider/AudioProvider';
+import { Button } from '../../../Button/Button';
 
 import styles from './Musics.module.scss';
 
@@ -19,7 +21,19 @@ const ORDERS = [
   { name: 'Top Week', value: 'popularity_week' },
 ];
 
-export const Musics: FC<Props> = ({ musicList }) => {
+interface Props {
+  className?: string;
+  musicList: MusicList;
+  onMenuButtonClick: () => unknown;
+  showMenuButton: boolean;
+}
+
+export const Musics: FC<Props> = ({
+  className,
+  musicList,
+  onMenuButtonClick,
+  showMenuButton,
+}) => {
   const { audioController, audioState } = useContext(AudioContext);
   const [musics, setMusics] = useState<Music[]>([]);
   const [jamendoOrder, setJamendoOrder] = useState<string>('popularity_total');
@@ -50,11 +64,19 @@ export const Musics: FC<Props> = ({ musicList }) => {
   }
 
   return (
-    <div className={styles.musicList}>
+    <div className={cn(styles.musicList, className)}>
       {loading && <Spinner color="#007ad8" />}
       <div className={styles.header}>
         <div>
           <h2>{musicList.name}</h2>
+          {showMenuButton && (
+            <Button
+              className={styles.showMenuButton}
+              onClick={onMenuButtonClick}
+            >
+              <FontAwesomeIcon className={styles.icon} icon={faArrowDown} />
+            </Button>
+          )}
           <Select
             className={styles.select}
             onChange={setJamendoOrder}
@@ -73,17 +95,9 @@ export const Musics: FC<Props> = ({ musicList }) => {
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th className={styles.colPreview} scope="col" />
               <th scope="col">Title</th>
-              <th className={styles.colArtist} scope="col">
-                Artist
-              </th>
+              <th scope="col">Artist</th>
               <th className={styles.colAlbum} scope="col">
                 Album
-              </th>
-              <th className={styles.colRelease} scope="col">
-                Release
-              </th>
-              <th className={styles.colDuration} scope="col">
-                Duration
               </th>
             </tr>
           </thead>
@@ -118,10 +132,8 @@ export const Musics: FC<Props> = ({ musicList }) => {
                 </td>
 
                 <td>{music.name}</td>
-                <td className={styles.colArtist}>{music.artistName}</td>
+                <td>{music.artistName}</td>
                 <td className={styles.colAlbum}>{music.albumName}</td>
-                <td className={styles.colRelease}>{music.releaseDate}</td>
-                <td className={styles.colDuration}>{music.duration}</td>
               </tr>
             ))}
           </tbody>
@@ -130,7 +142,3 @@ export const Musics: FC<Props> = ({ musicList }) => {
     </div>
   );
 };
-
-interface Props {
-  musicList: MusicList;
-}

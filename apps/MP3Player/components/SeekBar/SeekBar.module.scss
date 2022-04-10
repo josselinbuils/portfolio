@@ -1,3 +1,5 @@
+@import '../../../../platform/constants';
+
 .currentTime {
   margin-left: 1.5rem;
 }
@@ -22,4 +24,10 @@
   display: flex;
   max-width: 65rem;
   margin: 0 auto;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .playlistButton {
+    display: none;
+  }
 }

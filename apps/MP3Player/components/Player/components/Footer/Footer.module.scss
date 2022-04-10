@@ -1,9 +1,16 @@
+@import '../../../../../../platform/constants';
+
 .footer {
   display: flex;
-  height: 7.7rem;
   padding-left: 1.5rem;
 }
 
 .grow {
   flex-grow: 1;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .musicInfo {
+    display: none;
+  }
 }

@@ -1,5 +1,6 @@
+import cn from 'classnames';
 import { FC, useContext } from 'react';
-import { AudioContext } from '~/apps/MP3Player/components/AudioProvider/AudioProvider';
+import { AudioContext } from '../../../AudioProvider/AudioProvider';
 import { Controls } from '../../../Controls/Controls';
 import { MusicPreview } from '../../../MusicPreview/MusicPreview';
 import { SeekBar } from '../../../SeekBar/SeekBar';
@@ -7,7 +8,12 @@ import { MusicInfo } from './MusicInfo';
 
 import styles from './Footer.module.scss';
 
-export const Footer: FC<Props> = ({ onClickTogglePlaylist }) => {
+interface Props {
+  className?: string;
+  onClickTogglePlaylist(): void;
+}
+
+export const Footer: FC<Props> = ({ className, onClickTogglePlaylist }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {
@@ -17,9 +23,9 @@ export const Footer: FC<Props> = ({ onClickTogglePlaylist }) => {
   const { currentMusic } = audioState;
 
   return (
-    <footer className={styles.footer}>
+    <footer className={cn(styles.footer, className)}>
       <MusicPreview music={currentMusic} size={50} />
-      <MusicInfo music={currentMusic} />
+      <MusicInfo className={styles.musicInfo} music={currentMusic} />
       <div className={styles.grow}>
         <Controls size={40} />
         <SeekBar onClickTogglePlaylist={onClickTogglePlaylist} />
@@ -27,7 +33,3 @@ export const Footer: FC<Props> = ({ onClickTogglePlaylist }) => {
     </footer>
   );
 };
-
-interface Props {
-  onClickTogglePlaylist(): void;
-}

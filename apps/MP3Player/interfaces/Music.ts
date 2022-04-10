@@ -6,5 +6,4 @@ export interface Music {
   id: string;
   image: string;
   name: string;
-  releaseDate: string;
 }

@@ -1,9 +1,13 @@
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
-import { MiniPlayer } from './components/MiniPlayer/MiniPlayer';
 import { Player } from './components/Player/Player';
+
+const MiniPlayer = dynamic(
+  async () => (await import('./components/MiniPlayer/MiniPlayer')).MiniPlayer
+);
 
 const size = {
   min: {
@@ -34,7 +38,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       {...injectedWindowProps}
     >
       <AudioProvider>
-        <MiniPlayer min={min} onClickTogglePlaylist={() => setMin(false)} />
+        {min && <MiniPlayer onClickTogglePlaylist={() => setMin(false)} />}
         <Player min={min} onClickTogglePlaylist={() => setMin(true)} />
       </AudioProvider>
     </Window>

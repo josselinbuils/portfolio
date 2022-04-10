@@ -1,9 +1,9 @@
+@import '../../../../../../platform/constants';
 @import '../../../../constants';
-@import '../../constants';
 
 .header {
   flex: 0 0 auto;
-  padding-right: 1.8rem;
+  padding-right: 0.8rem;
 
   & > div {
     display: flex;
@@ -28,7 +28,6 @@
 .musicList {
   display: flex;
   flex-direction: column;
-  width: calc(100% - #{$sidebarWidth});
   margin: 0.5rem 1.5rem 1.5rem 1.5rem;
 
   table {
@@ -46,36 +45,13 @@
       text-overflow: ellipsis;
     }
 
-    td:last-child,
-    th:last-child {
-      padding-right: 0;
-      text-align: right;
-    }
-
     tr {
       color: $textColor;
       border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
 
-      .colAlbum {
-        width: 20%;
-      }
-
-      .colArtist {
-        width: 20%;
-      }
-
-      .colDuration {
-        width: 9%;
-        padding-right: 1rem;
-      }
-
       .colPreview {
         width: 3.2rem;
         padding-left: 0.7rem;
-      }
-
-      .colRelease {
-        width: 15%;
       }
     }
 
@@ -163,5 +139,16 @@
 
   select:focus {
     border-color: $primaryColor;
+  }
+}
+
+.showMenuButton {
+  font-size: 1.75rem;
+  margin-left: 1ch;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .colAlbum {
+    display: none;
   }
 }
