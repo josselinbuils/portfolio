@@ -6,7 +6,7 @@ import styles from './Desktop.module.scss';
 
 export const Desktop: FC = () => (
   <div className={styles.desktop}>
-    <TaskBar />
+    <TaskBar className={styles.taskBar} />
     <VisibleArea />
   </div>
 );

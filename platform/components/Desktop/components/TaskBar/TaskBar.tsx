@@ -8,13 +8,20 @@ import { getTaskId } from './utils/getTaskId';
 
 import styles from './TaskBar.module.scss';
 
-export const TaskBar: FC = () => {
+interface Props {
+  className?: string;
+}
+
+export const TaskBar: FC<Props> = ({ className }) => {
   const { getToolProps, isToolActive, toolbarProps } = useToolbar('vertical');
   const taskDescriptors = useTaskDescriptors(APP_DESCRIPTORS);
-  const { className, ...otherToolbarProps } = toolbarProps;
+  const { className: toolbarClassName, ...otherToolbarProps } = toolbarProps;
 
   return (
-    <div className={cn(styles.taskBar, className)} {...otherToolbarProps}>
+    <div
+      className={cn(styles.taskBar, className, toolbarClassName)}
+      {...otherToolbarProps}
+    >
       {taskDescriptors.map((taskDescriptor, index) => {
         const { appDescriptor, windowInstance } = taskDescriptor;
         const id = getTaskId(taskDescriptor, index);

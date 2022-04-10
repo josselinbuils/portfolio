@@ -2,16 +2,12 @@
 
 .taskBar {
   z-index: 999;
+  display: flex;
+  overflow: hidden;
   flex-basis: 6rem;
   flex-grow: 0;
   flex-shrink: 0;
   height: 100vh;
   color: $textColor;
   background: $backgroundColor;
-}
-
-@media only screen and (max-width: $mobileBreakpoint) {
-  .taskBar {
-    display: none;
-  }
 }

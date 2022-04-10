@@ -1,3 +1,5 @@
+@import '../../constants';
+
 .desktop {
   display: flex;
   overflow: hidden;
@@ -8,4 +10,21 @@
   background-attachment: fixed;
   background-position: center center;
   background-size: cover;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .desktop {
+    flex-direction: column-reverse;
+  }
+
+  .taskBar {
+    overflow-x: auto;
+  }
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .taskBar {
+    overflow-y: auto;
+    flex-direction: column;
+  }
 }
