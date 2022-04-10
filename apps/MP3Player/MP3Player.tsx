@@ -16,7 +16,7 @@ const size = {
   },
   max: {
     width: 950,
-    height: 530,
+    height: 600,
   },
 };
 

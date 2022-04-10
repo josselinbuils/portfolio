@@ -112,7 +112,7 @@ export const Musics: FC<Props> = ({
                   [styles.active]: currentMusic && music.id === currentMusic.id,
                 })}
                 key={music.id}
-                onDoubleClick={() => play(music)}
+                onClick={() => play(music)}
               >
                 <td className={styles.colPreview}>
                   <div
@@ -126,7 +126,6 @@ export const Musics: FC<Props> = ({
                           ? faPauseCircle
                           : faPlayCircle
                       }
-                      onClick={() => play(music)}
                     />
                   </div>
                 </td>
