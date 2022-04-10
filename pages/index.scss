@@ -16,11 +16,18 @@ a:active {
 
 body {
   font-size: 1.6rem;
+  position: fixed;
+  overflow-y: scroll;
+  height: 100%;
   margin: 0;
+
+  -webkit-overflow-scrolling: touch;
 }
 
 html {
   font-size: 10px;
+  overflow: hidden;
+  width: 100%;
 }
 
 img {
