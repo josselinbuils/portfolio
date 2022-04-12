@@ -1,14 +1,11 @@
-import { faList } from '@fortawesome/free-solid-svg-icons/faList';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { createRef, FC, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider/AudioProvider';
-import { Button } from '../Button/Button';
 import { ProgressBar } from './ProgressBar';
 
 import styles from './SeekBar.module.scss';
 
-export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
+export const SeekBar: FC = () => {
   const { audioController, audioState } = useContext(AudioContext);
   const progressBarRef = createRef<HTMLDivElement>();
   const seekStartHandler = useDragAndDrop(onSeekStart);
@@ -47,18 +44,6 @@ export const SeekBar: FC<Props> = ({ min = false, onClickTogglePlaylist }) => {
       <time className={styles.duration}>
         {currentMusic ? currentMusic.duration : '00:00'}
       </time>
-      <Button
-        checked={!min}
-        className={styles.playlistButton}
-        onClick={onClickTogglePlaylist}
-      >
-        <FontAwesomeIcon icon={faList} />
-      </Button>
     </div>
   );
 };
-
-interface Props {
-  min?: boolean;
-  onClickTogglePlaylist(): void;
-}

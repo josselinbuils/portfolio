@@ -1,4 +1,4 @@
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,8 +10,8 @@ import { loadMusics } from '~/apps/MP3Player/utils/loadMusics';
 import { Select } from '~/platform/components/Select/Select';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
-import { AudioContext } from '../../../AudioProvider/AudioProvider';
-import { Button } from '../../../Button/Button';
+import { AudioContext } from '../AudioProvider/AudioProvider';
+import { Button } from '../Button/Button';
 
 import styles from './Musics.module.scss';
 
@@ -68,15 +68,12 @@ export const Musics: FC<Props> = ({
       {loading && <Spinner color="#007ad8" />}
       <div className={styles.header}>
         <div>
-          <h2>{musicList.name}</h2>
           {showMenuButton && (
-            <Button
-              className={styles.showMenuButton}
-              onClick={onMenuButtonClick}
-            >
-              <FontAwesomeIcon className={styles.icon} icon={faArrowDown} />
+            <Button className={styles.menuButton} onClick={onMenuButtonClick}>
+              <FontAwesomeIcon icon={faBars} />
             </Button>
           )}
+          <h2>{musicList.name}</h2>
           <Select
             className={styles.select}
             onChange={setJamendoOrder}

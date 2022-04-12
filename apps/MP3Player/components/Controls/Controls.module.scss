@@ -2,13 +2,19 @@
   text-align: center;
 }
 
+.playButton {
+  font-size: 4rem;
+  padding: 0 1.5rem;
+}
+
 .previousButton,
 .nextButton {
   font-size: 2.8rem;
+  padding: 0.7rem 1.5rem;
 }
 
 .randomButton,
 .repeatButton {
-  font-size: 1.4rem;
-  margin-top: 0.1rem;
+  font-size: 1.6rem;
+  padding: 1.4rem 1rem;
 }

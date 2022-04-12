@@ -13,16 +13,10 @@
   text-align: center;
 }
 
-.playlistButton {
-  font-size: 1.4rem;
-  line-height: 1.6rem;
-  flex: 0 0 1ch;
-  margin-right: 1.5rem;
-}
-
 .seekBar {
   display: flex;
   max-width: 65rem;
+  height: 3rem;
   margin: 0 auto;
 }
 

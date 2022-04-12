@@ -1,45 +1,68 @@
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { useMobile } from '~/platform/hooks/useMobile';
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
-import { Player } from './components/Player/Player';
+import { Footer } from './components/Footer/Footer';
+import { Musics } from './components/Musics/Musics';
+import { Sidebar } from './components/Sidebar/Sidebar';
+import { MusicList } from './interfaces/MusicList';
+import { musicLists } from './musicLists';
 
-const MiniPlayer = dynamic(
-  async () => (await import('./components/MiniPlayer/MiniPlayer')).MiniPlayer
-);
-
-const size = {
-  min: {
-    width: 330,
-    height: 150,
-  },
-  max: {
-    width: 950,
-    height: 600,
-  },
-};
+import styles from './MP3Player.module.scss';
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
-  const [min, setMin] = useState(false);
-  const { height, width } = min ? size.min : size.max;
+  const isMobile = useMobile();
+  const [activeMusicList, setActiveMusicList] = useState<MusicList>(
+    musicLists[0]
+  );
+  const [showSidebar, setShowSidebar] = useState(!isMobile);
+
+  useLayoutEffect(() => {
+    setShowSidebar(!isMobile);
+  }, [isMobile]);
+
+  const onClickMusicList = useCallback(
+    (playlist: MusicList) => {
+      setActiveMusicList(playlist);
+
+      if (isMobile) {
+        setShowSidebar(false);
+      }
+    },
+    [isMobile]
+  );
 
   return (
     <Window
       background="#111625"
-      maxHeight={min ? height : Infinity}
-      maxWidth={min ? width : Infinity}
-      minHeight={height}
-      minWidth={width}
+      minHeight={600}
+      minWidth={950}
       ref={windowRef}
-      resizable={!min}
-      title={min ? '' : 'MP3Player'}
+      resizable
+      title="MP3Player"
       titleColor="#efefef"
       {...injectedWindowProps}
     >
       <AudioProvider>
-        {min && <MiniPlayer onClickTogglePlaylist={() => setMin(false)} />}
-        <Player min={min} onClickTogglePlaylist={() => setMin(true)} />
+        <div className={styles.player}>
+          <div className={styles.body}>
+            <Sidebar
+              activeMusicList={activeMusicList}
+              className={styles.sidebar}
+              isMobile={isMobile}
+              isVisible={showSidebar}
+              onClickMusicList={onClickMusicList}
+            />
+            <Musics
+              className={styles.musics}
+              musicList={activeMusicList}
+              showMenuButton={isMobile}
+              onMenuButtonClick={() => setShowSidebar(!showSidebar)}
+            />
+          </div>
+          <Footer className={styles.footer} />
+        </div>
       </AudioProvider>
     </Window>
   );

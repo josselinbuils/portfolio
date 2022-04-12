@@ -36,21 +36,21 @@ export const Controls: FC<Props> = ({ className, size }) => {
         <FontAwesomeIcon icon={faRandom} />
       </Button>
       <Button
-        className={cn(styles.previousButton)}
+        className={styles.previousButton}
         disabled={!isThereCurrentMusic}
         onClick={prev}
       >
         <FontAwesomeIcon icon={faStepBackward} />
       </Button>
       <Button
-        className={cn(styles.playButton)}
+        className={styles.playButton}
         disabled={!isThereCurrentMusic}
         onClick={play}
       >
         <FontAwesomeIcon icon={paused ? faPlayCircle : faPauseCircle} />
       </Button>
       <Button
-        className={cn(styles.nextButton)}
+        className={styles.nextButton}
         disabled={!isThereCurrentMusic}
         onClick={next}
       >

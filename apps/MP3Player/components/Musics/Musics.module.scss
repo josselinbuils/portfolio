@@ -1,5 +1,5 @@
-@import '../../../../../../platform/constants';
-@import '../../../../constants';
+@import '../../../../platform/constants';
+@import '../../constants';
 
 .header {
   flex: 0 0 auto;
@@ -23,6 +23,11 @@
       text-align: left;
     }
   }
+}
+
+.menuButton {
+  font-size: 3rem;
+  margin-right: 1ch;
 }
 
 .musicList {
@@ -140,11 +145,6 @@
   select:focus {
     border-color: $primaryColor;
   }
-}
-
-.showMenuButton {
-  font-size: 1.75rem;
-  margin-left: 1ch;
 }
 
 @media only screen and (max-width: $mobileBreakpoint) {

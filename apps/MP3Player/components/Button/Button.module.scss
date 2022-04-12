@@ -12,10 +12,6 @@
   outline: none;
   background: none;
 
-  & + & {
-    margin-left: 2.5rem;
-  }
-
   &:disabled {
     opacity: 0.5;
   }

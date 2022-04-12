@@ -3,7 +3,12 @@ import { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
 import { musicLists } from '~/apps/MP3Player/musicLists';
 import { MenuItem } from './MenuItem';
 
-export const Menu: FC<Props> = ({ activeMusicList, onClickMusicList }) => (
+export interface MenuProps {
+  activeMusicList: MusicList;
+  onClickMusicList(playlist: MusicList): void;
+}
+
+export const Menu: FC<MenuProps> = ({ activeMusicList, onClickMusicList }) => (
   <nav>
     {musicLists.map((musicList) => (
       <MenuItem
@@ -15,8 +20,3 @@ export const Menu: FC<Props> = ({ activeMusicList, onClickMusicList }) => (
     ))}
   </nav>
 );
-
-interface Props {
-  activeMusicList: MusicList;
-  onClickMusicList(playlist: MusicList): void;
-}
