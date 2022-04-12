@@ -23,6 +23,12 @@ import styles from './Task.module.scss';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+  appDescriptor: AppDescriptor;
+  taskButtonActive: boolean;
+  windowInstance?: WindowInstance;
+}
+
 export const Task: FC<Props> = forwardRef(
   (
     {
@@ -124,9 +130,3 @@ export const Task: FC<Props> = forwardRef(
     );
   }
 );
-
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  appDescriptor: AppDescriptor;
-  taskButtonActive: boolean;
-  windowInstance?: WindowInstance;
-}
