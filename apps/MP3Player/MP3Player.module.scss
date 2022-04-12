@@ -36,13 +36,3 @@ $footerHeight: 7.7rem;
 .sidebar {
   flex: 0 0 auto;
 }
-
-@media only screen and (max-width: $mobileBreakpoint) {
-  .sidebar {
-    position: absolute;
-    z-index: 1;
-    top: 4rem;
-    bottom: $footerHeight;
-    left: 0;
-  }
-}

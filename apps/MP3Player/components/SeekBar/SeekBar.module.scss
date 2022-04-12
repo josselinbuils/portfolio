@@ -19,9 +19,3 @@
   height: 3rem;
   margin: 0 auto;
 }
-
-@media only screen and (max-width: $mobileBreakpoint) {
-  .playlistButton {
-    display: none;
-  }
-}
