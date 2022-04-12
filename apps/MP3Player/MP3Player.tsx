@@ -36,7 +36,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   return (
     <Window
       background="#111625"
-      minHeight={600}
+      minHeight={641}
       minWidth={950}
       ref={windowRef}
       resizable
