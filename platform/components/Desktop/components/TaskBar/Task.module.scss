@@ -9,8 +9,6 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  left: 0;
-  height: 0.3rem;
   background: $primaryColor;
 }
 
@@ -78,5 +76,17 @@
 @media only screen and (max-width: $mobileBreakpoint) {
   .notMobileFriendly {
     display: none;
+  }
+
+  .runIndicator {
+    top: 0;
+    width: 0.3rem;
+  }
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .runIndicator {
+    left: 0;
+    height: 0.3rem;
   }
 }
