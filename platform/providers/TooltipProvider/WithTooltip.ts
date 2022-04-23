@@ -1,8 +1,15 @@
-import { Children, cloneElement, FC, ReactElement, useContext } from 'react';
+import {
+  Children,
+  cloneElement,
+  FC,
+  PropsWithChildren,
+  ReactElement,
+  useContext,
+} from 'react';
 import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 
-export const WithTooltip: FC<TooltipDescriptor> = ({
+export const WithTooltip: FC<PropsWithChildren<TooltipDescriptor>> = ({
   children,
   ...baseDescriptor
 }) => {

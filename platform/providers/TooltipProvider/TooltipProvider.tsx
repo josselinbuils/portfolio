@@ -1,5 +1,12 @@
 import dynamic from 'next/dynamic';
-import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 
@@ -10,7 +17,9 @@ const Tooltip = dynamic(
 const TOOLTIP_CLOSE_DELAY_MS = 50;
 const TOOLTIP_OPEN_DELAY_MS = 500;
 
-export const TooltipProvider: FC = ({ children }) => {
+export const TooltipProvider: FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const [descriptor, setDescriptor] = useState<TooltipDescriptor>();
   const [displayCallback, setDisplayCallback] =
     useState<() => TooltipDescriptor>();

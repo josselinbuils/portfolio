@@ -1,8 +1,17 @@
-import { Children, cloneElement, FC, ReactElement } from 'react';
+import {
+  Children,
+  cloneElement,
+  FC,
+  PropsWithChildren,
+  ReactElement,
+} from 'react';
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import { useContextMenu } from './useContextMenu';
 
-export const WithContextMenu: FC<Props> = ({ children, descriptor }) => {
+export const WithContextMenu: FC<PropsWithChildren<Props>> = ({
+  children,
+  descriptor,
+}) => {
   const { showContextMenu } = useContextMenu();
   const child = Children.only(children) as ReactElement;
 

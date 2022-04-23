@@ -1,4 +1,11 @@
-import { createContext, FC, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { AudioController, AudioState } from './AudioController';
 
 export const AudioContext = createContext<{
@@ -9,7 +16,7 @@ export const AudioContext = createContext<{
   audioState: undefined,
 });
 
-export const AudioProvider: FC = ({ children }) => {
+export const AudioProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const audioController = useMemo(() => new AudioController(), []);
   const [audioState, setAudioState] = useState<AudioState>();
 

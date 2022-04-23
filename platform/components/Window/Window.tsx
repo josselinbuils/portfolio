@@ -1,5 +1,10 @@
 import cn from 'classnames';
-import React, { Component, createRef, ReactElement } from 'react';
+import React, {
+  Component,
+  createRef,
+  PropsWithChildren,
+  ReactElement,
+} from 'react';
 import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
@@ -12,7 +17,7 @@ const DOM_UPDATE_DELAY = 10;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
-export class Window extends Component<WindowProps, State> {
+export class Window extends Component<PropsWithChildren<WindowProps>, State> {
   visible = true;
 
   private contentRatio?: number;

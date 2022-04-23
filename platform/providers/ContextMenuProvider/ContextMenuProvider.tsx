@@ -4,6 +4,7 @@ import {
   Children,
   cloneElement,
   FC,
+  PropsWithChildren,
   ReactElement,
   useCallback,
   useMemo,
@@ -18,7 +19,9 @@ const ContextMenu = dynamic(
   async () => (await import('./ContextMenu/ContextMenu')).ContextMenu
 );
 
-export const ContextMenuProvider: FC = ({ children }) => {
+export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
   const hideContextMenu = useCallback(() => setDescriptor(undefined), []);
 
