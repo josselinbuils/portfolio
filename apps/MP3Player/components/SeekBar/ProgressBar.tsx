@@ -7,6 +7,7 @@ export const ProgressBar = forwardRef<HTMLDivElement, Props>(
     <div
       className={styles.progressBar}
       onMouseDown={onSeekStart}
+      onTouchStart={onSeekStart}
       ref={ref}
       role="progressbar"
       tabIndex={0}
@@ -20,5 +21,5 @@ export const ProgressBar = forwardRef<HTMLDivElement, Props>(
 
 interface Props {
   progress: number;
-  onSeekStart(downEvent: React.MouseEvent): void;
+  onSeekStart(downEvent: React.MouseEvent | React.TouchEvent): void;
 }

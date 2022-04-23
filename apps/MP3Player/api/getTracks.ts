@@ -13,6 +13,7 @@ export async function getTracks(req: NextApiRequest): Promise<Music[]> {
   const jamendoParameters: JamendoTrackParameters = {
     client_id: config.jamendo.clientId,
     format: 'json',
+    imagesize: 35,
     limit: '50',
   };
 

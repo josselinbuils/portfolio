@@ -67,7 +67,7 @@ export const Musics: FC<Props> = ({
     <div className={cn(styles.musicList, className)}>
       {loading && <Spinner color="#007ad8" />}
       <div className={styles.header}>
-        <div>
+        <div className={styles.listInfo}>
           {showMenuButton && (
             <Button className={styles.menuButton} onClick={onMenuButtonClick}>
               <FontAwesomeIcon icon={faBars} />
@@ -86,16 +86,13 @@ export const Musics: FC<Props> = ({
             ))}
           </Select>
         </div>
-        <table className={styles.header}>
+        <table className={styles.tableHeader}>
           <thead>
             <tr>
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th className={styles.colPreview} scope="col" />
               <th scope="col">Title</th>
-              <th scope="col">Artist</th>
-              <th className={styles.colAlbum} scope="col">
-                Album
-              </th>
+              <th scope="col">Album</th>
             </tr>
           </thead>
         </table>
@@ -127,9 +124,11 @@ export const Musics: FC<Props> = ({
                   </div>
                 </td>
 
-                <td>{music.name}</td>
-                <td>{music.artistName}</td>
-                <td className={styles.colAlbum}>{music.albumName}</td>
+                <td>
+                  <p className={styles.musicName}>{music.name}</p>
+                  <p className={styles.artistName}>{music.artistName}</p>
+                </td>
+                <td className={styles.album}>{music.albumName}</td>
               </tr>
             ))}
           </tbody>

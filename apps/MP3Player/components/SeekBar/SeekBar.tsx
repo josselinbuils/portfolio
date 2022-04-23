@@ -18,8 +18,8 @@ export const SeekBar: FC = () => {
   const { currentMusic, currentTime, progress } = audioState;
 
   function onSeekStart(
-    downEvent: React.MouseEvent
-  ): ((moveEvent: MouseEvent) => void) | void {
+    downEvent: React.PointerEvent
+  ): ((moveEvent: PointerEvent) => void) | void {
     if (progressBarRef.current === null || currentMusic === undefined) {
       return;
     }
@@ -27,9 +27,11 @@ export const SeekBar: FC = () => {
     const progressBarWidth = progressBarRef.current.clientWidth;
     const dx = downEvent.nativeEvent.offsetX - downEvent.clientX;
 
-    setCurrentTime(downEvent.nativeEvent.offsetX / progressBarWidth);
+    setCurrentTime(
+      (downEvent as React.MouseEvent).nativeEvent.offsetX / progressBarWidth
+    );
 
-    return (moveEvent: MouseEvent) =>
+    return (moveEvent: PointerEvent) =>
       setCurrentTime((moveEvent.clientX + dx) / progressBarWidth);
   }
 

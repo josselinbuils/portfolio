@@ -1,27 +1,30 @@
 @import '../../../../platform/constants';
 @import '../../constants';
 
+$previewSize: 3.5rem;
+
+.album,
+.artistName {
+  font-size: $secondaryTextSize;
+  color: $secondaryTextColor;
+}
+
+.artistName {
+  margin: 0.3rem 0 0;
+}
+
 .header {
   flex: 0 0 auto;
   padding-right: 0.8rem;
+}
 
-  & > div {
-    display: flex;
-    justify-content: space-between;
+.listInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 
-    h2 {
-      margin: auto 0;
-    }
-  }
-
-  table {
-    width: 100%;
-    margin-top: 1rem;
-
-    th {
-      padding: 0.3rem 1.5rem 1rem 0;
-      text-align: left;
-    }
+  h2 {
+    margin: auto 0;
   }
 }
 
@@ -55,7 +58,7 @@
       border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
 
       .colPreview {
-        width: 3.2rem;
+        width: $previewSize;
         padding-left: 0.7rem;
       }
     }
@@ -102,20 +105,24 @@
       }
 
       .inlineMusicPreview {
-        width: 3.2rem;
-        height: 3.2rem;
+        width: $previewSize;
+        height: $previewSize;
         text-align: center;
         background-repeat: no-repeat;
-        background-size: 3.2rem;
+        background-size: $previewSize;
 
         .previewIcon {
-          font-size: 3.2rem;
-          line-height: 3.2rem;
+          font-size: $previewSize;
+          line-height: $previewSize;
           display: none;
         }
       }
     }
   }
+}
+
+.musicName {
+  margin: 0;
 }
 
 .overflow {
@@ -147,8 +154,22 @@
   }
 }
 
+.tableHeader {
+  width: 100%;
+
+  th {
+    padding: 0.3rem 1.5rem 1rem 0;
+    text-align: left;
+  }
+}
+
 @media only screen and (max-width: $mobileBreakpoint) {
-  .colAlbum {
+  .album,
+  .tableHeader {
     display: none;
+  }
+
+  .listInfo {
+    margin-top: 0.5rem;
   }
 }

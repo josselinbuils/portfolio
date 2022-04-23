@@ -19,7 +19,6 @@ $footerHeight: 7.7rem;
 
 .player {
   font-family: $fontFamily;
-  font-size: 1.4rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -35,4 +34,10 @@ $footerHeight: 7.7rem;
 
 .sidebar {
   flex: 0 0 auto;
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .player {
+    font-size: 1.4rem;
+  }
 }
