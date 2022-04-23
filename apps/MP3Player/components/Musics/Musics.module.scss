@@ -54,6 +54,7 @@ $previewSize: 3.5rem;
     }
 
     tr {
+      height: 6rem;
       color: $textColor;
       border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
 
