@@ -14,7 +14,6 @@ import {
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
-import { getWSBaseURL } from '~/platform/utils/getWSBaseURL';
 import { createAction } from './utils/createAction';
 import { handleAction } from './utils/handleAction';
 
@@ -75,16 +74,21 @@ export function useSharedFile({
       return;
     }
     let maintainOpen = true;
-    let reopenTimeoutID: number;
-    let ws: WebSocket;
+    let reopenTimeoutID: number | undefined;
+    let ws: WebSocket | undefined;
 
-    function openSocket(): void {
-      ws = new WebSocket(`${getWSBaseURL()}${WS_API_PATHNAME}`);
+    async function openSocket(): Promise<void> {
+      await fetch(WS_API_PATHNAME);
+
+      const { host, protocol } = window.location;
+      const wsProtocol = protocol === 'https:' ? `wss:` : `ws:`;
       const readyDeferred = new Deferred<void>();
+
+      ws = new WebSocket(`${wsProtocol}//${host}${WS_API_PATHNAME}`);
 
       dispatchToServerRef.current = async (action: Action) => {
         await readyDeferred.promise;
-        ws.send(JSON.stringify(action));
+        ws?.send(JSON.stringify(action));
       };
 
       ws.onclose = () => {
@@ -113,7 +117,7 @@ export function useSharedFile({
       maintainOpen = false;
       clearTimeout(reopenTimeoutID);
       dispatchToServerRef.current = () => {};
-      ws.close();
+      ws?.close();
       dispatch(createAction.updateClientState(initialState));
     };
   }, [active, selectionRef]);
@@ -131,7 +135,7 @@ export function useSharedFile({
     if (updateQueueRef.current.length > 0) {
       if (currentHash !== hashToWaitForRef.current) {
         if (clientState.code !== clientCodeRef.current) {
-          // We received a non expected state. As the server is always right,
+          // We received a not expected state. As the server is always right,
           // we have to deal with it
           updateQueueRef.current.length = 0;
           hashToWaitForRef.current = currentHash;

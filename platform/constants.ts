@@ -8,8 +8,7 @@ export enum MouseButton {
   Right = 2,
 }
 
-export const DEV_BASE_HOST = 'localhost:3000';
-export const DEV_BASE_URL = `http://${DEV_BASE_HOST}`;
+export const DEV_BASE_URL = `http://localhost:3000`;
 export const MOBILE_BREAKPOINT_PX = 1024;
 export const PROD_HOSTNAME = hostname;
 export const PROD_BASE_URL = packageFile.homepage;
