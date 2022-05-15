@@ -9,7 +9,7 @@ const App: NextPage = () => {
 
   return (
     <InjectorProvider>
-      <Home app={app as string} />
+      <Home lazyApp={app as string | undefined} />
     </InjectorProvider>
   );
 };

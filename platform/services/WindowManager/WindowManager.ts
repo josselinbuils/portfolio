@@ -7,20 +7,11 @@ import { WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   static injectionId = 'WindowManager';
-  static defaultApp: DefaultApp;
 
   windowInstancesSubject = new Subject<WindowInstance[]>([]);
 
   private readonly windowInstances: WindowInstance[] = [];
   private id = -1;
-
-  constructor() {
-    if (WindowManager.defaultApp !== undefined) {
-      const { appDescriptor, windowComponent, windowProps } =
-        WindowManager.defaultApp;
-      this.openApp(appDescriptor, windowProps, windowComponent);
-    }
-  }
 
   closeWindow = (id: number): void => {
     const index = this.windowInstances.findIndex(
@@ -147,10 +138,4 @@ export class WindowManager {
   private publishWindowInstances(): void {
     this.windowInstancesSubject.next([...this.windowInstances]);
   }
-}
-
-export interface DefaultApp<T = unknown> {
-  appDescriptor: AppDescriptor;
-  windowComponent: WindowComponent;
-  windowProps?: T & Partial<WindowProps>;
 }
