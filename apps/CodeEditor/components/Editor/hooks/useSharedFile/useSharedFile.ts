@@ -14,6 +14,7 @@ import {
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
+import { cancelable } from '~/platform/utils/cancelable';
 import { createAction } from './utils/createAction';
 import { handleAction } from './utils/handleAction';
 
@@ -73,48 +74,52 @@ export function useSharedFile({
     if (!active) {
       return;
     }
+    const [wsReadyPromise, cancelWsReadyPromise] = cancelable(
+      fetch(WS_API_PATHNAME)
+    );
     let maintainOpen = true;
     let reopenTimeoutID: number | undefined;
     let ws: WebSocket | undefined;
 
-    async function openSocket(): Promise<void> {
-      await fetch(WS_API_PATHNAME);
+    function openSocket(): void {
+      wsReadyPromise.then(() => {
+        const { host, protocol } = window.location;
+        const wsProtocol = protocol === 'https:' ? `wss:` : `ws:`;
+        const readyDeferred = new Deferred<void>();
 
-      const { host, protocol } = window.location;
-      const wsProtocol = protocol === 'https:' ? `wss:` : `ws:`;
-      const readyDeferred = new Deferred<void>();
+        ws = new WebSocket(`${wsProtocol}//${host}${WS_API_PATHNAME}`);
 
-      ws = new WebSocket(`${wsProtocol}//${host}${WS_API_PATHNAME}`);
+        dispatchToServerRef.current = async (action: Action) => {
+          await readyDeferred.promise;
+          ws?.send(JSON.stringify(action));
+        };
 
-      dispatchToServerRef.current = async (action: Action) => {
-        await readyDeferred.promise;
-        ws?.send(JSON.stringify(action));
-      };
-
-      ws.onclose = () => {
-        if (maintainOpen) {
-          reopenTimeoutID = window.setTimeout(openSocket, REOPEN_DELAY_MS);
-        }
-      };
-      ws.onopen = () => {
-        readyDeferred.resolve();
-        dispatchToServerRef.current(
-          createAction.updateSelection(selectionRef.current)
-        );
-      };
-      ws.onmessage = (event) => {
-        try {
-          const action = JSON.parse(event.data) as Action;
-          dispatch(action);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+        ws.onclose = () => {
+          if (maintainOpen) {
+            reopenTimeoutID = window.setTimeout(openSocket, REOPEN_DELAY_MS);
+          }
+        };
+        ws.onopen = () => {
+          readyDeferred.resolve();
+          dispatchToServerRef.current(
+            createAction.updateSelection(selectionRef.current)
+          );
+        };
+        ws.onmessage = (event) => {
+          try {
+            const action = JSON.parse(event.data) as Action;
+            dispatch(action);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      });
     }
     openSocket();
 
     return () => {
       maintainOpen = false;
+      cancelWsReadyPromise();
       clearTimeout(reopenTimeoutID);
       dispatchToServerRef.current = () => {};
       ws?.close();
