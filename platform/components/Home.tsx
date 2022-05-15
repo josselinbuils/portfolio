@@ -24,27 +24,6 @@ export const Home: FC<Props> = ({ app }) => {
     <>
       <Head>
         <title>Josselin BUILS</title>
-        <meta
-          name="description"
-          content="Hey, I'm Josselin, a full-stack JavaScript developer :)"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: `\
-{
-  "@context": "http://schema.org/",
-  "@type": "Person",
-  "jobTitle": "Software Engineer",
-  "name": "Josselin BUILS",
-  "nationality": "French"
-}`,
-          }}
-        />
-        <script
-          async
-          src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CResizeObserver"
-        />
       </Head>
       <ContextMenuProvider>
         <TooltipProvider>

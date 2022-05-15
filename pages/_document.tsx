@@ -1,12 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import fs from 'fs';
+import path from 'path';
 import Document, {
   Head as NextHead,
   Html,
   Main,
   NextScript,
 } from 'next/document';
-import path from 'path';
 
 class Head extends NextHead {
   getCssLinks({ allFiles }: DocumentFiles): JSX.Element[] | null {
@@ -32,7 +32,28 @@ export default class CustomDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <meta
+            name="description"
+            content="Hey, I'm Josselin, a full-stack JavaScript developer :)"
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'http://schema.org/',
+                '@type': 'Person',
+                jobTitle: 'Software Engineer',
+                name: 'Josselin BUILS',
+                nationality: 'French',
+              }),
+            }}
+          />
+          <script
+            defer
+            src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CResizeObserver"
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />
