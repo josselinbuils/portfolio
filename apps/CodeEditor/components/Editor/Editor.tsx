@@ -112,7 +112,7 @@ export const Editor: FC<Props> = ({
 
   useKeyMap(
     {
-      'Control+/,Control+Shift+/,Meta+/': () => {
+      'Control+:,Control+/,Meta+:,Meta+/': () => {
         const newState = comment(code, selection);
 
         if (newState !== undefined) {
