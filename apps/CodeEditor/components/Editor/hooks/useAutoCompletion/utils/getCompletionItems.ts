@@ -17,16 +17,20 @@ export function getCompletionItems(partialKeyword: string): {
     const objectsCompletionMap = getObjectsCompletionMap();
 
     if (objectsCompletionMap[objectName] !== undefined) {
-      completionItems = objectsCompletionMap[objectName].filter(({ keyword }) =>
-        keyword.startsWith(objectPartialProperty)
+      completionItems = objectsCompletionMap[objectName].filter(
+        ({ keyword }) =>
+          keyword.startsWith(objectPartialProperty) &&
+          objectPartialProperty.length < keyword.length
       );
       correctedPartialKeyword = objectPartialProperty;
     }
   } else {
     completionItems =
       partialKeyword.length > 1
-        ? getGlobalCompletionItems().filter(({ keyword }) =>
-            keyword.startsWith(partialKeyword)
+        ? getGlobalCompletionItems().filter(
+            ({ keyword }) =>
+              keyword.startsWith(partialKeyword) &&
+              partialKeyword.length < keyword.length
           )
         : [];
   }

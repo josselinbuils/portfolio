@@ -65,7 +65,6 @@ export const ContextMenu: FC<Props> = ({
         setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
       Enter: clickOnActiveItem,
       Escape: onHide,
-      ' ': clickOnActiveItem,
     },
     true,
     2

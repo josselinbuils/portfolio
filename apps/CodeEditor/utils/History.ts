@@ -91,6 +91,11 @@ export class History {
     const { index, states } = this;
 
     if (index > -1) {
+      if (states[index] === undefined) {
+        console.debug({ states });
+        throw new Error('Inconsistent history state');
+      }
+
       const newIndex = index - 1;
       const prevCode = states[index].diffs.reduceRight(revertDiff, currentCode);
       const prevSelection =
