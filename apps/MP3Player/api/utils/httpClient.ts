@@ -1,6 +1,6 @@
-import http, { ClientRequest, IncomingMessage } from 'http';
-import https from 'https';
-import { URL } from 'url';
+import http, { ClientRequest, IncomingMessage } from 'node:http';
+import https from 'node:https';
+import { URL } from 'node:url';
 
 const protocolClientMap: { [protocol: string]: HTTPClient } = {
   'http:': http,

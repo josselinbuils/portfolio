@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import Document, {
   Head as NextHead,
   Html,
@@ -9,19 +9,28 @@ import Document, {
 } from 'next/document';
 
 class Head extends NextHead {
+  private static readonly cache = new Map<string, string>();
+
   getCssLinks({ allFiles }: DocumentFiles): JSX.Element[] | null {
     return allFiles
       .filter((file) => file.endsWith('.css'))
-      .map((file) => (
-        <style
-          key={file}
-          nonce={this.props.nonce}
-          dangerouslySetInnerHTML={{
-            __html: fs.readFileSync(path.join('.next', file), 'utf-8'),
-          }}
-        />
-      ));
+      .map((file) => {
+        if (!Head.cache.has(file)) {
+          Head.cache.set(
+            file,
+            fs.readFileSync(path.join('.next', file), 'utf-8')
+          );
+        }
+        return (
+          <style
+            key={file}
+            nonce={this.props.nonce}
+            dangerouslySetInnerHTML={{ __html: Head.cache.get(file) as string }}
+          />
+        );
+      });
   }
+
   // eslint-disable-next-line class-methods-use-this
   getPolyfillScripts(): JSX.Element[] {
     return [];

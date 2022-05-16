@@ -1,5 +1,6 @@
-import fs from 'fs';
-import { IncomingMessage } from 'http';
+import fs from 'node:fs/promises';
+import { IncomingMessage } from 'node:http';
+import path from 'node:path';
 import WebSocket, { WebSocketServer } from 'ws';
 import { Logger } from '~/platform/api/Logger';
 import {
@@ -15,26 +16,26 @@ import { computeHash } from '../utils/computeHash';
 import { createSelection } from '../utils/createSelection';
 import { applyDiff } from '../utils/diffs';
 import { History } from '../utils/History';
-import { STATE_PATH } from './constants';
 import { createAction } from './utils/createAction';
 import { ExecQueue } from './utils/ExecQueue';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
+const SHARED_CODE_FILE_PATH = path.join(process.cwd(), '/sharedCode.txt');
 
 export class WSServer {
   private clientID = 0;
   private readonly clients = [] as Client[];
-  private code = fs.existsSync(STATE_PATH)
-    ? fs.readFileSync(STATE_PATH, 'utf8')
-    : '';
+  private code = '';
   private codeHash = computeHash(this.code);
   private readonly codeUpdateQueue = new ExecQueue();
   private readonly history = new History();
   private readonly requestQueue = new ExecQueue();
   private readonly server: WebSocketServer;
 
-  static create(): WSServer {
-    return new WSServer();
+  static async create(): Promise<WSServer> {
+    const server = new WSServer();
+    await server.loadSharedCode();
+    return server;
   }
 
   private static dispatch(wsClient: WebSocket, action: Action): void {
@@ -140,6 +141,18 @@ export class WSServer {
     });
   }
 
+  private async loadSharedCode(): Promise<void> {
+    try {
+      this.code = await fs.readFile(SHARED_CODE_FILE_PATH, 'utf8');
+      this.codeHash = computeHash(this.code);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+        return; // File does not exist
+      }
+      throw error;
+    }
+  }
+
   private reduce(wsClient: WebSocket, action: Action): void {
     const client = this.getClientFromWS(wsClient);
 
@@ -221,11 +234,8 @@ export class WSServer {
     this.fixCursorOffsets();
 
     // Avoids race conditions
-    this.codeUpdateQueue.enqueue(
-      async () =>
-        new Promise<void>((resolve) => {
-          fs.writeFile(STATE_PATH, code, resolve as () => void);
-        })
+    this.codeUpdateQueue.enqueue(async () =>
+      fs.writeFile(SHARED_CODE_FILE_PATH, code)
     );
   }
 

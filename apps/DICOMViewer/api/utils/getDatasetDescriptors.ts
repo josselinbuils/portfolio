@@ -1,5 +1,5 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { Logger } from '~/platform/api/Logger';
 import { extendError } from '~/platform/utils/extendError';
 import { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';

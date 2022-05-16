@@ -1,11 +1,12 @@
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
 import { validate } from 'jsonschema';
-import path from 'path';
 import configSchema from './config.schema.json';
 
 const rawConfig = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), 'config.json'), 'utf8')
 ) as Config;
+
 export const config = validate(rawConfig, configSchema, { throwError: true })
   .instance as Config;
 

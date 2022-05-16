@@ -1,18 +1,18 @@
-import { Server } from 'http';
+import { Server } from 'node:http';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { WSServer } from '~/apps/CodeEditor/api/WSServer';
 
 let wsServer: WSServer;
 
 /** Starts the WebSocket server used to share code if necessary. */
-export default function ws(
+export default async function ws(
   { socket, url }: NextApiRequest,
   res: NextApiResponse
-): void {
+): Promise<void> {
   if (wsServer === undefined) {
     const httpServer: Server = (socket as any).server;
 
-    wsServer = WSServer.create();
+    wsServer = await WSServer.create();
 
     httpServer.on('upgrade', (req) => {
       if (req.url === url) {
