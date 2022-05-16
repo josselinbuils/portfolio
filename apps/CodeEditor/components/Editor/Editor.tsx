@@ -67,7 +67,9 @@ export const Editor: FC<Props> = ({
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
-  const [selection, setSelection] = useState<Selection>({ start: 0, end: 0 });
+  const [selection, setSelection] = useState<Selection>(() =>
+    createSelection(0)
+  );
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
   const [activeFileName, previouslyActiveFileName, setActiveFileName] =
     useMemState<string>(files[0].name);
@@ -75,7 +77,7 @@ export const Editor: FC<Props> = ({
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
-  const cursorOffset = selection.start;
+  const cursorOffset = selection[0];
   const { complete, hasCompletionItems } = useAutoCompletion({
     active: autoCompleteActive,
     code,
@@ -184,11 +186,8 @@ export const Editor: FC<Props> = ({
     if (textAreaElement !== null) {
       const { selectionEnd, selectionStart } = textAreaElement;
 
-      if (
-        selectionStart !== selection.start ||
-        selectionEnd !== selection.end
-      ) {
-        textAreaElement.setSelectionRange(selection.start, selection.end);
+      if (selectionStart !== selection[0] || selectionEnd !== selection[1]) {
+        textAreaElement.setSelectionRange(selection[0], selection[1]);
       }
     }
   }, [code, selection, textAreaElementRef]);
@@ -214,8 +213,8 @@ export const Editor: FC<Props> = ({
       setCursorColor(state.cursorColor);
     }
     if (
-      selection.start !== state.selection.start ||
-      selection.end !== state.selection.end
+      selection[0] !== state.selection[0] ||
+      selection[1] !== state.selection[1]
     ) {
       setSelection(state.selection);
     }
@@ -338,14 +337,11 @@ export const Editor: FC<Props> = ({
       setAutoCompleteActive(false);
     }
 
-    if (selectionStart === selection.start && selectionEnd === selection.end) {
+    if (selectionStart === selection[0] && selectionEnd === selection[1]) {
       return;
     }
 
-    const newSelection = {
-      start: selectionStart,
-      end: selectionEnd,
-    };
+    const newSelection = createSelection(selectionStart, selectionEnd);
 
     if (isSharedFileActive) {
       updateSelection(newSelection);
@@ -462,20 +458,20 @@ export const Editor: FC<Props> = ({
         {textAreaElementRef.current &&
           isSharedFileActive &&
           cursors.map((cursor) =>
-            cursor.selection.end === cursor.selection.start ? (
+            cursor.selection[1] === cursor.selection[0] ? (
               <Cursor
                 color={cursor.color}
                 key={cursor.clientID}
-                offset={cursor.selection.start}
+                offset={cursor.selection[0]}
                 parent={textAreaElementRef.current as HTMLTextAreaElement}
               />
             ) : (
               <Highlight
                 code={code}
                 color={cursor.color}
-                endOffset={cursor.selection.end}
+                endOffset={cursor.selection[1]}
                 parent={textAreaElementRef.current as HTMLTextAreaElement}
-                startOffset={cursor.selection.start}
+                startOffset={cursor.selection[0]}
               />
             )
           )}

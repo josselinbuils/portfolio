@@ -38,10 +38,10 @@ export class History {
         if (
           !/\s/.test(firstNewDiff[2]) &&
           firstNewDiff[0] === lastCurrentDiff[0] &&
-          selection.start === lastStoredSelection.start &&
-          selection.end === lastStoredSelection.end &&
-          selection.end === selection.start &&
-          !isIntoBrackets(code, selection.start)
+          selection[0] === lastStoredSelection[0] &&
+          selection[1] === lastStoredSelection[1] &&
+          selection[1] === selection[0] &&
+          !isIntoBrackets(code, selection[0])
         ) {
           lastStoredState.selection = newState.selection;
           currentDiffs.push(firstNewDiff);
@@ -54,8 +54,8 @@ export class History {
     lastStoredSelection = lastStoredState?.selection ?? createSelection(0);
 
     if (
-      selection.start !== lastStoredSelection.start &&
-      selection.end !== lastStoredSelection.end
+      selection[0] !== lastStoredSelection[0] &&
+      selection[1] !== lastStoredSelection[1]
     ) {
       states.push({
         diffs: [],

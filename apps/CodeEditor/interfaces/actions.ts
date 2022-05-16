@@ -3,12 +3,16 @@ import { ClientCursor } from './ClientCursor';
 import { ClientState } from './ClientState';
 import { Selection } from './Selection';
 
-export const ACTION_REDO = 'REDO';
-export const ACTION_UNDO = 'UNDO';
-export const ACTION_UPDATE_CLIENT_STATE = 'UPDATE_CLIENT_STATE';
-export const ACTION_UPDATE_CODE = 'UPDATE_CODE';
-export const ACTION_UPDATE_CURSORS = 'UPDATE_CURSORS';
-export const ACTION_UPDATE_SELECTION = 'ACTION_UPDATE_SELECTION';
+const isDev = process.env.NODE_ENV === 'development';
+
+export const ACTION_REDO = isDev ? 'ACTION_REDO' : 0;
+export const ACTION_UNDO = isDev ? 'ACTION_UNDO' : 1;
+export const ACTION_UPDATE_CLIENT_STATE = isDev
+  ? 'ACTION_UPDATE_CLIENT_STATE'
+  : 2;
+export const ACTION_UPDATE_CODE = isDev ? 'ACTION_UPDATE_CODE' : 3;
+export const ACTION_UPDATE_CURSORS = isDev ? 'ACTION_UPDATE_CURSORS' : 4;
+export const ACTION_UPDATE_SELECTION = isDev ? 'ACTION_UPDATE_SELECTION' : 5;
 
 export type Action =
   | RedoAction
@@ -18,42 +22,38 @@ export type Action =
   | UpdateCursorsAction
   | UpdateSelectionAction;
 
-export interface RedoAction {
-  type: typeof ACTION_REDO;
-}
+export type RedoAction = [typeof ACTION_REDO];
 
-export interface UndoAction {
-  type: typeof ACTION_UNDO;
-}
+export type UndoAction = [typeof ACTION_UNDO];
 
-export interface UpdateClientStateAction {
-  type: typeof ACTION_UPDATE_CLIENT_STATE;
-  payload: {
-    state: Partial<ClientState>;
-  };
-}
+export type UpdateClientStateAction = [
+  typeof ACTION_UPDATE_CLIENT_STATE,
+  {
+    s: Partial<ClientState>; // state
+  }
+];
 
-export interface UpdateCodeAction {
-  type: typeof ACTION_UPDATE_CODE;
-  payload: {
-    currentSelection?: Selection;
-    diffs: Diff[];
-    newSelection?: Selection;
-    safetyHash?: number;
-  };
-}
+export type UpdateCodeAction = [
+  typeof ACTION_UPDATE_CODE,
+  {
+    cs?: Selection; // currentSelection
+    d: Diff[]; // diffs
+    ns?: Selection; // newSelection
+    sh?: number; // safetyHash
+  }
+];
 
-export interface UpdateCursorsAction {
-  type: typeof ACTION_UPDATE_CURSORS;
-  payload: {
-    cursors: ClientCursor[];
-  };
-}
+export type UpdateCursorsAction = [
+  typeof ACTION_UPDATE_CURSORS,
+  {
+    c: ClientCursor[]; // cursors
+  }
+];
 
-export interface UpdateSelectionAction {
-  type: typeof ACTION_UPDATE_SELECTION;
-  payload: {
-    clientID?: number;
-    selection: Selection;
-  };
-}
+export type UpdateSelectionAction = [
+  typeof ACTION_UPDATE_SELECTION,
+  {
+    cid?: number; // clientID
+    s: Selection; // selection
+  }
+];

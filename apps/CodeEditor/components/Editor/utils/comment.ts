@@ -11,8 +11,8 @@ export function comment(
   code: string,
   selection: Selection
 ): EditableState | undefined {
-  const firstLineOffset = getLineOffset(code, selection.start);
-  const lastLineOffset = getLineOffset(code, selection.end);
+  const firstLineOffset = getLineOffset(code, selection[0]);
+  const lastLineOffset = getLineOffset(code, selection[1]);
   const lineOffsets = [] as number[];
   let newCode = code;
 
@@ -53,10 +53,10 @@ export function comment(
     return {
       code: newCode,
       selection: createSelection(
-        selection.start < firstLineOffset + firstLineCommentOffset
-          ? selection.start
-          : selection.start - COMMENT.length,
-        selection.end - COMMENT.length * lineOffsetsToUncomment.length
+        selection[0] < firstLineOffset + firstLineCommentOffset
+          ? selection[0]
+          : selection[0] - COMMENT.length,
+        selection[1] - COMMENT.length * lineOffsetsToUncomment.length
       ),
     };
   }
@@ -95,10 +95,10 @@ export function comment(
   return {
     code: newCode,
     selection: createSelection(
-      selection.start < firstLineOffset + commentOffset
-        ? selection.start
-        : selection.start + COMMENT.length,
-      selection.end + COMMENT.length * lineOffsetsToComment.length
+      selection[0] < firstLineOffset + commentOffset
+        ? selection[0]
+        : selection[0] + COMMENT.length,
+      selection[1] + COMMENT.length * lineOffsetsToComment.length
     ),
   };
 }

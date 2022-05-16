@@ -77,11 +77,8 @@ export class WSServer {
     const codeLength = this.code.length;
 
     for (const client of this.clients) {
-      if (client.selection.start > codeLength) {
-        this.updateClientSelection(client, {
-          start: codeLength,
-          end: codeLength,
-        });
+      if (client.selection[0] > codeLength) {
+        this.updateClientSelection(client, createSelection(codeLength));
       }
     }
   }
@@ -153,13 +150,13 @@ export class WSServer {
     }
   }
 
-  private reduce(wsClient: WebSocket, action: Action): void {
+  private reduce(wsClient: WebSocket, [type, payload]: Action): void {
     const client = this.getClientFromWS(wsClient);
 
-    switch (action.type) {
+    switch (type) {
       case ACTION_REDO:
       case ACTION_UNDO: {
-        const historyFunction = action.type === ACTION_UNDO ? 'undo' : 'redo';
+        const historyFunction = type === ACTION_UNDO ? 'undo' : 'redo';
         const state = this.history[historyFunction](this.code);
 
         if (state === undefined) {
@@ -174,12 +171,16 @@ export class WSServer {
       }
 
       case ACTION_UPDATE_SELECTION:
-        this.updateClientSelection(client, action.payload.selection);
+        this.updateClientSelection(client, payload.s);
         break;
 
       case ACTION_UPDATE_CODE: {
-        const { currentSelection, diffs, newSelection, safetyHash } =
-          action.payload;
+        const {
+          cs: currentSelection,
+          d: diffs,
+          ns: newSelection,
+          sh: safetyHash,
+        } = payload;
 
         if (currentSelection === undefined || newSelection === undefined) {
           return;

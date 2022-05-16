@@ -31,7 +31,7 @@ const initialState: ClientState = {
 };
 
 const reducer = ((clientState, action) =>
-  handleAction[action.type]?.(clientState, action) || clientState) as Reducer<
+  handleAction[action[0]]?.(clientState, action) || clientState) as Reducer<
   ClientState,
   Action
 >;
@@ -56,7 +56,7 @@ export function useSharedFile({
   const clientCodeRef = useRef(clientState.code);
   const codeRef = useDynamicRef(code);
   const selectionRef = useDynamicRef(selection);
-  const lastCursorOffsetSentRef = useRef<Selection>({ end: 0, start: 0 });
+  const lastCursorOffsetSentRef = useRef<Selection>([0, 0]);
   const hashToWaitForRef = useRef<number>();
   const updateQueueRef = useRef<Diff[]>([]);
 
@@ -163,16 +163,13 @@ export function useSharedFile({
         console.debug('dequeue', diff, currentHash, clientState.code);
       }
 
-      diff[1] = clientState.selection.start;
+      diff[1] = clientState.selection[0];
 
       const newCursorOffset = getCursorOffsetAfterDiff(
         diff,
-        clientState.selection.start
+        clientState.selection[0]
       );
-      const newSelection = {
-        end: newCursorOffset,
-        start: newCursorOffset,
-      };
+      const newSelection = createSelection(newCursorOffset);
       const action = createAction.updateCode(
         clientState.selection,
         [diff],
@@ -246,8 +243,8 @@ export function useSharedFile({
     if (
       currentHash === hashToWaitForRef.current &&
       updateQueueRef.current.length === 0 &&
-      (newSelection.start !== lastCursorOffsetSentRef.current.start ||
-        newSelection.end !== lastCursorOffsetSentRef.current.end)
+      (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
+        newSelection[1] !== lastCursorOffsetSentRef.current[1])
     ) {
       const action = createAction.updateSelection({ ...newSelection });
       dispatchToServerRef.current(action);

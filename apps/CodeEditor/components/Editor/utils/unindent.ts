@@ -9,10 +9,10 @@ export function unindent(
   code: string,
   selection: Selection
 ): EditableState | undefined {
-  if (selection.end !== selection.start) {
-    const firstLineOffset = getLineOffset(code, selection.start);
+  if (selection[1] !== selection[0]) {
+    const firstLineOffset = getLineOffset(code, selection[0]);
     const processedLineOffsets = [] as number[];
-    let lastLineOffset = getLineOffset(code, selection.end);
+    let lastLineOffset = getLineOffset(code, selection[1]);
     let newCode = code;
 
     for (let i = firstLineOffset; i <= lastLineOffset; i++) {
@@ -30,13 +30,13 @@ export function unindent(
     return {
       code: newCode,
       selection: createSelection(
-        Math.max(selection.start - INDENT.length, firstLineOffset),
-        selection.end - INDENT.length * processedLineOffsets.length
+        Math.max(selection[0] - INDENT.length, firstLineOffset),
+        selection[1] - INDENT.length * processedLineOffsets.length
       ),
     };
   }
-  if (code.slice(selection.start - INDENT.length, selection.start) === INDENT) {
-    const newCursorOffset = selection.start - INDENT.length;
+  if (code.slice(selection[0] - INDENT.length, selection[0]) === INDENT) {
+    const newCursorOffset = selection[0] - INDENT.length;
 
     return {
       code: spliceString(code, newCursorOffset, INDENT.length),

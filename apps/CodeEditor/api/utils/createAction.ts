@@ -14,32 +14,27 @@ import { Selection } from '../../interfaces/Selection';
 import { Diff } from '../../utils/diffs';
 
 export const createAction = {
-  updateClientState: (
-    state: Partial<ClientState>
-  ): UpdateClientStateAction => ({
-    type: ACTION_UPDATE_CLIENT_STATE,
-    payload: { state },
-  }),
+  updateClientState: (state: Partial<ClientState>): UpdateClientStateAction => [
+    ACTION_UPDATE_CLIENT_STATE,
+    { s: state },
+  ],
   updateCode: (diffs: Diff[], newSelection?: Selection): UpdateCodeAction => {
-    const action: UpdateCodeAction = {
-      type: ACTION_UPDATE_CODE,
-      payload: { diffs },
-    };
+    const action: UpdateCodeAction = [ACTION_UPDATE_CODE, { d: diffs }];
 
     if (newSelection !== undefined) {
-      action.payload.newSelection = newSelection;
+      action[1].ns = newSelection;
     }
     return action;
   },
-  updateCursors: (cursors: ClientCursor[]): UpdateCursorsAction => ({
-    type: ACTION_UPDATE_CURSORS,
-    payload: { cursors },
-  }),
+  updateCursors: (cursors: ClientCursor[]): UpdateCursorsAction => [
+    ACTION_UPDATE_CURSORS,
+    { c: cursors },
+  ],
   updateSelection: (
     clientID: number,
     selection: Selection
-  ): UpdateSelectionAction => ({
-    type: ACTION_UPDATE_SELECTION,
-    payload: { clientID, selection },
-  }),
+  ): UpdateSelectionAction => [
+    ACTION_UPDATE_SELECTION,
+    { cid: clientID, s: selection },
+  ],
 };

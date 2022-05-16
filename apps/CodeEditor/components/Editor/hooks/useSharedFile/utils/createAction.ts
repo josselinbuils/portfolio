@@ -15,30 +15,28 @@ import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { Diff } from '~/apps/CodeEditor/utils/diffs';
 
 export const createAction = {
-  redo: (): RedoAction => ({ type: ACTION_REDO }),
-  undo: (): UndoAction => ({ type: ACTION_UNDO }),
-  updateClientState: (
-    state: Partial<ClientState>
-  ): UpdateClientStateAction => ({
-    type: ACTION_UPDATE_CLIENT_STATE,
-    payload: { state },
-  }),
+  redo: (): RedoAction => [ACTION_REDO],
+  undo: (): UndoAction => [ACTION_UNDO],
+  updateClientState: (state: Partial<ClientState>): UpdateClientStateAction => [
+    ACTION_UPDATE_CLIENT_STATE,
+    { s: state },
+  ],
   updateCode: (
     currentSelection: Selection,
     diffs: Diff[],
     newSelection: Selection,
     safetyHash: number
-  ): UpdateCodeAction => ({
-    type: ACTION_UPDATE_CODE,
-    payload: {
-      currentSelection,
-      diffs,
-      newSelection,
-      safetyHash,
+  ): UpdateCodeAction => [
+    ACTION_UPDATE_CODE,
+    {
+      cs: currentSelection,
+      d: diffs,
+      ns: newSelection,
+      sh: safetyHash,
     },
-  }),
-  updateSelection: (selection: Selection): UpdateSelectionAction => ({
-    type: ACTION_UPDATE_SELECTION,
-    payload: { selection },
-  }),
+  ],
+  updateSelection: (selection: Selection): UpdateSelectionAction => [
+    ACTION_UPDATE_SELECTION,
+    { s: selection },
+  ],
 };

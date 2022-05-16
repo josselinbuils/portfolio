@@ -14,13 +14,16 @@ import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 
 export const handleAction = {
-  [ACTION_UPDATE_CLIENT_STATE]: (state, action: UpdateClientStateAction) => ({
+  [ACTION_UPDATE_CLIENT_STATE]: (
+    state: ClientState,
+    action: UpdateClientStateAction
+  ) => ({
     ...state,
-    ...action.payload.state,
+    ...action[1].s,
   }),
 
   [ACTION_UPDATE_CODE]: (state: ClientState, action: UpdateCodeAction) => {
-    const { diffs, newSelection = state.selection } = action.payload;
+    const { d: diffs, ns: newSelection = state.selection } = action[1];
     const code = diffs.reduce(applyDiff, state.code);
     return { ...state, code, selection: newSelection };
   },
@@ -28,13 +31,13 @@ export const handleAction = {
   [ACTION_UPDATE_CURSORS]: (
     state: ClientState,
     action: UpdateCursorsAction
-  ) => ({ ...state, cursors: action.payload.cursors }),
+  ) => ({ ...state, cursors: action[1].c }),
 
   [ACTION_UPDATE_SELECTION]: (
     state: ClientState,
     action: UpdateSelectionAction
   ) => {
-    const { clientID, selection } = action.payload;
+    const { cid: clientID, s: selection } = action[1];
 
     if (clientID === state.id) {
       return { ...state, selection };
@@ -49,4 +52,4 @@ export const handleAction = {
 
     return { ...state };
   },
-} as { [action: string]: Reducer<ClientState, Action> };
+} as { [action: string | number]: Reducer<ClientState, Action> };
