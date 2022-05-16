@@ -37,6 +37,6 @@ export const createAction = {
   ],
   updateSelection: (selection: Selection): UpdateSelectionAction => [
     ACTION_UPDATE_SELECTION,
-    { s: selection },
+    { s: selection[0] === selection[1] ? selection[0] : selection },
   ],
 };

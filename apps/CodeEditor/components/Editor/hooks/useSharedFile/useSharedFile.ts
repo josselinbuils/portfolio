@@ -246,7 +246,7 @@ export function useSharedFile({
       (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
         newSelection[1] !== lastCursorOffsetSentRef.current[1])
     ) {
-      const action = createAction.updateSelection({ ...newSelection });
+      const action = createAction.updateSelection(newSelection);
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = { ...newSelection };
     }

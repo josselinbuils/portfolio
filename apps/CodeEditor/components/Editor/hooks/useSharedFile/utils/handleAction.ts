@@ -11,6 +11,7 @@ import {
   UpdateSelectionAction,
 } from '~/apps/CodeEditor/interfaces/actions';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 
 export const handleAction = {
@@ -37,7 +38,8 @@ export const handleAction = {
     state: ClientState,
     action: UpdateSelectionAction
   ) => {
-    const { cid: clientID, s: selection } = action[1];
+    const { cid: clientID, s } = action[1];
+    const selection = createSelection(s);
 
     if (clientID === state.id) {
       return { ...state, selection };

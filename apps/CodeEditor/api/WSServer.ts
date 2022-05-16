@@ -171,7 +171,7 @@ export class WSServer {
       }
 
       case ACTION_UPDATE_SELECTION:
-        this.updateClientSelection(client, payload.s);
+        this.updateClientSelection(client, createSelection(payload.s));
         break;
 
       case ACTION_UPDATE_CODE: {

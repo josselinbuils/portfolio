@@ -54,6 +54,6 @@ export type UpdateSelectionAction = [
   typeof ACTION_UPDATE_SELECTION,
   {
     cid?: number; // clientID
-    s: Selection; // selection
+    s: number | Selection; // selection
   }
 ];
