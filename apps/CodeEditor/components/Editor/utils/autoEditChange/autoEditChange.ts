@@ -14,6 +14,7 @@ import { unindent } from '../unindent';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
+import { getLineIndentBeforeCursor } from '../getLineIndentBeforeCursor';
 import { getLineNumber } from '../getLineNumber';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
@@ -78,7 +79,7 @@ export function autoEditChange(
           selection: createSelection(cursorOffset),
         };
       } else {
-        let indent = getLineIndent(code, selection.start);
+        let indent = getLineIndentBeforeCursor(code, selection.start);
         const lineBeforeCursor = getLineBeforeCursor(code, selection.start);
 
         if (

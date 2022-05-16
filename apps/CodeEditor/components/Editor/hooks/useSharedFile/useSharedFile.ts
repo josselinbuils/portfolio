@@ -226,6 +226,9 @@ export function useSharedFile({
         dispatchToServerRef.current(action);
       } else {
         if (diffs.length > 1) {
+          if (DEBUG) {
+            console.debug({ diffs });
+          }
           throw new Error('Cannot queue multiple diffs');
         }
         if (DEBUG) {
