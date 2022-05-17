@@ -92,7 +92,7 @@ export class History {
 
     if (index > -1) {
       if (states[index] === undefined) {
-        console.debug({ states });
+        console.debug({ states, index, state: states[index] });
         throw new Error('Inconsistent history state');
       }
 

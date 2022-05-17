@@ -44,6 +44,7 @@ import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
 import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
+import { duplicate } from './utils/duplicate';
 import { fileSaver, SHARED_FILENAME } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
@@ -114,13 +115,9 @@ export const Editor: FC<Props> = ({
 
   useKeyMap(
     {
-      'Control+:,Control+/,Meta+:,Meta+/': () => {
-        const newState = comment(code, selection);
-
-        if (newState !== undefined) {
-          updateState(newState);
-        }
-      },
+      'Control+:,Control+/,Meta+:,Meta+/': () =>
+        updateState(comment(code, selection)),
+      'Control+D,Meta+D': () => updateState(duplicate(code, selection)),
       'Control+N,Meta+N': createFile,
       'Control+O,Meta+O': () => open(undefined),
       'Control+S,Meta+S': format,
@@ -129,13 +126,7 @@ export const Editor: FC<Props> = ({
           setAutoCompleteActive(false);
         }
       },
-      'Shift+Tab': () => {
-        const newState = unindent(code, selection);
-
-        if (newState !== undefined) {
-          updateState(newState);
-        }
-      },
+      'Shift+Tab': () => updateState(unindent(code, selection)),
       Tab: () => {
         if (hasCompletionItems) {
           complete();
@@ -377,7 +368,10 @@ export const Editor: FC<Props> = ({
     }
   }
 
-  function updateState(newState: EditableState): void {
+  function updateState(newState: EditableState | undefined): void {
+    if (newState === undefined) {
+      return;
+    }
     if (isSharedFileActive) {
       updateClientState(newState);
     } else {
