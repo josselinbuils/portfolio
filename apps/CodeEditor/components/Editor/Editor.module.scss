@@ -1,5 +1,8 @@
 @import '../../constants';
 
+$lineNumbersWidth: 4rem;
+$tabsHeight: 3rem;
+
 ul.autoCompletionMenu {
   @include scrollbar;
 
@@ -62,8 +65,8 @@ ul.autoCompletionMenu {
   line-height: $lineHeight;
   position: absolute;
   z-index: 0;
-  top: 2.7rem;
-  left: 7rem;
+  top: $tabsHeight;
+  left: $toolbarWidth + $lineNumbersWidth;
   overflow-y: auto;
   box-sizing: border-box;
   width: calc(100% - 7rem);
@@ -101,16 +104,18 @@ ul.autoCompletionMenu {
 
 .lineNumbers {
   position: absolute;
-  top: 2.7rem;
+  top: $tabsHeight;
   bottom: 0;
-  left: 3rem;
+  left: $toolbarWidth;
+  width: $lineNumbersWidth;
 }
 
 .tabs {
   position: absolute;
   top: 0;
   right: 0;
-  left: 3rem;
+  left: $toolbarWidth;
+  height: $tabsHeight;
 }
 
 .toolbar {
@@ -118,6 +123,7 @@ ul.autoCompletionMenu {
   top: 0;
   bottom: 0;
   left: 0;
+  width: $toolbarWidth;
 }
 
 .textarea {

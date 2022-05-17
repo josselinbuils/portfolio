@@ -5,34 +5,18 @@
   outline: none;
 }
 
-.header {
-  font-size: 1.3rem;
-  line-height: 2.3rem;
+.logs {
   position: absolute;
   top: 0;
   right: 0;
-  left: 0;
-  box-sizing: border-box;
-  height: 2.5rem;
-  padding-left: 3rem;
-  user-select: none;
-  color: $textPrimaryColor;
-  border-top: 0.1rem solid $borderColorPrimary;
-  border-bottom: 0.1rem solid $borderColorPrimary;
-  background: $backgroundPrimaryColor;
-}
-
-.logs {
-  position: absolute;
-  top: 2.5rem;
-  right: 0;
   bottom: 0;
-  left: 3rem;
+  left: $toolbarWidth;
 }
 
 .toolbar {
   position: absolute;
-  top: 2.5rem;
+  top: 0;
   bottom: 0;
   left: 0;
+  width: $toolbarWidth;
 }

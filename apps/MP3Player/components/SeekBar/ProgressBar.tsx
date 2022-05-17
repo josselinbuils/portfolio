@@ -2,6 +2,11 @@ import React, { forwardRef } from 'react';
 
 import styles from './ProgressBar.module.scss';
 
+interface Props {
+  progress: number;
+  onSeekStart(downEvent: React.MouseEvent | React.TouchEvent): void;
+}
+
 export const ProgressBar = forwardRef<HTMLDivElement, Props>(
   ({ onSeekStart, progress }, ref) => (
     <div
@@ -18,8 +23,3 @@ export const ProgressBar = forwardRef<HTMLDivElement, Props>(
     </div>
   )
 );
-
-interface Props {
-  progress: number;
-  onSeekStart(downEvent: React.MouseEvent | React.TouchEvent): void;
-}

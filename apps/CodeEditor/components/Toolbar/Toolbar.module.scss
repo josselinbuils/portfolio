@@ -1,8 +1,8 @@
 @import '../../constants';
 
 .toolbar {
+  overflow: hidden;
   box-sizing: border-box;
-  width: 3rem;
   padding: 0.4rem;
   text-align: center;
   border-right: 0.1rem solid $borderColorPrimary;

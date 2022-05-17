@@ -9,18 +9,25 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-
-  & > * {
-    flex-grow: 0;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-}
-
-.editor {
-  flex-basis: 60%;
 }
 
 .console {
-  flex-basis: 40%;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.editor {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.resizeBar {
+  z-index: 1;
+  flex: 0 0 1rem;
+  box-sizing: border-box;
+  cursor: row-resize;
+  color: $textPrimaryColor;
+  border-top: 0.1rem solid $borderColorPrimary;
+  border-bottom: 0.1rem solid $borderColorPrimary;
+  background: $backgroundPrimaryColor;
 }

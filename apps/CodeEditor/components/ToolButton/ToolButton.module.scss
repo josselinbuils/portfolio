@@ -1,14 +1,16 @@
 @import '../../constants';
 
+$buttonSize: 2.5rem;
+
 .toolButton {
   $color: #b8babc;
 
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: $buttonSize;
+  height: $buttonSize;
   padding: 0;
   vertical-align: middle;
   color: $color;
@@ -35,10 +37,10 @@
 .tooltip {
   font-family: $fontFamily;
   font-size: 1.2rem;
-  line-height: 2.2rem;
+  line-height: $buttonSize;
   display: flex;
   box-sizing: border-box;
-  height: 2.2rem;
+  height: $buttonSize;
   margin: 0 0 0 -0.3rem;
   padding: 0 0.6rem;
   color: #b8babc;

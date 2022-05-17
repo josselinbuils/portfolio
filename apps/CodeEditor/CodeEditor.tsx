@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
 import { StatusBar } from './components/StatusBar/StatusBar';
@@ -18,6 +19,23 @@ const CodeEditor: WindowComponent = ({
     x: 0,
     y: 0,
   });
+  const [consoleHeight, setConsoleHeight] = useState('40%');
+  const consoleElementRef = useRef<HTMLDivElement>(null);
+  const resizeStartHandler = useDragAndDrop(onResizeStart);
+
+  function onResizeStart(
+    downEvent: React.PointerEvent
+  ): ((moveEvent: PointerEvent) => void) | void {
+    if (consoleElementRef.current === null) {
+      return;
+    }
+
+    const consoleStartHeight = consoleElementRef.current.clientHeight;
+    const startY = downEvent.clientY;
+
+    return (moveEvent: PointerEvent) =>
+      setConsoleHeight(`${consoleStartHeight - moveEvent.clientY + startY}px`);
+  }
 
   return (
     <Window
@@ -38,7 +56,14 @@ const CodeEditor: WindowComponent = ({
           onChange={setCode}
           onCursorPositionUpdate={setCursorPosition}
         />
-        <Console active={active} className={styles.console} codeToExec={code} />
+        <div className={styles.resizeBar} onPointerDown={resizeStartHandler} />
+        <Console
+          active={active}
+          className={styles.console}
+          codeToExec={code}
+          height={consoleHeight}
+          ref={consoleElementRef}
+        />
         <StatusBar
           className={styles.statusBar}
           cursorPosition={cursorPosition}
