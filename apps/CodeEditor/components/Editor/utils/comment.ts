@@ -53,7 +53,7 @@ export function comment(
     return {
       code: newCode,
       selection: createSelection(
-        selection[0] < firstLineOffset + firstLineCommentOffset
+        selection[0] <= firstLineOffset + firstLineCommentOffset
           ? selection[0]
           : selection[0] - COMMENT.length,
         selection[1] - COMMENT.length * lineOffsetsToUncomment.length
@@ -95,7 +95,7 @@ export function comment(
   return {
     code: newCode,
     selection: createSelection(
-      selection[0] < firstLineOffset + commentOffset
+      selection[0] <= firstLineOffset + commentOffset
         ? selection[0]
         : selection[0] + COMMENT.length,
       selection[1] + COMMENT.length * lineOffsetsToComment.length
