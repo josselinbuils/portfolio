@@ -52,6 +52,7 @@ import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
 import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
+import { moveLine } from './utils/moveLine';
 import { unindent } from './utils/unindent';
 
 import styles from './Editor.module.scss';
@@ -115,6 +116,8 @@ export const Editor: FC<Props> = ({
 
   useKeyMap(
     {
+      'Alt+Shift+ArrowDown': () => updateState(moveLine(code, selection, 1)),
+      'Alt+Shift+ArrowUp': () => updateState(moveLine(code, selection, -1)),
       'Control+:,Control+/,Meta+:,Meta+/': () =>
         updateState(comment(code, selection)),
       'Control+D,Meta+D': () => updateState(duplicate(code, selection)),
