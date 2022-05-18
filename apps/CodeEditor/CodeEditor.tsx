@@ -30,11 +30,17 @@ const CodeEditor: WindowComponent = ({
       return;
     }
 
-    const consoleStartHeight = consoleElementRef.current.clientHeight;
+    const consoleStartHeightPx = consoleElementRef.current.clientHeight;
+    const consoleStartHeightPercent = parseInt(consoleHeight, 10);
     const startY = downEvent.clientY;
 
-    return (moveEvent: PointerEvent) =>
-      setConsoleHeight(`${consoleStartHeight - moveEvent.clientY + startY}px`);
+    return (moveEvent: PointerEvent) => {
+      const deltaHeight = (startY - moveEvent.clientY) / consoleStartHeightPx;
+      const newHeightPercent = consoleStartHeightPercent * (1 + deltaHeight);
+      const newHeightBounded = Math.min(Math.max(newHeightPercent, 0), 100);
+
+      return setConsoleHeight(`${Math.round(newHeightBounded * 100) / 100}%`);
+    };
   }
 
   return (
