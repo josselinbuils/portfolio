@@ -3,6 +3,8 @@ import { Selection } from '../../../interfaces/Selection';
 import { createSelection } from '../../../utils/createSelection';
 import { spliceString } from '../../../utils/spliceString';
 import { INDENT } from '../constants';
+import { getCorrectedSelectionEnd } from './getCorrectedSelectionEnd';
+import { getLine } from './getLine';
 import { getLineOffset } from './getLineOffset';
 
 export function indent(code: string, selection: Selection): EditableState {
@@ -15,18 +17,19 @@ export function indent(code: string, selection: Selection): EditableState {
     };
   }
   const firstLineOffset = getLineOffset(code, selection[0]);
-  const processedLineOffsets = [] as number[];
-  let lastLineOffset = getLineOffset(code, selection[1]);
+  const correctedSelectionEnd = getCorrectedSelectionEnd(code, selection);
+  let lastLineOffset = getLineOffset(code, correctedSelectionEnd);
   let newCode = code;
+  let lineOffset = firstLineOffset;
+  let indentCount = 0;
 
-  for (let i = firstLineOffset; i <= lastLineOffset; i++) {
-    const lineOffset = getLineOffset(newCode, i);
+  while (lineOffset <= lastLineOffset) {
+    const line = getLine(newCode, lineOffset);
 
-    if (!processedLineOffsets.includes(lineOffset)) {
-      newCode = spliceString(newCode, lineOffset, 0, INDENT);
-      processedLineOffsets.push(lineOffset);
-      lastLineOffset += INDENT.length;
-    }
+    newCode = spliceString(newCode, lineOffset, 0, INDENT);
+    lastLineOffset += INDENT.length;
+    lineOffset += line.length + INDENT.length + 1;
+    indentCount += 1;
   }
 
   return {
@@ -35,7 +38,7 @@ export function indent(code: string, selection: Selection): EditableState {
       selection[0] === firstLineOffset
         ? selection[0]
         : selection[0] + INDENT.length,
-      selection[1] + INDENT.length * processedLineOffsets.length
+      selection[1] + INDENT.length * indentCount
     ),
   };
 }

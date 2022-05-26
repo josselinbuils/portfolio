@@ -323,30 +323,34 @@ export const Editor: FC<Props> = ({
     }
   }
 
-  function handleSelect({ target }: SyntheticEvent): void {
-    // Waits for selectionEnd and selectionStart to be updated
-    setTimeout(() => {
-      const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
+  function handleSelect({ nativeEvent, target }: SyntheticEvent): void {
+    const isKeyboardEvent = nativeEvent instanceof KeyboardEvent;
+    const isMouseEvent = nativeEvent instanceof MouseEvent;
 
-      if (
-        selectionEnd !== selectionStart ||
-        !isCodePortionEnd(code, selectionStart)
-      ) {
-        setAutoCompleteActive(false);
-      }
+    if (!isKeyboardEvent && !isMouseEvent) {
+      return;
+    }
 
-      if (selectionStart === selection[0] && selectionEnd === selection[1]) {
-        return;
-      }
+    const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
 
-      const newSelection = createSelection(selectionStart, selectionEnd);
+    if (
+      selectionEnd !== selectionStart ||
+      !isCodePortionEnd(code, selectionStart)
+    ) {
+      setAutoCompleteActive(false);
+    }
 
-      if (isSharedFileActive) {
-        updateSelection(newSelection);
-      } else {
-        setSelection(newSelection);
-      }
-    }, 0);
+    if (selectionStart === selection[0] && selectionEnd === selection[1]) {
+      return;
+    }
+
+    const newSelection = createSelection(selectionStart, selectionEnd);
+
+    if (isSharedFileActive) {
+      updateSelection(newSelection);
+    } else {
+      setSelection(newSelection);
+    }
   }
 
   function insertText(
@@ -495,12 +499,13 @@ export const Editor: FC<Props> = ({
         onDragLeave={() => setDisplayDragOverlay(false)}
         onDragOver={() => false}
         onDrop={handleDrop as (event: DragEvent) => void}
-        onKeyDown={handleSelect}
-        onMouseDown={(event) => {
-          disableAutoCompletion();
-          handleSelect(event);
+        onKeyDown={(event) => {
+          // Waits for selectionEnd and selectionStart to be updated
+          setTimeout(() => handleSelect(event), 0);
         }}
+        onMouseDown={disableAutoCompletion}
         onFocus={() => setActive(true)}
+        onSelect={handleSelect}
         onScroll={({ target }) =>
           setScrollTop((target as HTMLTextAreaElement).scrollTop)
         }

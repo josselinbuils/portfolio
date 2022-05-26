@@ -3,6 +3,8 @@ import { Selection } from '../../../interfaces/Selection';
 import { createSelection } from '../../../utils/createSelection';
 import { spliceString } from '../../../utils/spliceString';
 import { INDENT } from '../constants';
+import { getCorrectedSelectionEnd } from './getCorrectedSelectionEnd';
+import { getLine } from './getLine';
 import { getLineOffset } from './getLineOffset';
 
 export function unindent(
@@ -11,27 +13,30 @@ export function unindent(
 ): EditableState | undefined {
   if (selection[1] !== selection[0]) {
     const firstLineOffset = getLineOffset(code, selection[0]);
-    const processedLineOffsets = [] as number[];
-    let lastLineOffset = getLineOffset(code, selection[1]);
+    const correctedSelectionEnd = getCorrectedSelectionEnd(code, selection);
+    let lastLineOffset = getLineOffset(code, correctedSelectionEnd);
     let newCode = code;
+    let lineOffset = firstLineOffset;
+    let unindentCount = 0;
 
-    for (let i = firstLineOffset; i <= lastLineOffset; i++) {
-      const lineOffset = getLineOffset(newCode, i);
+    while (lineOffset <= lastLineOffset) {
+      const line = getLine(newCode, lineOffset);
 
-      if (!processedLineOffsets.includes(lineOffset)) {
-        if (newCode.slice(lineOffset, lineOffset + INDENT.length) !== INDENT) {
-          return;
-        }
+      if (newCode.slice(lineOffset, lineOffset + INDENT.length) === INDENT) {
         newCode = spliceString(newCode, lineOffset, INDENT.length);
-        processedLineOffsets.push(lineOffset);
+        unindentCount += 1;
         lastLineOffset -= INDENT.length;
+        lineOffset += line.length - INDENT.length + 1;
+      } else {
+        lineOffset += line.length + 1;
       }
     }
+
     return {
       code: newCode,
       selection: createSelection(
         Math.max(selection[0] - INDENT.length, firstLineOffset),
-        selection[1] - INDENT.length * processedLineOffsets.length
+        selection[1] - INDENT.length * unindentCount
       ),
     };
   }
