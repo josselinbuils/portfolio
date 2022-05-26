@@ -324,26 +324,29 @@ export const Editor: FC<Props> = ({
   }
 
   function handleSelect({ target }: SyntheticEvent): void {
-    const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
+    // Waits for selectionEnd and selectionStart to be updated
+    setTimeout(() => {
+      const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
 
-    if (
-      selectionEnd !== selectionStart ||
-      !isCodePortionEnd(code, selectionStart)
-    ) {
-      setAutoCompleteActive(false);
-    }
+      if (
+        selectionEnd !== selectionStart ||
+        !isCodePortionEnd(code, selectionStart)
+      ) {
+        setAutoCompleteActive(false);
+      }
 
-    if (selectionStart === selection[0] && selectionEnd === selection[1]) {
-      return;
-    }
+      if (selectionStart === selection[0] && selectionEnd === selection[1]) {
+        return;
+      }
 
-    const newSelection = createSelection(selectionStart, selectionEnd);
+      const newSelection = createSelection(selectionStart, selectionEnd);
 
-    if (isSharedFileActive) {
-      updateSelection(newSelection);
-    } else {
-      setSelection(newSelection);
-    }
+      if (isSharedFileActive) {
+        updateSelection(newSelection);
+      } else {
+        setSelection(newSelection);
+      }
+    }, 0);
   }
 
   function insertText(
@@ -492,12 +495,15 @@ export const Editor: FC<Props> = ({
         onDragLeave={() => setDisplayDragOverlay(false)}
         onDragOver={() => false}
         onDrop={handleDrop as (event: DragEvent) => void}
-        onMouseDown={disableAutoCompletion}
+        onKeyDown={handleSelect}
+        onMouseDown={(event) => {
+          disableAutoCompletion();
+          handleSelect(event);
+        }}
         onFocus={() => setActive(true)}
         onScroll={({ target }) =>
           setScrollTop((target as HTMLTextAreaElement).scrollTop)
         }
-        onSelect={handleSelect}
         ref={textAreaElementRef}
         spellCheck={false}
         style={isSharedFileActive ? { caretColor: cursorColor } : undefined}
