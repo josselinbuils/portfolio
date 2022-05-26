@@ -1,7 +1,7 @@
 export interface Log {
   id: string;
   level: LogLevel;
-  message: string;
+  message: (string | JSX.Element)[];
 }
 
 export enum LogLevel {

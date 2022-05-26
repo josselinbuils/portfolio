@@ -1,6 +1,7 @@
 import { ListManager } from '@josselinbuils/hooks/useList';
 import { createGUID } from '~/platform/utils/createGUID';
 import { highlightCode } from '~/platform/utils/highlightCode/highlightCode';
+import { Shortcut } from '../../Shortcut/Shortcut';
 import { Log, LogLevel } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {
@@ -19,13 +20,13 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
       logManager.push({
         id: createGUID(),
         level: LogLevel.Error,
-        message: `${error.message}${formattedPosition}`,
+        message: `${error.message}${formattedPosition}`.split('\n'),
       });
     } else if (error) {
       logManager.push({
         id: createGUID(),
         level: LogLevel.Error,
-        message: error.toString(),
+        message: error.toString().split('\n'),
       });
     }
   };
@@ -35,10 +36,12 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   console.log = (...args: any[]) => {
     originalConsoleLog(...args);
 
+    const id = createGUID();
+
     logManager.push({
-      id: createGUID(),
+      id,
       level: LogLevel.Info,
-      message: args.map(highlight).join(' '),
+      message: args.map((arg) => prettify(arg, id)),
     });
   };
 
@@ -48,28 +51,43 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   };
 }
 
-function highlight(code: string): string {
-  return highlightCode(prettify(code), 'javascript');
-}
-
-function prettify(value: any): string {
-  let prettified = `${value}`;
+function prettify(value: any, id: string): string | JSX.Element {
+  let prettified: string | JSX.Element = `${value}`;
 
   const replaceLineBreaks = (str: string) => str.replace(/\n|\\n/g, '↵');
+  const isPrimitive = value !== Object(value);
 
   if (typeof value === 'string') {
-    prettified = `'${value}'`;
+    prettified = (
+      <>
+        {value.split(/\[\[([^\]]+)]]/).map((part, index) =>
+          index % 2 === 0 ? (
+            // eslint-disable-next-line react/no-array-index-key
+            <span key={`${id}-${index}`}>{part}</span>
+          ) : (
+            // eslint-disable-next-line react/no-array-index-key
+            <Shortcut key={`${id}-${index}`} keys={part.split('+')} />
+          )
+        )}
+      </>
+    );
+  } else if (isPrimitive) {
+    prettified = highlightCode(`${value}`, 'javascript');
   } else if (Array.isArray(value)) {
-    const items = value.map((v) => replaceLineBreaks(prettify(v)));
+    const items = value
+      .map((v) => prettify(v, id))
+      .map((v) => (typeof v === 'string' ? replaceLineBreaks(v) : v));
     prettified = `[${items.join(', ')}]`;
   } else if (value && value.toString() === '[object Object]') {
     prettified = replaceLineBreaks(JSON.stringify(value));
   }
 
-  const matches = prettified.match(/^\[object ([^\]]+)]$/);
+  if (typeof prettified === 'string') {
+    const matches = prettified.match(/^\[object ([^\]]+)]$/);
 
-  if (matches !== null) {
-    prettified = matches[1];
+    if (matches !== null) {
+      prettified = matches[1];
+    }
   }
 
   return prettified;

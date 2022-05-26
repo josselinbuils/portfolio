@@ -1,4 +1,5 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
@@ -53,6 +54,7 @@ import { getLineNumber } from './utils/getLineNumber';
 import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { moveLines } from './utils/moveLines';
+import { showShortcuts } from './utils/showShortcuts';
 import { unindent } from './utils/unindent';
 
 import styles from './Editor.module.scss';
@@ -391,7 +393,7 @@ export const Editor: FC<Props> = ({
           onClick={createFile}
           title={
             <>
-              New
+              New&nbsp;
               <Shortcut keys={['Ctrl', 'N']} />
             </>
           }
@@ -401,7 +403,7 @@ export const Editor: FC<Props> = ({
           onClick={() => open()}
           title={
             <>
-              Open
+              Open&nbsp;
               <Shortcut keys={['Ctrl', 'O']} />
             </>
           }
@@ -412,7 +414,7 @@ export const Editor: FC<Props> = ({
           onClick={format}
           title={
             <>
-              Format
+              Format&nbsp;
               <Shortcut keys={['Ctrl', 'S']} />
             </>
           }
@@ -422,6 +424,11 @@ export const Editor: FC<Props> = ({
           icon={faCamera}
           onClick={exportCodeSnippet}
           title="Export as image"
+        />
+        <ToolButton
+          icon={faCircleInfo}
+          onClick={showShortcuts}
+          title="Show shortcuts"
         />
       </Toolbar>
       <Tabs className={styles.tabs} label="Files">

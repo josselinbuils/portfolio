@@ -10,7 +10,14 @@ export const Shortcut: FC<Props> = ({ keys }) => (
           {key}
         </kbd>
       ))
-      .reduce((prev, curr) => [prev, '+', curr])}
+      .reduce((prev, curr, index) => [
+        prev,
+        // eslint-disable-next-line react/no-array-index-key
+        <span className={styles.plus} key={`plus-${index}`}>
+          +
+        </span>,
+        curr,
+      ])}
   </>
 );
 
