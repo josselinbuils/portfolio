@@ -5,3 +5,13 @@
   height: 1.25em;
   border-right: 0.1rem solid;
 }
+
+.segment {
+  position: absolute;
+  z-index: -1;
+  display: inline-block;
+  height: 1.5em;
+  margin-top: -0.125em;
+
+  filter: brightness(0.3);
+}

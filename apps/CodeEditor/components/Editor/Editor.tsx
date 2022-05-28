@@ -32,7 +32,6 @@ import { Shortcut } from '../Shortcut/Shortcut';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Cursor } from './components/Cursor/Cursor';
-import { Highlight } from './components/Highlight/Highlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { Tab } from './components/Tab/Tab';
 import { Tabs } from './components/Tabs/Tabs';
@@ -468,24 +467,15 @@ export const Editor: FC<Props> = ({
         <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
         {textAreaElementRef.current &&
           isSharedFileActive &&
-          cursors.map((cursor) =>
-            cursor.selection[1] === cursor.selection[0] ? (
-              <Cursor
-                color={cursor.color}
-                key={cursor.clientID}
-                offset={cursor.selection[0]}
-                parent={textAreaElementRef.current as HTMLTextAreaElement}
-              />
-            ) : (
-              <Highlight
-                code={code}
-                color={cursor.color}
-                endOffset={cursor.selection[1]}
-                parent={textAreaElementRef.current as HTMLTextAreaElement}
-                startOffset={cursor.selection[0]}
-              />
-            )
-          )}
+          cursors.map((cursor) => (
+            <Cursor
+              code={code}
+              color={cursor.color}
+              key={cursor.clientID}
+              selection={selection}
+              parent={textAreaElementRef.current as HTMLTextAreaElement}
+            />
+          ))}
       </div>
       <textarea
         className={styles.textarea}
