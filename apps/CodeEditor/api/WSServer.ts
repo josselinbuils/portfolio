@@ -164,8 +164,12 @@ export class WSServer {
         }
         const { code, selection } = state;
 
-        this.dispatchAll(createAction.updateClientState({ code }));
-        this.updateClientSelection(client, selection);
+        this.dispatchAll(({ id }) =>
+          createAction.updateClientState(
+            id === client.id ? { code, selection } : { code }
+          )
+        );
+        this.updateClientSelection(client, selection, true);
         this.updateCode(code);
         break;
       }
