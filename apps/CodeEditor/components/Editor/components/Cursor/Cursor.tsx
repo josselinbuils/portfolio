@@ -56,6 +56,7 @@ export const Cursor: FC<Props> = ({ code, color, parent, selection }) => {
       {segments.map(({ width, x, y }) => (
         <div
           className={styles.segment}
+          key={`${color}${x}${y}${width}`}
           style={{ background: color, left: x, top: y, width }}
         />
       ))}

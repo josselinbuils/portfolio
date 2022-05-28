@@ -472,7 +472,7 @@ export const Editor: FC<Props> = ({
               code={code}
               color={cursor.color}
               key={cursor.clientID}
-              selection={selection}
+              selection={cursor.selection}
               parent={textAreaElementRef.current as HTMLTextAreaElement}
             />
           ))}
