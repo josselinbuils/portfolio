@@ -158,8 +158,14 @@ export const Editor: FC<Props> = ({
   }, [activeFile, applyState]);
 
   useLayoutEffect(() => {
-    setHighlightedCode(highlightCode(code, activeFile.language));
-  }, [activeFile.language, code]);
+    setHighlightedCode(
+      highlightCode(
+        code,
+        activeFile.language,
+        selection[1] === selection[0] ? selection[0] : undefined
+      )
+    );
+  }, [activeFile.language, code, selection]);
 
   useEffect(() => {
     const x = getLineBeforeCursor(code, cursorOffset).length + 1;

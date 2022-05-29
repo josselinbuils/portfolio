@@ -4,7 +4,7 @@ import { CursorPosition } from '../../interfaces/CursorPosition';
 
 import styles from './StatusBar.module.scss';
 
-const DEBUG = false;
+const DEBUG = true;
 
 export const StatusBar: FC<Props> = ({ className, cursorPosition }) => {
   const { offset, x, y } = cursorPosition;

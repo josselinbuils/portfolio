@@ -40,6 +40,11 @@
     cursor: help;
   }
 
+  &.highlightedBracket {
+    color: #ffef28;
+    background-color: #3b514d;
+  }
+
   &.important {
     font-weight: bold;
   }
