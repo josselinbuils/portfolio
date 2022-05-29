@@ -1,4 +1,4 @@
-import { Action, ActionType } from './Action';
+import { Action } from './Action';
 
 export type ActionCreator<Payload = void> = Payload extends void
   ? () => Action<Payload>
@@ -6,5 +6,5 @@ export type ActionCreator<Payload = void> = Payload extends void
 
 export interface ActionFactory<Payload> {
   create: ActionCreator<Payload>;
-  type: ActionType;
+  type: string;
 }

@@ -15,5 +15,5 @@ export const updateCode = createActionFactory<{
   cs?: Selection; // currentSelection
   d: Diff[]; // diffs
   ns?: Selection; // newSelection
-  sh?: number; // safetyHash
+  sh?: string; // safetyHash
 }>('UPDATE_CODE');

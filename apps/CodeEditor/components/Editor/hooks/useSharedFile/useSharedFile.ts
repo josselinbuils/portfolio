@@ -6,7 +6,6 @@ import * as serverActions from '~/apps/CodeEditor/api/utils/serverActions';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
-import { computeHash } from '~/apps/CodeEditor/utils/computeHash';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import {
   applyDiff,
@@ -14,9 +13,10 @@ import {
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
-import { cancelable } from '~/platform/utils/cancelable';
 import { Action } from '~/platform/state/interfaces/Action';
 import { createReducer } from '~/platform/state/utils/createReducer';
+import { cancelable } from '~/platform/utils/cancelable';
+import { computeHash } from '~/platform/utils/computeHash';
 import * as actions from './clientActions';
 
 const DEBUG = false;
@@ -54,7 +54,7 @@ export function useSharedFile({
   const codeRef = useDynamicRef(code);
   const selectionRef = useDynamicRef(selection);
   const lastCursorOffsetSentRef = useRef<Selection>([0, 0]);
-  const hashToWaitForRef = useRef<number>();
+  const hashToWaitForRef = useRef<string>();
   const updateQueueRef = useRef<Diff[]>([]);
 
   useKeyMap(

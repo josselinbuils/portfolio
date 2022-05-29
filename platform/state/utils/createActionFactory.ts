@@ -1,13 +1,12 @@
-import { ActionType } from '../interfaces/Action';
+import { computeHash } from '~/platform/utils/computeHash';
 import { ActionCreator, ActionFactory } from '../interfaces/ActionFactory';
 
 const isProduction = process.env.NODE_ENV === 'production';
-let prodActionId = -1; // To reduce size of WebSocket payloads
 
 export function createActionFactory<Payload = void>(
-  type: ActionType
+  type: string
 ): ActionFactory<Payload> {
-  const optimisedType = isProduction ? ++prodActionId : type;
+  const optimisedType = isProduction ? computeHash(type) : type;
 
   return {
     create: ((payload?: unknown) =>
