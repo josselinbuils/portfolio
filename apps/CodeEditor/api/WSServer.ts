@@ -3,6 +3,7 @@ import { IncomingMessage } from 'node:http';
 import path from 'node:path';
 import WebSocket, { WebSocketServer } from 'ws';
 import * as clientActions from '~/apps/CodeEditor/components/Editor/hooks/useSharedFile/clientActions';
+import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import { Logger } from '~/platform/api/Logger';
 import { Action } from '~/platform/state/interfaces/Action';
 import { computeHash } from '~/platform/utils/computeHash';
@@ -249,15 +250,17 @@ export class WSServer {
     excludeClient = false
   ): void {
     client.selection = selection;
+    const minifiedSelection = minifySelection(selection);
+
     this.dispatchAll(({ id }) => {
       if (id !== client.id) {
         return clientActions.applyForeignSelection.create({
           cid: client.id,
-          s: selection,
+          s: minifiedSelection,
         });
       }
       if (!excludeClient) {
-        return clientActions.applySelection.create({ s: selection });
+        return clientActions.applySelection.create({ s: minifiedSelection });
       }
     });
   }

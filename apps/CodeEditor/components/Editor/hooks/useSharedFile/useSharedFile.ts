@@ -13,6 +13,7 @@ import {
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
+import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import { Action } from '~/platform/state/interfaces/Action';
 import { createReducer } from '~/platform/state/utils/createReducer';
 import { cancelable } from '~/platform/utils/cancelable';
@@ -100,7 +101,7 @@ export function useSharedFile({
           readyDeferred.resolve();
           dispatchToServerRef.current(
             serverActions.updateClientSelection.create({
-              s: selectionRef.current,
+              s: minifySelection(selectionRef.current),
             })
           );
         };
@@ -245,11 +246,12 @@ export function useSharedFile({
       (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
         newSelection[1] !== lastCursorOffsetSentRef.current[1])
     ) {
-      const action = serverActions.updateClientSelection.create({
-        s: newSelection,
-      });
-      dispatchToServerRef.current(action);
-      lastCursorOffsetSentRef.current = { ...newSelection };
+      dispatchToServerRef.current(
+        serverActions.updateClientSelection.create({
+          s: minifySelection(newSelection),
+        })
+      );
+      lastCursorOffsetSentRef.current = createSelection(newSelection);
     }
   }, []);
 
