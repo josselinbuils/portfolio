@@ -219,7 +219,7 @@ export class WSServer {
       }
 
       default:
-        throw new Error('Unknown action');
+        throw new Error(`Unknown action: ${JSON.stringify([type, payload])}`);
     }
   }
 
