@@ -71,7 +71,7 @@ function afterTokenizeHook(
       if (isToken) {
         (token as any).offset = offset;
       }
-      offset += isToken ? token.content.length : token.length;
+      offset += getTokenLength(token);
     });
 
     const tokens = (env.tokens as (string | Token)[]).filter(
@@ -121,6 +121,16 @@ function afterTokenizeHook(
       }
     }
   }
+}
+
+function getTokenLength(token: string | Token): number {
+  if (typeof token === 'string') {
+    return token.length;
+  }
+  if (Array.isArray(token.content)) {
+    return token.content.reduce((sum, entry) => sum + getTokenLength(entry), 0);
+  }
+  return getTokenLength(token.content);
 }
 
 function removeHook(name: string, callback: hooks.HookCallback): void {
