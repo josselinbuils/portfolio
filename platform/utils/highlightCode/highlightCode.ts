@@ -10,7 +10,7 @@ import 'prismjs/components/prism-scss.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-yaml.min';
 
-import styles from './darcula.module.scss';
+import styles from './manomano.module.scss';
 
 const CLOSING_BRACKETS = [')', ']', '}'];
 const OPENING_BRACKETS = ['(', '[', '{'];

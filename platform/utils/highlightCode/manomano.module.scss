@@ -1,0 +1,86 @@
+.token {
+  &.annotation {
+    color: #bbb529;
+  }
+
+  &.bold {
+    font-weight: bold;
+  }
+
+  &.comment:not(.doc-comment) {
+    color: #8b91a1;
+  }
+
+  &.constant {
+    color: #9876aa;
+  }
+
+  &.doc-comment {
+    font-style: italic;
+    color: #6a8759;
+
+    .keyword {
+      font-weight: bold;
+      text-decoration: underline;
+      color: #6a8759;
+    }
+
+    .parameter {
+      color: #8a653b;
+    }
+  }
+
+  &.doctype,
+  &.function,
+  &.selector {
+    color: #29b9ad;
+  }
+
+  &.entity {
+    cursor: help;
+  }
+
+  &.highlightedBracket {
+    color: #ffdf9b;
+    background-color: #0d596b;
+  }
+
+  &.important {
+    font-weight: bold;
+  }
+
+  &.italic {
+    font-style: italic;
+  }
+
+  &.keyword,
+  &.boolean,
+  &.constant,
+  &.null,
+  &.important,
+  &.rule {
+    color: #dd891d;
+  }
+
+  &.number {
+    color: #91b2ec;
+  }
+
+  &.string,
+  &.regex,
+  &.char {
+    color: #c698fb;
+  }
+
+  &.tag {
+    color: #e8bf6a;
+
+    .attr-name {
+      color: #a3b7c6;
+    }
+
+    .attr-value {
+      color: #a5c261;
+    }
+  }
+}
