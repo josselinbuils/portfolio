@@ -2,22 +2,17 @@ import fs from 'node:fs/promises';
 import { IncomingMessage } from 'node:http';
 import path from 'node:path';
 import WebSocket, { WebSocketServer } from 'ws';
+import * as clientActions from '~/apps/CodeEditor/components/Editor/hooks/useSharedFile/clientActions';
 import { Logger } from '~/platform/api/Logger';
-import {
-  Action,
-  ACTION_REDO,
-  ACTION_UNDO,
-  ACTION_UPDATE_CODE,
-  ACTION_UPDATE_SELECTION,
-} from '../interfaces/actions';
+import { Action } from '~/platform/state/interfaces/Action';
 import { ClientCursor } from '../interfaces/ClientCursor';
 import { Selection } from '../interfaces/Selection';
 import { computeHash } from '../utils/computeHash';
 import { createSelection } from '../utils/createSelection';
 import { applyDiff } from '../utils/diffs';
 import { History } from '../utils/History';
-import { createAction } from './utils/createAction';
 import { ExecQueue } from './utils/ExecQueue';
+import * as serverActions from './utils/serverActions';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 const SHARED_CODE_FILE_PATH = path.join(process.cwd(), '/sharedCode.txt');
@@ -38,7 +33,7 @@ export class WSServer {
     return server;
   }
 
-  private static dispatch(wsClient: WebSocket, action: Action): void {
+  private static dispatch(wsClient: WebSocket, action: Action<any>): void {
     wsClient.send(JSON.stringify(action));
   }
 
@@ -57,7 +52,7 @@ export class WSServer {
   }
 
   private dispatchAll(
-    action: Action | ((client: Client) => Action | undefined)
+    action: Action<any> | ((client: Client) => Action<any> | undefined)
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
@@ -115,7 +110,10 @@ export class WSServer {
         cursorColor,
         id,
       };
-      WSServer.dispatch(wsClient, createAction.updateClientState(state));
+      WSServer.dispatch(
+        wsClient,
+        clientActions.applyState.create({ s: state })
+      );
       this.sendCursors();
     });
 
@@ -150,13 +148,14 @@ export class WSServer {
     }
   }
 
-  private reduce(wsClient: WebSocket, [type, payload]: Action): void {
+  private reduce(wsClient: WebSocket, [type, payload]: Action<any>): void {
     const client = this.getClientFromWS(wsClient);
 
     switch (type) {
-      case ACTION_REDO:
-      case ACTION_UNDO: {
-        const historyFunction = type === ACTION_UNDO ? 'undo' : 'redo';
+      case serverActions.redo.type:
+      case serverActions.undo.type: {
+        const historyFunction =
+          type === serverActions.undo.type ? 'undo' : 'redo';
         const state = this.history[historyFunction](this.code);
 
         if (state === undefined) {
@@ -165,20 +164,20 @@ export class WSServer {
         const { code, selection } = state;
 
         this.dispatchAll(({ id }) =>
-          createAction.updateClientState(
-            id === client.id ? { code, selection } : { code }
-          )
+          clientActions.applyState.create({
+            s: id === client.id ? { code, selection } : { code },
+          })
         );
         this.updateClientSelection(client, selection, true);
         this.updateCode(code);
         break;
       }
 
-      case ACTION_UPDATE_SELECTION:
+      case serverActions.updateClientSelection.type:
         this.updateClientSelection(client, createSelection(payload.s));
         break;
 
-      case ACTION_UPDATE_CODE: {
+      case serverActions.updateCode.type: {
         const {
           cs: currentSelection,
           d: diffs,
@@ -195,14 +194,14 @@ export class WSServer {
           // Requested update is obsolete so we reset client code
           WSServer.dispatch(
             wsClient,
-            createAction.updateClientState({ code: this.code })
+            clientActions.applyState.create({ s: { code: this.code } })
           );
           return;
         }
         this.dispatchAll(({ id }) =>
-          id === client.id
-            ? createAction.updateCode(diffs, newSelection)
-            : createAction.updateCode(diffs)
+          clientActions.applyCodeChange.create(
+            id === client.id ? { d: diffs, ns: newSelection } : { d: diffs }
+          )
         );
         this.updateClientSelection(client, newSelection, true);
         this.history.pushState(
@@ -227,9 +226,9 @@ export class WSServer {
   private sendCursors(): void {
     const cursors = this.getCursors();
     this.dispatchAll((client) =>
-      createAction.updateCursors(
-        cursors.filter(({ clientID }) => clientID !== client.id)
-      )
+      clientActions.applyForeignCursors.create({
+        c: cursors.filter(({ clientID }) => clientID !== client.id),
+      })
     );
   }
 
@@ -251,8 +250,14 @@ export class WSServer {
   ): void {
     client.selection = selection;
     this.dispatchAll(({ id }) => {
-      if (!excludeClient || id !== client.id) {
-        return createAction.updateSelection(client.id, selection);
+      if (id !== client.id) {
+        return clientActions.applyForeignSelection.create({
+          cid: client.id,
+          s: selection,
+        });
+      }
+      if (!excludeClient) {
+        return clientActions.applySelection.create({ s: selection });
       }
     });
   }

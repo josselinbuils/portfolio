@@ -1,8 +1,8 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { Deferred } from '@josselinbuils/utils/Deferred';
-import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
-import { Action } from '~/apps/CodeEditor/interfaces/actions';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
+import * as serverActions from '~/apps/CodeEditor/api/utils/serverActions';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
@@ -15,8 +15,9 @@ import {
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';
 import { cancelable } from '~/platform/utils/cancelable';
-import { createAction } from './utils/createAction';
-import { handleAction } from './utils/handleAction';
+import { Action } from '~/platform/state/interfaces/Action';
+import { createReducer } from '~/platform/state/utils/createReducer';
+import * as actions from './clientActions';
 
 const DEBUG = false;
 const REOPEN_DELAY_MS = 1000;
@@ -30,11 +31,7 @@ const initialState: ClientState = {
   selection: createSelection(0),
 };
 
-const reducer = ((clientState, action) =>
-  handleAction[action[0]]?.(clientState, action) || clientState) as Reducer<
-  ClientState,
-  Action
->;
+const reducer = createReducer(Object.values(actions));
 
 export function useSharedFile({
   active,
@@ -50,7 +47,7 @@ export function useSharedFile({
   updateClientState(newState: EditableState): void;
   updateSelection(selection: Selection): void;
 } {
-  const dispatchToServerRef = useRef<(action: Action) => void>(() => {});
+  const dispatchToServerRef = useRef<(action: Action<any>) => void>(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
   const clientCodeRef = useRef(clientState.code);
@@ -63,9 +60,9 @@ export function useSharedFile({
   useKeyMap(
     {
       'Control+Z,Meta+Z': () =>
-        dispatchToServerRef.current(createAction.undo()),
+        dispatchToServerRef.current(serverActions.undo.create()),
       'Control+Shift+Z,Meta+Shift+Z': () =>
-        dispatchToServerRef.current(createAction.redo()),
+        dispatchToServerRef.current(serverActions.redo.create()),
     },
     active
   );
@@ -89,7 +86,7 @@ export function useSharedFile({
 
         ws = new WebSocket(`${wsProtocol}//${host}${WS_API_PATHNAME}`);
 
-        dispatchToServerRef.current = async (action: Action) => {
+        dispatchToServerRef.current = async (action: Action<any>) => {
           await readyDeferred.promise;
           ws?.send(JSON.stringify(action));
         };
@@ -102,7 +99,9 @@ export function useSharedFile({
         ws.onopen = () => {
           readyDeferred.resolve();
           dispatchToServerRef.current(
-            createAction.updateSelection(selectionRef.current)
+            serverActions.updateClientSelection.create({
+              s: selectionRef.current,
+            })
           );
         };
         ws.onmessage = (event) => {
@@ -123,7 +122,7 @@ export function useSharedFile({
       clearTimeout(reopenTimeoutID);
       dispatchToServerRef.current = () => {};
       ws?.close();
-      dispatch(createAction.updateClientState(initialState));
+      dispatch(actions.applyState.create({ s: initialState }));
     };
   }, [active, selectionRef]);
 
@@ -170,12 +169,12 @@ export function useSharedFile({
         clientState.selection[0]
       );
       const newSelection = createSelection(newCursorOffset);
-      const action = createAction.updateCode(
-        clientState.selection,
-        [diff],
-        newSelection,
-        currentHash
-      );
+      const action = serverActions.updateCode.create({
+        cs: clientState.selection,
+        d: [diff],
+        ns: newSelection,
+        sh: currentHash,
+      });
 
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = newSelection;
@@ -208,12 +207,12 @@ export function useSharedFile({
         currentHash === hashToWaitForRef.current &&
         updateQueue.length === 0
       ) {
-        const action = createAction.updateCode(
-          selectionRef.current,
-          diffs,
-          newState.selection,
-          currentHash
-        );
+        const action = serverActions.updateCode.create({
+          cs: selectionRef.current,
+          d: diffs,
+          ns: newState.selection,
+          sh: currentHash,
+        });
 
         if (DEBUG) {
           console.debug('send directly', diffs);
@@ -246,7 +245,9 @@ export function useSharedFile({
       (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
         newSelection[1] !== lastCursorOffsetSentRef.current[1])
     ) {
-      const action = createAction.updateSelection(newSelection);
+      const action = serverActions.updateClientSelection.create({
+        s: newSelection,
+      });
       dispatchToServerRef.current(action);
       lastCursorOffsetSentRef.current = { ...newSelection };
     }
