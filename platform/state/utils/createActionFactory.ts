@@ -12,8 +12,8 @@ export function createActionFactory<Payload = void>(
   return {
     create: ((payload?: unknown) =>
       payload !== undefined
-        ? [type, payload]
-        : [type]) as ActionCreator<Payload>,
+        ? [optimisedType, payload]
+        : [optimisedType]) as ActionCreator<Payload>,
     type: optimisedType,
   };
 }
