@@ -16,22 +16,24 @@ export function computeSegments(
   const segments: Segment[] = [];
   let segmentStartPosition: Position<number> | undefined;
 
-  for (let offset = selection[0]; offset <= selection[1]; offset++) {
-    const isLineEnd = code[offset] === '\n';
-    const isLastOffset = offset === selection[1];
+  if (selection[1] !== selection[0]) {
+    for (let offset = selection[0]; offset <= selection[1]; offset++) {
+      const isLineEnd = code[offset] === '\n';
+      const isLastOffset = offset === selection[1];
 
-    if (segmentStartPosition === undefined) {
-      segmentStartPosition = getOffsetPosition(parent, offset);
-    }
-    if (isLineEnd || isLastOffset) {
-      segments.push({
-        ...segmentStartPosition,
-        width:
-          getOffsetPosition(parent, offset).x -
-          segmentStartPosition.x +
-          (isLineEnd && !isLastOffset ? END_LINE_SPACE_PX : 0),
-      });
-      segmentStartPosition = undefined;
+      if (segmentStartPosition === undefined) {
+        segmentStartPosition = getOffsetPosition(parent, offset);
+      }
+      if (isLineEnd || isLastOffset) {
+        segments.push({
+          ...segmentStartPosition,
+          width:
+            getOffsetPosition(parent, offset).x -
+            segmentStartPosition.x +
+            (isLineEnd && !isLastOffset ? END_LINE_SPACE_PX : 0),
+        });
+        segmentStartPosition = undefined;
+      }
     }
   }
   return segments;
