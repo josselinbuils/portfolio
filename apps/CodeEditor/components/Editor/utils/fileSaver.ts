@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { EditorFile } from '../interfaces/EditorFile';
 
-export const SHARED_FILENAME = 'morpion.js';
+export const SHARED_FILENAME = 'ticTacToe.js';
 const STORAGE_KEY = 'codeEditor';
 
 const defaultFiles: EditorFile[] = [
