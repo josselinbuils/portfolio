@@ -47,36 +47,18 @@ ul.autoCompletionMenu {
   margin-left: 0.7rem;
 }
 
-.code::before {
-  position: absolute;
-  top: 0;
-  left: calc(0.7rem + 80ch);
-  height: 100%;
-  content: '';
-  border-right: 0.1rem solid #484848;
+.code {
+  position: relative;
+  flex: 1 1 100%;
 }
 
-.code,
-.textarea {
-  @include scrollbar;
-
-  font-family: $fontFamily;
-  font-size: $fontSize;
-  line-height: $lineHeight;
+.container {
   position: absolute;
-  z-index: 0;
-  top: $tabsHeight;
-  left: $toolbarWidth + $lineNumbersWidth;
-  overflow-y: auto;
-  box-sizing: border-box;
-  width: calc(100% - 7rem);
-  height: calc(100% - 2.7rem);
-  padding: 0.5rem 0.7rem;
-  white-space: pre-wrap;
-  border: none;
-  outline: none;
-
-  overflow-wrap: break-word;
+  top: 3rem;
+  right: 0;
+  bottom: 0;
+  left: 3.3rem;
+  display: flex;
 }
 
 .dragAndDropOverlay {
@@ -102,12 +84,43 @@ ul.autoCompletionMenu {
   background: $backgroundSecondaryColor;
 }
 
-.lineNumbers {
+.code::before {
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  line-height: $lineHeight;
   position: absolute;
-  top: $tabsHeight;
+  top: 0;
+  left: calc(0.7rem + 80ch);
+  height: 100%;
+  content: '';
+  border-right: 0.1rem solid #484848;
+}
+
+.graphicalObjects,
+.textarea {
+  @include scrollbar;
+
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
   bottom: 0;
-  left: $toolbarWidth;
-  width: $lineNumbersWidth;
+  left: 0;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 0.7rem;
+  white-space: pre-wrap;
+  border: none;
+  outline: none;
+
+  overflow-wrap: break-word;
+}
+
+.lineNumbers {
+  flex: 0 0 $lineNumbersWidth;
 }
 
 .tabs {
@@ -127,7 +140,12 @@ ul.autoCompletionMenu {
 }
 
 .textarea {
+  position: absolute;
   z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   resize: none;
   color: transparent;
   background: transparent;

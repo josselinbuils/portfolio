@@ -465,68 +465,73 @@ export const Editor: FC<Props> = ({
           </Tab>
         ))}
       </Tabs>
-      <LineNumbers
-        className={styles.lineNumbers}
-        code={code}
-        lineCount={lineCount}
-        scrollTop={scrollTop}
-        selection={selection}
-      />
-      <div className={styles.code} ref={codeElementRef}>
-        <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-        {textAreaElementRef.current && (
-          <>
-            {isSharedFileActive &&
-              cursors.map((cursor) => (
-                <Cursor
-                  code={code}
-                  color={cursor.color}
-                  key={cursor.clientID}
-                  selection={cursor.selection}
+      <div className={styles.container}>
+        {activeFile.SideComponent ? <activeFile.SideComponent /> : null}
+        <LineNumbers
+          className={styles.lineNumbers}
+          code={code}
+          lineCount={lineCount}
+          scrollTop={scrollTop}
+          selection={selection}
+        />
+        <div className={styles.code}>
+          <div className={styles.graphicalObjects} ref={codeElementRef}>
+            <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+            {textAreaElementRef.current && (
+              <>
+                {isSharedFileActive &&
+                  cursors.map((cursor) => (
+                    <Cursor
+                      code={code}
+                      color={cursor.color}
+                      key={cursor.clientID}
+                      selection={cursor.selection}
+                      parent={textAreaElementRef.current as HTMLTextAreaElement}
+                    />
+                  ))}
+                <LineHighlight
                   parent={textAreaElementRef.current as HTMLTextAreaElement}
+                  selection={selection}
                 />
-              ))}
-            <LineHighlight
-              parent={textAreaElementRef.current as HTMLTextAreaElement}
-              selection={selection}
-            />
-          </>
-        )}
+              </>
+            )}
+          </div>
+          <textarea
+            className={styles.textarea}
+            onBlur={() => setActive(false)}
+            onChange={handleChange}
+            onDragEnd={() => setDisplayDragOverlay(false)}
+            onDragEnter={() => {
+              setDisplayDragOverlay(true);
+              return false;
+            }}
+            onDragLeave={() => setDisplayDragOverlay(false)}
+            onDragOver={() => false}
+            onDrop={handleDrop as (event: DragEvent) => void}
+            onKeyDown={(event) => {
+              // Waits for selectionEnd and selectionStart to be updated
+              setTimeout(() => handleSelect(event), 0);
+            }}
+            onMouseDown={(event) => {
+              disableAutoCompletion();
+              // Waits for selectionEnd and selectionStart to be updated
+              setTimeout(() => handleSelect(event), 0);
+            }}
+            onFocus={() => setActive(true)}
+            onSelect={handleSelect}
+            onScroll={({ target }) =>
+              setScrollTop((target as HTMLTextAreaElement).scrollTop)
+            }
+            ref={textAreaElementRef}
+            spellCheck={false}
+            style={isSharedFileActive ? { caretColor: cursorColor } : undefined}
+            value={code}
+          />
+          {displayDragOverlay && (
+            <div className={styles.dragAndDropOverlay}>Drop to open</div>
+          )}
+        </div>
       </div>
-      <textarea
-        className={styles.textarea}
-        onBlur={() => setActive(false)}
-        onChange={handleChange}
-        onDragEnd={() => setDisplayDragOverlay(false)}
-        onDragEnter={() => {
-          setDisplayDragOverlay(true);
-          return false;
-        }}
-        onDragLeave={() => setDisplayDragOverlay(false)}
-        onDragOver={() => false}
-        onDrop={handleDrop as (event: DragEvent) => void}
-        onKeyDown={(event) => {
-          // Waits for selectionEnd and selectionStart to be updated
-          setTimeout(() => handleSelect(event), 0);
-        }}
-        onMouseDown={(event) => {
-          disableAutoCompletion();
-          // Waits for selectionEnd and selectionStart to be updated
-          setTimeout(() => handleSelect(event), 0);
-        }}
-        onFocus={() => setActive(true)}
-        onSelect={handleSelect}
-        onScroll={({ target }) =>
-          setScrollTop((target as HTMLTextAreaElement).scrollTop)
-        }
-        ref={textAreaElementRef}
-        spellCheck={false}
-        style={isSharedFileActive ? { caretColor: cursorColor } : undefined}
-        value={code}
-      />
-      {displayDragOverlay && (
-        <div className={styles.dragAndDropOverlay}>Drop to open</div>
-      )}
     </div>
   );
 };

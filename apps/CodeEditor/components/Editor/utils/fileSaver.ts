@@ -1,13 +1,17 @@
+import dynamic from 'next/dynamic';
 import { EditorFile } from '../interfaces/EditorFile';
 
-export const SHARED_FILENAME = 'shared.js';
+export const SHARED_FILENAME = 'morpion.js';
 const STORAGE_KEY = 'codeEditor';
 
-const defaultFiles = [
+const defaultFiles: EditorFile[] = [
   {
     content: '',
     language: 'javascript',
     name: SHARED_FILENAME,
+    SideComponent: dynamic(
+      async () => (await import('../../../games/TicTacToe/TicTacToe')).TicTacToe
+    ),
   },
   {
     content: '',
@@ -37,7 +41,7 @@ function loadFiles(): EditorFile[] {
 
       files.push(
         storedFileIndex !== -1
-          ? storedFiles.splice(storedFileIndex, 1)[0]
+          ? { ...file, ...storedFiles.splice(storedFileIndex, 1)[0] }
           : file
       );
     }
@@ -49,15 +53,19 @@ function loadFiles(): EditorFile[] {
 }
 
 function saveFiles(files: EditorFile[]): void {
-  files = files.filter(({ name }) => !name.includes('shared'));
+  files = files.filter(({ name }) => name !== SHARED_FILENAME);
+
+  const saveState: SaveState = {
+    files: files.map(({ SideComponent, ...file }) => file),
+  };
 
   if (files.length > 0) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ files } as SaveState));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saveState));
   } else {
     localStorage.removeItem(STORAGE_KEY);
   }
 }
 
 interface SaveState {
-  files: EditorFile[];
+  files: Omit<EditorFile, 'sideComponent'>[];
 }

@@ -1,0 +1,18 @@
+@import '../../../../constants';
+
+.element {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  transform: translate(-50%, -50%);
+
+  fill: $textPrimaryColor;
+  stroke: $textPrimaryColor;
+  stroke-width: 2;
+}
+
+.grid {
+  fill: #29b9ad;
+  stroke: #29b9ad;
+  stroke-width: 2;
+}

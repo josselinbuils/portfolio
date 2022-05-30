@@ -1,0 +1,9 @@
+@import '../../constants';
+
+.ticTacToe {
+  position: relative;
+  flex: 1 1 auto;
+  background: $backgroundSecondaryColor;
+
+  aspect-ratio: 1;
+}
