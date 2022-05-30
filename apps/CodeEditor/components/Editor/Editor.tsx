@@ -32,6 +32,7 @@ import { Shortcut } from '../Shortcut/Shortcut';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Cursor } from './components/Cursor/Cursor';
+import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { Tab } from './components/Tab/Tab';
 import { Tabs } from './components/Tabs/Tabs';
@@ -466,22 +467,31 @@ export const Editor: FC<Props> = ({
       </Tabs>
       <LineNumbers
         className={styles.lineNumbers}
+        code={code}
         lineCount={lineCount}
         scrollTop={scrollTop}
+        selection={selection}
       />
       <div className={styles.code} ref={codeElementRef}>
         <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-        {textAreaElementRef.current &&
-          isSharedFileActive &&
-          cursors.map((cursor) => (
-            <Cursor
-              code={code}
-              color={cursor.color}
-              key={cursor.clientID}
-              selection={cursor.selection}
+        {textAreaElementRef.current && (
+          <>
+            {isSharedFileActive &&
+              cursors.map((cursor) => (
+                <Cursor
+                  code={code}
+                  color={cursor.color}
+                  key={cursor.clientID}
+                  selection={cursor.selection}
+                  parent={textAreaElementRef.current as HTMLTextAreaElement}
+                />
+              ))}
+            <LineHighlight
               parent={textAreaElementRef.current as HTMLTextAreaElement}
+              selection={selection}
             />
-          ))}
+          </>
+        )}
       </div>
       <textarea
         className={styles.textarea}
@@ -499,7 +509,11 @@ export const Editor: FC<Props> = ({
           // Waits for selectionEnd and selectionStart to be updated
           setTimeout(() => handleSelect(event), 0);
         }}
-        onMouseDown={disableAutoCompletion}
+        onMouseDown={(event) => {
+          disableAutoCompletion();
+          // Waits for selectionEnd and selectionStart to be updated
+          setTimeout(() => handleSelect(event), 0);
+        }}
         onFocus={() => setActive(true)}
         onSelect={handleSelect}
         onScroll={({ target }) =>

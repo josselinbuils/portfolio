@@ -1,5 +1,9 @@
 @import '../../../../constants';
 
+.activeLine {
+  color: $textPrimaryColor;
+}
+
 .lineNumbers {
   font-family: $fontFamily;
   font-size: $fontSize;
@@ -13,4 +17,8 @@
   color: $textTertiaryColor;
   border-right: 0.1rem solid $borderColorTertiary;
   background: $backgroundTertiaryColor;
+
+  & > * {
+    display: block;
+  }
 }

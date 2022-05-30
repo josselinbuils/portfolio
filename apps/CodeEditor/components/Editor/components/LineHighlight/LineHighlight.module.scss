@@ -1,0 +1,12 @@
+@import '../../../../constants';
+
+.lineHighlight {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  left: 0;
+  display: inline-block;
+  height: $lineHeight;
+  margin-top: -0.125em;
+  background-color: #323232;
+}
