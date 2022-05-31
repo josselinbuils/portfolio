@@ -20,7 +20,8 @@ export class GameManager {
   readonly subject: Subject<Elements>;
   private elements: Elements;
   private turnCallback?: (elements: Elements) => unknown;
-  private timers: number[] = [];
+  private timer?: number;
+  private turn?: Element;
 
   constructor() {
     this.elements = getInitialElements();
@@ -32,38 +33,25 @@ export class GameManager {
   };
 
   setElement = (x: number, y: number) => {
-    if (this.elements[y][x] === '') {
-      this.elements[y][x] = 'o';
-      this.update();
-      this.checkWinner(() => {
-        this.timers.push(
-          window.setTimeout(() => {
-            this.playComputerTurn();
-            this.checkWinner(() => {
-              this.timers.push(
-                window.setTimeout(
-                  () => this.turnCallback?.(this.elements),
-                  DELAY_MS
-                )
-              );
-            });
-          }, DELAY_MS)
-        );
-      });
-    } else {
-      throw new Error(`There is already an element in position [${x}, ${y}].`);
+    if (this.turn !== 'o') {
+      throw new Error('This is not your turn!');
     }
+    this.play('o', y, x);
   };
 
-  clean = () => {
-    this.timers.forEach((id) => window.clearTimeout(id));
-  };
+  clean = () => window.clearTimeout(this.timer);
 
   start = () => {
     this.clean();
     this.elements = getInitialElements();
     this.subject.next(this.elements);
-    this.turnCallback?.(this.elements);
+    this.turn = Math.random() < 0.5 ? 'o' : 'x';
+
+    if (this.turn === 'o') {
+      this.turnCallback?.(this.elements);
+    } else {
+      this.playComputerTurn();
+    }
   };
 
   private checkWinner(noWinnerCallback: () => unknown): void {
@@ -78,6 +66,27 @@ export class GameManager {
     }
   }
 
+  private play(element: Element, y: number, x: number) {
+    if (this.elements[y][x] !== '') {
+      throw new Error(
+        `There is already an element in position { x: ${x}, y: ${y} }.`
+      );
+    }
+
+    this.elements[y][x] = element;
+    this.update();
+
+    this.checkWinner(() => {
+      this.timer = window.setTimeout(() => {
+        if (this.turn === 'o') {
+          this.turnCallback?.(this.elements);
+        } else {
+          this.playComputerTurn();
+        }
+      }, DELAY_MS);
+    });
+  }
+
   private playComputerTurn(): void {
     const checkElement = (element: Element): boolean => {
       for (const line of this.elements) {
@@ -88,8 +97,7 @@ export class GameManager {
           sortedLine[1] === element &&
           sortedLine[1] === sortedLine[2]
         ) {
-          line[line.indexOf('')] = 'x';
-          this.update();
+          this.play('x', this.elements.indexOf(line), line.indexOf(''));
           return true;
         }
       }
@@ -107,7 +115,7 @@ export class GameManager {
           sortedColumn[1] === element &&
           sortedColumn[1] === sortedColumn[2]
         ) {
-          this.elements[column.indexOf('')][x] = 'x';
+          this.play('x', column.indexOf(''), x);
           this.update();
           return true;
         }
@@ -125,9 +133,7 @@ export class GameManager {
         sortedFirstDiagonal[1] === element &&
         sortedFirstDiagonal[1] === sortedFirstDiagonal[2]
       ) {
-        this.elements[firstDiagonal.indexOf('')][firstDiagonal.indexOf('')] =
-          'x';
-        this.update();
+        this.play('x', firstDiagonal.indexOf(''), firstDiagonal.indexOf(''));
         return true;
       }
 
@@ -143,9 +149,11 @@ export class GameManager {
         sortedSecondDiagonal[1] === element &&
         sortedSecondDiagonal[1] === sortedSecondDiagonal[2]
       ) {
-        this.elements[secondDiagonal.indexOf('')][
+        this.play(
+          'x',
+          secondDiagonal.indexOf(''),
           2 - secondDiagonal.indexOf('')
-        ] = 'x';
+        );
         this.update();
         return true;
       }
@@ -173,8 +181,7 @@ export class GameManager {
       y = Math.floor(Math.random() * 3);
     } while (this.elements[y][x] !== '');
 
-    this.elements[y][x] = 'x';
-    this.update();
+    this.play('x', y, x);
   }
 
   private isFinished(): boolean {
@@ -220,6 +227,7 @@ export class GameManager {
   }
 
   private update(): void {
+    this.turn = this.turn === 'o' ? 'x' : 'o';
     this.subject.next([...this.elements]);
   }
 }
