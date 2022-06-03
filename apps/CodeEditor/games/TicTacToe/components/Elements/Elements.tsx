@@ -1,19 +1,22 @@
+import cn from 'classnames';
 import React, { FC } from 'react';
+import { Position } from '~/platform/interfaces/Position';
 
 import styles from './Elements.module.scss';
 
 const POSITIONS = ['16%', '50%', '84%'];
 
 interface Props {
-  position: [number, number];
+  highlighted?: boolean;
+  position: Position<number>;
 }
 
-export const Cross: FC<Props> = ({ position }) => {
-  const [x, y] = position;
+export const Cross: FC<Props> = ({ highlighted = false, position }) => {
+  const { x, y } = position;
 
   return (
     <svg
-      className={styles.element}
+      className={cn(styles.element, { [styles.highlighted]: highlighted })}
       style={{ left: POSITIONS[x], top: POSITIONS[y] }}
       viewBox="0 0 47 47"
     >
@@ -32,12 +35,12 @@ export const Grid: FC = () => (
   </svg>
 );
 
-export const Round: FC<Props> = ({ position }) => {
-  const [x, y] = position;
+export const Round: FC<Props> = ({ highlighted = false, position }) => {
+  const { x, y } = position;
 
   return (
     <svg
-      className={styles.element}
+      className={cn(styles.element, { [styles.highlighted]: highlighted })}
       style={{ left: POSITIONS[x], top: POSITIONS[y] }}
       viewBox="0 0 47 47"
     >

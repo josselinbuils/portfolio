@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Position } from '~/platform/interfaces/Position';
 import { Cross, Grid, Round } from './components/Elements/Elements';
 import { Elements, GameManager } from './utils/GameManager';
 
@@ -7,10 +8,24 @@ import styles from './TicTacToe.module.scss';
 export const TicTacToe: FC = () => {
   const gameManager = useMemo(() => new GameManager(), []);
   const [elements, setElements] = useState<Elements>();
+  const [winnerCases, setWinnerCases] = useState<Position[] | undefined>();
 
   useEffect(() => {
+    gameManager.onStart(() => setWinnerCases(undefined));
+
+    gameManager.onEnd((winner) => {
+      if (winner) {
+        console.log(`The winner is ${winner.element} ヽ(^o^)ノ`);
+        setWinnerCases(winner.cases);
+      } else {
+        console.log(`There is no winner【ツ】`);
+      }
+    });
+
     gameManager.subject.subscribe(setElements);
+
     (window as any).ticTacToe = gameManager;
+
     return gameManager.clean;
   }, [gameManager]);
 
@@ -21,11 +36,23 @@ export const TicTacToe: FC = () => {
         line.map((element, x) => {
           switch (element) {
             case 'x':
-              // eslint-disable-next-line react/no-array-index-key
-              return <Cross key={`${x}${y}`} position={[x, y]} />;
+              return (
+                <Cross
+                  highlighted={isCaseHighlighted(winnerCases, { x, y })}
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${x}${y}`}
+                  position={{ x, y }}
+                />
+              );
             case 'o':
-              // eslint-disable-next-line react/no-array-index-key
-              return <Round key={`${x}${y}`} position={[x, y]} />;
+              return (
+                <Round
+                  highlighted={isCaseHighlighted(winnerCases, { x, y })}
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${x}${y}`}
+                  position={{ x, y }}
+                />
+              );
             default:
               return null;
           }
@@ -34,3 +61,13 @@ export const TicTacToe: FC = () => {
     </div>
   );
 };
+
+function isCaseHighlighted(
+  winnerCases: Position[] | undefined,
+  { x, y }: Position
+): boolean {
+  return (
+    winnerCases?.some((position) => position.x === x && position.y === y) ??
+    false
+  );
+}

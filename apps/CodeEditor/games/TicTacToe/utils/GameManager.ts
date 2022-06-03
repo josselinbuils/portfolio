@@ -1,4 +1,5 @@
 import { Subject } from '@josselinbuils/utils/Subject';
+import { Position } from '~/platform/interfaces/Position';
 
 type Element = 'x' | 'o' | '';
 
@@ -16,9 +17,16 @@ const getInitialElements = (): Elements => [
 
 const DELAY_MS = 1000;
 
+export interface Winner {
+  element: Element;
+  cases: Position[];
+}
+
 export class GameManager {
   readonly subject: Subject<Elements>;
   private elements: Elements;
+  private endCallback?: (winner: Winner | undefined) => unknown;
+  private startCallback?: () => unknown;
   private turnCallback?: (elements: Elements) => unknown;
   private timer?: number;
   private turn?: Element;
@@ -28,8 +36,16 @@ export class GameManager {
     this.subject = new Subject(this.elements);
   }
 
+  onEnd = (callback: (winner: Winner | undefined) => unknown): void => {
+    this.endCallback = callback;
+  };
+
   onMyTurn = (callback: (elements: Elements) => unknown): void => {
     this.turnCallback = callback;
+  };
+
+  onStart = (callback: () => unknown): void => {
+    this.startCallback = callback;
   };
 
   setElement = (x: number, y: number) => {
@@ -46,6 +62,7 @@ export class GameManager {
     this.clean();
     this.elements = getInitialElements();
     this.subject.next(this.elements);
+    this.startCallback?.();
     this.next();
   };
 
@@ -54,10 +71,8 @@ export class GameManager {
 
     if (!winner && !this.isFinished()) {
       noWinnerCallback();
-    } else if (winner) {
-      console.log(`The winner is ${winner} ヽ(^o^)ノ`);
     } else {
-      console.log(`There is no winner【ツ】`);
+      this.endCallback?.(winner);
     }
   }
 
@@ -192,10 +207,15 @@ export class GameManager {
     return this.elements.flat().every((element) => element !== '');
   }
 
-  private getWinner(): Element | undefined {
+  private getWinner(): Winner | undefined {
     for (const line of this.elements) {
-      if (new Set(line).size === 1) {
-        return line[0];
+      if (isRowFilledWithSameMark(line)) {
+        const y = this.elements.indexOf(line);
+
+        return {
+          element: line[0],
+          cases: line.map((_, x) => ({ x, y })),
+        };
       }
     }
 
@@ -208,25 +228,40 @@ export class GameManager {
     }
 
     for (const column of columns) {
-      if (new Set(column).size === 1) {
-        return column[0];
+      if (isRowFilledWithSameMark(column)) {
+        const x = columns.indexOf(column);
+
+        return {
+          element: column[0],
+          cases: column.map((_, y) => ({ x, y })),
+        };
       }
     }
 
-    const diagonals: Element[][] = [
-      ['', '', ''],
-      ['', '', ''],
-    ];
+    const firstDiagonal: Element[] = ['', '', ''];
+    const secondDiagonal: Element[] = ['', '', ''];
 
     for (let i = 0; i < 3; i++) {
-      diagonals[0][i] = this.elements[i][i];
-      diagonals[1][i] = this.elements[i][2 - i];
+      firstDiagonal[i] = this.elements[i][i];
+      secondDiagonal[i] = this.elements[i][2 - i];
     }
 
-    for (const diagonal of diagonals) {
-      if (new Set(diagonal).size === 1) {
-        return diagonal[0];
-      }
+    if (isRowFilledWithSameMark(firstDiagonal)) {
+      return {
+        element: firstDiagonal[0],
+        cases: firstDiagonal.map((_, i) => ({ x: i, y: i })),
+      };
+    }
+
+    if (isRowFilledWithSameMark(secondDiagonal)) {
+      return {
+        element: secondDiagonal[0],
+        cases: secondDiagonal.map((_, i) => ({ x: 2 - i, y: i })),
+      };
     }
   }
+}
+
+function isRowFilledWithSameMark(row: Element[]): boolean {
+  return new Set(row).size === 1 && row[0] !== '';
 }

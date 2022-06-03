@@ -1,5 +1,10 @@
 @import '../../../../constants';
 
+.element,
+.grid {
+  stroke-width: 2;
+}
+
 .element {
   position: absolute;
   width: 30%;
@@ -8,11 +13,10 @@
 
   fill: $textPrimaryColor;
   stroke: $textPrimaryColor;
-  stroke-width: 2;
 }
 
-.grid {
+.grid,
+.highlighted {
   fill: #29b9ad;
   stroke: #29b9ad;
-  stroke-width: 2;
 }
