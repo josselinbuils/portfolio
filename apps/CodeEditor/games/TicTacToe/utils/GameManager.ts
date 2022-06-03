@@ -51,6 +51,7 @@ export class GameManager {
   setElement = (x: number, y: number) => {
     if (this.turn !== 'o') {
       console.error(new Error('This is not your turn!'));
+      this.clean();
     } else {
       this.play('o', y, x);
     }
@@ -77,13 +78,13 @@ export class GameManager {
   }
 
   private next = (): void => {
-    this.timer = window.setTimeout(() => {
-      if (this.turn === undefined) {
-        this.turn = Math.random() < 0.5 ? 'o' : 'x';
-      } else {
-        this.turn = this.turn === 'o' ? 'x' : 'o';
-      }
+    if (this.turn === undefined) {
+      this.turn = Math.random() < 0.5 ? 'o' : 'x';
+    } else {
+      this.turn = this.turn === 'o' ? 'x' : 'o';
+    }
 
+    this.timer = window.setTimeout(() => {
       if (this.turn === 'o') {
         this.turnCallback?.(this.elements);
       } else {
@@ -99,6 +100,7 @@ export class GameManager {
           `There is already an element in position { x: ${x}, y: ${y} }.`
         )
       );
+      this.clean();
       return;
     }
 
