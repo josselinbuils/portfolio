@@ -34,9 +34,10 @@ export class GameManager {
 
   setElement = (x: number, y: number) => {
     if (this.turn !== 'o') {
-      throw new Error('This is not your turn!');
+      console.error(new Error('This is not your turn!'));
+    } else {
+      this.play('o', y, x);
     }
-    this.play('o', y, x);
   };
 
   clean = () => window.clearTimeout(this.timer);
@@ -68,9 +69,12 @@ export class GameManager {
 
   private play(element: Element, y: number, x: number) {
     if (this.elements[y][x] !== '') {
-      throw new Error(
-        `There is already an element in position { x: ${x}, y: ${y} }.`
+      console.error(
+        new Error(
+          `There is already an element in position { x: ${x}, y: ${y} }.`
+        )
       );
+      return;
     }
 
     this.elements[y][x] = element;
