@@ -415,10 +415,10 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     return { left, top };
   }
 
-  private isFrozen(): boolean {
+  private isFrozen = (): boolean => {
     const { animated, moving, resizing } = this.state;
     return animated || moving || resizing;
-  }
+  };
 
   private getSize(): { width: number; height: number } {
     const windowElement = this.windowRef.current;
