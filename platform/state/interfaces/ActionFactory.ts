@@ -8,3 +8,9 @@ export interface ActionFactory<Payload> {
   create: ActionCreator<Payload>;
   type: string;
 }
+
+export type ActionFromFactory<Factory> = Factory extends ActionFactory<
+  infer Payload
+>
+  ? Action<Payload>
+  : Action;

@@ -61,6 +61,7 @@ async function readFile(file: File): Promise<EditorFile> {
         content: (event.target?.result as string) || '',
         language: LANGUAGE[extension],
         name: file.name,
+        shared: false,
       });
     };
     reader.readAsText(file);

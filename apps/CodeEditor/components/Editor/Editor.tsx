@@ -46,7 +46,7 @@ import { EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
 import { duplicate } from './utils/duplicate';
-import { fileSaver, SHARED_FILENAME } from './utils/fileSaver';
+import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
@@ -75,7 +75,7 @@ export const Editor: FC<Props> = ({
     createSelection(0)
   );
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
-  const [activeFileName, previouslyActiveFileName, setActiveFileName] =
+  const [activeFilename, previouslyActiveFilename, setActiveFilename] =
     useMemState<string>(files[0].name);
   const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
@@ -98,23 +98,23 @@ export const Editor: FC<Props> = ({
     },
     [onChange]
   );
-  const isSharedFileActive = activeFileName === SHARED_FILENAME;
+  const activeFile = files.find(
+    ({ name }) => name === activeFilename
+  ) as EditorFile;
   const { pushState } = useHistory({
-    active: !isSharedFileActive,
+    active: !activeFile.shared,
     code,
-    fileName: activeFileName,
+    fileName: activeFilename,
     selection,
     applyState,
   });
   const { updateClientState, updateSelection } = useSharedFile({
-    active: isSharedFileActive,
+    active: activeFile.shared,
     applyClientState,
     code,
+    filename: activeFilename,
     selection,
   });
-  const activeFile = files.find(
-    ({ name }) => name === activeFileName
-  ) as EditorFile;
 
   useKeyMap(
     {
@@ -146,7 +146,7 @@ export const Editor: FC<Props> = ({
   useEffect(() => {
     activeFile.content = code;
     fileSaver.saveFiles(files);
-  }, [activeFile, code, files, isSharedFileActive]);
+  }, [activeFile, code, files, activeFile.shared]);
 
   useLayoutEffect(() => {
     applyState({
@@ -228,15 +228,15 @@ export const Editor: FC<Props> = ({
   function closeFile(name: string): void {
     const fileToClose = files.find((file) => file.name === name) as EditorFile;
 
-    if (activeFileName === name) {
+    if (activeFilename === name) {
       const isPreviouslyActiveFileStillOpen = files.some(
-        (file) => file.name === previouslyActiveFileName
+        (file) => file.name === previouslyActiveFilename
       );
-      const newActiveFileName = isPreviouslyActiveFileStillOpen
-        ? (previouslyActiveFileName as string)
+      const newActiveFilename = isPreviouslyActiveFileStillOpen
+        ? (previouslyActiveFilename as string)
         : (files.find((file) => file !== fileToClose) as EditorFile).name;
 
-      setActiveFileName(newActiveFileName);
+      setActiveFilename(newActiveFilename);
     }
 
     const updatedFiles = [...files];
@@ -254,8 +254,13 @@ export const Editor: FC<Props> = ({
       )
     );
     const name = `local${maxIndex > -1 ? maxIndex + 1 : ''}.js`;
-    fileManager.push({ content: '', language: 'javascript', name });
-    setActiveFileName(name);
+    fileManager.push({
+      content: '',
+      language: 'javascript',
+      name,
+      shared: false,
+    });
+    setActiveFilename(name);
   }
 
   function disableAutoCompletion(): void {
@@ -277,7 +282,7 @@ export const Editor: FC<Props> = ({
       const formatted = await formatCode(code, cursorOffset, language);
 
       if (formatted.code !== code) {
-        if (isSharedFileActive) {
+        if (activeFile.shared) {
           updateClientState(formatted);
         } else {
           updateState(formatted);
@@ -311,7 +316,7 @@ export const Editor: FC<Props> = ({
     if (newState !== undefined) {
       updateState(newState);
 
-      if (isSharedFileActive) {
+      if (activeFile.shared) {
         // Mitigates that React issue https://github.com/facebook/react/issues/12762
         onChange(`${code} `);
       }
@@ -352,7 +357,7 @@ export const Editor: FC<Props> = ({
 
     const newSelection = createSelection(selectionStart, selectionEnd);
 
-    if (isSharedFileActive) {
+    if (activeFile.shared) {
       updateSelection(newSelection);
     } else {
       setSelection(newSelection);
@@ -379,7 +384,7 @@ export const Editor: FC<Props> = ({
           closeFile(editorFile.name);
         }
         fileManager.push(editorFile);
-        setActiveFileName(editorFile.name);
+        setActiveFilename(editorFile.name);
       }
     } catch (error) {
       console.error(error);
@@ -390,7 +395,7 @@ export const Editor: FC<Props> = ({
     if (newState === undefined) {
       return;
     }
-    if (isSharedFileActive) {
+    if (activeFile.shared) {
       updateClientState(newState);
     } else {
       pushState(newState);
@@ -448,8 +453,8 @@ export const Editor: FC<Props> = ({
         {files.map(({ name }, index) => (
           <Tab
             key={name}
-            onClick={() => setActiveFileName(name)}
-            selected={name === activeFileName}
+            onClick={() => setActiveFilename(name)}
+            selected={name === activeFilename}
           >
             {name}
             {index >= fileSaver.defaultFiles.length && (
@@ -479,7 +484,7 @@ export const Editor: FC<Props> = ({
             <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
             {textAreaElementRef.current && (
               <>
-                {isSharedFileActive &&
+                {activeFile.shared &&
                   cursors.map((cursor) => (
                     <Cursor
                       code={code}
@@ -524,7 +529,7 @@ export const Editor: FC<Props> = ({
             }
             ref={textAreaElementRef}
             spellCheck={false}
-            style={isSharedFileActive ? { caretColor: cursorColor } : undefined}
+            style={activeFile.shared ? { caretColor: cursorColor } : undefined}
             value={code}
           />
           {displayDragOverlay && (

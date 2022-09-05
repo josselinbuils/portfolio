@@ -8,6 +8,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
     '@typescript-eslint/no-var-requires': 'off', // applied to js files
     'default-param-last': 'off', // false positives
+    'no-useless-constructor': 'off',
     'react/function-component-definition': 'off',
     'react/jsx-no-bind': 'off',
     'react/no-unused-class-component-methods': 'off', // false positives

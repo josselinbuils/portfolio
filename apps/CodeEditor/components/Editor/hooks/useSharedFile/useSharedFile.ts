@@ -36,19 +36,23 @@ const reducer = createReducer(Object.values(actions));
 
 export function useSharedFile({
   active,
-  code,
   applyClientState,
+  code,
+  filename,
   selection,
 }: {
   active: boolean;
   code: string;
+  filename: string;
   selection: Selection;
   applyClientState(clientState: ClientState): any;
 }): {
   updateClientState(newState: EditableState): void;
   updateSelection(selection: Selection): void;
 } {
-  const dispatchToServerRef = useRef<(action: Action<any>) => void>(() => {});
+  const dispatchToServerRef = useRef<
+    (action: Action<any>) => void | Promise<void>
+  >(() => {});
   const [clientState, dispatch] = useReducer(reducer, initialState);
   const applyClientStateRef = useDynamicRef(applyClientState);
   const clientCodeRef = useRef(clientState.code);
@@ -61,9 +65,9 @@ export function useSharedFile({
   useKeyMap(
     {
       'Control+Z,Meta+Z': () =>
-        dispatchToServerRef.current(serverActions.undo.create()),
+        dispatchToServerRef.current(serverActions.undo.create({ f: filename })),
       'Control+Shift+Z,Meta+Shift+Z': () =>
-        dispatchToServerRef.current(serverActions.redo.create()),
+        dispatchToServerRef.current(serverActions.redo.create({ f: filename })),
     },
     active
   );
@@ -100,7 +104,11 @@ export function useSharedFile({
         ws.onopen = () => {
           readyDeferred.resolve();
           dispatchToServerRef.current(
+            serverActions.subscribe.create({ f: filename })
+          );
+          dispatchToServerRef.current(
             serverActions.updateClientSelection.create({
+              f: filename,
               s: minifySelection(selectionRef.current),
             })
           );
@@ -125,7 +133,7 @@ export function useSharedFile({
       ws?.close();
       dispatch(actions.applyState.create({ s: initialState }));
     };
-  }, [active, selectionRef]);
+  }, [active, filename, selectionRef]);
 
   useEffect(() => {
     if (!active || clientState === undefined) {
@@ -173,6 +181,7 @@ export function useSharedFile({
       const action = serverActions.updateCode.create({
         cs: clientState.selection,
         d: [diff],
+        f: filename,
         ns: newSelection,
         sh: currentHash,
       });
@@ -189,7 +198,7 @@ export function useSharedFile({
       }
       hashToWaitForRef.current = currentHash;
     }
-  }, [active, applyClientStateRef, clientState, clientCodeRef]);
+  }, [active, applyClientStateRef, clientState, clientCodeRef, filename]);
 
   const updateClientState = useCallback(
     (newState: EditableState) => {
@@ -211,6 +220,7 @@ export function useSharedFile({
         const action = serverActions.updateCode.create({
           cs: selectionRef.current,
           d: diffs,
+          f: filename,
           ns: newState.selection,
           sh: currentHash,
         });
@@ -234,26 +244,30 @@ export function useSharedFile({
         updateQueue.push(diffs[0]);
       }
     },
-    [active, codeRef, selectionRef]
+    [active, codeRef, filename, selectionRef]
   );
 
-  const updateSelection = useCallback((newSelection: Selection) => {
-    const currentHash = computeHash(clientCodeRef.current);
+  const updateSelection = useCallback(
+    (newSelection: Selection) => {
+      const currentHash = computeHash(clientCodeRef.current);
 
-    if (
-      currentHash === hashToWaitForRef.current &&
-      updateQueueRef.current.length === 0 &&
-      (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
-        newSelection[1] !== lastCursorOffsetSentRef.current[1])
-    ) {
-      dispatchToServerRef.current(
-        serverActions.updateClientSelection.create({
-          s: minifySelection(newSelection),
-        })
-      );
-      lastCursorOffsetSentRef.current = createSelection(newSelection);
-    }
-  }, []);
+      if (
+        currentHash === hashToWaitForRef.current &&
+        updateQueueRef.current.length === 0 &&
+        (newSelection[0] !== lastCursorOffsetSentRef.current[0] ||
+          newSelection[1] !== lastCursorOffsetSentRef.current[1])
+      ) {
+        dispatchToServerRef.current(
+          serverActions.updateClientSelection.create({
+            f: filename,
+            s: minifySelection(newSelection),
+          })
+        );
+        lastCursorOffsetSentRef.current = createSelection(newSelection);
+      }
+    },
+    [filename]
+  );
 
   return {
     updateClientState,

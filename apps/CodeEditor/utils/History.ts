@@ -6,29 +6,43 @@ import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;
 
+export interface HistoryEntry {
+  diffs: Diff[];
+  selection: Selection;
+}
+
+export interface HistoryState {
+  index: number;
+  entries: HistoryEntry[];
+}
+
 export class History {
-  private index = -1;
-  private readonly states = [] as HistoryState[];
+  constructor(
+    public state: HistoryState = {
+      index: -1,
+      entries: [],
+    }
+  ) {}
 
   pushState(currentState: EditableState, newState: EditableState): void {
-    const { index, states } = this;
+    const { entries, index } = this.state;
     const { code, selection } = currentState;
     const newDiffs = getDiffs(code, newState.code);
     const firstNewDiff = newDiffs[0];
-    let lastStoredState: HistoryState;
+    let lastStoredState: HistoryEntry;
     let lastStoredSelection: Selection;
 
-    if (index < states.length - 1) {
-      states.length = index + 1;
+    if (index < entries.length - 1) {
+      entries.length = index + 1;
     } else {
-      if (states.length >= HISTORY_SIZE_LIMIT) {
-        states.splice(0, states.length - HISTORY_SIZE_LIMIT + 1);
+      if (entries.length >= HISTORY_SIZE_LIMIT) {
+        entries.splice(0, entries.length - HISTORY_SIZE_LIMIT + 1);
       }
-      lastStoredState = states[states.length - 1];
+      lastStoredState = entries[entries.length - 1];
       lastStoredSelection = lastStoredState?.selection ?? createSelection(0);
 
       if (
-        states.length > 0 &&
+        entries.length > 0 &&
         newDiffs.length === 1 &&
         lastStoredState.diffs.length > 0
       ) {
@@ -50,35 +64,35 @@ export class History {
       }
     }
 
-    lastStoredState = states[states.length - 1];
+    lastStoredState = entries[entries.length - 1];
     lastStoredSelection = lastStoredState?.selection ?? createSelection(0);
 
     if (
       selection[0] !== lastStoredSelection[0] &&
       selection[1] !== lastStoredSelection[1]
     ) {
-      states.push({
+      entries.push({
         diffs: [],
         selection,
       });
     }
 
-    states.push({
+    entries.push({
       diffs: newDiffs,
       selection: newState.selection,
     });
-    this.index = states.length - 1;
+    this.state.index = entries.length - 1;
   }
 
   redo(currentCode: string): EditableState | undefined {
-    const { index, states } = this;
+    const { entries, index } = this.state;
 
-    if (index < states.length - 1) {
+    if (index < entries.length - 1) {
       const newIndex = index + 1;
-      const { diffs, selection } = states[newIndex];
+      const { diffs, selection } = entries[newIndex];
       const newCode = diffs.reduce(applyDiff, currentCode);
 
-      this.index = newIndex;
+      this.state.index = newIndex;
 
       return {
         code: newCode,
@@ -88,20 +102,23 @@ export class History {
   }
 
   undo(currentCode: string): EditableState | undefined {
-    const { index, states } = this;
+    const { entries, index } = this.state;
 
     if (index > -1) {
-      if (states[index] === undefined) {
-        console.debug({ states, index, state: states[index] });
+      if (entries[index] === undefined) {
+        console.debug({ entries, index, state: entries[index] });
         throw new Error('Inconsistent history state');
       }
 
       const newIndex = index - 1;
-      const prevCode = states[index].diffs.reduceRight(revertDiff, currentCode);
+      const prevCode = entries[index].diffs.reduceRight(
+        revertDiff,
+        currentCode
+      );
       const prevSelection =
-        newIndex >= 0 ? states[newIndex].selection : createSelection(0);
+        newIndex >= 0 ? entries[newIndex].selection : createSelection(0);
 
-      this.index = newIndex;
+      this.state.index = newIndex;
 
       return {
         code: prevCode,
@@ -109,9 +126,4 @@ export class History {
       };
     }
   }
-}
-
-export interface HistoryState {
-  diffs: Diff[];
-  selection: Selection;
 }

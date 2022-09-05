@@ -1,14 +1,14 @@
 import dynamic from 'next/dynamic';
 import { EditorFile } from '../interfaces/EditorFile';
 
-export const SHARED_FILENAME = 'ticTacToe.js';
 const STORAGE_KEY = 'codeEditor';
 
 const defaultFiles: EditorFile[] = [
   {
     content: '',
     language: 'javascript',
-    name: SHARED_FILENAME,
+    name: 'ticTacToe.js',
+    shared: true,
     SideComponent: dynamic(
       async () => (await import('../../../games/TicTacToe/TicTacToe')).TicTacToe
     ),
@@ -16,7 +16,14 @@ const defaultFiles: EditorFile[] = [
   {
     content: '',
     language: 'javascript',
+    name: 'shared.js',
+    shared: true,
+  },
+  {
+    content: '',
+    language: 'javascript',
     name: 'local.js',
+    shared: false,
   },
 ];
 
@@ -53,7 +60,7 @@ function loadFiles(): EditorFile[] {
 }
 
 function saveFiles(files: EditorFile[]): void {
-  files = files.filter(({ name }) => name !== SHARED_FILENAME);
+  files = files.filter(({ shared }) => !shared);
 
   const saveState: SaveState = {
     files: files.map(({ SideComponent, ...file }) => file),
