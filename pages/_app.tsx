@@ -1,5 +1,6 @@
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { AppProps } from 'next/app';
+import Head from 'next/head';
 import { FC, StrictMode } from 'react';
 import { Favicon } from '~/platform/components/Favicon/Favicon';
 
@@ -11,7 +12,10 @@ config.autoAddCss = false;
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => (
   <StrictMode>
-    <Favicon />
+    <Head>
+      <title>Josselin BUILS</title>
+      <Favicon />
+    </Head>
     <Component {...pageProps} />
   </StrictMode>
 );

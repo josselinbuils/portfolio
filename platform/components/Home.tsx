@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { FC, useEffect } from 'react';
 import { AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
@@ -38,15 +37,10 @@ export const Home: FC<Props> = ({ defaultApp, lazyApp }) => {
   }, [lazyApp, windowManager]);
 
   return (
-    <>
-      <Head>
-        <title>Josselin BUILS</title>
-      </Head>
-      <ContextMenuProvider>
-        <TooltipProvider>
-          <Desktop />
-        </TooltipProvider>
-      </ContextMenuProvider>
-    </>
+    <ContextMenuProvider>
+      <TooltipProvider>
+        <Desktop />
+      </TooltipProvider>
+    </ContextMenuProvider>
   );
 };
