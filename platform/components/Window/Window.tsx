@@ -35,11 +35,12 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
     this.state = {
       animated: false,
-      frozen: false,
       height: `min(${minHeight / 10}rem, 100%)`,
       left: `max((100% - ${minWidth / 10}rem) * 0.5, 0rem)`,
       maximized: false,
+      moving: false,
       minimized: false,
+      resizing: false,
       top: `max((100% - ${minHeight / 10}rem) * 0.2, 0rem)`,
       width: `min(${minWidth / 10}rem, 100%)`,
     };
@@ -123,6 +124,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     const {
       contentRef,
       props,
+      isFrozen,
       startMove,
       startResize,
       state,
@@ -144,8 +146,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       titleColor,
       zIndex,
     } = props;
-    const { animated, frozen, height, left, maximized, minimized, top, width } =
-      state;
+    const { animated, height, left, maximized, minimized, top, width } = state;
+    const frozen = isFrozen();
 
     const className = cn(styles.window, {
       [styles.active]: active,
@@ -243,8 +245,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
       lastMoveEvent = moveEvent;
 
-      if (!state.frozen) {
-        this.setState({ frozen: true });
+      if (!state.moving) {
+        this.setState({ moving: true });
         return;
       }
 
@@ -292,7 +294,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     };
 
     const upHandler = () => {
-      this.setState({ frozen: false });
+      this.setState({ moving: false });
       window.removeEventListener('mousemove', moveHandler);
       window.removeEventListener('mouseup', upHandler);
     };
@@ -321,8 +323,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       const height = startSize.height + moveEvent.clientY - downEvent.clientY;
       ({ state } = this); // State reference will change if not yet frozen
 
-      if (!state.frozen) {
-        this.setState({ frozen: true });
+      if (!state.resizing) {
+        this.setState({ resizing: true });
         return;
       }
 
@@ -332,7 +334,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     const upHandler = () => {
       const size = this.getSize();
       this.setSize(size.width, size.height);
-      this.setState({ frozen: false });
+      this.setState({ resizing: false });
       window.removeEventListener('mousemove', moveHandler);
       window.removeEventListener('mouseup', upHandler);
     };
@@ -413,6 +415,11 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     return { left, top };
   }
 
+  private isFrozen(): boolean {
+    const { animated, moving, resizing } = this.state;
+    return animated || moving || resizing;
+  }
+
   private getSize(): { width: number; height: number } {
     const windowElement = this.windowRef.current;
     let width = 0;
@@ -436,7 +443,6 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
   private setPosition(x: number, y: number, force = false): void {
     const { visibleAreaSize } = this.props;
-    const { frozen } = this.state;
 
     if (!force && visibleAreaSize !== undefined) {
       // This cannot be done when showing again a minimized window because its dimensions are null
@@ -452,7 +458,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     x = Math.round(x);
     y = Math.round(y);
 
-    if (frozen) {
+    if (this.isFrozen()) {
       this.setStyle('left', `${x / 10}rem`);
       this.setStyle('top', `${y / 10}rem`);
     } else {
@@ -472,7 +478,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       onResize,
       visibleAreaSize,
     } = this.props;
-    const { frozen } = this.state;
+    const frozen = this.isFrozen();
 
     if (visibleAreaSize === undefined) {
       return;
@@ -540,14 +546,14 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       },
     };
 
-    this.setState({ animated: true, frozen: true }, () =>
+    this.setState({ animated: true }, () =>
       setTimeout(() => {
         if (typeof ready === 'function') {
           ready();
         }
 
         setTimeout(() => {
-          this.setState({ animated: false, frozen: false });
+          this.setState({ animated: false });
 
           if (typeof finished === 'function') {
             finished();
@@ -608,11 +614,12 @@ export interface WindowProps {
 
 interface State {
   animated: boolean;
-  frozen: boolean;
   height: string;
   left: string;
   maximized: boolean;
+  moving: boolean;
   minimized: boolean;
+  resizing: boolean;
   top: string;
   width: string;
 }
