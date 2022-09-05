@@ -22,13 +22,13 @@ export function computeSegments(
       const isLastOffset = offset === selection[1];
 
       if (segmentStartPosition === undefined) {
-        segmentStartPosition = getOffsetPosition(parent, offset);
+        segmentStartPosition = getOffsetPosition(code, parent, offset);
       }
       if (isLineEnd || isLastOffset) {
         segments.push({
           ...segmentStartPosition,
           width:
-            getOffsetPosition(parent, offset).x -
+            getOffsetPosition(code, parent, offset).x -
             segmentStartPosition.x +
             (isLineEnd && !isLastOffset ? END_LINE_SPACE_PX : 0),
         });

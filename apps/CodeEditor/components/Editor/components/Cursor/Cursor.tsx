@@ -14,8 +14,8 @@ interface Props {
 
 export const Cursor: FC<Props> = ({ code, color, parent, selection }) => {
   const position = useMemo(
-    () => getOffsetPosition(parent, selection[0]),
-    [selection, parent]
+    () => getOffsetPosition(code, parent, selection[0]),
+    [code, selection, parent]
   );
   const segments = useMemo(
     () => computeSegments(code, selection, parent),

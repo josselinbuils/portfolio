@@ -49,6 +49,7 @@ export function useAutoCompletion({
 
       if (completionItems.length > 0) {
         const cursorPosition = getOffsetPosition(
+          code,
           textAreaElement,
           cursorOffset - correctedPartialKeyword.length
         );
@@ -87,6 +88,7 @@ export function useAutoCompletion({
       }
     }
   }, [
+    code,
     cursorOffset,
     hideContextMenu,
     lineIndent,

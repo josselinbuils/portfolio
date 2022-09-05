@@ -36,6 +36,7 @@ const properties = [
 
 // Based on https://github.com/component/textarea-caret-position
 export function getOffsetPosition(
+  code: string,
   element: HTMLTextAreaElement,
   cursorOffset: number
 ): Position<number> {
@@ -101,14 +102,14 @@ export function getOffsetPosition(
     style.overflow = 'hidden';
   }
 
-  div.textContent = element.value.substring(0, cursorOffset);
+  div.textContent = code.substring(0, cursorOffset);
 
   if (isInput) {
     div.textContent = (div.textContent || '').replace(/\s/g, '\u00a0');
   }
 
   const span = document.createElement('span');
-  span.textContent = element.value.substring(cursorOffset) || '.';
+  span.textContent = code.substring(cursorOffset) || '.';
   div.appendChild(span);
 
   const position = {

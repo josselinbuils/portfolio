@@ -495,6 +495,7 @@ export const Editor: FC<Props> = ({
                     />
                   ))}
                 <LineHighlight
+                  code={code}
                   parent={textAreaElementRef.current as HTMLTextAreaElement}
                   selection={selection}
                 />
