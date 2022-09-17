@@ -57,15 +57,6 @@ export function useSharedFile({
   const { dispatchToServer } = useSharedState({
     active,
     dispatchToClient: dispatch,
-    onWebsocketOpen(): void {
-      dispatchToServer(serverActions.subscribe.create({ f: filename }));
-      dispatchToServer(
-        serverActions.updateClientSelection.create({
-          f: filename,
-          s: minifySelection(selectionRef.current),
-        })
-      );
-    },
   });
 
   useKeyMap(
@@ -77,6 +68,22 @@ export function useSharedFile({
     },
     active
   );
+
+  useEffect(() => {
+    if (!active) {
+      dispatch(actions.applyState.create({ s: initialState }));
+    }
+  }, [active]);
+
+  useEffect(() => {
+    dispatchToServer(serverActions.subscribe.create({ f: filename }));
+    dispatchToServer(
+      serverActions.updateClientSelection.create({
+        f: filename,
+        s: minifySelection(selectionRef.current),
+      })
+    );
+  }, [dispatchToServer, filename, selectionRef]);
 
   useEffect(() => {
     if (!active || clientState === undefined) {
