@@ -42,8 +42,8 @@ export function useSharedState({
 
     if (wsReadyPromise === undefined) {
       wsReadyPromise = fetch(WS_API_PATHNAME);
-      openSocket();
     }
+    openSocket();
 
     async function openSocket(): Promise<void> {
       await wsReadyPromise;
