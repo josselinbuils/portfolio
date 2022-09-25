@@ -1,7 +1,6 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import * as serverActions from '~/apps/CodeEditor/api/utils/serverActions';
 import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
@@ -17,6 +16,7 @@ import { createReducer } from '~/platform/state/utils/createReducer';
 import { computeHash } from '~/platform/utils/computeHash';
 import { useSharedState } from '../useSharedState';
 import * as actions from './clientActions';
+import * as serverActions from './serverActions';
 
 const DEBUG = false;
 
