@@ -25,13 +25,13 @@ const PERSISTENT_STATE_FILE_PATH = path.join(
 
 export interface Client {
   cursorColor: string;
+  filename: string | undefined;
   id: number;
   selection: Selection;
   ws: WebSocket;
 }
 
 interface FileState {
-  clients: Client[];
   code: string;
   codeHash: string;
   history: History;
@@ -46,6 +46,7 @@ interface PersistentState {
 
 export class WSServer {
   private clientID = 0;
+  private readonly clients = [] as Client[];
   private readonly files: { [filename: string]: FileState };
   private readonly fsUpdateQueue = new ExecQueue();
   private readonly requestQueue = new ExecQueue();
@@ -58,7 +59,9 @@ export class WSServer {
   }
 
   private static dispatch(wsClient: WebSocket, action: Action<any>): void {
-    wsClient.send(JSON.stringify(action));
+    if (wsClient.readyState === WebSocket.OPEN) {
+      wsClient.send(JSON.stringify(action));
+    }
   }
 
   private constructor() {
@@ -94,23 +97,21 @@ export class WSServer {
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
-    this.server.clients.forEach((wsClient) => {
-      if (wsClient.readyState === WebSocket.OPEN) {
-        const client = this.getClientFromWS(filename, wsClient);
-        const clientAction = actionCreator(client);
+    this.getFileClients(filename).forEach((client) => {
+      const clientAction = actionCreator(client);
 
-        if (clientAction !== undefined) {
-          WSServer.dispatch(wsClient, actionCreator(client) as Action);
-        }
+      if (clientAction !== undefined) {
+        WSServer.dispatch(client.ws, actionCreator(client) as Action);
       }
     });
   }
 
   private fixCursorOffsets(filename: string): void {
+    const clients = this.getFileClients(filename);
     const fileState = this.files[filename];
     const codeLength = fileState.code.length;
 
-    for (const client of fileState.clients) {
+    for (const client of clients) {
       if (client.selection[0] > codeLength) {
         this.updateClientSelection(
           filename,
@@ -121,10 +122,8 @@ export class WSServer {
     }
   }
 
-  private getClientFromWS(filename: string, wsClient: WebSocket): Client {
-    const client = this.files[filename].clients.find(
-      ({ ws }) => ws === wsClient
-    );
+  private getClientFromWS(wsClient: WebSocket): Client {
+    const client = this.clients.find(({ ws }) => ws === wsClient);
 
     if (client === undefined) {
       throw new Error('Unable to find client');
@@ -133,7 +132,7 @@ export class WSServer {
   }
 
   private getCursors(filename: string): ClientCursor[] {
-    return this.files[filename].clients.map(
+    return this.getFileClients(filename).map(
       ({ cursorColor, id, selection }) => ({
         clientID: id,
         color: cursorColor,
@@ -142,26 +141,46 @@ export class WSServer {
     );
   }
 
+  private getFileClients(filename: string): Client[] {
+    return this.clients.filter((client) => client.filename === filename);
+  }
+
   private handleConnection(wsClient: WebSocket): void {
-    wsClient.on('close', () => {
-      for (const [filename, { clients }] of Object.entries(this.files)) {
-        const clientIndex = clients.findIndex(({ ws }) => ws === wsClient);
+    this.requestQueue.enqueue(() => {
+      const id = ++this.clientID;
+      const colorsUsed = this.clients.map((c) => c.cursorColor);
+      const cursorColor =
+        CURSOR_COLORS.find((color) => !colorsUsed.includes(color)) || 'white';
+
+      const client: Client = {
+        cursorColor,
+        filename: undefined,
+        id,
+        selection: createSelection(0),
+        ws: wsClient,
+      };
+      this.clients.push(client);
+
+      wsClient.on('close', () => {
+        const clientIndex = this.clients.indexOf(client);
 
         if (clientIndex !== -1) {
-          clients.splice(clientIndex, 1);
-          this.sendCursors(filename);
+          this.clients.splice(clientIndex, 1);
         }
-      }
-    });
+        if (client.filename !== undefined) {
+          this.sendCursors(client.filename);
+        }
+      });
 
-    wsClient.on('message', (data) => {
-      this.requestQueue.enqueue(() => {
-        try {
-          const action = JSON.parse(data.toString()) as Action;
-          this.reduce(wsClient, action);
-        } catch (error: any) {
-          Logger.error(error.stack);
-        }
+      wsClient.on('message', (data) => {
+        this.requestQueue.enqueue(() => {
+          try {
+            const action = JSON.parse(data.toString()) as Action;
+            this.reduce(wsClient, action);
+          } catch (error: any) {
+            Logger.error(error.stack);
+          }
+        });
       });
     });
   }
@@ -207,7 +226,7 @@ export class WSServer {
         >;
         const { f: filename } = payload;
         const fileState = this.files[filename];
-        const client = this.getClientFromWS(filename, wsClient);
+        const client = this.getClientFromWS(wsClient);
         const historyFunction =
           type === serverActions.undo.type ? 'undo' : 'redo';
         const state = fileState.history[historyFunction](fileState.code);
@@ -232,7 +251,7 @@ export class WSServer {
           typeof serverActions.updateClientSelection
         >;
         const { f: filename, s: selection } = payload;
-        const client = this.getClientFromWS(filename, wsClient);
+        const client = this.getClientFromWS(wsClient);
 
         this.updateClientSelection(
           filename,
@@ -254,7 +273,7 @@ export class WSServer {
           sh: safetyHash,
         } = payload;
         const fileState = this.files[filename];
-        const client = this.getClientFromWS(filename, wsClient);
+        const client = this.getClientFromWS(wsClient);
 
         if (currentSelection === undefined || newSelection === undefined) {
           return;
@@ -318,24 +337,15 @@ export class WSServer {
   }
 
   private subscribe(filename: string, wsClient: WebSocket): void {
+    const client = this.getClientFromWS(wsClient);
     const fileState = this.files[filename];
-    const id = ++this.clientID;
-    const colorsUsed = fileState.clients.map((c) => c.cursorColor);
-    const cursorColor =
-      CURSOR_COLORS.find((color) => !colorsUsed.includes(color)) || 'white';
 
-    const client = {
-      cursorColor,
-      id,
-      selection: createSelection(0),
-      ws: wsClient,
-    };
-    fileState.clients.push(client);
+    client.filename = filename;
 
     const state = {
       code: fileState.code,
-      cursorColor,
-      id,
+      cursorColor: client.cursorColor,
+      id: client.id,
     };
     WSServer.dispatch(wsClient, clientActions.applyState.create({ s: state }));
     this.sendCursors(filename);
