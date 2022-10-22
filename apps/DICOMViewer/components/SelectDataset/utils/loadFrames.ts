@@ -1,6 +1,6 @@
 import { onFetchProgress } from '~/platform/utils/onFetchProgress';
-import { DatasetDescriptor } from '../../../interfaces/DatasetDescriptor';
-import { DicomFrame } from '../../../models/DicomFrame';
+import type { DatasetDescriptor } from '../../../interfaces/DatasetDescriptor';
+import type { DicomFrame } from '../../../models/DicomFrame';
 import { decodeFrames } from '../../../utils/decodeFrames';
 import { untar } from '../../../utils/untar';
 

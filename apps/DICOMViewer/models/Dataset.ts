@@ -1,12 +1,12 @@
-import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { computeFrames } from '../utils/computeFrames';
 import { computeSharedProperties } from '../utils/computeSharedProperties';
 import { computeVolume } from '../utils/computeVolume';
 import { V } from '../utils/math/Vector';
-import { DicomFrame } from './DicomFrame';
-import { Frame } from './Frame';
+import type { DicomFrame } from './DicomFrame';
+import type { Frame } from './Frame';
 import { Model } from './Model';
-import { Volume } from './Volume';
+import type { Volume } from './Volume';
 
 const MANDATORY_FIELDS = ['frames', 'voxelSpacing'];
 

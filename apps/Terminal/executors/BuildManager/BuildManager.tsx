@@ -1,11 +1,13 @@
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
-import { MutableRefObject, useEffect, useState } from 'react';
+import type { MutableRefObject } from 'react';
+import { useEffect, useState } from 'react';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
-import { AsyncExecutor } from '../AsyncExecutor';
+import type { AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
-import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';
-import { Log } from './Log';
+import type { BMError } from './BuildManagerClient';
+import { BuildManagerClient, MessageType } from './BuildManagerClient';
+import type { Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';
 

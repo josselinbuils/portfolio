@@ -1,5 +1,5 @@
-import { SharedProperties } from '../interfaces/SharedProperties';
-import { Frame } from '../models/Frame';
+import type { SharedProperties } from '../interfaces/SharedProperties';
+import type { Frame } from '../models/Frame';
 import { Volume } from '../models/Volume';
 import { isVolume } from './isVolume';
 import { V } from './math/Vector';

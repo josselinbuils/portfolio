@@ -1,13 +1,13 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { useMobile } from '~/platform/hooks/useMobile';
 import styles from './MP3Player.module.scss';
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
 import { Footer } from './components/Footer/Footer';
 import { Musics } from './components/Musics/Musics';
 import { Sidebar } from './components/Sidebar/Sidebar';
-import { MusicList } from './interfaces/MusicList';
+import type { MusicList } from './interfaces/MusicList';
 import { musicLists } from './musicLists';
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {

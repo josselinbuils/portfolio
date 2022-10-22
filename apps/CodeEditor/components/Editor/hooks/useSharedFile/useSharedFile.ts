@@ -1,13 +1,13 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
-import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
-import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import type { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import type { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
+import type { Diff } from '~/apps/CodeEditor/utils/diffs';
 import {
   applyDiff,
-  Diff,
   getCursorOffsetAfterDiff,
   getDiffs,
 } from '~/apps/CodeEditor/utils/diffs';

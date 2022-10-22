@@ -8,7 +8,7 @@ import { Shortcut } from '../Shortcut/Shortcut';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';
 import styles from './Console.module.scss';
-import { Log } from './Log';
+import type { Log } from './Log';
 import { Logs } from './components/Logs/Logs';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';

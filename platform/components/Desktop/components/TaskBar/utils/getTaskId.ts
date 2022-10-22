@@ -1,4 +1,4 @@
-import { TaskDescriptor } from '../TaskDescriptor';
+import type { TaskDescriptor } from '../TaskDescriptor';
 
 export function getTaskId(
   { appDescriptor, windowInstance }: TaskDescriptor,

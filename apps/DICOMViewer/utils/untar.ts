@@ -1,4 +1,4 @@
-import { File } from '../interfaces/File';
+import type { File } from '../interfaces/File';
 
 // All sizes are in octets
 

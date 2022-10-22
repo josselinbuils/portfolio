@@ -1,13 +1,14 @@
 import cn from 'classnames';
-import React, { FC, useEffect, useLayoutEffect, useRef } from 'react';
+import type { FC } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks/useElementSize';
-import { Size } from '~/platform/interfaces/Size';
-import { ViewportStats } from '../../interfaces/ViewportStats';
-import { Viewport } from '../../models/Viewport';
+import type { Size } from '~/platform/interfaces/Size';
+import type { ViewportStats } from '../../interfaces/ViewportStats';
+import type { Viewport } from '../../models/Viewport';
 import styles from './ViewportElement.module.scss';
-import { Renderer } from './renderers/Renderer';
+import type { Renderer } from './renderers/Renderer';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 

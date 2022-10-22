@@ -1,6 +1,6 @@
-import { Camera } from '../../models/Camera';
-import { Viewport } from '../../models/Viewport';
-import { Volume } from '../../models/Volume';
+import type { Camera } from '../../models/Camera';
+import type { Viewport } from '../../models/Viewport';
+import type { Volume } from '../../models/Volume';
 import { areFloatEquals } from '../areFloatEquals';
 import { M3 } from '../math/Matrix3';
 import { V } from '../math/Vector';

@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Executor, ExecutorProps } from './Executor';
+import type { FC } from 'react';
+import type { Executor, ExecutorProps } from './Executor';
 
 export interface AsyncExecutor extends FC<ExecutorProps & AsyncExecutorProps> {
   async: boolean;

@@ -1,6 +1,6 @@
-import { FC, RefObject } from 'react';
-import { Size } from '~/platform/interfaces/Size';
-import { Window, WindowProps } from './Window';
+import type { FC, RefObject } from 'react';
+import type { Size } from '~/platform/interfaces/Size';
+import type { Window, WindowProps } from './Window';
 
 export type WindowComponent<T = unknown> = FC<T & InjectedWindowProps>;
 

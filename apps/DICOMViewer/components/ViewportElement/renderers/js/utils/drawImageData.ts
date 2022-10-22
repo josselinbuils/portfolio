@@ -1,4 +1,4 @@
-import {
+import type {
   BoundedViewportSpaceCoordinates,
   ViewportSpaceCoordinates,
 } from '../../RenderingProperties';

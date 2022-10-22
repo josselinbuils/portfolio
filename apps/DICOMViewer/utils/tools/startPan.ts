@@ -1,5 +1,5 @@
-import { Viewport } from '../../models/Viewport';
-import { Volume } from '../../models/Volume';
+import type { Viewport } from '../../models/Viewport';
+import type { Volume } from '../../models/Volume';
 import { changePointSpace } from '../changePointSpace';
 import { V } from '../math/Vector';
 import { isImageCentered } from './utils/isImageCentered';

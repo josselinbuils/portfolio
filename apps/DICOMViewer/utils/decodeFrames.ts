@@ -1,7 +1,7 @@
 import dicomParser from 'dicom-parser';
 import { extendError } from '~/platform/utils/extendError';
-import { PhotometricInterpretation } from '../constants';
-import { File } from '../interfaces/File';
+import type { PhotometricInterpretation } from '../constants';
+import type { File } from '../interfaces/File';
 import { DicomFrame } from '../models/DicomFrame';
 
 export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {

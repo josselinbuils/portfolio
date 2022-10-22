@@ -3,7 +3,7 @@ import {
   PhotometricInterpretation,
   PixelRepresentation,
 } from '../constants';
-import { DicomFrame } from '../models/DicomFrame';
+import type { DicomFrame } from '../models/DicomFrame';
 import { Frame } from '../models/Frame';
 import { V } from './math/Vector';
 

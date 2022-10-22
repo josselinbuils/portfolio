@@ -1,7 +1,8 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import dynamic from 'next/dynamic';
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
-import { Size } from '~/platform/interfaces/Size';
+import type { FC, MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { getRefElementSize } from '~/platform/utils/getRefElementSize';

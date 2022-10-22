@@ -1,4 +1,7 @@
-import { PhotometricInterpretation, PixelRepresentation } from '../constants';
+import type {
+  PhotometricInterpretation,
+  PixelRepresentation,
+} from '../constants';
 import { Model } from './Model';
 
 const MANDATORY_FIELDS = [

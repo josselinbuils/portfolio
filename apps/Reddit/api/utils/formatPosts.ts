@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { RedditPost } from '../../interfaces/RedditPost';
+import type { RedditPost } from '../../interfaces/RedditPost';
 
 dayjs.extend(relativeTime);
 

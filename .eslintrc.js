@@ -5,6 +5,7 @@ module.exports = {
   ],
   rules: {
     '@next/next/no-img-element': 'off',
+    '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
     '@typescript-eslint/no-var-requires': 'off', // applied to js files
     'default-param-last': 'off', // false positives
@@ -15,7 +16,6 @@ module.exports = {
         'newlines-between': 'never',
         warnOnUnassignedImports: true,
         groups: [
-          'type',
           'builtin',
           'external',
           'internal',

@@ -1,9 +1,9 @@
 import { ViewType } from '../constants';
-import { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { V } from '../utils/math/Vector';
-import { Frame } from './Frame';
+import type { Frame } from './Frame';
 import { Renderable } from './Renderable';
-import { Volume } from './Volume';
+import type { Volume } from './Volume';
 
 const MANDATORY_FIELDS = [
   'baseFieldOfView',

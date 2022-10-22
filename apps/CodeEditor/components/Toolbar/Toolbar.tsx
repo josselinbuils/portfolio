@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { Children, cloneElement, FC, ReactElement } from 'react';
+import type { FC, ReactElement } from 'react';
+import { Children, cloneElement } from 'react';
 import styles from './Toolbar.module.scss';
 
 export const Toolbar: FC<Props> = ({ children, className }) => (

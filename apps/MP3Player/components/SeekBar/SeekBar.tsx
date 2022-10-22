@@ -1,4 +1,5 @@
-import React, { createRef, FC, useContext } from 'react';
+import type { FC } from 'react';
+import React, { createRef, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';

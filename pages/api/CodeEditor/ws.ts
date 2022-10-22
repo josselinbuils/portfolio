@@ -1,5 +1,5 @@
-import { Server } from 'node:http';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { Server } from 'node:http';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { WSServer } from '~/apps/CodeEditor/api/WSServer';
 import { SharedFileWSPlugin } from '~/apps/CodeEditor/components/Editor/hooks/useSharedFile/SharedFileWSPlugin';
 

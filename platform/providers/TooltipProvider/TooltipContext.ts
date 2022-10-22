@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
+import type { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 
 function throwError(): void {
   throw new Error('TooltipContext not initialized');

@@ -1,4 +1,5 @@
-import { RefObject, useLayoutEffect, useState } from 'react';
+import type { RefObject } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 export function useElementSize(elementRef: RefObject<HTMLElement>): number[] {
   const [size, setSize] = useState([0, 0]);

@@ -1,12 +1,8 @@
 import cn from 'classnames';
-import React, {
-  Component,
-  createRef,
-  PropsWithChildren,
-  ReactElement,
-} from 'react';
+import type { PropsWithChildren, ReactElement } from 'react';
+import React, { Component, createRef } from 'react';
 import { MouseButton } from '~/platform/constants';
-import { Size } from '~/platform/interfaces/Size';
+import type { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
 import styles from './Window.module.scss';
 

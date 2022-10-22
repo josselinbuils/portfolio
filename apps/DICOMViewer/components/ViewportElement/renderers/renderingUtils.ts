@@ -1,11 +1,11 @@
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
-import { Camera } from '../../../models/Camera';
-import { Frame } from '../../../models/Frame';
+import type { Camera } from '../../../models/Camera';
+import type { Frame } from '../../../models/Frame';
 import { Viewport } from '../../../models/Viewport';
-import { Volume } from '../../../models/Volume';
+import type { Volume } from '../../../models/Volume';
 import { changePointSpace } from '../../../utils/changePointSpace';
 import { V } from '../../../utils/math/Vector';
-import {
+import type {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,

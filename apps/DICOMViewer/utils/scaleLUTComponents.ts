@@ -1,4 +1,4 @@
-import { LUTComponent } from '../interfaces/LUTComponent';
+import type { LUTComponent } from '../interfaces/LUTComponent';
 
 const BASE_SIZE = 256;
 

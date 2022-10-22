@@ -1,10 +1,10 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
-import { RefObject } from 'react';
-import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
-import { ContextMenuDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
-import { ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
+import type { RefObject } from 'react';
+import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import type { ContextMenuDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
+import type { ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
-import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import type { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 
 export function useTaskContextMenu(

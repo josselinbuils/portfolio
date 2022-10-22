@@ -1,11 +1,12 @@
-import { RendererType, ViewType } from '../constants';
-import { CoordinateSpace } from '../interfaces/CoordinateSpace';
-import { LUTComponent } from '../interfaces/LUTComponent';
+import type { RendererType } from '../constants';
+import { ViewType } from '../constants';
+import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import type { LUTComponent } from '../interfaces/LUTComponent';
 import { V } from '../utils/math/Vector';
 import { Camera } from './Camera';
-import { Dataset } from './Dataset';
+import type { Dataset } from './Dataset';
 import { Renderable } from './Renderable';
-import { Volume } from './Volume';
+import type { Volume } from './Volume';
 
 const MANDATORY_FIELDS = ['camera', 'dataset', 'viewType'];
 

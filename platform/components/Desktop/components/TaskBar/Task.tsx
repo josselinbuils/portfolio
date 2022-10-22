@@ -1,19 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import cn from 'classnames';
-import {
-  ButtonHTMLAttributes,
-  FC,
-  forwardRef,
-  RefObject,
-  useEffect,
-  useState,
-} from 'react';
-import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import type { ButtonHTMLAttributes, FC, RefObject } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
+import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WithTooltip } from '~/platform/providers/TooltipProvider/WithTooltip';
-import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import type { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { noop } from '~/platform/utils/noop';
 import styles from './Task.module.scss';

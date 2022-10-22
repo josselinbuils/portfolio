@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import styles from './Notes.module.scss';
 
 const smileys: { [smiley: string]: string } = {

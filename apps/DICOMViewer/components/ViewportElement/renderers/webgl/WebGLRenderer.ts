@@ -1,7 +1,7 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import { Frame } from '~/apps/DICOMViewer/models/Frame';
-import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
-import { Renderer } from '../Renderer';
+import type { Frame } from '~/apps/DICOMViewer/models/Frame';
+import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import type { Renderer } from '../Renderer';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { getFragmentShaderSrc, getTextureFormat } from './fragmentShader';
 import { VERTEX_SHADER_SRC } from './vertexShader';

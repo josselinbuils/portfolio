@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import styles from './CommandHelp.module.scss';
 
 export const CommandHelp: FC<Props> = ({

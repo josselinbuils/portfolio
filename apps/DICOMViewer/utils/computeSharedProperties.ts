@@ -1,5 +1,5 @@
-import { SharedProperties } from '../interfaces/SharedProperties';
-import { Frame } from '../models/Frame';
+import type { SharedProperties } from '../interfaces/SharedProperties';
+import type { Frame } from '../models/Frame';
 
 export function computeSharedProperties(frames: Frame[]): SharedProperties {
   const { pixelSpacing, spacingBetweenSlices } = frames[0];

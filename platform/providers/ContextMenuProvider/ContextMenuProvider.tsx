@@ -1,17 +1,9 @@
 import cn from 'classnames';
 import dynamic from 'next/dynamic';
-import {
-  Children,
-  cloneElement,
-  FC,
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import type { FC, PropsWithChildren, ReactElement } from 'react';
+import { Children, cloneElement, useCallback, useMemo, useState } from 'react';
 import { ContextMenuContext } from './ContextMenuContext';
-import { ContextMenuDescriptor } from './ContextMenuDescriptor';
+import type { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import styles from './ContextMenuProvider.module.scss';
 
 const ContextMenu = dynamic(

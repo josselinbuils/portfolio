@@ -1,6 +1,7 @@
 import cn from 'classnames';
-import React, { FC } from 'react';
-import { Position } from '~/platform/interfaces/Position';
+import type { FC } from 'react';
+import React from 'react';
+import type { Position } from '~/platform/interfaces/Position';
 import styles from './Elements.module.scss';
 
 const POSITIONS = ['16%', '50%', '84%'];

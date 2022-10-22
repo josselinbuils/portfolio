@@ -1,12 +1,7 @@
-import {
-  createContext,
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { AudioController, AudioState } from './AudioController';
+import type { FC, PropsWithChildren } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import type { AudioState } from './AudioController';
+import { AudioController } from './AudioController';
 
 export const AudioContext = createContext<{
   audioController: AudioController | undefined;

@@ -1,5 +1,5 @@
 import { faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
-import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const DICOMViewerDescriptor: AppDescriptor = {
   description: 'Medical image viewer.',

@@ -1,5 +1,5 @@
 import { NormalizedImageFormat } from '../constants';
-import { Frame } from '../models/Frame';
+import type { Frame } from '../models/Frame';
 
 export function isVolume(frames: Frame[]): boolean {
   return (

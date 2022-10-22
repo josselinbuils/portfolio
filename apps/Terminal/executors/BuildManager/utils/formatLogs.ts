@@ -1,4 +1,4 @@
-import { Log } from '../Log';
+import type { Log } from '../Log';
 
 let logId = -1;
 

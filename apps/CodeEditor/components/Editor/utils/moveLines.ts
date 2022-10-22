@@ -1,5 +1,5 @@
-import { EditableState } from '../../../interfaces/EditableState';
-import { Selection } from '../../../interfaces/Selection';
+import type { EditableState } from '../../../interfaces/EditableState';
+import type { Selection } from '../../../interfaces/Selection';
 import { createSelection } from '../../../utils/createSelection';
 import { spliceString } from '../../../utils/spliceString';
 import { getCorrectedSelectionEnd } from './getCorrectedSelectionEnd';

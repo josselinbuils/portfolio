@@ -1,6 +1,6 @@
-import { NextApiRequest } from 'next';
-import { Subreddit as SnoowrapSubreddit } from 'snoowrap';
-import { Subreddit } from '../interfaces/Subreddit';
+import type { NextApiRequest } from 'next';
+import type { Subreddit as SnoowrapSubreddit } from 'snoowrap';
+import type { Subreddit } from '../interfaces/Subreddit';
 import { getSnoowrapInstance } from './utils/getSnoowrapInstance';
 
 export async function getSubreddit(req: NextApiRequest): Promise<Subreddit> {

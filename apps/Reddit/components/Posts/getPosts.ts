@@ -1,6 +1,6 @@
 import { getBaseURL } from '~/platform/utils/getBaseURL';
-import { RedditFilter } from '../../interfaces/RedditFilter';
-import { RedditPost } from '../../interfaces/RedditPost';
+import type { RedditFilter } from '../../interfaces/RedditFilter';
+import type { RedditPost } from '../../interfaces/RedditPost';
 
 export async function getPosts(
   subreddit: string,

@@ -1,7 +1,8 @@
-import { NextPage } from 'next';
+import type { NextPage } from 'next';
 import Terminal from '~/apps/Terminal/Terminal';
 import { TerminalDescriptor } from '~/apps/Terminal/TerminalDescriptor';
-import { DefaultApp, Home } from '~/platform/components/Home';
+import type { DefaultApp } from '~/platform/components/Home';
+import { Home } from '~/platform/components/Home';
 import { InjectorProvider } from '~/platform/providers/InjectorProvider/InjectorProvider';
 
 const defaultApp: DefaultApp = {

@@ -1,6 +1,6 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import dayjs from 'dayjs';
-import { Music } from '../../interfaces/Music';
+import type { Music } from '../../interfaces/Music';
 
 export class AudioController {
   audioStateSubject: Subject<AudioState>;

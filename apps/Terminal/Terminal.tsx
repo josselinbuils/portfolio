@@ -3,13 +3,14 @@ import { useList } from '@josselinbuils/hooks/useList';
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import styles from './Terminal.module.scss';
 import { About } from './executors/About/About';
-import { AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
+import type { AsyncExecutor } from './executors/AsyncExecutor';
+import { isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';
 import { Command } from './executors/Command/Command';
-import { Executor } from './executors/Executor';
+import type { Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
 
 const USER = 'guest';

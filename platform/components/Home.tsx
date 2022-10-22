@@ -1,12 +1,13 @@
-import { FC, useEffect } from 'react';
-import { AppDescriptor } from '../interfaces/AppDescriptor';
+import type { FC } from 'react';
+import { useEffect } from 'react';
+import type { AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
 import { useInjector } from '../providers/InjectorProvider/useInjector';
 import { TooltipProvider } from '../providers/TooltipProvider/TooltipProvider';
 import { WindowManager } from '../services/WindowManager/WindowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
-import { WindowComponent } from './Window/WindowComponent';
+import type { WindowComponent } from './Window/WindowComponent';
 
 export interface DefaultApp {
   appDescriptor: AppDescriptor;

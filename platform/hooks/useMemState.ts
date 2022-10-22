@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export function useMemState<S>(
   initialValue: S | (() => S)

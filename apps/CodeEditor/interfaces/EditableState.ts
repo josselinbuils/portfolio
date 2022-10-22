@@ -1,4 +1,4 @@
-import { Selection } from './Selection';
+import type { Selection } from './Selection';
 
 export interface EditableState {
   code: string;

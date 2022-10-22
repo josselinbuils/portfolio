@@ -1,6 +1,6 @@
 import { getBaseURL } from '~/platform/utils/getBaseURL';
 import { preloadImage } from '~/platform/utils/preloadImage';
-import { Music } from '../interfaces/Music';
+import type { Music } from '../interfaces/Music';
 
 export async function loadMusics(
   jamendoTag: string,

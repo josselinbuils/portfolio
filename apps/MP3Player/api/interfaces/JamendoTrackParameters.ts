@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import { JamendoBoost } from './JamendoBoost';
-import { JamendoOrder } from './JamendoOrder';
+import type { JamendoBoost } from './JamendoBoost';
+import type { JamendoOrder } from './JamendoOrder';
 
 export interface JamendoTrackParameters {
   boost?: JamendoBoost;

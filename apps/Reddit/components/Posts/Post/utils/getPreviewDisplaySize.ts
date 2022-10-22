@@ -1,5 +1,5 @@
-import { ImageResolution } from '~/apps/Reddit/interfaces/RedditPost';
-import { Size } from '~/platform/interfaces/Size';
+import type { ImageResolution } from '~/apps/Reddit/interfaces/RedditPost';
+import type { Size } from '~/platform/interfaces/Size';
 import { PREVIEW_MAX_HEIGHT, PREVIEW_MAX_WIDTH } from '../constants';
 
 export function getPreviewDisplaySize(

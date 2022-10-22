@@ -1,10 +1,10 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
-import { Frame } from '~/apps/DICOMViewer/models/Frame';
-import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import type { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import type { Frame } from '~/apps/DICOMViewer/models/Frame';
+import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
-import { Renderer } from '../Renderer';
-import {
+import type { Renderer } from '../Renderer';
+import type {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,

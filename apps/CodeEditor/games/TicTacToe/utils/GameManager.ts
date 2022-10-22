@@ -1,5 +1,5 @@
 import { Subject } from '@josselinbuils/utils/Subject';
-import { Position } from '~/platform/interfaces/Position';
+import type { Position } from '~/platform/interfaces/Position';
 
 type Element = 'x' | 'o' | '';
 
@@ -48,6 +48,7 @@ export class GameManager {
     this.startCallback = callback;
   };
 
+  // TODO change this and describe its interface in the comment
   setElement = (x: number, y: number) => {
     if (this.turn !== 'o') {
       console.error(new Error('This is not your turn!'));

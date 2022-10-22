@@ -1,5 +1,5 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
 
 export interface AppDescriptor {
   description: string;

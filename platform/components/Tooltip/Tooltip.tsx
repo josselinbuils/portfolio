@@ -1,8 +1,9 @@
 import cn from 'classnames';
-import { FC, useEffect } from 'react';
+import type { FC } from 'react';
+import { useEffect } from 'react';
 import { ROOT_FONT_SIZE_PX } from '~/platform/constants';
 import styles from './Tooltip.module.scss';
-import { TooltipDescriptor } from './TooltipDescriptor';
+import type { TooltipDescriptor } from './TooltipDescriptor';
 
 interface TooltipProps extends TooltipDescriptor {
   onDOMReady(): void;

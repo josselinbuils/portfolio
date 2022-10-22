@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { Window } from '~/platform/components/Window/Window';
-import { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import styles from './Blog.module.scss';
 
 const Blog: WindowComponent = ({

@@ -1,4 +1,4 @@
-import { Selection } from '../interfaces/Selection';
+import type { Selection } from '../interfaces/Selection';
 
 export function createSelection(
   start: number | readonly number[],

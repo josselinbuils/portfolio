@@ -1,4 +1,7 @@
-import { Image, ImageResolution } from '~/apps/Reddit/interfaces/RedditPost';
+import type {
+  Image,
+  ImageResolution,
+} from '~/apps/Reddit/interfaces/RedditPost';
 import { PREVIEW_MAX_HEIGHT, PREVIEW_MAX_WIDTH } from '../constants';
 
 export function getPreviewResolution(preview: Image): ImageResolution {

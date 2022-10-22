@@ -1,8 +1,9 @@
 import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import { FC, useEffect, useState } from 'react';
-import { LUTComponent } from '../../interfaces/LUTComponent';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import type { LUTComponent } from '../../interfaces/LUTComponent';
 import styles from './ColorPalette.module.scss';
 import { BarPreview } from './components/BarPreview/BarPreview';
 import { GraphPreview } from './components/GraphPreview/GraphPreview';

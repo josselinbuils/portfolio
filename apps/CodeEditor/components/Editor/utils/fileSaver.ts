@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { EditorFile } from '../interfaces/EditorFile';
+import type { EditorFile } from '../interfaces/EditorFile';
 
 const STORAGE_KEY = 'codeEditor';
 

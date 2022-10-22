@@ -1,14 +1,14 @@
 import { ViewType } from '~/apps/DICOMViewer/constants';
-import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
-import { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
-import { Dataset } from '~/apps/DICOMViewer/models/Dataset';
-import { Viewport } from '~/apps/DICOMViewer/models/Viewport';
-import { Volume } from '~/apps/DICOMViewer/models/Volume';
+import type { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import type { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import type { Dataset } from '~/apps/DICOMViewer/models/Dataset';
+import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import type { Volume } from '~/apps/DICOMViewer/models/Volume';
 import { changePointSpace } from '~/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '~/apps/DICOMViewer/utils/math/Vector';
-import { Renderer } from '../Renderer';
-import {
+import type { Renderer } from '../Renderer';
+import type {
   BoundedViewportSpaceCoordinates,
   ImageSpaceCoordinates,
   RenderingProperties,

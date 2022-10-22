@@ -1,6 +1,6 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Action } from '~/platform/state/interfaces/Action';
+import type { Action } from '~/platform/state/interfaces/Action';
 
 const REOPEN_DELAY_MS = 1000;
 const WS_API_PATHNAME = '/api/CodeEditor/ws';

@@ -1,8 +1,8 @@
-import { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import type { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
+import type { Diff } from '~/apps/CodeEditor/utils/diffs';
 import {
   applyDiff,
-  Diff,
   DiffType,
   getCursorOffsetBeforeDiff,
   getDiffs,

@@ -1,6 +1,6 @@
 import { MouseButton } from '~/platform/constants';
 import { MouseTool } from '../constants';
-import { Viewport } from '../models/Viewport';
+import type { Viewport } from '../models/Viewport';
 
 export async function startTool(
   downEvent: MouseEvent,
