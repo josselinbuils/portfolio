@@ -66,9 +66,9 @@
     "eslint-plugin-react": "7.31.10",
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "8.0.1",
-    "next-bundle-analyzer": "0.6.4"
+    "next-bundle-analyzer": "0.6.5"
   },
   "engines": {
-    "node": ">=16.13"
+    "node": ">=18"
   }
 }

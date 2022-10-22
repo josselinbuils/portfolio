@@ -1878,13 +1878,13 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-next-bundle-analyzer@0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/next-bundle-analyzer/-/next-bundle-analyzer-0.6.4.tgz#83eb5aee85ddce52ae2ded72ce3892ef60ae42bb"
-  integrity sha512-bWYOqxNcqVJFi+QohrwTFxoRrgykU3vjRzfn0HUMfmdlXodsgI7MCdMKDFuCsvu8/mrE5aRv+eJHuKCcaYO3zw==
+next-bundle-analyzer@0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/next-bundle-analyzer/-/next-bundle-analyzer-0.6.5.tgz#28cbd69d72d9c379eee9c24ed9596dd6acb9a882"
+  integrity sha512-WwLyZGX95leaDddWlFvw18Q2dHUCAcO/wIvgyyQkLefvcLrjPRMsGuH6xzFoXLX8dvuJ90xJYrsziOvA8oLLqA==
   dependencies:
     open "^8.4.0"
-    webpack-bundle-analyzer "^4.5.0"
+    webpack-bundle-analyzer "^4.6.1"
 
 next-transpile-modules@9.1.0:
   version "9.1.0"
@@ -2653,7 +2653,7 @@ vow@^0.4.17, vow@^0.4.7:
   resolved "https://registry.yarnpkg.com/vow/-/vow-0.4.20.tgz#77ca6ef0828e0043a93e55dc37030226519ce711"
   integrity sha512-YYoSYXUYABqY08D/WrjcWJxJSErcILRRTQpcPyUc0SFfgIPKSUFzVt7u1HC3TXGJZM/qhsSjCLNQstxqf7asgQ==
 
-webpack-bundle-analyzer@^4.5.0:
+webpack-bundle-analyzer@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-4.6.1.tgz#bee2ee05f4ba4ed430e4831a319126bb4ed9f5a6"
   integrity sha512-oKz9Oz9j3rUciLNfpGFjOb49/jEpXNmWdVH8Ls//zNcnLlQdTGXQQMsBbb/gR7Zl8WNLxVCq+0Hqbx3zv6twBw==
