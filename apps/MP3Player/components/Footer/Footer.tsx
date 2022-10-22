@@ -4,9 +4,8 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Controls } from '../Controls/Controls';
 import { MusicPreview } from '../MusicPreview/MusicPreview';
 import { SeekBar } from '../SeekBar/SeekBar';
-import { MusicInfo } from './MusicInfo';
-
 import styles from './Footer.module.scss';
+import { MusicInfo } from './MusicInfo';
 
 interface Props {
   className?: string;

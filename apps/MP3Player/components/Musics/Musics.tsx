@@ -12,7 +12,6 @@ import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
-
 import styles from './Musics.module.scss';
 
 const ORDERS = [

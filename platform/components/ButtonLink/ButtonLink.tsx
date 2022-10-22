@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { ButtonHTMLAttributes, FC } from 'react';
-
 import styles from './ButtonLink.module.scss';
 
 export const ButtonLink: FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({

@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react';
-
 import styles from './ProgressBar.module.scss';
 
 interface Props {

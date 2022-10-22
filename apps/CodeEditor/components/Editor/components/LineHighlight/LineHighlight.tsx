@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-
 import styles from './LineHighlight.module.scss';
 
 interface Props {

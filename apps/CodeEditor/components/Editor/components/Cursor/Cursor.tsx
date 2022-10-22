@@ -2,9 +2,8 @@ import { FC, useEffect, useState } from 'react';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { Position } from '~/platform/interfaces/Position';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import { computeSegments, Segment } from './utils/computeSegments';
-
 import styles from './Cursor.module.scss';
+import { computeSegments, Segment } from './utils/computeSegments';
 
 interface Props {
   code: string;

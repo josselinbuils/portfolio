@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-
 import styles from './Spinner.module.scss';
 
 const DISPLAY_DELAY_MS = 100;

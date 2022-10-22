@@ -1,12 +1,12 @@
 import WebSocket from 'ws';
-import { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
-import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
-import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
-import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
-import { History, HistoryState } from '~/apps/CodeEditor/utils/History';
-import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import { WSClient } from '~/apps/CodeEditor/api/WSClient';
 import { WSServer } from '~/apps/CodeEditor/api/WSServer';
+import { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
+import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { History, HistoryState } from '~/apps/CodeEditor/utils/History';
+import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
+import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
+import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import { Action } from '~/platform/state/interfaces/Action';
 import { ActionFromFactory } from '~/platform/state/interfaces/ActionFactory';
 import { computeHash } from '~/platform/utils/computeHash';

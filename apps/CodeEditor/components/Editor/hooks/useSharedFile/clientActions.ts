@@ -1,5 +1,5 @@
-import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
+import { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import { applyDiff, Diff } from '~/apps/CodeEditor/utils/diffs';

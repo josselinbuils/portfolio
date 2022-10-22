@@ -9,7 +9,6 @@ import { FC } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { MouseTool, ViewType } from '../../constants';
 import { Viewport } from '../../models/Viewport';
-
 import styles from './LeftToolbar.module.scss';
 
 const mouseTools = [

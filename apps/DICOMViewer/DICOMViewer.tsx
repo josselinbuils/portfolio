@@ -4,6 +4,7 @@ import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { MouseButton } from '~/platform/constants';
+import styles from './DICOMViewer.module.scss';
 import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsElement';
 import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
@@ -15,8 +16,6 @@ import { Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
 import { getAvailableViewTypes } from './utils/getAvailableViewTypes';
 import { startTool } from './utils/startTool';
-
-import styles from './DICOMViewer.module.scss';
 
 const ColorPalette = dynamic(
   async () =>

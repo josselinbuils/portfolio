@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
-
 import styles from './Button.module.scss';
 
 export const Button: FC<Props> = ({

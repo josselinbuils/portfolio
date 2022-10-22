@@ -2,7 +2,6 @@ import React, { createRef, FC, useContext } from 'react';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
-
 import styles from './SeekBar.module.scss';
 
 export const SeekBar: FC = () => {

@@ -5,9 +5,8 @@ import { createGUID } from '~/platform/utils/createGUID';
 import { ROOT_FONT_SIZE_PX } from '../../../constants';
 import { ContextMenuDescriptor } from '../ContextMenuDescriptor';
 import { ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
-import { ContextMenuItem } from './ContextMenuItem';
-
 import styles from './ContextMenu.module.scss';
+import { ContextMenuItem } from './ContextMenuItem';
 
 export const ContextMenu: FC<Props> = ({
   className,

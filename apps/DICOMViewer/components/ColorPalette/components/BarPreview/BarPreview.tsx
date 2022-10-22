@@ -3,7 +3,6 @@ import { FC, useLayoutEffect, useRef } from 'react';
 import { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
 import { useElementSize } from '~/platform/hooks/useElementSize';
-
 import styles from './BarPreview.module.scss';
 
 export const BarPreview: FC<Props> = ({ className, lutComponents }) => {

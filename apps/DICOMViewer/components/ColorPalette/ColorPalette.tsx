@@ -3,11 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC, useEffect, useState } from 'react';
 import { LUTComponent } from '../../interfaces/LUTComponent';
+import styles from './ColorPalette.module.scss';
 import { BarPreview } from './components/BarPreview/BarPreview';
 import { GraphPreview } from './components/GraphPreview/GraphPreview';
 import { LUTComponentList } from './components/LUTComponentList/LUTComponentList';
-
-import styles from './ColorPalette.module.scss';
 
 const baseLUTComponents = [
   { id: '0', start: 0, end: 65, color: [0, 0, 255] },

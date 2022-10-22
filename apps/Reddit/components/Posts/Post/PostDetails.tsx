@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { ButtonLink } from '~/platform/components/ButtonLink/ButtonLink';
 import { Icon } from '../../Icon/Icon';
-
 import styles from './PostDetails.module.scss';
 
 export const PostDetails: FC<Props> = ({

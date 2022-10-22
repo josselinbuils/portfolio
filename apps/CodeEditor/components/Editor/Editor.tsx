@@ -29,8 +29,9 @@ import { Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
 import { spliceString } from '../../utils/spliceString';
 import { Shortcut } from '../Shortcut/Shortcut';
-import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
+import { Toolbar } from '../Toolbar/Toolbar';
+import styles from './Editor.module.scss';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
@@ -56,8 +57,6 @@ import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { moveLines } from './utils/moveLines';
 import { showShortcuts } from './utils/showShortcuts';
 import { unindent } from './utils/unindent';
-
-import styles from './Editor.module.scss';
 
 export const Editor: FC<Props> = ({
   className,

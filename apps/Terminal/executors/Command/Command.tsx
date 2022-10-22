@@ -1,5 +1,4 @@
 import { Executor } from '../Executor';
-
 import styles from './Command.module.scss';
 
 export const Command: Executor = ({ args }) => (

@@ -4,9 +4,8 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import { Executor } from '../Executor';
-import me from './me.png';
-
 import styles from './About.module.scss';
+import me from './me.png';
 
 export const About: Executor = () => (
   <div className={styles.about}>

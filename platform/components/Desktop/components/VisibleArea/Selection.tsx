@@ -1,7 +1,6 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { FC, useState } from 'react';
 import { Position } from '~/platform/interfaces/Position';
-
 import styles from './Selection.module.scss';
 
 export const Selection: FC = () => {

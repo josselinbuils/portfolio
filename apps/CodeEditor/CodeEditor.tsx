@@ -2,11 +2,10 @@ import React, { useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
+import styles from './CodeEditor.module.scss';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
 import { StatusBar } from './components/StatusBar/StatusBar';
-
-import styles from './CodeEditor.module.scss';
 
 const CodeEditor: WindowComponent = ({
   active,

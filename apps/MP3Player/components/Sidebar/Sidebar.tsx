@@ -1,10 +1,9 @@
 import cn from 'classnames';
 import { FC } from 'react';
+import styles from './Sidebar.module.scss';
+import { JamendoLink } from './components/JamendoLink/JamendoLink';
 import { Logo } from './components/Logo/Logo';
 import { Menu, type MenuProps } from './components/Menu/Menu';
-import { JamendoLink } from './components/JamendoLink/JamendoLink';
-
-import styles from './Sidebar.module.scss';
 
 interface Props extends MenuProps {
   className?: string;

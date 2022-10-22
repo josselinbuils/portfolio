@@ -1,5 +1,5 @@
-import dynamic from 'next/dynamic';
 import cn from 'classnames';
+import dynamic from 'next/dynamic';
 import {
   Children,
   cloneElement,
@@ -11,7 +11,6 @@ import {
   useState,
 } from 'react';
 import { ContextMenuContext } from './ContextMenuContext';
-
 import { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import styles from './ContextMenuProvider.module.scss';
 

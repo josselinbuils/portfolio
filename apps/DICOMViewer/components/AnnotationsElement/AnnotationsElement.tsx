@@ -7,7 +7,6 @@ import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { Annotations } from '../../interfaces/Annotations';
-
 import styles from './AnnotationsElement.module.scss';
 
 export const AnnotationsElement: FC<Props> = ({

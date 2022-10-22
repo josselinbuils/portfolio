@@ -10,7 +10,6 @@ import {
 import { isIntoBrackets } from '~/apps/CodeEditor/utils/isIntoBrackets';
 import { spliceString } from '~/apps/CodeEditor/utils/spliceString';
 import { INDENT } from '../../constants';
-import { unindent } from '../unindent';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
@@ -18,6 +17,7 @@ import { getLineIndentBeforeCursor } from '../getLineIndentBeforeCursor';
 import { getLineNumber } from '../getLineNumber';
 import { isCodePortionEnd } from '../isCodePortionEnd';
 import { isIntoAutoCloseGroup } from '../isIntoAutoCloseGroup';
+import { unindent } from '../unindent';
 import { getAutoCloseChar } from './utils/getAutoCloseChar';
 import { isAutoCloseChar } from './utils/isAutoCloseChar';
 import { isOpenBracket } from './utils/isOpenBracket';

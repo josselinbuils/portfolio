@@ -5,9 +5,8 @@ import { Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { getRefElementSize } from '~/platform/utils/getRefElementSize';
-import { Windows } from './Windows';
-
 import styles from './VisibleArea.module.scss';
+import { Windows } from './Windows';
 
 const Selection = dynamic(async () => (await import('./Selection')).Selection);
 

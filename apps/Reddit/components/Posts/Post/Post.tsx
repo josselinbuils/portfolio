@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC, MouseEvent } from 'react';
 import { RedditPost } from '../../../interfaces/RedditPost';
+import styles from './Post.module.scss';
 import { PostDetails } from './PostDetails';
 import { formatNumber } from './utils/formatNumber';
 import { getPreviewDisplaySize } from './utils/getPreviewDisplaySize';
 import { getPreviewResolution } from './utils/getPreviewResolution';
-
-import styles from './Post.module.scss';
 
 const REDDIT_URL = 'https://www.reddit.com';
 

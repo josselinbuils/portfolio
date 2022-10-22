@@ -2,7 +2,6 @@ import cn from 'classnames';
 import { FC, ReactNode, useLayoutEffect, useMemo, useRef } from 'react';
 import { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { getLineNumber } from '../../utils/getLineNumber';
-
 import styles from './LineNumbers.module.scss';
 
 interface Props {

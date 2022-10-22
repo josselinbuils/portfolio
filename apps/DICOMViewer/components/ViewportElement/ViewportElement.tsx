@@ -6,9 +6,8 @@ import { useElementSize } from '~/platform/hooks/useElementSize';
 import { Size } from '~/platform/interfaces/Size';
 import { ViewportStats } from '../../interfaces/ViewportStats';
 import { Viewport } from '../../models/Viewport';
-import { Renderer } from './renderers/Renderer';
-
 import styles from './ViewportElement.module.scss';
+import { Renderer } from './renderers/Renderer';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 

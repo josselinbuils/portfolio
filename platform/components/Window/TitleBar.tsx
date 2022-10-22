@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC, MouseEvent } from 'react';
 import { useToolbar } from '~/platform/hooks/useToolbar';
-
 import styles from './TitleBar.module.scss';
 
 export const TitleBar: FC<Props> = ({

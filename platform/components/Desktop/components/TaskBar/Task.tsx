@@ -13,13 +13,12 @@ import { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
 import { WithTooltip } from '~/platform/providers/TooltipProvider/WithTooltip';
-import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import { noop } from '~/platform/utils/noop';
+import styles from './Task.module.scss';
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
-
-import styles from './Task.module.scss';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 

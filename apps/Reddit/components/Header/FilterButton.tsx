@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { ButtonLink } from '~/platform/components/ButtonLink/ButtonLink';
 import { RedditFilter } from '../../interfaces/RedditFilter';
-
 import styles from './FilterButton.module.scss';
 
 const filters: RedditFilter[] = ['hot', 'top'];

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { HTTP_INTERNAL_ERROR } from './constants';
 import { Logger } from './Logger';
+import { HTTP_INTERNAL_ERROR } from './constants';
 
 export function syncRoute(handler: SyncRequestHandler): RequestHandler {
   return (req: NextApiRequest, res: NextApiResponse) => {

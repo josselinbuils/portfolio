@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Position } from '~/platform/interfaces/Position';
+import styles from './TicTacToe.module.scss';
 import { Cross, Grid, Round } from './components/Elements/Elements';
 import { Elements, GameManager } from './utils/GameManager';
-
-import styles from './TicTacToe.module.scss';
 
 export const TicTacToe: FC = () => {
   const gameManager = useMemo(() => new GameManager(), []);

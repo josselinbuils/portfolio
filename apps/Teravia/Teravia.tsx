@@ -2,7 +2,6 @@ import cn from 'classnames';
 import { Window } from '~/platform/components/Window/Window';
 import { WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { PROD_HOSTNAME } from '~/platform/constants';
-
 import styles from './Teravia.module.scss';
 
 const Teravia: WindowComponent = ({

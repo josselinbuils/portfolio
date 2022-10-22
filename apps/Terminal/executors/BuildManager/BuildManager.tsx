@@ -3,12 +3,11 @@ import cn from 'classnames';
 import { MutableRefObject, useEffect, useState } from 'react';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { AsyncExecutor } from '../AsyncExecutor';
+import styles from './BuildManager.module.scss';
 import { BMError, BuildManagerClient, MessageType } from './BuildManagerClient';
 import { Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';
-
-import styles from './BuildManager.module.scss';
 
 const CODE_UNAUTHORIZED = 401;
 const DEFAULT_ERROR_MESSAGE = 'An error occurred';

@@ -4,16 +4,15 @@ import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import React, { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
-import { Toolbar } from '../Toolbar/Toolbar';
-import { ToolButton } from '../ToolButton/ToolButton';
 import { Shortcut } from '../Shortcut/Shortcut';
-import { Logs } from './components/Logs/Logs';
+import { ToolButton } from '../ToolButton/ToolButton';
+import { Toolbar } from '../Toolbar/Toolbar';
+import styles from './Console.module.scss';
 import { Log } from './Log';
+import { Logs } from './components/Logs/Logs';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
 import { observeMutations } from './utils/observeMutations';
-
-import styles from './Console.module.scss';
 
 interface Props {
   active: boolean;

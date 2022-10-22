@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-
 import styles from './Shortcut.module.scss';
 
 export const Shortcut: FC<Props> = ({ keys }) => (

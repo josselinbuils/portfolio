@@ -8,7 +8,6 @@ import React, {
 import { MouseButton } from '~/platform/constants';
 import { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
-
 import styles from './Window.module.scss';
 
 const ANIMATION_DURATION = 200;

@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { FC } from 'react';
 import { ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
-
 import styles from './ContextMenuItem.module.scss';
 
 export const ContextMenuItem: FC<Props> = ({

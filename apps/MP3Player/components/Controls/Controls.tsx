@@ -9,7 +9,6 @@ import cn from 'classnames';
 import { FC, useContext } from 'react';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
-
 import styles from './Controls.module.scss';
 
 export const Controls: FC<Props> = ({ className, size }) => {
