@@ -9,7 +9,7 @@ import me from './me.png';
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <Image alt="me" height={269} layout="fixed" priority src={me} width={202} />
+    <Image alt="me" height={269} priority src={me} width={202} />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I&apos;m Josselin, a full-stack JavaScript developer :)
