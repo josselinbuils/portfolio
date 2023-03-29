@@ -11,9 +11,7 @@ import type { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
 import styles from './Window.module.scss';
 
-const ANIMATION_DURATION = 200;
 const BUTTONS_WIDTH = 66;
-const DOM_UPDATE_DELAY = 10;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
@@ -87,10 +85,12 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       props.minHeight !== prevProps.minHeight ||
       props.minWidth !== prevProps.minWidth
     ) {
-      this.startAnimation().ready(() => {
-        const { height, width } = this.getSize();
-        this.setSize(width, height);
-      });
+      this.createAnimation()
+        .ready(() => {
+          const { height, width } = this.getSize();
+          this.setSize(width, height);
+        })
+        .start();
     }
   }
 
@@ -102,7 +102,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     const { props } = this;
 
     if (this.visible && this.windowRef.current !== null) {
-      this.startAnimation()
+      this.createAnimation()
         .ready(() => {
           this.lastDisplayProperties.minimize = {
             ...this.getPosition(),
@@ -116,7 +116,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
         })
         .finished(() => {
           this.visible = false;
-        });
+        })
+        .start();
     }
   }
 
@@ -203,7 +204,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
   show(): void {
     if (!this.visible && this.lastDisplayProperties.minimize !== undefined) {
-      this.startAnimation()
+      this.createAnimation()
         .ready(() => {
           if (this.lastDisplayProperties.minimize !== undefined) {
             const { left, top, width, height } =
@@ -216,7 +217,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
         })
         .finished(() => {
           this.visible = true;
-        });
+        })
+        .start();
     }
   }
 
@@ -269,7 +271,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
         this.toggleMaximize(
           true,
           () => {
-            this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
+            this.setPosition(downEvent.clientX + dx, downEvent.clientY + dy);
           },
           () => {
             isUnmaximazing = false;
@@ -353,7 +355,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     if (props.resizable === false) {
       return;
     }
-    this.startAnimation()
+    this.createAnimation()
       .ready(() => {
         onReady();
 
@@ -389,8 +391,48 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
           this.setState({ maximized: true });
         }
         onFinished();
-      });
+      })
+      .start();
   };
+
+  private createAnimation(): WindowAnimation {
+    let finished: () => void;
+    let ready: () => void;
+
+    const windowAnimation: WindowAnimation = {
+      finished: (finishedCallback: () => void): WindowAnimation => {
+        finished = finishedCallback;
+        return windowAnimation;
+      },
+      ready: (readyCallback: () => void): WindowAnimation => {
+        ready = readyCallback;
+        return windowAnimation;
+      },
+      start: () => {
+        const windowElement = this.windowRef.current;
+
+        const transitionEndListener = () => {
+          windowElement?.removeEventListener(
+            'transitionend',
+            transitionEndListener
+          );
+          this.setState({ animated: false }, () => {
+            if (typeof finished === 'function') {
+              finished();
+            }
+          });
+        };
+        windowElement?.addEventListener('transitionend', transitionEndListener);
+
+        this.setState({ animated: true }, () => {
+          if (typeof ready === 'function') {
+            ready();
+          }
+        });
+      },
+    };
+    return windowAnimation;
+  }
 
   private getContentSize(): { height: number; width: number } {
     const contentElement = this.contentRef.current;
@@ -532,40 +574,6 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     }
   }
 
-  private startAnimation(): WindowAnimation {
-    let finished: () => void;
-    let ready: () => void;
-
-    const windowAnimation: WindowAnimation = {
-      finished: (finishedCallback: () => void): WindowAnimation => {
-        finished = finishedCallback;
-        return windowAnimation;
-      },
-      ready: (readyCallback: () => void): WindowAnimation => {
-        ready = readyCallback;
-        return windowAnimation;
-      },
-    };
-
-    this.setState({ animated: true }, () =>
-      setTimeout(() => {
-        if (typeof ready === 'function') {
-          ready();
-        }
-
-        setTimeout(() => {
-          this.setState({ animated: false });
-
-          if (typeof finished === 'function') {
-            finished();
-          }
-        }, ANIMATION_DURATION + DOM_UPDATE_DELAY);
-      }, DOM_UPDATE_DELAY)
-    );
-
-    return windowAnimation;
-  }
-
   private unselectIfNoChildFocused = ({
     currentTarget,
   }: React.FocusEvent): void => {
@@ -629,4 +637,6 @@ interface WindowAnimation {
   finished(finishedCallback: () => void): WindowAnimation;
 
   ready(readyCallback: () => void): WindowAnimation;
+
+  start(): void;
 }
