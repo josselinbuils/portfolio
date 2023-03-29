@@ -1,6 +1,11 @@
 import cn from 'classnames';
-import type { PropsWithChildren, ReactElement } from 'react';
-import React, { Component, createRef } from 'react';
+import React, {
+  Component,
+  createRef,
+  type MutableRefObject,
+  type PropsWithChildren,
+  type ReactElement,
+} from 'react';
 import { MouseButton } from '~/platform/constants';
 import type { Size } from '~/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
@@ -227,7 +232,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     const dy = windowElement.offsetTop - downEvent.clientY;
     let dx = windowElement.offsetLeft - downEvent.clientX;
     let isUnmaximazing = false;
-    let lastMoveEvent: MouseEvent;
+    const lastMoveEventRef = createRef() as MutableRefObject<MouseEvent>;
 
     const moveHandler = (moveEvent: MouseEvent) => {
       if (
@@ -238,7 +243,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       }
       const { state } = this;
 
-      lastMoveEvent = moveEvent;
+      lastMoveEventRef.current = moveEvent;
 
       if (!state.moving) {
         this.setState({ moving: true });
@@ -263,14 +268,15 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
         this.toggleMaximize(
           true,
-          () =>
-            this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy),
+          () => {
+            this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
+          },
           () => {
             isUnmaximazing = false;
             this.setStyle('transform', '');
             this.setPosition(
-              lastMoveEvent.clientX + dx,
-              lastMoveEvent.clientY + dy
+              lastMoveEventRef.current.clientX + dx,
+              lastMoveEventRef.current.clientY + dy
             );
           }
         );
