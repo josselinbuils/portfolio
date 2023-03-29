@@ -1,14 +1,10 @@
-const withTM = require('next-transpile-modules')([
-  '@josselinbuils/hooks',
-  '@josselinbuils/utils',
-]);
-
-let nextConfig = withTM({
+let nextConfig = {
   cleanDistDir: false,
   eslint: { ignoreDuringBuilds: true },
   images: { imageSizes: [202, 404] },
   productionBrowserSourceMaps: true,
-});
+  transpilePackages: ['@josselinbuils/hooks', '@josselinbuils/utils'],
+};
 
 if (process.env.ANALYZE === 'true') {
   // eslint-disable-next-line global-require,import/no-extraneous-dependencies

@@ -49,7 +49,8 @@ export function useSharedState({
       await wsReadyPromise;
 
       const isOpen =
-        ws !== undefined && [ws.CONNECTING, ws.OPEN].includes(ws.readyState);
+        ws !== undefined &&
+        [ws.CONNECTING, ws.OPEN].includes(ws.readyState as any);
 
       if (!maintainOpen || isOpen) {
         return;
