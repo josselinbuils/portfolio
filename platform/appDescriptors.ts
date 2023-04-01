@@ -2,7 +2,6 @@ import { BlogDescriptor } from '~/apps/Blog/BlogDescriptor';
 import { CodeEditorDescriptor } from '~/apps/CodeEditor/CodeEditorDescriptor';
 import { DICOMViewerDescriptor } from '~/apps/DICOMViewer/DICOMViewerDescriptor';
 import { MP3PlayerDescriptor } from '~/apps/MP3Player/MP3PlayerDescriptor';
-import { NotesDescriptor } from '~/apps/Notes/NotesDescriptor';
 import { RedditDescriptor } from '~/apps/Reddit/RedditDescriptor';
 import { TeraviaDescriptor } from '~/apps/Teravia/TeraviaDescriptor';
 // Open executor dynamically imported in Terminal so no cycle
@@ -17,5 +16,4 @@ export const APP_DESCRIPTORS = [
   MP3PlayerDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
-  NotesDescriptor,
 ];
