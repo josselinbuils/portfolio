@@ -7,7 +7,7 @@
   user-select: none;
 
   &.frozen {
-    display: none;
+    visibility: hidden;
   }
 }
 

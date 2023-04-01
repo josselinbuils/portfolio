@@ -371,7 +371,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
           if (!keepPosition) {
             this.setPosition(left, top);
           }
-          this.setSize(width, height);
+          this.setSize(width, height, true);
 
           delete this.lastDisplayProperties.maximize;
         } else {
