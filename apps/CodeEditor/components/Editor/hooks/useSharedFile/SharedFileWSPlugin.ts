@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import type { WSClient } from '~/apps/CodeEditor/api/WSClient';
-import type { WSServer } from '~/apps/CodeEditor/api/WSServer';
+import type { WSPlugin, WSServer } from '~/apps/CodeEditor/api/WSServer';
 import type { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
 import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import type { HistoryState } from '~/apps/CodeEditor/utils/History';
@@ -36,7 +36,7 @@ interface PersistentState {
   };
 }
 
-export class SharedFileWSPlugin {
+export class SharedFileWSPlugin implements WSPlugin {
   readonly name = 'sharedFile';
   private readonly files: { [filename: string]: FileState };
   private readonly wsServer: WSServer;

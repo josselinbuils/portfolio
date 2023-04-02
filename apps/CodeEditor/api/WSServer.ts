@@ -21,10 +21,6 @@ export interface WSPlugin {
   onClientClose?(client: WSClient): unknown;
 }
 
-export interface WSPluginCreator {
-  create(wsServer: WSServer): WSPlugin;
-}
-
 export class WSServer {
   readonly clients = [] as WSClient[];
   private readonly fsUpdateQueue = new ExecQueue();
@@ -33,16 +29,14 @@ export class WSServer {
   private readonly server: WebSocketServer;
   private state: { [pluginName: string]: unknown } = {};
 
-  static async create(pluginsCreators: WSPluginCreator[]): Promise<WSServer> {
-    const server = new WSServer(pluginsCreators);
+  static async create(plugins: WSPlugin[]): Promise<WSServer> {
+    const server = new WSServer(plugins);
     await server.loadPersistentState();
     return server;
   }
 
-  private constructor(pluginsCreators: WSPluginCreator[]) {
-    this.plugins = pluginsCreators.map((pluginsCreator) =>
-      pluginsCreator.create(this)
-    );
+  private constructor(plugins: WSPlugin[]) {
+    this.plugins = plugins;
     this.server = new WebSocketServer({ noServer: true });
     this.server.on('connection', this.handleConnection.bind(this));
   }
