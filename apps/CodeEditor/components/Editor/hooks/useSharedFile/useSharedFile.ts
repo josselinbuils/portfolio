@@ -14,7 +14,7 @@ import {
 import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import { createReducer } from '~/platform/state/utils/createReducer';
 import { computeHash } from '~/platform/utils/computeHash';
-import { useSharedState } from '../useSharedState';
+import { dispatchToServer, registerClient } from '../../utils/shareState';
 import * as actions from './clientActions';
 import * as serverActions from './serverActions';
 
@@ -54,10 +54,6 @@ export function useSharedFile({
   const lastCursorOffsetSentRef = useRef<Selection>([0, 0]);
   const hashToWaitForRef = useRef<string>();
   const updateQueueRef = useRef<Diff[]>([]);
-  const { dispatchToServer } = useSharedState({
-    active,
-    dispatchToClient: dispatch,
-  });
 
   useKeyMap(
     {
@@ -70,20 +66,23 @@ export function useSharedFile({
   );
 
   useEffect(() => {
-    if (!active) {
-      dispatch(actions.applyState.create({ s: initialState }));
+    if (active) {
+      return registerClient(dispatch);
     }
+    dispatch(actions.applyState.create({ s: initialState }));
   }, [active]);
 
   useEffect(() => {
-    dispatchToServer(serverActions.subscribe.create({ f: filename }));
-    dispatchToServer(
-      serverActions.updateClientSelection.create({
-        f: filename,
-        s: minifySelection(selectionRef.current),
-      })
-    );
-  }, [dispatchToServer, filename, selectionRef]);
+    if (active) {
+      dispatchToServer(serverActions.subscribe.create({ f: filename }));
+      dispatchToServer(
+        serverActions.updateClientSelection.create({
+          f: filename,
+          s: minifySelection(selectionRef.current),
+        })
+      );
+    }
+  }, [active, filename, selectionRef]);
 
   useEffect(() => {
     if (!active || clientState === undefined) {
@@ -148,14 +147,7 @@ export function useSharedFile({
       }
       hashToWaitForRef.current = currentHash;
     }
-  }, [
-    active,
-    applyClientStateRef,
-    clientState,
-    clientCodeRef,
-    dispatchToServer,
-    filename,
-  ]);
+  }, [active, applyClientStateRef, clientState, clientCodeRef, filename]);
 
   const updateClientState = useCallback(
     (newState: EditableState) => {
@@ -201,7 +193,7 @@ export function useSharedFile({
         updateQueue.push(diffs[0]);
       }
     },
-    [active, codeRef, dispatchToServer, filename, selectionRef]
+    [active, codeRef, filename, selectionRef]
   );
 
   const updateSelection = useCallback(
@@ -223,7 +215,7 @@ export function useSharedFile({
         lastCursorOffsetSentRef.current = createSelection(newSelection);
       }
     },
-    [dispatchToServer, filename]
+    [filename]
   );
 
   return {

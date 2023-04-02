@@ -10,7 +10,7 @@ const defaultFiles: EditorFile[] = [
     name: 'ticTacToe.js',
     shared: true,
     SideComponent: dynamic(
-      async () => (await import('../../../games/TicTacToe/TicTacToe')).TicTacToe
+      async () => (await import('../games/TicTacToe/TicTacToe')).TicTacToe
     ),
   },
   {

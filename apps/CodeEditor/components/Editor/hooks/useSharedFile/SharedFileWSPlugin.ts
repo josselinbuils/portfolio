@@ -95,10 +95,9 @@ export class SharedFileWSPlugin implements WSPlugin {
     }
 
     switch (type) {
-      case serverActions.subscribe.type: {
+      case serverActions.subscribe.type:
         this.subscribe(wsClient);
         break;
-      }
 
       case serverActions.redo.type:
       case serverActions.undo.type: {
