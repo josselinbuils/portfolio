@@ -49,7 +49,6 @@ async function openSocket(): Promise<void> {
     wsConnectedDeferred = new Deferred<void>();
 
     if (clients.length > 0) {
-      console.log('reopen');
       reopenTimeoutID = window.setTimeout(openSocket, REOPEN_DELAY_MS);
     }
   };
