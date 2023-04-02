@@ -2,6 +2,7 @@ import type { Server } from 'node:http';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { WSServer } from '~/apps/CodeEditor/api/WSServer';
 import { SharedFileWSPlugin } from '~/apps/CodeEditor/components/Editor/hooks/useSharedFile/SharedFileWSPlugin';
+import { fileSaver } from '~/apps/CodeEditor/components/Editor/utils/fileSaver';
 
 let wsServer: WSServer;
 
@@ -13,7 +14,13 @@ export default async function ws(
   if (wsServer === undefined) {
     const httpServer: Server = (socket as any).server;
 
-    wsServer = await WSServer.create([SharedFileWSPlugin]);
+    wsServer = new WSServer();
+
+    await wsServer.init(
+      fileSaver.defaultFiles
+        .filter(({ shared }) => shared)
+        .map(({ name }) => new SharedFileWSPlugin(wsServer, name))
+    );
 
     httpServer.on('upgrade', (req) => {
       if (req.url === url) {

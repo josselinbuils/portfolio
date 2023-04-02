@@ -24,19 +24,12 @@ export interface WSPlugin {
 export class WSServer {
   readonly clients = [] as WSClient[];
   private readonly fsUpdateQueue = new ExecQueue();
-  private readonly plugins: WSPlugin[];
+  private plugins: WSPlugin[] = [];
   private readonly requestQueue = new ExecQueue();
   private readonly server: WebSocketServer;
   private state: { [pluginName: string]: unknown } = {};
 
-  static async create(plugins: WSPlugin[]): Promise<WSServer> {
-    const server = new WSServer(plugins);
-    await server.loadPersistentState();
-    return server;
-  }
-
-  private constructor(plugins: WSPlugin[]) {
-    this.plugins = plugins;
+  constructor() {
     this.server = new WebSocketServer({ noServer: true });
     this.server.on('connection', this.handleConnection.bind(this));
   }
@@ -57,6 +50,11 @@ export class WSServer {
       throw new Error('Unable to find client');
     }
     return client;
+  }
+
+  async init(plugins: WSPlugin[]) {
+    this.plugins = plugins;
+    await this.loadPersistentState();
   }
 
   savePersistentState(pluginName: string, state: Record<any, any>): void {
