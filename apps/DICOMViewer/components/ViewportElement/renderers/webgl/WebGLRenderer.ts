@@ -4,7 +4,7 @@ import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
 import type { Renderer } from '../Renderer';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { getFragmentShaderSrc, getTextureFormat } from './fragmentShader';
-import { VERTEX_SHADER_SRC } from './vertexShader';
+import VERTEX_SHADER_SRC from './shaders/vertexShader.vert';
 
 export class WebGLRenderer implements Renderer {
   private readonly gl: WebGLRenderingContext;

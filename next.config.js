@@ -4,6 +4,13 @@ let nextConfig = {
   images: { imageSizes: [202, 404] },
   productionBrowserSourceMaps: true,
   transpilePackages: ['@josselinbuils/hooks', '@josselinbuils/utils'],
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(frag|vert)$/,
+      type: 'asset/source',
+    });
+    return config;
+  },
 };
 
 if (process.env.ANALYZE === 'true') {

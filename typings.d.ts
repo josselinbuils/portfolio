@@ -1,5 +1,15 @@
 declare module 'dicom-parser';
 
+declare module '*.frag' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.vert' {
+  const content: string;
+  export default content;
+}
+
 declare class ResizeObserver {
   disconnect: () => void;
   observe: (target: Element, options?: ResizeObserverObserveOptions) => void;
