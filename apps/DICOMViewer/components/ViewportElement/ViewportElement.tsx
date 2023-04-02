@@ -69,7 +69,7 @@ export const ViewportElement: FC<Props> = ({
         console.error(error);
       });
 
-    const render = () => {
+    const render = async () => {
       if (
         canvasElementRef.current &&
         renderer &&
@@ -81,7 +81,7 @@ export const ViewportElement: FC<Props> = ({
         const t = performance.now();
 
         try {
-          renderer.render(viewport);
+          await renderer.render(viewport);
           viewport.makeClean();
           renderDurations.push(performance.now() - t);
 

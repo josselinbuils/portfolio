@@ -133,7 +133,7 @@ export class JSVolumeRenderer implements Renderer {
     this.renderingContext = renderingContext;
   }
 
-  render(viewport: Viewport): void {
+  async render(viewport: Viewport): Promise<void> {
     const { dataset, windowWidth } = viewport;
 
     if (dataset.volume === undefined) {
@@ -161,12 +161,12 @@ export class JSVolumeRenderer implements Renderer {
       imageSpace.displayWidth * imageSpace.displayHeight;
     const viewportPixelsToRender =
       boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
-    let renderPixels;
+    let renderPixels: () => void | Promise<void>;
 
     if (
       [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType)
     ) {
-      renderPixels = () =>
+      renderPixels = async () =>
         this.render3DImagePixels(viewport, renderingProperties);
     } else {
       renderPixels =
@@ -177,12 +177,12 @@ export class JSVolumeRenderer implements Renderer {
 
     if (viewport.viewType === ViewType.Oblique) {
       this.background = 10;
-      displayCube(viewport, this.canvas, renderPixels);
+      await displayCube(viewport, this.canvas, renderPixels as () => void);
     } else {
       this.background = 0;
       this.context.fillStyle = 'black';
       this.context.fillRect(0, 0, viewport.width, viewport.height);
-      renderPixels();
+      await renderPixels();
     }
   }
 
@@ -227,10 +227,10 @@ export class JSVolumeRenderer implements Renderer {
     return intensity | (intensity << 8) | (intensity << 16) | (alpha << 24);
   }
 
-  private render3DImagePixels(
+  private async render3DImagePixels(
     viewport: Viewport,
     renderingProperties: RenderingProperties
-  ): void {
+  ): Promise<void> {
     const {
       boundedViewportSpace,
       imageSpace,
@@ -252,9 +252,11 @@ export class JSVolumeRenderer implements Renderer {
       viewportSpace
     );
     const [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
+    const draftImageData32 = new Uint32Array(
+      (displayWidth * displayHeight) / 4
+    );
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
     const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
-    let dataIndex = 0;
 
     const { camera, dataset } = viewport;
     const basis = camera.getWorldBasis();
@@ -263,37 +265,84 @@ export class JSVolumeRenderer implements Renderer {
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
-    for (let y = displayY0; y <= displayY1; y++) {
-      for (let x = displayX0; x <= displayX1; x++) {
-        const pointLPS = JSVolumeRenderer.getPointLPS(
-          imageWorldOrigin,
-          xAxis,
-          yAxis,
-          x,
-          y
-        );
-        let pixelValue;
+    const offsets = [
+      [0, 0],
+      [1, 1],
+      [1, 0],
+      [0, 1],
+    ];
 
-        for (let i = 0; i < dimensionsVoxels[1]; i++) {
-          const rawPixelValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
+    let draftDataIndex = 0;
 
-          if (rawPixelValue > targetValue) {
-            pixelValue = getPixelValue(
-              rawPixelValue,
-              Math.round(255 / Math.max((i * i) / dimensionsVoxels[2] / 100, 1))
+    for (const [offsetX, offsetY] of offsets) {
+      let dataIndex = 0;
+
+      for (let y = displayY0 + offsetY; y <= displayY1; y += 2) {
+        dataIndex += (displayX1 + 1) * offsetY;
+
+        for (let x = displayX0 + offsetX; x <= displayX1; x += 2) {
+          const pointLPS = JSVolumeRenderer.getPointLPS(
+            imageWorldOrigin,
+            xAxis,
+            yAxis,
+            x,
+            y
+          );
+          let pixelValue;
+
+          for (let i = 0; i < dimensionsVoxels[1]; i++) {
+            const rawPixelValue = JSVolumeRenderer.getRawValue(
+              dataset,
+              pointLPS
             );
 
-            break;
-          }
-          pointLPS[0] += direction[0];
-          pointLPS[1] += direction[1];
-          pointLPS[2] += direction[2];
-        }
+            if (rawPixelValue > targetValue) {
+              pixelValue = getPixelValue(
+                rawPixelValue,
+                Math.round(
+                  255 / Math.max((i * i) / dimensionsVoxels[2] / 100, 1)
+                )
+              );
 
-        imageData32[dataIndex++] = pixelValue || 0 | 0;
+              break;
+            }
+            pointLPS[0] += direction[0];
+            pointLPS[1] += direction[1];
+            pointLPS[2] += direction[2];
+          }
+
+          if (offsetX === 0 && offsetY === 0) {
+            draftImageData32[draftDataIndex++] = pixelValue || 0 | 0;
+          }
+
+          dataIndex += offsetX;
+          imageData32[dataIndex++] = pixelValue || 0 | 0;
+          dataIndex += 1 - offsetX;
+        }
+        dataIndex += (displayX1 + 1) * (1 - offsetY);
+      }
+
+      if (offsetX === 0 && offsetY === 0) {
+        drawImageData(
+          draftImageData32,
+          this.context,
+          this.renderingContext,
+          displayWidth / 2,
+          displayHeight / 2,
+          boundedViewportSpace
+        );
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        }); // Empty the event queue to force drawing
       }
     }
-
+    this.context.clearRect(
+      0,
+      0,
+      this.context.canvas.width,
+      this.context.canvas.height
+    );
     drawImageData(
       imageData32,
       this.context,
