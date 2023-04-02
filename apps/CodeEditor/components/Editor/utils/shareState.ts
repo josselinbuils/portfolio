@@ -28,7 +28,6 @@ export function registerClient(
 }
 
 async function openSocket(): Promise<void> {
-  console.log('openSocket');
   if (wsReadyPromise === undefined) {
     wsReadyPromise = fetch(WS_API_PATHNAME);
   }

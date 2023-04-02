@@ -1,15 +1,16 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import type { Position } from '~/platform/interfaces/Position';
+import type { Action } from '~/platform/state/interfaces/Action';
+import type { ActionFromFactory } from '~/platform/state/interfaces/ActionFactory';
+import { dispatchToServer, registerClient } from '../../../utils/shareState';
+import * as clientActions from './clientActions';
+import * as serverActions from './serverActions';
 
-type Element = 'x' | 'o' | '';
+export type Mark = 'x' | 'o' | '';
 
-export type Elements = [
-  [Element, Element, Element],
-  [Element, Element, Element],
-  [Element, Element, Element]
-];
+export type Grid = [[Mark, Mark, Mark], [Mark, Mark, Mark], [Mark, Mark, Mark]];
 
-const getInitialElements = (): Elements => [
+export const getInitialGrid = (): Grid => [
   ['', '', ''],
   ['', '', ''],
   ['', '', ''],
@@ -18,29 +19,32 @@ const getInitialElements = (): Elements => [
 const DELAY_MS = 1000;
 
 export interface Winner {
-  element: Element;
   cases: Position[];
+  mark: Mark;
 }
 
 export class GameManager {
-  readonly subject: Subject<Elements>;
-  private elements: Elements;
+  readonly subject: Subject<Grid>;
   private endCallback?: (winner: Winner | undefined) => unknown;
+  private grid: Grid;
   private startCallback?: () => unknown;
-  private turnCallback?: (elements: Elements) => unknown;
+  private turnCallback?: (grid: Grid) => unknown;
+  private readonly unregisterWSClient: () => void;
   private timer?: number;
-  private turn?: Element;
+  private turn?: Mark;
 
   constructor() {
-    this.elements = getInitialElements();
-    this.subject = new Subject(this.elements);
+    this.grid = getInitialGrid();
+    this.subject = new Subject(this.grid);
+    this.unregisterWSClient = registerClient(this.reduce);
+    dispatchToServer(serverActions.subscribe.create());
   }
 
   onEnd = (callback: (winner: Winner | undefined) => unknown): void => {
     this.endCallback = callback;
   };
 
-  onMyTurn = (callback: (elements: Elements) => unknown): void => {
+  onMyTurn = (callback: (grid: Grid) => unknown): void => {
     this.turnCallback = callback;
   };
 
@@ -48,8 +52,7 @@ export class GameManager {
     this.startCallback = callback;
   };
 
-  // TODO change this and describe its interface in the comment
-  setElement = (x: number, y: number) => {
+  placeMyMark = (x: number, y: number) => {
     if (this.turn !== 'o') {
       console.error(new Error('This is not your turn!'));
       this.clean();
@@ -58,21 +61,25 @@ export class GameManager {
     }
   };
 
-  clean = () => window.clearTimeout(this.timer);
-
-  start = (): void => {
-    this.clean();
-    this.elements = getInitialElements();
-    this.subject.next(this.elements);
-    this.startCallback?.();
-    this.next();
+  clean = () => {
+    window.clearTimeout(this.timer);
+    this.unregisterWSClient();
   };
 
-  private checkWinner(noWinnerCallback: () => unknown): void {
+  start = (): void => {
+    window.clearTimeout(this.timer);
+    this.grid = getInitialGrid();
+    this.subject.next(this.grid);
+    this.startCallback?.();
+    this.next();
+    dispatchToServer(serverActions.reset.create());
+  };
+
+  private checkWinner(noWinnerCallback?: () => unknown): void {
     const winner = this.getWinner();
 
     if (!winner && !this.isFinished()) {
-      noWinnerCallback();
+      noWinnerCallback?.();
     } else {
       this.endCallback?.(winner);
     }
@@ -87,56 +94,51 @@ export class GameManager {
 
     this.timer = window.setTimeout(() => {
       if (this.turn === 'o') {
-        this.turnCallback?.(this.elements);
+        this.turnCallback?.(this.grid);
       } else {
         this.playComputerTurn();
       }
     }, DELAY_MS);
   };
 
-  private play(element: Element, y: number, x: number) {
-    if (this.elements[y][x] !== '') {
+  private play(mark: Mark, y: number, x: number) {
+    if (this.grid[y][x] !== '') {
       console.error(
-        new Error(
-          `There is already an element in position { x: ${x}, y: ${y} }.`
-        )
+        new Error(`There is already an mark in position { x: ${x}, y: ${y} }.`)
       );
       this.clean();
       return;
     }
 
-    this.elements[y][x] = element;
-    this.subject.next([...this.elements]);
+    this.grid[y][x] = mark;
+    this.subject.next([...this.grid]);
+    dispatchToServer(serverActions.placeMark.create({ mark, x, y }));
 
     this.checkWinner(this.next);
   }
 
   private playComputerTurn(): void {
-    const checkElement = (element: Element): boolean => {
-      for (const line of this.elements) {
+    const checkMark = (mark: Mark): boolean => {
+      for (const line of this.grid) {
         const sortedLine = [...line].sort();
 
         if (
           sortedLine[0] === '' &&
-          sortedLine[1] === element &&
+          sortedLine[1] === mark &&
           sortedLine[1] === sortedLine[2]
         ) {
-          this.play('x', this.elements.indexOf(line), line.indexOf(''));
+          this.play('x', this.grid.indexOf(line), line.indexOf(''));
           return true;
         }
       }
 
       for (let x = 0; x < 3; x++) {
-        const column = [
-          this.elements[0][x],
-          this.elements[1][x],
-          this.elements[2][x],
-        ];
+        const column = [this.grid[0][x], this.grid[1][x], this.grid[2][x]];
         const sortedColumn = [...column].sort();
 
         if (
           sortedColumn[0] === '' &&
-          sortedColumn[1] === element &&
+          sortedColumn[1] === mark &&
           sortedColumn[1] === sortedColumn[2]
         ) {
           this.play('x', column.indexOf(''), x);
@@ -144,16 +146,12 @@ export class GameManager {
         }
       }
 
-      const firstDiagonal = [
-        this.elements[0][0],
-        this.elements[1][1],
-        this.elements[2][2],
-      ];
+      const firstDiagonal = [this.grid[0][0], this.grid[1][1], this.grid[2][2]];
       const sortedFirstDiagonal = [...firstDiagonal].sort();
 
       if (
         sortedFirstDiagonal[0] === '' &&
-        sortedFirstDiagonal[1] === element &&
+        sortedFirstDiagonal[1] === mark &&
         sortedFirstDiagonal[1] === sortedFirstDiagonal[2]
       ) {
         this.play('x', firstDiagonal.indexOf(''), firstDiagonal.indexOf(''));
@@ -161,15 +159,15 @@ export class GameManager {
       }
 
       const secondDiagonal = [
-        this.elements[0][2],
-        this.elements[1][1],
-        this.elements[2][0],
+        this.grid[0][2],
+        this.grid[1][1],
+        this.grid[2][0],
       ];
       const sortedSecondDiagonal = [...secondDiagonal].sort();
 
       if (
         sortedSecondDiagonal[0] === '' &&
-        sortedSecondDiagonal[1] === element &&
+        sortedSecondDiagonal[1] === mark &&
         sortedSecondDiagonal[1] === sortedSecondDiagonal[2]
       ) {
         this.play(
@@ -184,16 +182,16 @@ export class GameManager {
     };
 
     // We try to finish our lines first
-    if (checkElement('x')) {
+    if (checkMark('x')) {
       return;
     }
 
     // Then we prevent the enemy to finish
-    if (checkElement('o')) {
+    if (checkMark('o')) {
       return;
     }
 
-    // Then we put our element at a random position
+    // Then we put our mark at a random position
 
     let x: number;
     let y: number;
@@ -201,32 +199,32 @@ export class GameManager {
     do {
       x = Math.floor(Math.random() * 3);
       y = Math.floor(Math.random() * 3);
-    } while (this.elements[y][x] !== '');
+    } while (this.grid[y][x] !== '');
 
     this.play('x', y, x);
   }
 
   private isFinished(): boolean {
-    return this.elements.flat().every((element) => element !== '');
+    return this.grid.flat().every((mark) => mark !== '');
   }
 
   private getWinner(): Winner | undefined {
-    for (const line of this.elements) {
-      if (isRowFilledWithSameMark(line)) {
-        const y = this.elements.indexOf(line);
+    for (const row of this.grid) {
+      if (isRowFilledWithSameMark(row)) {
+        const y = this.grid.indexOf(row);
 
         return {
-          element: line[0],
-          cases: line.map((_, x) => ({ x, y })),
+          mark: row[0],
+          cases: row.map((_, x) => ({ x, y })),
         };
       }
     }
 
-    const columns: Elements = getInitialElements();
+    const columns: Grid = getInitialGrid();
 
     for (let y = 0; y < 3; y++) {
       for (let x = 0; x < 3; x++) {
-        columns[y][x] = this.elements[x][y];
+        columns[y][x] = this.grid[x][y];
       }
     }
 
@@ -235,36 +233,55 @@ export class GameManager {
         const x = columns.indexOf(column);
 
         return {
-          element: column[0],
+          mark: column[0],
           cases: column.map((_, y) => ({ x, y })),
         };
       }
     }
 
-    const firstDiagonal: Element[] = ['', '', ''];
-    const secondDiagonal: Element[] = ['', '', ''];
+    const firstDiagonal: Mark[] = ['', '', ''];
+    const secondDiagonal: Mark[] = ['', '', ''];
 
     for (let i = 0; i < 3; i++) {
-      firstDiagonal[i] = this.elements[i][i];
-      secondDiagonal[i] = this.elements[i][2 - i];
+      firstDiagonal[i] = this.grid[i][i];
+      secondDiagonal[i] = this.grid[i][2 - i];
     }
 
     if (isRowFilledWithSameMark(firstDiagonal)) {
       return {
-        element: firstDiagonal[0],
+        mark: firstDiagonal[0],
         cases: firstDiagonal.map((_, i) => ({ x: i, y: i })),
       };
     }
 
     if (isRowFilledWithSameMark(secondDiagonal)) {
       return {
-        element: secondDiagonal[0],
+        mark: secondDiagonal[0],
         cases: secondDiagonal.map((_, i) => ({ x: 2 - i, y: i })),
       };
     }
   }
+
+  private reduce = (action: Action<any>): void => {
+    const [type] = action;
+
+    switch (type) {
+      case clientActions.apply.type: {
+        const [, grid] = action as ActionFromFactory<
+          typeof clientActions.apply
+        >;
+        this.grid = grid;
+        this.subject.next(this.grid);
+        this.checkWinner();
+        break;
+      }
+
+      default:
+      // Ignore action
+    }
+  };
 }
 
-function isRowFilledWithSameMark(row: Element[]): boolean {
+function isRowFilledWithSameMark(row: Mark[]): boolean {
   return new Set(row).size === 1 && row[0] !== '';
 }

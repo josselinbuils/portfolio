@@ -16,9 +16,9 @@ const PERSISTENT_STATE_FILE_PATH = path.join(
 export interface WSPlugin {
   name: string;
   loadPersistentState?(state: any): unknown;
-  reduce(wsClient: WebSocket, action: Action<any>): unknown;
-  onClientOpen?(client: WSClient): unknown;
-  onClientClose?(client: WSClient): unknown;
+  onWSClientClose?(wsClient: WSClient): unknown;
+  onWSClientOpen?(wsClient: WSClient): unknown;
+  reduce(wsClient: WSClient, action: Action<any>): unknown;
 }
 
 export class WSServer {
@@ -43,8 +43,8 @@ export class WSServer {
     );
   }
 
-  getClientFromWS(wsClient: WebSocket): WSClient {
-    const client = this.clients.find(({ ws }) => ws === wsClient);
+  getClientFromWS(ws: WebSocket): WSClient {
+    const client = this.clients.find((wsClient) => wsClient.ws === ws);
 
     if (client === undefined) {
       throw new Error('Unable to find client');
@@ -67,28 +67,28 @@ export class WSServer {
     );
   }
 
-  private handleConnection(wsClient: WebSocket): void {
+  private handleConnection(ws: WebSocket): void {
     this.requestQueue.enqueue(() => {
-      const client = new WSClient(wsClient);
-      this.clients.push(client);
+      const wsClient = new WSClient(ws);
+      this.clients.push(wsClient);
 
       for (const plugin of this.plugins) {
-        plugin.onClientOpen?.(client);
+        plugin.onWSClientOpen?.(wsClient);
       }
 
-      wsClient.on('close', () => {
-        const clientIndex = this.clients.indexOf(client);
+      ws.on('close', () => {
+        const clientIndex = this.clients.indexOf(wsClient);
 
         if (clientIndex !== -1) {
           this.clients.splice(clientIndex, 1);
         }
 
         for (const plugin of this.plugins) {
-          plugin.onClientClose?.(client);
+          plugin.onWSClientClose?.(wsClient);
         }
       });
 
-      wsClient.on('message', (data) => {
+      ws.on('message', (data) => {
         this.requestQueue.enqueue(() => {
           try {
             const action = JSON.parse(data.toString()) as Action;

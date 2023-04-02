@@ -1,6 +1,7 @@
 import type { Server } from 'node:http';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { WSServer } from '~/apps/CodeEditor/api/WSServer';
+import { TicTacToeWSPlugin } from '~/apps/CodeEditor/components/Editor/games/TicTacToe/utils/TicTacToeWSPlugin';
 import { SharedFileWSPlugin } from '~/apps/CodeEditor/components/Editor/hooks/useSharedFile/SharedFileWSPlugin';
 import { fileSaver } from '~/apps/CodeEditor/components/Editor/utils/fileSaver';
 
@@ -16,11 +17,12 @@ export default async function ws(
 
     wsServer = new WSServer();
 
-    await wsServer.init(
-      fileSaver.defaultFiles
+    await wsServer.init([
+      ...fileSaver.defaultFiles
         .filter(({ shared }) => shared)
-        .map(({ name }) => new SharedFileWSPlugin(wsServer, name))
-    );
+        .map(({ name }) => new SharedFileWSPlugin(wsServer, name)),
+      new TicTacToeWSPlugin(wsServer),
+    ]);
 
     httpServer.on('upgrade', (req) => {
       if (req.url === url) {

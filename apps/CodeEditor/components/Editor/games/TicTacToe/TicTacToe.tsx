@@ -1,41 +1,43 @@
 import type { FC } from 'react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Position } from '~/platform/interfaces/Position';
 import styles from './TicTacToe.module.scss';
 import { Cross, Grid, Round } from './components/Elements/Elements';
-import type { Elements } from './utils/GameManager';
+import type { Grid as IGrid } from './utils/GameManager';
 import { GameManager } from './utils/GameManager';
 
 export const TicTacToe: FC = () => {
-  const gameManager = useMemo(() => new GameManager(), []);
-  const [elements, setElements] = useState<Elements>();
+  const [grid, setGrid] = useState<IGrid>();
   const [winnerCases, setWinnerCases] = useState<Position[] | undefined>();
 
   useEffect(() => {
-    gameManager.onStart(() => setWinnerCases(undefined));
+    const gameManager = new GameManager();
 
     gameManager.onEnd((winner) => {
       if (winner) {
-        console.log(`The winner is ${winner.element} ヽ(^o^)ノ`);
+        console.log(`The winner is ${winner.mark} ヽ(^o^)ノ`);
         setWinnerCases(winner.cases);
       } else {
         console.log(`There is no winner【ツ】`);
       }
     });
 
-    gameManager.subject.subscribe(setElements);
+    gameManager.subject.subscribe((newGrid) => {
+      setWinnerCases(undefined);
+      setGrid(newGrid);
+    });
 
     (window as any).ticTacToe = gameManager;
 
     return gameManager.clean;
-  }, [gameManager]);
+  }, []);
 
   return (
     <div className={styles.ticTacToe}>
       <Grid />
-      {elements?.map((line, y) =>
-        line.map((element, x) => {
-          switch (element) {
+      {grid?.map((row, y) =>
+        row.map((mark, x) => {
+          switch (mark) {
             case 'x':
               return (
                 <Cross

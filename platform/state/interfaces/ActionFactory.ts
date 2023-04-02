@@ -14,3 +14,9 @@ export type ActionFromFactory<Factory> = Factory extends ActionFactory<
 >
   ? Action<Payload>
   : Action;
+
+export type PayloadFromFactory<Factory> = Factory extends ActionFactory<
+  infer Payload
+>
+  ? Payload
+  : void;

@@ -11,7 +11,7 @@ export const applyState = createActionManager<
   {
     s: Partial<ClientState>; // state
   }
->('APPLY_STATE', (state, action) => ({
+>('SHARED_FILE:APPLY_STATE', (state, action) => ({
   ...state,
   ...action[1].s,
 }));
@@ -22,7 +22,7 @@ export const applyCodeChange = createActionManager<
     d: Diff[]; // diffs
     ns?: Selection; // newSelection
   }
->('APPLY_CODE_CHANGE', (state, action) => {
+>('SHARED_FILE:APPLY_CODE_CHANGE', (state, action) => {
   const { d: diffs, ns: newSelection = state.selection } = action[1];
   const code = diffs.reduce(applyDiff, state.code);
   return { ...state, code, selection: newSelection };
@@ -33,7 +33,7 @@ export const applyForeignCursors = createActionManager<
   {
     c: ClientCursor[]; // cursors
   }
->('APPLY_FOREIGN_CURSORS', (state, action) => ({
+>('SHARED_FILE:APPLY_FOREIGN_CURSORS', (state, action) => ({
   ...state,
   cursors: action[1].c,
 }));
@@ -44,7 +44,7 @@ export const applyForeignSelection = createActionManager<
     cid: number; // clientID
     s: number | Selection; // selection
   }
->('APPLY_FOREIGN_SELECTION', (state, action) => {
+>('SHARED_FILE:APPLY_FOREIGN_SELECTION', (state, action) => {
   const { cid: clientID, s } = action[1];
   const cursorToEdit = state.cursors.find(
     (cursor) => cursor.clientID === clientID
@@ -61,7 +61,7 @@ export const applySelection = createActionManager<
   {
     s: number | Selection; // selection
   }
->('APPLY_SELECTION', (state, action) => ({
+>('SHARED_FILE:APPLY_SELECTION', (state, action) => ({
   ...state,
   selection: createSelection(action[1].s),
 }));

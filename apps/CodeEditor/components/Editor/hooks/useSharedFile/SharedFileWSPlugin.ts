@@ -1,4 +1,3 @@
-import WebSocket from 'ws';
 import type { WSClient } from '~/apps/CodeEditor/api/WSClient';
 import type { WSPlugin, WSServer } from '~/apps/CodeEditor/api/WSServer';
 import type { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
@@ -9,7 +8,7 @@ import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
 import type { Action } from '~/platform/state/interfaces/Action';
-import type { ActionFromFactory } from '~/platform/state/interfaces/ActionFactory';
+import type { PayloadFromFactory } from '~/platform/state/interfaces/ActionFactory';
 import { computeHash } from '~/platform/utils/computeHash';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
@@ -44,22 +43,13 @@ export class SharedFileWSPlugin implements WSPlugin {
   };
   private readonly wsServer: WSServer;
 
-  private static dispatch(wsClient: WebSocket, action: Action<any>): void {
-    if (wsClient.readyState === WebSocket.OPEN) {
-      wsClient.send(JSON.stringify(action));
-    }
-  }
-
   constructor(wsServer: WSServer, filename: string) {
     this.filename = filename;
     this.name = `sharedFile:${filename}`;
     this.wsServer = wsServer;
   }
 
-  async loadPersistentState({
-    code,
-    historyState,
-  }: PersistentState): Promise<void> {
+  loadPersistentState({ code, historyState }: PersistentState): void {
     const { fileState } = this;
 
     fileState.code = code;
@@ -67,11 +57,11 @@ export class SharedFileWSPlugin implements WSPlugin {
     fileState.history = new History(historyState);
   }
 
-  onClientClose(): void {
+  onWSClientClose(): void {
     this.sendCursors();
   }
 
-  onClientOpen(client: WSClient): void {
+  onWSClientOpen(client: WSClient): void {
     const colorsUsed = this.wsServer.clients
       .map((c) => c.getState<ClientState>(this.name)?.cursorColor)
       .filter(Boolean);
@@ -86,11 +76,10 @@ export class SharedFileWSPlugin implements WSPlugin {
     });
   }
 
-  reduce(wsClient: WebSocket, action: Action<any>): void {
-    const [type, { f: filename }] =
-      action as Action<SharedFileServerBaseAction>;
+  reduce(wsClient: WSClient, action: Action<any>): void {
+    const [type, payload] = action as Action<SharedFileServerBaseAction>;
 
-    if (filename !== this.filename) {
+    if (!payload || payload.f !== this.filename) {
       return;
     }
 
@@ -102,7 +91,6 @@ export class SharedFileWSPlugin implements WSPlugin {
       case serverActions.redo.type:
       case serverActions.undo.type: {
         const { fileState } = this;
-        const client = this.getClientFromWS(wsClient);
         const historyFunction =
           type === serverActions.undo.type ? 'undo' : 'redo';
         const state = fileState.history[historyFunction](fileState.code);
@@ -114,37 +102,31 @@ export class SharedFileWSPlugin implements WSPlugin {
 
         this.dispatchAll(({ id }) =>
           clientActions.applyState.create({
-            s: id === client.id ? { code, selection } : { code },
+            s: id === wsClient.id ? { code, selection } : { code },
           })
         );
-        this.updateClientSelection(client, selection, true);
+        this.updateClientSelection(wsClient, selection, true);
         this.updateCode(code);
         break;
       }
 
       case serverActions.updateClientSelection.type: {
-        const [, payload] = action as ActionFromFactory<
+        const { s: selection } = payload as PayloadFromFactory<
           typeof serverActions.updateClientSelection
         >;
-        const { s: selection } = payload;
-        const client = this.getClientFromWS(wsClient);
 
-        this.updateClientSelection(client, createSelection(selection));
+        this.updateClientSelection(wsClient, createSelection(selection));
         break;
       }
 
       case serverActions.updateCode.type: {
-        const [, payload] = action as ActionFromFactory<
-          typeof serverActions.updateCode
-        >;
         const {
           cs: currentSelection,
           d: diffs,
           ns: newSelection,
           sh: safetyHash,
-        } = payload;
+        } = payload as PayloadFromFactory<typeof serverActions.updateCode>;
         const { fileState } = this;
-        const client = this.getClientFromWS(wsClient);
 
         if (currentSelection === undefined || newSelection === undefined) {
           return;
@@ -153,18 +135,17 @@ export class SharedFileWSPlugin implements WSPlugin {
 
         if (safetyHash !== fileState.codeHash) {
           // Requested update is obsolete so we reset client code
-          SharedFileWSPlugin.dispatch(
-            wsClient,
+          wsClient.dispatch(
             clientActions.applyState.create({ s: { code: fileState.code } })
           );
           return;
         }
         this.dispatchAll(({ id }) =>
           clientActions.applyCodeChange.create(
-            id === client.id ? { d: diffs, ns: newSelection } : { d: diffs }
+            id === wsClient.id ? { d: diffs, ns: newSelection } : { d: diffs }
           )
         );
-        this.updateClientSelection(client, newSelection, true);
+        this.updateClientSelection(wsClient, newSelection, true);
         fileState.history.pushState(
           {
             code: fileState.code,
@@ -180,7 +161,7 @@ export class SharedFileWSPlugin implements WSPlugin {
       }
 
       default:
-        throw new Error(`Unknown action: ${JSON.stringify(action)}`);
+      // Ignore action
     }
   }
 
@@ -189,11 +170,11 @@ export class SharedFileWSPlugin implements WSPlugin {
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
-    this.getWSClients().forEach((client) => {
-      const clientAction = actionCreator(client);
+    this.getWSClients().forEach((wsClient) => {
+      const clientAction = actionCreator(wsClient);
 
       if (clientAction !== undefined) {
-        SharedFileWSPlugin.dispatch(client.ws, actionCreator(client) as Action);
+        wsClient.dispatch(actionCreator(wsClient) as Action);
       }
     });
   }
@@ -208,15 +189,6 @@ export class SharedFileWSPlugin implements WSPlugin {
         this.updateClientSelection(client, createSelection(codeLength));
       }
     }
-  }
-
-  private getClientFromWS(wsClient: WebSocket): WSClient {
-    const client = this.wsServer.clients.find(({ ws }) => ws === wsClient);
-
-    if (client === undefined) {
-      throw new Error('Unable to find client');
-    }
-    return client;
   }
 
   private getClientState(client: WSClient): ClientState {
@@ -271,22 +243,18 @@ export class SharedFileWSPlugin implements WSPlugin {
     });
   }
 
-  private subscribe(wsClient: WebSocket): void {
-    const client = this.getClientFromWS(wsClient);
-    const { cursorColor } = this.getClientState(client);
+  private subscribe(wsClient: WSClient): void {
+    const { cursorColor } = this.getClientState(wsClient);
     const { filename, fileState } = this;
 
-    this.setClientState(client, { filename });
+    this.setClientState(wsClient, { filename });
 
     const state = {
       code: fileState.code,
       cursorColor,
-      id: client.id,
+      id: wsClient.id,
     };
-    SharedFileWSPlugin.dispatch(
-      wsClient,
-      clientActions.applyState.create({ s: state })
-    );
+    wsClient.dispatch(clientActions.applyState.create({ s: state }));
     this.sendCursors();
   }
 

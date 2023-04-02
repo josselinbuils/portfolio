@@ -6,19 +6,22 @@ export interface SharedFileServerBaseAction {
   f: string; // filename
 }
 
-export const redo = createActionFactory<SharedFileServerBaseAction>('REDO');
+export const redo =
+  createActionFactory<SharedFileServerBaseAction>('SHARED_FILE:REDO');
 
-export const subscribe =
-  createActionFactory<SharedFileServerBaseAction>('SUBSCRIBE');
+export const subscribe = createActionFactory<SharedFileServerBaseAction>(
+  'SHARED_FILE:SUBSCRIBE'
+);
 
-export const undo = createActionFactory<SharedFileServerBaseAction>('UNDO');
+export const undo =
+  createActionFactory<SharedFileServerBaseAction>('SHARED_FILE:UNDO');
 
 export const updateClientSelection = createActionFactory<
   SharedFileServerBaseAction & {
     cid?: number; // clientID
     s: number | Selection; // selection
   }
->('UPDATE_CLIENT_SELECTION');
+>('SHARED_FILE:UPDATE_CLIENT_SELECTION');
 
 export const updateCode = createActionFactory<
   SharedFileServerBaseAction & {
@@ -27,4 +30,4 @@ export const updateCode = createActionFactory<
     ns?: Selection; // newSelection
     sh?: string; // safetyHash
   }
->('UPDATE_CODE');
+>('SHARED_FILE:UPDATE_CODE');
