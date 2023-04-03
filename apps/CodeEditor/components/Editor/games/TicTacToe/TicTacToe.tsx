@@ -15,10 +15,7 @@ export const TicTacToe: FC = () => {
 
     gameManager.onEnd((winner) => {
       if (winner) {
-        console.log(`The winner is ${winner.mark} ヽ(^o^)ノ`);
         setWinnerCases(winner.cases);
-      } else {
-        console.log(`There is no winner【ツ】`);
       }
     });
 
