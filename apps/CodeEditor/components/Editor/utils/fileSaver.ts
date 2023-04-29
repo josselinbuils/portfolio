@@ -7,17 +7,17 @@ const defaultFiles: EditorFile[] = [
   {
     content: '',
     language: 'javascript',
+    name: 'shared.js',
+    shared: true,
+  },
+  {
+    content: '',
+    language: 'javascript',
     name: 'ticTacToe.js',
     shared: true,
     SideComponent: dynamic(
       async () => (await import('../games/TicTacToe/TicTacToe')).TicTacToe
     ),
-  },
-  {
-    content: '',
-    language: 'javascript',
-    name: 'shared.js',
-    shared: true,
   },
   {
     content: '',
