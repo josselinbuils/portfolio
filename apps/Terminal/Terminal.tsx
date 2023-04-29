@@ -277,18 +277,45 @@ const Terminal: WindowComponent = ({
 
       case 'Tab':
         if (!query && userInput.length > 0) {
-          const command = Object.keys(executors).find(
-            (c) => c.indexOf(userInput) === 0
-          );
-
-          if (command !== undefined) {
-            setUserInput(command);
-            setCaretIndex(command.length);
-          }
+          suggest(userInput).then((suggestedUserInput) => {
+            if (suggestedUserInput !== undefined) {
+              setUserInput(suggestedUserInput);
+              setCaretIndex(suggestedUserInput.length);
+            }
+          });
         } else {
           return false;
         }
     }
+  }
+
+  async function suggest(str: string): Promise<string | undefined> {
+    // Removes unnecessary spaces
+    const cleanStr = str.split(' ').filter(Boolean).join(' ');
+    const args = cleanStr.split(' ');
+    const command = args[0];
+
+    if (!command) {
+      return undefined;
+    }
+
+    if ('clear'.startsWith(command)) {
+      return 'clear';
+    }
+
+    if (executors[command] === undefined && args.length === 1) {
+      return Object.keys(executors).find((c) => c.startsWith(command));
+    }
+
+    if (executors[command] !== undefined && args.length === 2) {
+      const executor = await executors[command]();
+      const suggestedArg = executor.suggest?.(args[1]);
+
+      if (suggestedArg !== undefined) {
+        return `${command} ${suggestedArg}`;
+      }
+    }
+    return undefined;
   }
 
   return (

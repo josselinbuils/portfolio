@@ -6,19 +6,16 @@ import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import type { AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
 import type { BMError } from './BuildManagerClient';
-import { BuildManagerClient, MessageType } from './BuildManagerClient';
+import { BuildManagerClient } from './BuildManagerClient';
 import type { Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';
 
 const CODE_UNAUTHORIZED = 401;
+const COMMANDS = ['build', 'login', 'logs'] as const;
 const DEFAULT_ERROR_MESSAGE = 'An error occurred';
 
-enum Command {
-  Build = 'build',
-  Login = 'login',
-  Logs = 'logs',
-}
+type Command = (typeof COMMANDS)[number];
 
 const authTokenRef: MutableRefObject<string | undefined> = {
   current: undefined,
@@ -35,7 +32,7 @@ export const BuildManager: AsyncExecutor = ({
   const [showHelp, setShowHelp] = useState(false);
   const [bmClient, setBMClient] = useState<BuildManagerClient>();
   const [logs, logManager] = useList<Log>();
-  const command = args[0];
+  const command = args[0] as Command | string;
 
   useEffect(() => {
     if (hasOption(args, 'help')) {
@@ -54,7 +51,7 @@ export const BuildManager: AsyncExecutor = ({
     };
 
     switch (command) {
-      case Command.Build: {
+      case 'build': {
         if (args.length === 1) {
           setShowHelp(true);
           onRelease();
@@ -67,17 +64,17 @@ export const BuildManager: AsyncExecutor = ({
           .onError(errorHandler)
           .onClose(onRelease)
           .onMessage(async ({ type, value }) => {
-            if (type === MessageType.Logs) {
+            if (type === 'logs') {
               const formattedLogs = await formatLogs(value, styles.stepNumber);
               logManager.push(...formattedLogs);
             }
           })
           .waitUntilReady()
           .then(() =>
-            client.send(MessageType.Command, {
+            client.send('command', {
               authToken: authTokenRef.current,
               args: args.slice(1),
-              command: Command.Build,
+              command: 'build' satisfies Command,
             })
           );
 
@@ -85,7 +82,7 @@ export const BuildManager: AsyncExecutor = ({
         break;
       }
 
-      case Command.Login: {
+      case 'login': {
         onQueryUser(
           'password:',
           (password) => {
@@ -95,17 +92,17 @@ export const BuildManager: AsyncExecutor = ({
               .onError(errorHandler)
               .onClose(onRelease)
               .onMessage(({ type, value }) => {
-                if (type === MessageType.AuthToken) {
+                if (type === 'authToken') {
                   authTokenRef.current = value;
-                } else if (type === MessageType.Success) {
+                } else if (type === 'success') {
                   setSuccessMessage(value);
                   onRelease();
                 }
               })
               .waitUntilReady()
               .then(() =>
-                client.send(MessageType.Command, {
-                  command: Command.Login,
+                client.send('command', {
+                  command: 'login' satisfies Command,
                   args: [password],
                 })
               );
@@ -117,7 +114,7 @@ export const BuildManager: AsyncExecutor = ({
         break;
       }
 
-      case Command.Logs: {
+      case 'logs': {
         const client = new BuildManagerClient();
 
         client
@@ -135,7 +132,7 @@ export const BuildManager: AsyncExecutor = ({
           })
           .waitUntilReady()
           .then(() =>
-            client.send(MessageType.Command, { command: Command.Logs })
+            client.send('command', { command: 'logs' satisfies Command })
           );
 
         setBMClient(client);
@@ -164,7 +161,7 @@ export const BuildManager: AsyncExecutor = ({
 
   if (showHelp) {
     switch (command) {
-      case Command.Build:
+      case 'build':
         return (
           <CommandHelp
             command="bm build"
@@ -185,7 +182,7 @@ export const BuildManager: AsyncExecutor = ({
           />
         );
 
-      case Command.Logs:
+      case 'logs':
         return (
           <CommandHelp
             command="bm logs"
@@ -242,7 +239,7 @@ export const BuildManager: AsyncExecutor = ({
       </>
     );
   }
-  if (command === Command.Logs && !alive) {
+  if (command === 'logs' && !alive) {
     return <p className={styles.p}>No log to display</p>;
   }
 
@@ -250,3 +247,6 @@ export const BuildManager: AsyncExecutor = ({
 };
 
 BuildManager.async = true;
+
+BuildManager.suggest = (arg: string): string | undefined =>
+  COMMANDS.find((command) => command.startsWith(arg));

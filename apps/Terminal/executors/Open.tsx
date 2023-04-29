@@ -33,3 +33,6 @@ export const Open: Executor = ({ args }) => {
     />
   );
 };
+
+Open.suggest = (arg: string): string | undefined =>
+  Object.keys(getAppDescriptors()).find((appName) => appName.startsWith(arg));

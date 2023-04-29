@@ -4,13 +4,12 @@ import { noop } from '~/platform/utils/noop';
 
 const RETRY_DELAY_MS = 2000;
 
-export enum MessageType {
-  AuthToken = 'authToken',
-  Command = 'command',
-  Error = 'error',
-  Logs = 'logs',
-  Success = 'success',
-}
+export type MessageType =
+  | 'authToken'
+  | 'command'
+  | 'error'
+  | 'logs'
+  | 'success';
 
 export class BuildManagerClient {
   private closeHandler = noop as () => void;
@@ -41,7 +40,7 @@ export class BuildManagerClient {
       try {
         const message = JSON.parse(event.data) as BMMessage;
 
-        if (message.type === MessageType.Error) {
+        if (message.type === 'error') {
           this.errorHandler(message.value);
         } else {
           this.messageHandler(message);

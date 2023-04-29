@@ -3,6 +3,7 @@ import type { Executor, ExecutorProps } from './Executor';
 
 export interface AsyncExecutor extends FC<ExecutorProps & AsyncExecutorProps> {
   async: boolean;
+  suggest?(arg: string): string | undefined;
 }
 
 export function isAsyncExecutor(
