@@ -5,5 +5,5 @@ config.json
 node_modules
 out
 persistentState.json
-public/assets
+public/assets/dicom
 tmp

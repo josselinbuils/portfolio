@@ -23,8 +23,6 @@ const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
   // Factory with dynamic import so no cycle
   // eslint-disable-next-line import/no-cycle
   open: async () => (await import('./executors/Open')).Open,
-  skills: async () => (await import('./executors/Skills/Skills')).Skills,
-  work: async () => (await import('./executors/Work/Work')).Work,
 };
 
 const initialExecutions: Execution[] = [

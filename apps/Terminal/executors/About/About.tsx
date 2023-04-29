@@ -1,6 +1,7 @@
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import type { Executor } from '../Executor';
@@ -38,6 +39,9 @@ export const About: Executor = () => (
           target="_blank"
         >
           <FontAwesomeIcon icon={faTwitter} />
+        </a>
+        <a aria-label="Curriculum Vitae" href="/assets/cv.pdf" target="_blank">
+          <FontAwesomeIcon icon={faAddressCard} />
         </a>
       </p>
       <p className={styles.help}>Type help for more information</p>
