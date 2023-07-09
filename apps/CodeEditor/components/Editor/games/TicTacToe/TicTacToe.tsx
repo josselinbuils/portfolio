@@ -1,9 +1,9 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import React, { useEffect, useState } from 'react';
-import type { Position } from '~/platform/interfaces/Position';
+import { type Position } from '~/platform/interfaces/Position';
 import styles from './TicTacToe.module.scss';
 import { Cross, Grid, Round } from './components/Elements/Elements';
-import type { Grid as IGrid } from './utils/GameManager';
+import { type Grid as IGrid } from './utils/GameManager';
 import { GameManager } from './utils/GameManager';
 
 export const TicTacToe: FC = () => {

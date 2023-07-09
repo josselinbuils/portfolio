@@ -1,7 +1,7 @@
 import cn from 'classnames';
-import type { FC, ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import { useLayoutEffect, useMemo, useRef } from 'react';
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { getLineNumber } from '../../utils/getLineNumber';
 import styles from './LineNumbers.module.scss';
 

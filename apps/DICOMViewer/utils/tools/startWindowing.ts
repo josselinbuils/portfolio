@@ -1,4 +1,4 @@
-import type { Viewport } from '../../models/Viewport';
+import { type Viewport } from '../../models/Viewport';
 
 const WINDOW_LEVEL_SENSIBILITY = 3;
 const WINDOW_WIDTH_SENSIBILITY = 5;
@@ -7,7 +7,7 @@ const WINDOW_WIDTH_MIN = 1;
 export function startWindowing(
   viewport: Viewport,
   downEvent: MouseEvent,
-  onWindowing: (values: { windowCenter: number; windowWidth: number }) => void
+  onWindowing: (values: { windowCenter: number; windowWidth: number }) => void,
 ): (moveEvent: MouseEvent) => void {
   const startX = downEvent.clientX;
   const startY = downEvent.clientY;
@@ -20,7 +20,7 @@ export function startWindowing(
       (moveEvent.clientX - startX) * WINDOW_WIDTH_SENSIBILITY;
     const windowWidth = Math.max(
       startWindowWidth + deltaWindowWidth,
-      WINDOW_WIDTH_MIN
+      WINDOW_WIDTH_MIN,
     );
     const windowCenter =
       startWindowCenter -

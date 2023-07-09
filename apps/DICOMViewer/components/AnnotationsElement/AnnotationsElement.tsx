@@ -1,14 +1,14 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FC, RefObject } from 'react';
+import { type FC, type RefObject } from 'react';
 import { useRef } from 'react';
-import type { ViewType } from '~/apps/DICOMViewer/constants';
+import { type ViewType } from '~/apps/DICOMViewer/constants';
 import { RendererType } from '~/apps/DICOMViewer/constants';
-import type { ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
+import { type ContextMenuItemDescriptor } from '~/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { useContextMenu } from '~/platform/providers/ContextMenuProvider/useContextMenu';
-import type { Annotations } from '../../interfaces/Annotations';
+import { type Annotations } from '../../interfaces/Annotations';
 import styles from './AnnotationsElement.module.scss';
 
 export const AnnotationsElement: FC<Props> = ({

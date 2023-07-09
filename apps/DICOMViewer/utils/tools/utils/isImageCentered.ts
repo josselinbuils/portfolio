@@ -1,5 +1,5 @@
-import type { Viewport } from '../../../models/Viewport';
-import type { Volume } from '../../../models/Volume';
+import { type Viewport } from '../../../models/Viewport';
+import { type Volume } from '../../../models/Volume';
 import { changePointSpace } from '../../changePointSpace';
 
 const DELTA_LIMIT = 0.02;
@@ -7,7 +7,7 @@ const DELTA_LIMIT = 0.02;
 export function isImageCentered(
   viewport: Viewport,
   viewportCenter?: number[],
-  lookPoint?: number[]
+  lookPoint?: number[],
 ): boolean {
   const { camera, dataset } = viewport;
 

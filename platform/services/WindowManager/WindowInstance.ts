@@ -1,10 +1,10 @@
-import type { RefObject } from 'react';
-import type { Window } from '~/platform/components/Window/Window';
-import type {
-  InjectedWindowProps,
-  WindowComponent,
+import { type RefObject } from 'react';
+import { type Window } from '~/platform/components/Window/Window';
+import {
+  type InjectedWindowProps,
+  type WindowComponent,
 } from '~/platform/components/Window/WindowComponent';
-import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { type AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export interface WindowInstance extends Partial<InjectedWindowProps> {
   active: boolean;

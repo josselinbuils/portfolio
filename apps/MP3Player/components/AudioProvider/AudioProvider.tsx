@@ -1,6 +1,6 @@
-import type { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 import { createContext, useEffect, useMemo, useState } from 'react';
-import type { AudioState } from './AudioController';
+import { type AudioState } from './AudioController';
 import { AudioController } from './AudioController';
 
 export const AudioContext = createContext<{
@@ -26,7 +26,7 @@ export const AudioProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
 
   const value = useMemo(
     () => ({ audioController, audioState }),
-    [audioController, audioState]
+    [audioController, audioState],
   );
 
   return (

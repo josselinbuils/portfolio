@@ -1,9 +1,9 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import { createRef } from 'react';
-import type { WindowProps } from '~/platform/components/Window/Window';
-import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
-import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
-import type { WindowInstance } from './WindowInstance';
+import { type WindowProps } from '~/platform/components/Window/Window';
+import { type WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { type AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { type WindowInstance } from './WindowInstance';
 
 export class WindowManager {
   static injectionId = 'WindowManager';

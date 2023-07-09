@@ -1,6 +1,6 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import type { RefObject } from 'react';
+import { type RefObject } from 'react';
 import { createRef, useEffect, useRef, useState } from 'react';
 
 export function useToolbar(

@@ -1,8 +1,8 @@
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import type { AppProps } from 'next/app';
+import { type AppProps } from 'next/app';
 import Head from 'next/head';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { StrictMode } from 'react';
 import { Favicon } from '~/platform/components/Favicon/Favicon';
 import './index.scss';

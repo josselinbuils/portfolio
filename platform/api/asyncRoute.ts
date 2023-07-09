@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { type NextApiRequest, type NextApiResponse } from 'next';
 import { Logger } from './Logger';
 import { HTTP_INTERNAL_ERROR } from './constants';
 

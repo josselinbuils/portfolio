@@ -1,4 +1,4 @@
-import type { File } from '../interfaces/File';
+import { type File } from '../interfaces/File';
 
 // All sizes are in octets
 
@@ -20,22 +20,22 @@ export function untar(buffer: ArrayBuffer): File[] {
     const type = readString(
       buffer,
       offset + FILE_TYPE_OFFSET,
-      FILE_TYPE_LENGTH
+      FILE_TYPE_LENGTH,
     );
     const size = parseInt(
       readString(buffer, offset + FILE_SIZE_OFFSET, FILE_SIZE_LENGTH),
-      8
+      8,
     );
 
     if (type === NORMAL_FILE_TYPE) {
       const name = readString(
         buffer,
         offset + FILENAME_OFFSET,
-        FILENAME_LENGTH
+        FILENAME_LENGTH,
       );
       const content = buffer.slice(
         offset + HEADER_LENGTH,
-        offset + HEADER_LENGTH + size
+        offset + HEADER_LENGTH + size,
       );
 
       files.push({ name, content });

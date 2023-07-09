@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useLayoutEffect, useState } from 'react';
 import { ButtonLink } from '~/platform/components/ButtonLink/ButtonLink';
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';

@@ -1,14 +1,14 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { RendererType, ViewType } from '~/apps/DICOMViewer/constants';
 import { MouseButton } from '~/platform/constants';
 import { useElementSize } from '~/platform/hooks/useElementSize';
-import type { Size } from '~/platform/interfaces/Size';
-import type { ViewportStats } from '../../interfaces/ViewportStats';
-import type { Viewport } from '../../models/Viewport';
+import { type Size } from '~/platform/interfaces/Size';
+import { type ViewportStats } from '../../interfaces/ViewportStats';
+import { type Viewport } from '../../models/Viewport';
 import styles from './ViewportElement.module.scss';
-import type { Renderer } from './renderers/Renderer';
+import { type Renderer } from './renderers/Renderer';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
@@ -45,16 +45,16 @@ export const ViewportElement: FC<Props> = ({
           case RendererType.JavaScript:
             if (viewport.viewType === ViewType.Native) {
               return import('./renderers/js/JSFrameRenderer').then(
-                (m) => m.JSFrameRenderer
+                (m) => m.JSFrameRenderer,
               );
             }
             return import('./renderers/js/JSVolumeRenderer').then(
-              (m) => m.JSVolumeRenderer
+              (m) => m.JSVolumeRenderer,
             );
 
           case RendererType.WebGL:
             return import('./renderers/webgl/WebGLRenderer').then(
-              (m) => m.WebGLRenderer
+              (m) => m.WebGLRenderer,
             );
 
           default:

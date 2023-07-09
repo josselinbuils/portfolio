@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
-import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { type WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { useDragAndDrop } from '~/platform/hooks/useDragAndDrop';
 import styles from './CodeEditor.module.scss';
 import { Console } from './components/Console/Console';

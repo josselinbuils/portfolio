@@ -8,7 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
-import type { ChangeEvent, DragEvent, FC, SyntheticEvent } from 'react';
+import {
+  type ChangeEvent,
+  type DragEvent,
+  type FC,
+  type SyntheticEvent,
+} from 'react';
 import {
   useCallback,
   useEffect,
@@ -18,11 +23,11 @@ import {
 } from 'react';
 import { useMemState } from '~/platform/hooks/useMemState';
 import { highlightCode } from '~/platform/utils/highlightCode/highlightCode';
-import type { ClientCursor } from '../../interfaces/ClientCursor';
-import type { ClientState } from '../../interfaces/ClientState';
-import type { CursorPosition } from '../../interfaces/CursorPosition';
-import type { EditableState } from '../../interfaces/EditableState';
-import type { Selection } from '../../interfaces/Selection';
+import { type ClientCursor } from '../../interfaces/ClientCursor';
+import { type ClientState } from '../../interfaces/ClientState';
+import { type CursorPosition } from '../../interfaces/CursorPosition';
+import { type EditableState } from '../../interfaces/EditableState';
+import { type Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
 import { spliceString } from '../../utils/spliceString';
 import { Shortcut } from '../Shortcut/Shortcut';
@@ -34,11 +39,11 @@ import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { Tab } from './components/Tab/Tab';
 import { Tabs } from './components/Tabs/Tabs';
-import type { Completion } from './hooks/useAutoCompletion/useAutoCompletion';
+import { type Completion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useAutoCompletion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
-import type { EditorFile } from './interfaces/EditorFile';
+import { type EditorFile } from './interfaces/EditorFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
 import { duplicate } from './utils/duplicate';

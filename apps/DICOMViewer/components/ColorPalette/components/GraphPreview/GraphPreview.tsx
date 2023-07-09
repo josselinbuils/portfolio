@@ -1,7 +1,7 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import type { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import { type LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { applyPolynomialInterpolation } from '~/apps/DICOMViewer/utils/math/applyPolynomialInterpolation';
 import { scaleLUTComponents } from '~/apps/DICOMViewer/utils/scaleLUTComponents';
 import { useElementSize } from '~/platform/hooks/useElementSize';

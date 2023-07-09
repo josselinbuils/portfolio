@@ -1,12 +1,12 @@
-import type { Viewport } from '../../models/Viewport';
-import type { Volume } from '../../models/Volume';
+import { type Viewport } from '../../models/Viewport';
+import { type Volume } from '../../models/Volume';
 import { changePointSpace } from '../changePointSpace';
 import { V } from '../math/Vector';
 import { isImageCentered } from './utils/isImageCentered';
 
 export function startPan(
   viewport: Viewport,
-  downEvent: MouseEvent
+  downEvent: MouseEvent,
 ): (moveEvent: MouseEvent) => void {
   const { camera, dataset } = viewport;
   const cursorStartPosition = [downEvent.clientX, downEvent.clientY, 0];
@@ -24,7 +24,7 @@ export function startPan(
     const startLookPointViewport = changePointSpace(
       startLookPoint,
       dataset,
-      viewport
+      viewport,
     );
     const newLookPointViewport = [
       startLookPointViewport[0] + cursorStartPosition[0] - moveEvent.clientX,
@@ -34,13 +34,13 @@ export function startPan(
     const isCentered = isImageCentered(
       viewport,
       baseCenterViewport,
-      newLookPointViewport
+      newLookPointViewport,
     );
 
     camera.lookPoint = changePointSpace(
       isCentered ? baseCenterViewport : newLookPointViewport,
       viewport,
-      dataset
+      dataset,
     );
     camera.eyePoint = V(camera.lookPoint).sub(direction);
   };

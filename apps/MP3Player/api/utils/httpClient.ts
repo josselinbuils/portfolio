@@ -1,4 +1,4 @@
-import type { ClientRequest, IncomingMessage } from 'node:http';
+import { type ClientRequest, type IncomingMessage } from 'node:http';
 import http from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';

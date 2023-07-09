@@ -1,4 +1,4 @@
-import type { EditorFile } from '../interfaces/EditorFile';
+import { type EditorFile } from '../interfaces/EditorFile';
 
 const LANGUAGE: { [language: string]: string } = {
   css: 'css',

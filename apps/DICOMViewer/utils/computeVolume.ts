@@ -1,12 +1,12 @@
-import type { SharedProperties } from '../interfaces/SharedProperties';
-import type { Frame } from '../models/Frame';
+import { type SharedProperties } from '../interfaces/SharedProperties';
+import { type Frame } from '../models/Frame';
 import { Volume } from '../models/Volume';
 import { isVolume } from './isVolume';
 import { V } from './math/Vector';
 
 export function computeVolume(
   frames: Frame[],
-  sharedProperties: SharedProperties
+  sharedProperties: SharedProperties,
 ): Volume | undefined {
   if (!isVolume(frames)) {
     return undefined;
@@ -21,10 +21,10 @@ export function computeVolume(
   const displayRatio = voxelSpacing.map((v) => v / voxelSpacing[1]);
   const dimensionsMm = dimensionsVoxels.map((dim, i) => dim * voxelSpacing[i]);
   const orientedDimensionsMm = orientation.map((orient, index) =>
-    V(orient).mul(dimensionsMm[index])
+    V(orient).mul(dimensionsMm[index]),
   );
   const orientedDimensionsVoxels = orientation.map((orient, index) =>
-    V(orient).mul(dimensionsVoxels[index])
+    V(orient).mul(dimensionsVoxels[index]),
   );
 
   const getCorner = (x: number, y: number, z: number): number[] =>

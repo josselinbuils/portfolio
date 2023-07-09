@@ -1,5 +1,9 @@
 import cn from 'classnames';
-import type { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
+import {
+  type ButtonHTMLAttributes,
+  type DetailedHTMLProps,
+  type FC,
+} from 'react';
 import styles from './Button.module.scss';
 
 export const Button: FC<Props> = ({

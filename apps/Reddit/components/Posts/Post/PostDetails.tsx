@@ -1,6 +1,6 @@
 import { faAnchor } from '@fortawesome/free-solid-svg-icons/faAnchor';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { ButtonLink } from '~/platform/components/ButtonLink/ButtonLink';
 import { Icon } from '../../Icon/Icon';
 import styles from './PostDetails.module.scss';

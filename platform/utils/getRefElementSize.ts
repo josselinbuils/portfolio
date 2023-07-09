@@ -1,5 +1,5 @@
-import type { RefObject } from 'react';
-import type { Size } from '../interfaces/Size';
+import { type RefObject } from 'react';
+import { type Size } from '../interfaces/Size';
 
 export function getRefElementSize(elementRef: RefObject<HTMLElement>): Size {
   if (elementRef.current === null) {

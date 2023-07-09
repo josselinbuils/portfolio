@@ -1,11 +1,11 @@
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createGUID } from '~/platform/utils/createGUID';
 import { ROOT_FONT_SIZE_PX } from '../../../constants';
-import type { ContextMenuDescriptor } from '../ContextMenuDescriptor';
-import type { ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
+import { type ContextMenuDescriptor } from '../ContextMenuDescriptor';
+import { type ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
 import styles from './ContextMenu.module.scss';
 import { ContextMenuItem } from './ContextMenuItem';
 

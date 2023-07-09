@@ -1,8 +1,8 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useCallback, useRef } from 'react';
-import type { EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type EditableState } from '~/apps/CodeEditor/interfaces/EditableState';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { History } from '~/apps/CodeEditor/utils/History';
 
 export function useHistory({

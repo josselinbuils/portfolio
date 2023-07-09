@@ -1,8 +1,8 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useEffect, useState } from 'react';
-import type { Size } from '~/platform/interfaces/Size';
+import { type Size } from '~/platform/interfaces/Size';
 import { useInjector } from '~/platform/providers/InjectorProvider/useInjector';
-import type { WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
+import { type WindowInstance } from '~/platform/services/WindowManager/WindowInstance';
 import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {

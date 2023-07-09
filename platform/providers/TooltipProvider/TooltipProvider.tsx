@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
-import type { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import type { TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
+import { type TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 
 const Tooltip = dynamic(

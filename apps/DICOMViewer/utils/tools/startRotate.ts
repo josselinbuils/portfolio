@@ -1,6 +1,6 @@
-import type { Camera } from '../../models/Camera';
-import type { Viewport } from '../../models/Viewport';
-import type { Volume } from '../../models/Volume';
+import { type Camera } from '../../models/Camera';
+import { type Viewport } from '../../models/Viewport';
+import { type Volume } from '../../models/Volume';
 import { areFloatEquals } from '../areFloatEquals';
 import { M3 } from '../math/Matrix3';
 import { V } from '../math/Vector';
@@ -8,7 +8,7 @@ import { V } from '../math/Vector';
 export function startRotate(
   viewport: Viewport,
   downEvent: MouseEvent,
-  onRotate: () => void
+  onRotate: () => void,
 ): (moveEvent: MouseEvent) => void {
   if (!viewport.dataset.is3D) {
     throw new Error('Unable to rotate on a 2D dataset');
@@ -23,7 +23,7 @@ export function startRotate(
   let previousVector = computeTrackball(
     trackballCenter,
     trackballRadius,
-    cursorStartPosition
+    cursorStartPosition,
   );
 
   return (moveEvent: MouseEvent) => {
@@ -31,7 +31,7 @@ export function startRotate(
     const currentVector = computeTrackball(
       trackballCenter,
       trackballRadius,
-      cursorOffset
+      cursorOffset,
     );
 
     if (V(currentVector).equals(previousVector)) {
@@ -52,7 +52,7 @@ export function startRotate(
 
 function computeRotation(
   previous: number[],
-  current: number[]
+  current: number[],
 ): { angle: number; axis: number[] } {
   const axis = V(current).cross(previous).normalize();
   const angle = V(previous).angle(current);
@@ -62,7 +62,7 @@ function computeRotation(
 function computeTrackball(
   center: number[],
   radius: number,
-  cursorOffset: number[]
+  cursorOffset: number[],
 ): number[] {
   const fromCenter = V([...cursorOffset, 0]).sub([...center, 0]);
   const fromCenterNorm = V(fromCenter).norm();

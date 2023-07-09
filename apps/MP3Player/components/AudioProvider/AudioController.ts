@@ -1,6 +1,6 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import dayjs from 'dayjs';
-import type { Music } from '../../interfaces/Music';
+import { type Music } from '../../interfaces/Music';
 
 export class AudioController {
   audioStateSubject: Subject<AudioState>;
@@ -26,7 +26,7 @@ export class AudioController {
     this.audioElement.removeEventListener('ended', this.musicEndListener);
     this.audioElement.removeEventListener(
       'timeupdate',
-      this.timeUpdateListener
+      this.timeUpdateListener,
     );
     this.audioElement.pause();
   }
@@ -110,7 +110,7 @@ export class AudioController {
 
     this.audioElement.currentTime = Math.min(
       Math.round(value * duration),
-      duration - 1
+      duration - 1,
     );
   };
 
@@ -176,11 +176,11 @@ export class AudioController {
 
   private readonly timeUpdateListener = () => {
     this.currentTime = dayjs(
-      Math.round(this.audioElement.currentTime) * 1000
+      Math.round(this.audioElement.currentTime) * 1000,
     ).format('mm:ss');
     this.progress =
       Math.round(
-        (this.audioElement.currentTime / this.audioElement.duration) * 10000
+        (this.audioElement.currentTime / this.audioElement.duration) * 10000,
       ) / 100;
     this.publishState();
   };

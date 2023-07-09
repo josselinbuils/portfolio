@@ -1,6 +1,6 @@
 import { MouseButton } from '~/platform/constants';
 import { MouseTool } from '../constants';
-import type { Viewport } from '../models/Viewport';
+import { type Viewport } from '../models/Viewport';
 
 export async function startTool(
   downEvent: MouseEvent,
@@ -8,7 +8,7 @@ export async function startTool(
   activeLeftTool: MouseTool,
   activeMiddleTool?: MouseTool,
   activeRightTool?: MouseTool,
-  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {}
+  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {},
 ): Promise<void> {
   downEvent.preventDefault();
 

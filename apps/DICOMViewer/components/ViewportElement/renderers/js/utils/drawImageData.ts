@@ -1,6 +1,6 @@
-import type {
-  BoundedViewportSpaceCoordinates,
-  ViewportSpaceCoordinates,
+import {
+  type BoundedViewportSpaceCoordinates,
+  type ViewportSpaceCoordinates,
 } from '../../RenderingProperties';
 
 export function drawImageData(

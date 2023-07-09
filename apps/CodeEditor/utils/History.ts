@@ -1,7 +1,7 @@
-import type { EditableState } from '../interfaces/EditableState';
-import type { Selection } from '../interfaces/Selection';
+import { type EditableState } from '../interfaces/EditableState';
+import { type Selection } from '../interfaces/Selection';
 import { createSelection } from './createSelection';
-import type { Diff } from './diffs';
+import { type Diff } from './diffs';
 import { applyDiff, getDiffs, revertDiff } from './diffs';
 import { isIntoBrackets } from './isIntoBrackets';
 

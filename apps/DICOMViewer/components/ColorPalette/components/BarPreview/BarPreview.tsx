@@ -1,7 +1,7 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useLayoutEffect, useRef } from 'react';
-import type { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import { type LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
 import { useElementSize } from '~/platform/hooks/useElementSize';
 import styles from './BarPreview.module.scss';

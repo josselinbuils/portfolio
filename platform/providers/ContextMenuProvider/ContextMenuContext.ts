@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { ContextMenuDescriptor } from './ContextMenuDescriptor';
+import { type ContextMenuDescriptor } from './ContextMenuDescriptor';
 
 export const ContextMenuContext = createContext<ContextMenuManager>({
   isContextMenuDisplayed: false,

@@ -1,5 +1,8 @@
 import { computeHash } from '~/platform/utils/computeHash';
-import type { ActionCreator, ActionFactory } from '../interfaces/ActionFactory';
+import {
+  type ActionCreator,
+  type ActionFactory,
+} from '../interfaces/ActionFactory';
 
 const isProduction = process.env.NODE_ENV === 'production';
 

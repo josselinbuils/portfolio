@@ -1,18 +1,18 @@
-import type { WSClient } from '~/apps/CodeEditor/api/WSClient';
-import type { WSPlugin, WSServer } from '~/apps/CodeEditor/api/WSServer';
-import type { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
-import type { HistoryState } from '~/apps/CodeEditor/utils/History';
+import { type WSClient } from '~/apps/CodeEditor/api/WSClient';
+import { type WSPlugin, type WSServer } from '~/apps/CodeEditor/api/WSServer';
+import { type ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type HistoryState } from '~/apps/CodeEditor/utils/History';
 import { History } from '~/apps/CodeEditor/utils/History';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 import { minifySelection } from '~/apps/CodeEditor/utils/minifySelection';
-import type { Action } from '~/platform/state/interfaces/Action';
-import type { PayloadFromFactory } from '~/platform/state/interfaces/ActionFactory';
+import { type Action } from '~/platform/state/interfaces/Action';
+import { type PayloadFromFactory } from '~/platform/state/interfaces/ActionFactory';
 import { computeHash } from '~/platform/utils/computeHash';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
-import type { SharedFileServerBaseAction } from './serverActions';
+import { type SharedFileServerBaseAction } from './serverActions';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 

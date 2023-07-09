@@ -1,4 +1,4 @@
-import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { type Viewport } from '~/apps/DICOMViewer/models/Viewport';
 
 export interface Renderer {
   destroy?(): void;

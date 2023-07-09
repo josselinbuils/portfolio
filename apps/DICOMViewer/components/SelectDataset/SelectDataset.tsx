@@ -1,10 +1,10 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
 import { cancelable } from '~/platform/utils/cancelable';
 import { preloadImage } from '~/platform/utils/preloadImage';
-import type { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
+import { type DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';
 import styles from './SelectDataset.module.scss';

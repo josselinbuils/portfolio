@@ -1,4 +1,4 @@
-import type { Selection } from '../../../interfaces/Selection';
+import { type Selection } from '../../../interfaces/Selection';
 import { getLineBeforeCursor } from './getLineBeforeCursor';
 
 /**

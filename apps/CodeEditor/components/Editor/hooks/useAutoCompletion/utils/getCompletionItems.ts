@@ -1,4 +1,4 @@
-import type { CompletionItem } from '../CompletionItem';
+import { type CompletionItem } from '../CompletionItem';
 import {
   getGlobalCompletionItems,
   getObjectsCompletionMap,

@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import type { FC } from 'react';
-import type { Music } from '~/apps/MP3Player/interfaces/Music';
+import { type FC } from 'react';
+import { type Music } from '~/apps/MP3Player/interfaces/Music';
 import styles from './MusicInfo.module.scss';
 
 interface Props {

@@ -1,10 +1,10 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useEffect, useState } from 'react';
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
-import type { Position } from '~/platform/interfaces/Position';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type Position } from '~/platform/interfaces/Position';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './Cursor.module.scss';
-import type { Segment } from './utils/computeSegments';
+import { type Segment } from './utils/computeSegments';
 import { computeSegments } from './utils/computeSegments';
 
 interface Props {

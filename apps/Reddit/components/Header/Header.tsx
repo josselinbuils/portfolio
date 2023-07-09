@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import type { RedditFilter } from '../../interfaces/RedditFilter';
+import { type FC } from 'react';
+import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
 import styles from './Header.module.scss';

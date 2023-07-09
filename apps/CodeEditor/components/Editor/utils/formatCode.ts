@@ -1,5 +1,5 @@
-import type { BuiltInParserName, Plugin } from 'prettier';
-import type { EditableState } from '../../../interfaces/EditableState';
+import { type BuiltInParserName, type Plugin } from 'prettier';
+import { type EditableState } from '../../../interfaces/EditableState';
 import { createSelection } from '../../../utils/createSelection';
 
 interface Parser {

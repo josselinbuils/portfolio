@@ -1,5 +1,5 @@
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
-import type { Diff } from '~/apps/CodeEditor/utils/diffs';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type Diff } from '~/apps/CodeEditor/utils/diffs';
 import { createActionFactory } from '~/platform/state/utils/createActionFactory';
 
 export interface SharedFileServerBaseAction {

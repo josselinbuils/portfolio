@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import type { Music } from '../../interfaces/Music';
-import type { JamendoTrack } from '../interfaces/JamendoTrack';
+import { type Music } from '../../interfaces/Music';
+import { type JamendoTrack } from '../interfaces/JamendoTrack';
 
 export function formatTracks(tracks: JamendoTrack[]): Music[] {
   return tracks.map((track) => ({

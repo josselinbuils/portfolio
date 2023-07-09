@@ -1,4 +1,4 @@
-import type { MusicList } from './interfaces/MusicList';
+import { type MusicList } from './interfaces/MusicList';
 
 export const musicLists = [
   { name: 'Top 50', jamendoTag: '' },

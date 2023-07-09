@@ -3,10 +3,10 @@ import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useContext, useEffect, useState } from 'react';
-import type { Music } from '~/apps/MP3Player/interfaces/Music';
-import type { MusicList } from '~/apps/MP3Player/interfaces/MusicList';
+import { type Music } from '~/apps/MP3Player/interfaces/Music';
+import { type MusicList } from '~/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '~/apps/MP3Player/utils/loadMusics';
 import { Select } from '~/platform/components/Select/Select';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
@@ -44,7 +44,7 @@ export const Musics: FC<Props> = ({
     setMusics([]);
 
     const [tracksPromise, cancelTracksPromise] = cancelable(
-      loadMusics(musicList.jamendoTag, jamendoOrder)
+      loadMusics(musicList.jamendoTag, jamendoOrder),
     );
     tracksPromise.then(setMusics).finally(() => setLoading(false));
 

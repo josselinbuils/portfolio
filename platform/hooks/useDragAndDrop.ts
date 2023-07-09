@@ -1,6 +1,6 @@
 import type React from 'react';
 import { MouseButton } from '../constants';
-import type { EventHandler } from '../interfaces/EventHandler';
+import { type EventHandler } from '../interfaces/EventHandler';
 import { noop } from '../utils/noop';
 
 type PointerMoveHandler = EventHandler<'pointermove'>;

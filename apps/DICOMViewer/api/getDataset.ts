@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { type NextApiRequest, type NextApiResponse } from 'next';
 import { HTTP_NOT_FOUND } from '~/platform/api/constants';
 import { DATASETS_PATH, MAX_AGE } from './constants';
 

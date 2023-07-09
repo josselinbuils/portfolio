@@ -1,13 +1,13 @@
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
-import type { MutableRefObject } from 'react';
+import { type MutableRefObject } from 'react';
 import { useEffect, useState } from 'react';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
-import type { AsyncExecutor } from '../AsyncExecutor';
+import { type AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
-import type { BMError } from './BuildManagerClient';
+import { type BMError } from './BuildManagerClient';
 import { BuildManagerClient } from './BuildManagerClient';
-import type { Log } from './Log';
+import { type Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';
 
@@ -75,7 +75,7 @@ export const BuildManager: AsyncExecutor = ({
               authToken: authTokenRef.current,
               args: args.slice(1),
               command: 'build' satisfies Command,
-            })
+            }),
           );
 
         setBMClient(client);
@@ -104,12 +104,12 @@ export const BuildManager: AsyncExecutor = ({
                 client.send('command', {
                   command: 'login' satisfies Command,
                   args: [password],
-                })
+                }),
               );
 
             setBMClient(client);
           },
-          true
+          true,
         );
         break;
       }
@@ -132,7 +132,7 @@ export const BuildManager: AsyncExecutor = ({
           })
           .waitUntilReady()
           .then(() =>
-            client.send('command', { command: 'logs' satisfies Command })
+            client.send('command', { command: 'logs' satisfies Command }),
           );
 
         setBMClient(client);

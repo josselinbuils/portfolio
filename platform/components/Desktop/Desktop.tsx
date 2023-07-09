@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import styles from './Desktop.module.scss';
 import { TaskBar } from './components/TaskBar/TaskBar';
 import { VisibleArea } from './components/VisibleArea/VisibleArea';

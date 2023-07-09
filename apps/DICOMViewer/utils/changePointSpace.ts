@@ -1,4 +1,4 @@
-import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { M3 } from './math/Matrix3';
 import { M4 } from './math/Matrix4';
 import { V } from './math/Vector';
@@ -10,7 +10,7 @@ let cache: {
 export function changePointSpace(
   point: number[],
   originalSpace: CoordinateSpace,
-  finalSpace: CoordinateSpace
+  finalSpace: CoordinateSpace,
 ): number[] {
   const originalSpaceToWorldMatrix =
     getWorldTransformationMatrix(originalSpace).to;

@@ -1,11 +1,11 @@
-import type { Viewport } from '../../models/Viewport';
+import { type Viewport } from '../../models/Viewport';
 import { V } from '../math/Vector';
 
 const PAGING_SENSIBILITY = 1.2;
 
 export function startPaging(
   viewport: Viewport,
-  downEvent: MouseEvent
+  downEvent: MouseEvent,
 ): (moveEvent: MouseEvent) => void {
   const startY = downEvent.clientY;
   const { camera } = viewport;
@@ -28,7 +28,7 @@ export function startPaging(
       PAGING_SENSIBILITY;
     const deltaPosition = (startY - moveEvent.clientY) * sensitivity;
     let newLookPoint: number[] = V(startLookPoint).add(
-      V(direction).mul(deltaPosition)
+      V(direction).mul(deltaPosition),
     );
     const positionOnDirection = V(newLookPoint).dot(direction);
 

@@ -5,7 +5,7 @@ import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 // eslint-disable-next-line import/no-cycle
 import { getAppDescriptors } from '~/platform/utils/getAppDescriptors';
 import { CommandHelp } from '../components/CommandHelp/CommandHelp';
-import type { Executor } from './Executor';
+import { type Executor } from './Executor';
 
 export const Open: Executor = ({ args }) => {
   const windowManager = useInjector(WindowManager);

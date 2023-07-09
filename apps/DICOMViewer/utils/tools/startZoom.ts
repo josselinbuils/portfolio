@@ -1,4 +1,4 @@
-import type { Viewport } from '../../models/Viewport';
+import { type Viewport } from '../../models/Viewport';
 import { isImageCentered } from './utils/isImageCentered';
 
 const ZOOM_LIMIT = 0.07;
@@ -9,7 +9,7 @@ const ZOOM_SENSIBILITY = 1000;
 export function startZoom(
   viewport: Viewport,
   downEvent: MouseEvent,
-  onZoom: (values: { zoom: number }) => void
+  onZoom: (values: { zoom: number }) => void,
 ): (moveEvent: MouseEvent) => void {
   const { camera, height } = viewport;
   const { baseFieldOfView } = camera;

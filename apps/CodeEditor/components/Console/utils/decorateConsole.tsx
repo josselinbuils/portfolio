@@ -1,8 +1,8 @@
-import type { ListManager } from '@josselinbuils/hooks/useList';
+import { type ListManager } from '@josselinbuils/hooks/useList';
 import { createGUID } from '~/platform/utils/createGUID';
 import { highlightCode } from '~/platform/utils/highlightCode/highlightCode';
 import { Shortcut } from '../../Shortcut/Shortcut';
-import type { Log } from '../Log';
+import { type Log } from '../Log';
 import { LogLevel } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {

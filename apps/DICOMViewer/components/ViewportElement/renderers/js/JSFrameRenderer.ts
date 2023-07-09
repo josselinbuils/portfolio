@@ -1,13 +1,13 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import type { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
-import type { Frame } from '~/apps/DICOMViewer/models/Frame';
-import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { type VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import { type Frame } from '~/apps/DICOMViewer/models/Frame';
+import { type Viewport } from '~/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
-import type { Renderer } from '../Renderer';
-import type {
-  BoundedViewportSpaceCoordinates,
-  ImageSpaceCoordinates,
-  RenderingProperties,
+import { type Renderer } from '../Renderer';
+import {
+  type BoundedViewportSpaceCoordinates,
+  type ImageSpaceCoordinates,
+  type RenderingProperties,
 } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { drawImageData } from './utils/drawImageData';

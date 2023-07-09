@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 export interface Executor extends FC<ExecutorProps> {
   suggest?(arg: string): string | undefined;

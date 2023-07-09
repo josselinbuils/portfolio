@@ -1,10 +1,10 @@
-import type { LUTComponent } from '../interfaces/LUTComponent';
+import { type LUTComponent } from '../interfaces/LUTComponent';
 
 const BASE_SIZE = 256;
 
 export function scaleLUTComponents(
   lutComponents: LUTComponent[],
-  newSize: number
+  newSize: number,
 ): LUTComponent[] {
   return lutComponents.map(({ end, start, ...others }) => ({
     ...others,

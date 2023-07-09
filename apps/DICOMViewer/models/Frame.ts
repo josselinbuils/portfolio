@@ -1,9 +1,9 @@
-import type {
-  NormalizedImageFormat,
-  PhotometricInterpretation,
-  PixelRepresentation,
+import {
+  type NormalizedImageFormat,
+  type PhotometricInterpretation,
+  type PixelRepresentation,
 } from '../constants';
-import type { DicomFrame } from './DicomFrame';
+import { type DicomFrame } from './DicomFrame';
 import { Model } from './Model';
 
 const MANDATORY_FIELDS = [

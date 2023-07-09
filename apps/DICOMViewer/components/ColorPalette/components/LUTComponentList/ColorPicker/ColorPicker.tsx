@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { throttle } from '~/platform/utils/throttle';
 import styles from './ColorPicker.module.scss';
 import { hexToRGB } from './utils/hexToRGB';

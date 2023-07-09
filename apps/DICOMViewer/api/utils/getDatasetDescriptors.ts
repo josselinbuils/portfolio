@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { Logger } from '~/platform/api/Logger';
 import { extendError } from '~/platform/utils/extendError';
-import type { DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
+import { type DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { computeFrames } from '../../utils/computeFrames';
 import { decodeFrames } from '../../utils/decodeFrames';
 import { isVolume } from '../../utils/isVolume';

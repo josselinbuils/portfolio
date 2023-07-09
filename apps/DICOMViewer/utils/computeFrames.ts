@@ -3,7 +3,7 @@ import {
   PhotometricInterpretation,
   PixelRepresentation,
 } from '../constants';
-import type { DicomFrame } from '../models/DicomFrame';
+import { type DicomFrame } from '../models/DicomFrame';
 import { Frame } from '../models/Frame';
 import { V } from './math/Vector';
 
@@ -27,7 +27,7 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
 
     spacingBetweenSlices = isComputable
       ? V(firstFrame.imagePosition as number[]).distance(
-          dicomFrames[1].imagePosition as number[]
+          dicomFrames[1].imagePosition as number[],
         )
       : 1;
   }
@@ -69,7 +69,7 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
 
 function computeFrameGeometry(
   frame: DicomFrame,
-  frameIndex: number
+  frameIndex: number,
 ): FrameGeometry {
   let { imageOrientation, imagePosition, pixelSpacing, sliceLocation } = frame;
 
@@ -114,7 +114,7 @@ function computeFrameGeometry(
 function getDicomImageFormat(
   bitsAllocated: number,
   photometricInterpretation: PhotometricInterpretation,
-  pixelRepresentation: PixelRepresentation
+  pixelRepresentation: PixelRepresentation,
 ): DicomImageFormat {
   let format: string;
 
@@ -125,7 +125,7 @@ function getDicomImageFormat(
     format = `${isSigned ? '' : 'u'}int${bitsAllocated <= 8 ? '8' : '16'}`;
   } else {
     throw new Error(
-      `Unsupported photometric interpretation: ${photometricInterpretation}`
+      `Unsupported photometric interpretation: ${photometricInterpretation}`,
     );
   }
 
@@ -142,7 +142,7 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
   const dicomImageFormat = getDicomImageFormat(
     bitsAllocated,
     photometricInterpretation,
-    pixelRepresentation
+    pixelRepresentation,
   );
   const rawPixelData = frame.pixelData;
   let imageFormat: NormalizedImageFormat;
@@ -160,14 +160,14 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
         typedPixelData = new Int8Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length
+          rawPixelData.length,
         );
         break;
       case DicomImageFormat.Int16:
         typedPixelData = new Int16Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length / 2
+          rawPixelData.length / 2,
         );
         break;
       case DicomImageFormat.UInt8:
@@ -177,7 +177,7 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
         typedPixelData = new Uint16Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length / 2
+          rawPixelData.length / 2,
         );
         break;
       default:

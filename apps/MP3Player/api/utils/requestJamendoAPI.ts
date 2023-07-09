@@ -1,11 +1,11 @@
 import { Logger } from '~/platform/api/Logger';
-import type { JamendoResponse } from '../interfaces/JamendoResponse';
-import type { JamendoTrackParameters } from '../interfaces/JamendoTrackParameters';
+import { type JamendoResponse } from '../interfaces/JamendoResponse';
+import { type JamendoTrackParameters } from '../interfaces/JamendoTrackParameters';
 import { httpClient } from './httpClient';
 
 export async function requestJamendoAPI<T>(
   path: string,
-  jamendoParameters: JamendoTrackParameters
+  jamendoParameters: JamendoTrackParameters,
 ): Promise<T[]> {
   const queryParams = Object.entries(jamendoParameters)
     .map(([key, value]) => `${key}=${value}`)
@@ -16,7 +16,7 @@ export async function requestJamendoAPI<T>(
   Logger.info(`-> GET ${url}`);
 
   const { headers, results } = (await httpClient.get(
-    url
+    url,
   )) as JamendoResponse<T>;
 
   if (headers.status === 'success') {

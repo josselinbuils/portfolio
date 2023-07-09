@@ -1,8 +1,8 @@
-import type { ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
-import type { ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
-import type { Selection } from '~/apps/CodeEditor/interfaces/Selection';
+import { type ClientCursor } from '~/apps/CodeEditor/interfaces/ClientCursor';
+import { type ClientState } from '~/apps/CodeEditor/interfaces/ClientState';
+import { type Selection } from '~/apps/CodeEditor/interfaces/Selection';
 import { createSelection } from '~/apps/CodeEditor/utils/createSelection';
-import type { Diff } from '~/apps/CodeEditor/utils/diffs';
+import { type Diff } from '~/apps/CodeEditor/utils/diffs';
 import { applyDiff } from '~/apps/CodeEditor/utils/diffs';
 import { createActionManager } from '~/platform/state/utils/createActionManager';
 

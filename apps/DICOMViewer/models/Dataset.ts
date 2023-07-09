@@ -1,12 +1,12 @@
-import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { computeFrames } from '../utils/computeFrames';
 import { computeSharedProperties } from '../utils/computeSharedProperties';
 import { computeVolume } from '../utils/computeVolume';
 import { V } from '../utils/math/Vector';
-import type { DicomFrame } from './DicomFrame';
-import type { Frame } from './Frame';
+import { type DicomFrame } from './DicomFrame';
+import { type Frame } from './Frame';
 import { Model } from './Model';
-import type { Volume } from './Volume';
+import { type Volume } from './Volume';
 
 const MANDATORY_FIELDS = ['frames', 'voxelSpacing'];
 
@@ -40,15 +40,15 @@ export class Dataset extends Model implements CoordinateSpace {
   findClosestFrame(point: number[]): Frame {
     const { imagePosition, imageNormal, spacingBetweenSlices } = this.frames[0];
     const index = Math.round(
-      V(point).sub(imagePosition).dot(imageNormal) / spacingBetweenSlices
+      V(point).sub(imagePosition).dot(imageNormal) / spacingBetweenSlices,
     );
 
     if (index < 0 || index >= this.frames.length) {
       const formattedPoint = JSON.stringify(
-        point.map((c) => Math.round(c * 1000) / 1000)
+        point.map((c) => Math.round(c * 1000) / 1000),
       );
       throw new Error(
-        `Unable to find a frame on which the point ${formattedPoint} is`
+        `Unable to find a frame on which the point ${formattedPoint} is`,
       );
     }
 

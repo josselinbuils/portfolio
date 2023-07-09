@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import type { Executor, ExecutorProps } from './Executor';
+import { type FC } from 'react';
+import { type Executor, type ExecutorProps } from './Executor';
 
 export interface AsyncExecutor extends FC<ExecutorProps & AsyncExecutorProps> {
   async: boolean;
@@ -7,7 +7,7 @@ export interface AsyncExecutor extends FC<ExecutorProps & AsyncExecutorProps> {
 }
 
 export function isAsyncExecutor(
-  executor: Executor | AsyncExecutor
+  executor: Executor | AsyncExecutor,
 ): executor is AsyncExecutor {
   return (executor as AsyncExecutor).async;
 }
@@ -19,6 +19,6 @@ interface AsyncExecutorProps {
   onQueryUser(
     query: string,
     callback: (userInput: string) => void,
-    hideAnswer?: boolean
+    hideAnswer?: boolean,
   ): void;
 }

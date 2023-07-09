@@ -1,7 +1,7 @@
 // Open executor dynamically imported in Terminal so no cycle
 // eslint-disable-next-line import/no-cycle
 import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
-import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { type AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export function getAppDescriptors(): { [name: string]: AppDescriptor } {
   const descriptors: { [name: string]: AppDescriptor } = {};

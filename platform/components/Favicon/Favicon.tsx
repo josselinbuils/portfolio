@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import favicon16 from './favicon16.png';
 import favicon32 from './favicon32.png';
 

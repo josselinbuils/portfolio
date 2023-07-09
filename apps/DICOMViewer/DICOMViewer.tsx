@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic';
-import type { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import type { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import { type LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '~/platform/components/Window/Window';
-import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { type WindowComponent } from '~/platform/components/Window/WindowComponent';
 import { MouseButton } from '~/platform/constants';
 import styles from './DICOMViewer.module.scss';
 import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsElement';
@@ -11,16 +11,16 @@ import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { MouseTool, RendererType, ViewType } from './constants';
-import type { Annotations } from './interfaces/Annotations';
-import type { ViewportStats } from './interfaces/ViewportStats';
-import type { Dataset } from './models/Dataset';
+import { type Annotations } from './interfaces/Annotations';
+import { type ViewportStats } from './interfaces/ViewportStats';
+import { type Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
 import { getAvailableViewTypes } from './utils/getAvailableViewTypes';
 import { startTool } from './utils/startTool';
 
 const ColorPalette = dynamic(
   async () =>
-    (await import('./components/ColorPalette/ColorPalette')).ColorPalette
+    (await import('./components/ColorPalette/ColorPalette')).ColorPalette,
 );
 
 const DEFAULT_RENDERER_TYPE = RendererType.JavaScript;
@@ -30,17 +30,17 @@ const DICOMViewer: WindowComponent = ({
   ...injectedWindowProps
 }) => {
   const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
-    MouseTool.Paging
+    MouseTool.Paging,
   );
   const [activeRightTool, setActiveRightTool] = useState<MouseTool>(
-    MouseTool.Zoom
+    MouseTool.Zoom,
   );
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>();
   const [rendererType, setRendererType] = useState<RendererType>(
-    DEFAULT_RENDERER_TYPE
+    DEFAULT_RENDERER_TYPE,
   );
   const [viewport, setViewport] = useState<Viewport>();
   const [viewportStats, setViewportStats] = useState<ViewportStats>();
@@ -87,7 +87,7 @@ const DICOMViewer: WindowComponent = ({
     setActiveLeftTool(
       viewport.dataset.frames.length > 1
         ? MouseTool.Paging
-        : MouseTool.Windowing
+        : MouseTool.Windowing,
     );
     const { viewType, windowCenter, windowWidth } = viewport;
     const zoom = viewport.getImageZoom();
@@ -107,7 +107,7 @@ const DICOMViewer: WindowComponent = ({
         ...previousAnnotations,
         ...viewportStats,
       })),
-    [viewportStats]
+    [viewportStats],
   );
 
   useLayoutEffect(() => {
@@ -146,7 +146,7 @@ const DICOMViewer: WindowComponent = ({
     }
     if (viewport) {
       const showTools = ![ViewType.VolumeBones, ViewType.VolumeSkin].includes(
-        viewport.viewType
+        viewport.viewType,
       );
 
       return (
@@ -173,7 +173,7 @@ const DICOMViewer: WindowComponent = ({
             annotations={annotations}
             availableViewTypes={getAvailableViewTypes(
               viewport.dataset,
-              rendererType
+              rendererType,
             )}
             onRendererTypeSwitch={setRendererType}
             onViewTypeSwitch={switchViewType}
@@ -248,7 +248,7 @@ const DICOMViewer: WindowComponent = ({
           default:
             throw new Error('Unknown mouse tool');
         }
-      }
+      },
     );
   }
 
@@ -270,7 +270,7 @@ const DICOMViewer: WindowComponent = ({
     }
 
     setViewport(
-      Viewport.create(dataset, viewType, rendererType, lutComponents)
+      Viewport.create(dataset, viewType, rendererType, lutComponents),
     );
   }
 

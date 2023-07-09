@@ -1,7 +1,7 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useState } from 'react';
-import type { Position } from '~/platform/interfaces/Position';
+import { type Position } from '~/platform/interfaces/Position';
 import styles from './Selection.module.scss';
 
 export const Selection: FC = () => {

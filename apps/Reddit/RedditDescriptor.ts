@@ -1,5 +1,5 @@
 import { faRedditAlien } from '@fortawesome/free-brands-svg-icons/faRedditAlien';
-import type { AppDescriptor } from '~/platform/interfaces/AppDescriptor';
+import { type AppDescriptor } from '~/platform/interfaces/AppDescriptor';
 
 export const RedditDescriptor: AppDescriptor = {
   description: 'Reddit content reader.',

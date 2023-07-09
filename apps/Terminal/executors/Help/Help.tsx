@@ -1,4 +1,4 @@
-import type { Executor } from '../Executor';
+import { type Executor } from '../Executor';
 import styles from './Help.module.scss';
 
 const commands = [

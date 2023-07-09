@@ -1,8 +1,8 @@
-import type { WSClient } from '~/apps/CodeEditor/api/WSClient';
-import type { WSPlugin, WSServer } from '~/apps/CodeEditor/api/WSServer';
-import type { Action } from '~/platform/state/interfaces/Action';
-import type { ActionFromFactory } from '~/platform/state/interfaces/ActionFactory';
-import type { Grid } from './GameManager';
+import { type WSClient } from '~/apps/CodeEditor/api/WSClient';
+import { type WSPlugin, type WSServer } from '~/apps/CodeEditor/api/WSServer';
+import { type Action } from '~/platform/state/interfaces/Action';
+import { type ActionFromFactory } from '~/platform/state/interfaces/ActionFactory';
+import { type Grid } from './GameManager';
 import { getInitialGrid } from './GameManager';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import type { RedditPost } from '../../interfaces/RedditPost';
+import { type RedditPost } from '../../interfaces/RedditPost';
 
 dayjs.extend(relativeTime);
 
@@ -17,6 +17,6 @@ export function formatPosts(posts: any[]): RedditPost[] {
         stickied: post.stickied,
         subreddit: post.subreddit_name_prefixed,
         title: post.title,
-      } as RedditPost)
+      }) as RedditPost,
   );
 }

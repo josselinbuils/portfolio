@@ -1,6 +1,6 @@
-import type {
-  PhotometricInterpretation,
-  PixelRepresentation,
+import {
+  type PhotometricInterpretation,
+  type PixelRepresentation,
 } from '../constants';
 import { Model } from './Model';
 

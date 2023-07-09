@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import styles from './Sidebar.module.scss';
 import { JamendoLink } from './components/JamendoLink/JamendoLink';
 import { Logo } from './components/Logo/Logo';

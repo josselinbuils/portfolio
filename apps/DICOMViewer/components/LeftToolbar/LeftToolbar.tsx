@@ -5,10 +5,10 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { MouseButton } from '~/platform/constants';
 import { MouseTool, ViewType } from '../../constants';
-import type { Viewport } from '../../models/Viewport';
+import { type Viewport } from '../../models/Viewport';
 import styles from './LeftToolbar.module.scss';
 
 const mouseTools = [

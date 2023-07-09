@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
-import type { IncomingMessage } from 'node:http';
+import { type IncomingMessage } from 'node:http';
 import path from 'node:path';
 import type WebSocket from 'ws';
 import { WebSocketServer } from 'ws';
 import { Logger } from '~/platform/api/Logger';
-import type { Action } from '~/platform/state/interfaces/Action';
+import { type Action } from '~/platform/state/interfaces/Action';
 import { ExecQueue } from './ExecQueue';
 import { WSClient } from './WSClient';
 

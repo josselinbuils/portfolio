@@ -1,5 +1,5 @@
-import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
-import type { Volume } from '~/apps/DICOMViewer/models/Volume';
+import { type Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { type Volume } from '~/apps/DICOMViewer/models/Volume';
 import { changePointSpace } from '~/apps/DICOMViewer/utils/changePointSpace';
 import { V } from '~/apps/DICOMViewer/utils/math/Vector';
 import { getLinePlaneIntersection } from '~/apps/DICOMViewer/utils/math/getLinePlaneIntersection';

@@ -1,7 +1,7 @@
 import { NormalizedImageFormat } from '~/apps/DICOMViewer/constants';
-import type { Frame } from '~/apps/DICOMViewer/models/Frame';
-import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
-import type { Renderer } from '../Renderer';
+import { type Frame } from '~/apps/DICOMViewer/models/Frame';
+import { type Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { type Renderer } from '../Renderer';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { getFragmentShaderSrc, getTextureFormat } from './fragmentShader';
 import VERTEX_SHADER_SRC from './shaders/vertexShader.vert';
@@ -20,7 +20,7 @@ export class WebGLRenderer implements Renderer {
       canvas.getContext('experimental-webgl') instanceof WebGLRenderingContext
     ) {
       this.gl = canvas.getContext(
-        'experimental-webgl'
+        'experimental-webgl',
       ) as WebGLRenderingContext;
     } else {
       throw new Error('Cannot retrieve WebGL context');
@@ -77,7 +77,7 @@ export class WebGLRenderer implements Renderer {
     gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]),
-      gl.STATIC_DRAW
+      gl.STATIC_DRAW,
     );
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
@@ -86,19 +86,19 @@ export class WebGLRenderer implements Renderer {
       // Look up uniform locations
       const rescaleInterceptLocation = gl.getUniformLocation(
         this.program,
-        'rescaleIntercept'
+        'rescaleIntercept',
       );
       const rescaleSlopeLocation = gl.getUniformLocation(
         this.program,
-        'rescaleSlope'
+        'rescaleSlope',
       );
       const windowCenterLocation = gl.getUniformLocation(
         this.program,
-        'windowCenter'
+        'windowCenter',
       );
       const windowWidthLocation = gl.getUniformLocation(
         this.program,
-        'windowWidth'
+        'windowWidth',
       );
 
       gl.uniform1f(rescaleInterceptLocation, rescaleIntercept);
@@ -213,7 +213,7 @@ export class WebGLRenderer implements Renderer {
     const format = getTextureFormat(gl, imageFormat);
     const pixelData = new Uint8Array(
       frame.pixelData.buffer,
-      frame.pixelData.byteOffset
+      frame.pixelData.byteOffset,
     );
 
     // Upload the image into the texture.
@@ -226,7 +226,7 @@ export class WebGLRenderer implements Renderer {
       0,
       format,
       gl.UNSIGNED_BYTE,
-      pixelData
+      pixelData,
     );
 
     return texture;

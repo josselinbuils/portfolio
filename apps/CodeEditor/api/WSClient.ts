@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import type { Action } from '~/platform/state/interfaces/Action';
+import { type Action } from '~/platform/state/interfaces/Action';
 
 export class WSClient {
   private static clientID = -1;

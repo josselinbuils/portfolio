@@ -1,9 +1,9 @@
 import { RendererType, ViewType } from '../constants';
-import type { Dataset } from '../models/Dataset';
+import { type Dataset } from '../models/Dataset';
 
 export function getAvailableViewTypes(
   dataset: Dataset,
-  rendererType: RendererType
+  rendererType: RendererType,
 ): ViewType[] {
   const availableViewTypes = [ViewType.Native];
 
@@ -13,7 +13,7 @@ export function getAvailableViewTypes(
       ViewType.Coronal,
       ViewType.Sagittal,
       ViewType.VolumeBones,
-      ViewType.VolumeSkin
+      ViewType.VolumeSkin,
     );
   }
   return availableViewTypes;

@@ -1,12 +1,12 @@
-import type { RendererType } from '../constants';
+import { type RendererType } from '../constants';
 import { ViewType } from '../constants';
-import type { CoordinateSpace } from '../interfaces/CoordinateSpace';
-import type { LUTComponent } from '../interfaces/LUTComponent';
+import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { type LUTComponent } from '../interfaces/LUTComponent';
 import { V } from '../utils/math/Vector';
 import { Camera } from './Camera';
-import type { Dataset } from './Dataset';
+import { type Dataset } from './Dataset';
 import { Renderable } from './Renderable';
-import type { Volume } from './Volume';
+import { type Volume } from './Volume';
 
 const MANDATORY_FIELDS = ['camera', 'dataset', 'viewType'];
 
@@ -29,7 +29,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     dataset: Dataset,
     viewType: ViewType,
     rendererType: RendererType,
-    lutComponents?: LUTComponent[]
+    lutComponents?: LUTComponent[],
   ): Viewport {
     const frame = dataset.frames[Math.floor(dataset.frames.length / 2)];
     const { windowCenter, windowWidth } = frame;
@@ -110,8 +110,8 @@ export class Viewport extends Renderable implements CoordinateSpace {
           ? this.dataset.findClosestFrame(this.camera.lookPoint).rows
           : Math.abs(
               V((this.dataset.volume as Volume).dimensionsVoxels).dot(
-                this.camera.upVector
-              )
+                this.camera.upVector,
+              ),
             );
 
       this.imageZoom =
@@ -125,7 +125,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     if (this.origin === undefined) {
       if (this.width === 0 || this.height === 0) {
         throw new Error(
-          `Viewport has incorrect dimensions: ${this.width}x${this.height}`
+          `Viewport has incorrect dimensions: ${this.width}x${this.height}`,
         );
       }
 
@@ -135,8 +135,8 @@ export class Viewport extends Renderable implements CoordinateSpace {
       this.origin = V(this.camera.getWorldOrigin())
         .add(
           V(cameraBasis[0]).mul(
-            ((-this.camera.fieldOfView / this.height) * this.width) / 2
-          )
+            ((-this.camera.fieldOfView / this.height) * this.width) / 2,
+          ),
         )
         .add(V(cameraBasis[1]).mul(-this.camera.fieldOfView / 2))
         .add(direction);

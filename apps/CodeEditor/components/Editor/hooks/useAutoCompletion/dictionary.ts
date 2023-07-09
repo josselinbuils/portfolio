@@ -1,5 +1,5 @@
 import { INDENT } from '../../constants';
-import type { CompletionItem } from './CompletionItem';
+import { type CompletionItem } from './CompletionItem';
 
 export const CURSOR = '[CURSOR]';
 const KEYWORD_ITEMS = [

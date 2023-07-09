@@ -3,14 +3,14 @@ import { useList } from '@josselinbuils/hooks/useList';
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useEffect, useRef, useState } from 'react';
 import { Window } from '~/platform/components/Window/Window';
-import type { WindowComponent } from '~/platform/components/Window/WindowComponent';
+import { type WindowComponent } from '~/platform/components/Window/WindowComponent';
 import styles from './Terminal.module.scss';
 import { About } from './executors/About/About';
-import type { AsyncExecutor } from './executors/AsyncExecutor';
+import { type AsyncExecutor } from './executors/AsyncExecutor';
 import { isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';
 import { Command } from './executors/Command/Command';
-import type { Executor } from './executors/Executor';
+import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
 
 const USER = 'guest';
@@ -45,7 +45,7 @@ const Terminal: WindowComponent = ({
 }) => {
   const [caretIndex, setCaretIndex] = useState(0);
   const [commands, commandManager] = useList<string>(
-    initialExecutions[0].args.slice(1)
+    initialExecutions[0].args.slice(1),
   );
   const [commandIndex, setCommandIndex] = useState(1);
   const [executions, executionManager] = useList<Execution>(initialExecutions);
@@ -76,7 +76,7 @@ const Terminal: WindowComponent = ({
           }
           setUserInput(
             (input) =>
-              input.slice(0, caretIndex) + event.key + input.slice(caretIndex)
+              input.slice(0, caretIndex) + event.key + input.slice(caretIndex),
           );
           setCaretIndex((index) => index + 1);
         } else if (!event.altKey && !event.ctrlKey && !event.metaKey) {
@@ -86,7 +86,7 @@ const Terminal: WindowComponent = ({
         }
       },
     },
-    active
+    active,
   );
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const Terminal: WindowComponent = ({
 
   async function loadExecutor(
     executor: Executor | AsyncExecutor,
-    args: string[]
+    args: string[],
   ): Promise<void> {
     const execution: Execution = {
       args,
@@ -205,7 +205,7 @@ const Terminal: WindowComponent = ({
       execution.queryUserHandler = (
         str: string,
         callback: (userInput: string) => void,
-        hideAnswer = false
+        hideAnswer = false,
       ) => {
         execution.query = { callback, hideAnswer, str };
         executionManager.update();
@@ -263,7 +263,7 @@ const Terminal: WindowComponent = ({
       case 'Backspace':
         if (caretIndex > 0) {
           setUserInput(
-            userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex)
+            userInput.slice(0, caretIndex - 1) + userInput.slice(caretIndex),
           );
           setCaretIndex(caretIndex - 1);
         }
@@ -351,7 +351,7 @@ const Terminal: WindowComponent = ({
               />
             ) : (
               <ExecutorComponent args={args} key={id} />
-            )
+            ),
         )}
         <noscript className={styles.error}>
           ✘ failed to run command bin/bash: JavaScript disabled
@@ -392,7 +392,7 @@ interface Execution {
   queryUserHandler?(
     query: string,
     callback: (userInput: string) => void,
-    hideAnswer?: boolean
+    hideAnswer?: boolean,
   ): void;
   releaseHandler?(error: Error | undefined): void;
 }

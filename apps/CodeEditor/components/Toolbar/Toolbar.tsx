@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import type { FC, ReactElement } from 'react';
+import { type FC, type ReactElement } from 'react';
 import { Children, cloneElement } from 'react';
 import styles from './Toolbar.module.scss';
 

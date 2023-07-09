@@ -1,8 +1,8 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Spinner } from '~/platform/components/Spinner/Spinner';
-import type { RedditFilter } from '../../interfaces/RedditFilter';
-import type { RedditPost } from '../../interfaces/RedditPost';
+import { type RedditFilter } from '../../interfaces/RedditFilter';
+import { type RedditPost } from '../../interfaces/RedditPost';
 import { Post } from './Post/Post';
 import { getPosts } from './getPosts';
 

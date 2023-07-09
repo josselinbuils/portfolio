@@ -1,9 +1,9 @@
-import type { NextApiRequest } from 'next';
+import { type NextApiRequest } from 'next';
 import { config } from '~/platform/api/config';
-import type { Music } from '../interfaces/Music';
-import type { JamendoBoost } from './interfaces/JamendoBoost';
-import type { JamendoOrder } from './interfaces/JamendoOrder';
-import type { JamendoTrackParameters } from './interfaces/JamendoTrackParameters';
+import { type Music } from '../interfaces/Music';
+import { type JamendoBoost } from './interfaces/JamendoBoost';
+import { type JamendoOrder } from './interfaces/JamendoOrder';
+import { type JamendoTrackParameters } from './interfaces/JamendoTrackParameters';
 import { formatTracks } from './utils/formatTracks';
 import { requestJamendoAPI } from './utils/requestJamendoAPI';
 

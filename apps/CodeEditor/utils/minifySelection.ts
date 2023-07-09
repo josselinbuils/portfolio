@@ -1,4 +1,4 @@
-import type { Selection } from '../interfaces/Selection';
+import { type Selection } from '../interfaces/Selection';
 
 export function minifySelection(selection: Selection): number | Selection {
   const [start, end] = selection;

@@ -1,7 +1,7 @@
 import { faExpand } from '@fortawesome/free-solid-svg-icons/faExpand';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { APP_DESCRIPTORS } from '~/platform/appDescriptors';
 import { useToolbar } from '~/platform/hooks/useToolbar';
 import { Task } from './Task';

@@ -1,7 +1,7 @@
 import dicomParser from 'dicom-parser';
 import { extendError } from '~/platform/utils/extendError';
-import type { PhotometricInterpretation } from '../constants';
-import type { File } from '../interfaces/File';
+import { type PhotometricInterpretation } from '../constants';
+import { type File } from '../interfaces/File';
 import { DicomFrame } from '../models/DicomFrame';
 
 export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
@@ -13,7 +13,7 @@ export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
     frames = [];
 
     const instanceFramesList = await Promise.all(
-      files.map((file) => loadInstance(file))
+      files.map((file) => loadInstance(file)),
     );
     for (const instanceFrames of instanceFramesList) {
       frames.push(...instanceFrames);
@@ -21,7 +21,7 @@ export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
 
     frames = frames.every((frame) => frame.sliceLocation !== undefined)
       ? frames.sort((a, b) =>
-          (a as any).sliceLocation > (b as any).sliceLocation ? 1 : -1
+          (a as any).sliceLocation > (b as any).sliceLocation ? 1 : -1,
         )
       : frames.sort((a, b) => (a.sopInstanceUID > b.sopInstanceUID ? 1 : -1));
   } else {
@@ -33,7 +33,7 @@ export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
 
 function findWindowingInFunctionalGroup(
   functionalGroup: any,
-  index = 0
+  index = 0,
 ): Windowing | undefined {
   if (functionalGroup !== undefined) {
     const voiLUT = functionalGroup.items[index].dataSet.elements.x00289132;
@@ -59,7 +59,7 @@ function findWindowingInFunctionalGroup(
 function floatStringsToArray(
   parsedFile: ParsedDicomFile,
   tag: string,
-  slice?: number
+  slice?: number,
 ): number[] | number[][] | undefined {
   const nbValues = parsedFile.numStringValues(tag);
 
@@ -100,7 +100,7 @@ async function loadInstance(file: File): Promise<DicomFrame[]> {
       imageOrientation: floatStringsToArray(parsedFile, 'x00200037', 3),
       patientName: parsedFile.string('x00100010'),
       photometricInterpretation: parsedFile.string(
-        'x00280004'
+        'x00280004',
       ) as PhotometricInterpretation,
       pixelRepresentation: parsedFile.uint16('x00280103'),
       pixelSpacing: floatStringsToArray(parsedFile, 'x00280030'),
@@ -119,7 +119,7 @@ async function loadInstance(file: File): Promise<DicomFrame[]> {
     const pixelData: Uint8Array = dicomParser.sharedCopy(
       dicomData,
       pixelDataElement.dataOffset,
-      pixelDataElement.length
+      pixelDataElement.length,
     );
 
     const frames: DicomFrame[] = [];
@@ -133,7 +133,7 @@ async function loadInstance(file: File): Promise<DicomFrame[]> {
       }
 
       const sharedWindowing = findWindowingInFunctionalGroup(
-        parsedFile.elements.x52009229
+        parsedFile.elements.x52009229,
       );
 
       if (sharedWindowing !== undefined) {
@@ -149,13 +149,13 @@ async function loadInstance(file: File): Promise<DicomFrame[]> {
         frame.pixelData = new Uint8Array(
           pixelData.buffer,
           byteOffset,
-          frameLength
+          frameLength,
         );
 
         if (sharedWindowing === undefined) {
           const frameWindowing = findWindowingInFunctionalGroup(
             parsedFile.elements.x52009230,
-            i
+            i,
           );
 
           if (frameWindowing !== undefined) {
@@ -175,7 +175,7 @@ async function loadInstance(file: File): Promise<DicomFrame[]> {
   } catch (error: unknown) {
     throw extendError(
       `Unable to load DICOM instance from "${file.name}"`,
-      error
+      error,
     );
   }
 }

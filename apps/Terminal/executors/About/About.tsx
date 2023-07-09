@@ -4,7 +4,7 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import type { Executor } from '../Executor';
+import { type Executor } from '../Executor';
 import styles from './About.module.scss';
 import me from './me.png';
 

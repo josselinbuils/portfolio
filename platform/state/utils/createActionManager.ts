@@ -1,6 +1,6 @@
-import type { Reducer } from 'react';
-import type { Action } from '../interfaces/Action';
-import type { ActionManager } from '../interfaces/ActionManager';
+import { type Reducer } from 'react';
+import { type Action } from '../interfaces/Action';
+import { type ActionManager } from '../interfaces/ActionManager';
 import { createActionFactory } from './createActionFactory';
 
 export function createActionManager<State, Payload = void>(

@@ -1,18 +1,18 @@
 import { ViewType } from '~/apps/DICOMViewer/constants';
-import type { LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
-import type { VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
-import type { Dataset } from '~/apps/DICOMViewer/models/Dataset';
-import type { Viewport } from '~/apps/DICOMViewer/models/Viewport';
-import type { Volume } from '~/apps/DICOMViewer/models/Volume';
+import { type LUTComponent } from '~/apps/DICOMViewer/interfaces/LUTComponent';
+import { type VOILUT } from '~/apps/DICOMViewer/interfaces/VOILUT';
+import { type Dataset } from '~/apps/DICOMViewer/models/Dataset';
+import { type Viewport } from '~/apps/DICOMViewer/models/Viewport';
+import { type Volume } from '~/apps/DICOMViewer/models/Volume';
 import { changePointSpace } from '~/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '~/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '~/apps/DICOMViewer/utils/math/Vector';
-import type { Renderer } from '../Renderer';
-import type {
-  BoundedViewportSpaceCoordinates,
-  ImageSpaceCoordinates,
-  RenderingProperties,
-  ViewportSpaceCoordinates,
+import { type Renderer } from '../Renderer';
+import {
+  type BoundedViewportSpaceCoordinates,
+  type ImageSpaceCoordinates,
+  type RenderingProperties,
+  type ViewportSpaceCoordinates,
 } from '../RenderingProperties';
 import { getRenderingProperties } from '../renderingUtils';
 import { displayCube } from './utils/displayCube';
