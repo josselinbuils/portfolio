@@ -10,7 +10,7 @@ import { WSClient } from './WSClient';
 
 const PERSISTENT_STATE_FILE_PATH = path.join(
   process.cwd(),
-  '/persistentState.json'
+  '/persistentState.json',
 );
 
 export interface WSPlugin {
@@ -39,7 +39,7 @@ export class WSServer {
       req,
       req.socket,
       Buffer.from([]),
-      (ws: WebSocket) => this.server.emit('connection', ws, req)
+      (ws: WebSocket) => this.server.emit('connection', ws, req),
     );
   }
 
@@ -62,8 +62,8 @@ export class WSServer {
     this.fsUpdateQueue.enqueue(async () =>
       fs.writeFile(
         PERSISTENT_STATE_FILE_PATH,
-        JSON.stringify({ ...this.state, [pluginName]: state })
-      )
+        JSON.stringify({ ...this.state, [pluginName]: state }),
+      ),
     );
   }
 
@@ -107,7 +107,7 @@ export class WSServer {
   private async loadPersistentState(): Promise<void> {
     try {
       this.state = JSON.parse(
-        await fs.readFile(PERSISTENT_STATE_FILE_PATH, 'utf8')
+        await fs.readFile(PERSISTENT_STATE_FILE_PATH, 'utf8'),
       );
 
       for (const plugin of this.plugins) {

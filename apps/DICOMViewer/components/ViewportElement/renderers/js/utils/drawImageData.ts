@@ -9,12 +9,12 @@ export function drawImageData(
   renderingContext: CanvasRenderingContext2D,
   width: number,
   height: number,
-  drawSpace: BoundedViewportSpaceCoordinates | ViewportSpaceCoordinates
+  drawSpace: BoundedViewportSpaceCoordinates | ViewportSpaceCoordinates,
 ): void {
   const imageData = new ImageData(
     new Uint8ClampedArray(data.buffer),
     width,
-    height
+    height,
   );
 
   renderingContext.canvas.width = width;
@@ -27,6 +27,6 @@ export function drawImageData(
     imageX0,
     imageY0,
     imageWidth,
-    imageHeight
+    imageHeight,
   );
 }

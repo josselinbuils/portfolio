@@ -23,7 +23,7 @@ const CodeEditor: WindowComponent = ({
   const resizeStartHandler = useDragAndDrop(onResizeStart);
 
   function onResizeStart(
-    downEvent: React.PointerEvent
+    downEvent: React.PointerEvent,
   ): ((moveEvent: PointerEvent) => void) | void {
     if (consoleElementRef.current === null) {
       return;

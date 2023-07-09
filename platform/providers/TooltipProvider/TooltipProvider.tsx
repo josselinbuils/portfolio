@@ -5,7 +5,7 @@ import type { TooltipDescriptor } from '../../components/Tooltip/TooltipDescript
 import { TooltipContext } from './TooltipContext';
 
 const Tooltip = dynamic(
-  async () => (await import('../../components/Tooltip/Tooltip')).Tooltip
+  async () => (await import('../../components/Tooltip/Tooltip')).Tooltip,
 );
 
 const TOOLTIP_CLOSE_DELAY_MS = 50;
@@ -30,7 +30,7 @@ export const TooltipProvider: FC<PropsWithChildren<unknown>> = ({
   const value = useMemo(() => {
     function onEnterTooltipParent(
       newDescriptor: TooltipDescriptor,
-      updateDescriptorOnDisplay?: () => TooltipDescriptor
+      updateDescriptorOnDisplay?: () => TooltipDescriptor,
     ) {
       window.clearTimeout(closeTimeoutRef.current);
       setDescriptor(newDescriptor);

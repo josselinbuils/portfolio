@@ -18,7 +18,7 @@ const baseLUTComponents = [
 export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
-    baseLUTComponents.map((component) => ({ ...component }))
+    baseLUTComponents.map((component) => ({ ...component })),
   );
   const [open, setOpen] = useState(false);
 
@@ -40,17 +40,17 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
 
   function deleteLUTComponent(componentId: string): void {
     setLUTComponents(
-      lutComponents.filter((component) => component.id !== componentId)
+      lutComponents.filter((component) => component.id !== componentId),
     );
   }
 
   function dragLUTComponent(
     downEvent: MouseEvent,
     previewWidth: number,
-    componentId: string
+    componentId: string,
   ): void {
     const targetLUTComponent = lutComponents.find(
-      ({ id }) => id === componentId
+      ({ id }) => id === componentId,
     );
 
     if (targetLUTComponent === undefined) {
@@ -65,7 +65,7 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
 
     function mouseMoveListener(moveEvent: MouseEvent): void {
       const offset = Math.round(
-        ((moveEvent.clientX - downEvent.clientX) / previewWidth) * 256
+        ((moveEvent.clientX - downEvent.clientX) / previewWidth) * 256,
       );
       let newStart = baseStart + offset;
       let newEnd = baseEnd + offset;
@@ -95,7 +95,7 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
 
   function setLUTComponentColor(componentId: string, color: number[]): void {
     const targetLUTComponent = lutComponents.find(
-      ({ id }) => id === componentId
+      ({ id }) => id === componentId,
     );
 
     if (targetLUTComponent === undefined) {

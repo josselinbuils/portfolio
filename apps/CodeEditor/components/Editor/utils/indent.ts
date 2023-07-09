@@ -38,7 +38,7 @@ export function indent(code: string, selection: Selection): EditableState {
       selection[0] === firstLineOffset
         ? selection[0]
         : selection[0] + INDENT.length,
-      selection[1] + INDENT.length * indentCount
+      selection[1] + INDENT.length * indentCount,
     ),
   };
 }

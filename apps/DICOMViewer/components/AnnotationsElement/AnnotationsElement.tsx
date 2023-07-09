@@ -37,7 +37,7 @@ export const AnnotationsElement: FC<Props> = ({
 
   function showMenu(
     elementRef: RefObject<HTMLElement>,
-    items: ContextMenuItemDescriptor[]
+    items: ContextMenuItemDescriptor[],
   ): void {
     if (elementRef.current === null) {
       return;

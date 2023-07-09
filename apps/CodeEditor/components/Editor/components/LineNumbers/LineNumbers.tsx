@@ -22,7 +22,7 @@ export const LineNumbers: FC<Props> = ({
 }) => {
   const lineNumbers = useMemo(
     () => computeLineNumbers(lineCount, code, selection),
-    [code, lineCount, selection]
+    [code, lineCount, selection],
   );
   const lineNumbersElementRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +45,7 @@ export const LineNumbers: FC<Props> = ({
 function computeLineNumbers(
   lineCount: number,
   code: string,
-  selection: Selection
+  selection: Selection,
 ): ReactNode[] {
   const activeLine = getLineNumber(code, selection[0]) + 1;
   const numbers: ReactNode[] = [];
@@ -58,7 +58,7 @@ function computeLineNumbers(
         </span>
       ) : (
         <span key={i}>{i}</span>
-      )
+      ),
     );
   }
   return numbers;

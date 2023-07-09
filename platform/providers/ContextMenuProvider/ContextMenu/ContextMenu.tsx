@@ -67,7 +67,7 @@ export const ContextMenu: FC<Props> = ({
       Escape: onHide,
     },
     true,
-    2
+    2,
   );
 
   if (position === undefined) {

@@ -104,7 +104,7 @@ export class GameManager {
   private play(mark: Mark, y: number, x: number) {
     if (this.grid[y][x] !== '') {
       console.error(
-        new Error(`There is already an mark in position { x: ${x}, y: ${y} }.`)
+        new Error(`There is already an mark in position { x: ${x}, y: ${y} }.`),
       );
       this.clean();
       return;
@@ -173,7 +173,7 @@ export class GameManager {
         this.play(
           'x',
           secondDiagonal.indexOf(''),
-          2 - secondDiagonal.indexOf('')
+          2 - secondDiagonal.indexOf(''),
         );
         return true;
       }

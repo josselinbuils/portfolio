@@ -20,7 +20,7 @@ export function getCompletionItems(partialKeyword: string): {
       completionItems = objectsCompletionMap[objectName].filter(
         ({ keyword }) =>
           keyword.startsWith(objectPartialProperty) &&
-          objectPartialProperty.length < keyword.length
+          objectPartialProperty.length < keyword.length,
       );
       correctedPartialKeyword = objectPartialProperty;
     }
@@ -30,7 +30,7 @@ export function getCompletionItems(partialKeyword: string): {
         ? getGlobalCompletionItems().filter(
             ({ keyword }) =>
               keyword.startsWith(partialKeyword) &&
-              partialKeyword.length < keyword.length
+              partialKeyword.length < keyword.length,
           )
         : [];
   }

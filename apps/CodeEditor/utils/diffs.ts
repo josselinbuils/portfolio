@@ -21,14 +21,14 @@ export function applyDiff(code: string, [type, start, diff]: Diff): string {
 
 export function getCursorOffsetAfterDiff(
   diff: Diff,
-  cursorBeforeDiff: number
+  cursorBeforeDiff: number,
 ): number {
   return cursorBeforeDiff + diff[0] * diff[2].length;
 }
 
 export function getCursorOffsetBeforeDiff(
   diff: Diff,
-  cursorOffsetAfterDiff: number
+  cursorOffsetAfterDiff: number,
 ): number {
   return cursorOffsetAfterDiff - diff[0] * diff[2].length;
 }

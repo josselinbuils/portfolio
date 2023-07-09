@@ -8,7 +8,7 @@ type PointerUpHandler = EventHandler<'pointerup'>;
 
 export function useDragAndDrop(
   downHandler: (downEvent: React.PointerEvent) => PointerMoveHandler | void,
-  upHandler: PointerUpHandler = noop
+  upHandler: PointerUpHandler = noop,
 ): (downEvent: React.PointerEvent) => void {
   return function dragAndDropHandler(downEvent: React.PointerEvent): void {
     if (downEvent.button !== MouseButton.Left) {

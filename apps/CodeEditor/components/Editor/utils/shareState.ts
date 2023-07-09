@@ -17,7 +17,7 @@ export async function dispatchToServer(action: Action<any>) {
 }
 
 export function registerClient(
-  dispatch: (action: Action<any>) => void
+  dispatch: (action: Action<any>) => void,
 ): () => void {
   const id = ++clientId;
 
@@ -68,7 +68,7 @@ async function openSocket(): Promise<void> {
 function unregisterClient(id: number): void {
   clients.splice(
     clients.findIndex((client) => client.id === id),
-    1
+    1,
   );
   if (clients.length === 0) {
     clearTimeout(reopenTimeoutID);

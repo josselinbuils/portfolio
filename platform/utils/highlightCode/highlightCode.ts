@@ -19,7 +19,7 @@ const BRACKETS = [...OPENING_BRACKETS, ...CLOSING_BRACKETS];
 export function highlightCode(
   code: string,
   language: string,
-  cursorOffset?: number
+  cursorOffset?: number,
 ): string {
   if (Prism.languages[language] === undefined) {
     return escapeHtml(code);
@@ -34,7 +34,7 @@ export function highlightCode(
   const highlighted = Prism.highlight(
     code,
     Prism.languages[language],
-    language
+    language,
   );
 
   removeHook('after-tokenize', afterTokenizeHookListener);
@@ -54,7 +54,7 @@ function escapeHtml(str: string): string {
 
 function afterTokenizeHook(
   env: Environment,
-  cursorOffset: number | undefined
+  cursorOffset: number | undefined,
 ): void {
   (env.tokens as (string | Token)[])
     .filter((token) => (token as Token).content === ';')
@@ -75,13 +75,13 @@ function afterTokenizeHook(
     });
 
     const tokens = (env.tokens as (string | Token)[]).filter(
-      (token) => typeof token !== 'string'
+      (token) => typeof token !== 'string',
     ) as Token[];
 
     const tokenNearCursor = tokens.find(
       (token) =>
         BRACKETS.includes(token.content as string) &&
-        [cursorOffset, cursorOffset - 1].includes((token as any).offset)
+        [cursorOffset, cursorOffset - 1].includes((token as any).offset),
     );
 
     if (tokenNearCursor !== undefined) {

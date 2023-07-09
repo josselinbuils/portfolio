@@ -1,6 +1,6 @@
 export function observeMutations(
   element: HTMLElement,
-  callback: () => void
+  callback: () => void,
 ): () => void {
   const observer = new MutationObserver(callback);
 

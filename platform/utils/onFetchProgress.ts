@@ -1,7 +1,7 @@
 import { throttle } from '~/platform/utils/throttle';
 
 export function onFetchProgress(
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
 ): (response: Response) => Response {
   const onProgressThrottled = throttle(onProgress, 300);
 
@@ -45,7 +45,7 @@ export function onFetchProgress(
           }
           read();
         },
-      })
+      }),
     );
   };
 }

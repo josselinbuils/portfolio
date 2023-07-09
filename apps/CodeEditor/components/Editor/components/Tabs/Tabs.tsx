@@ -8,7 +8,7 @@ export const Tabs: FC<Props> = ({ children, className, label }) => (
     {Children.map(children, (child: ReactElement) =>
       cloneElement(child, {
         className: cn(child.props.className, styles.tab),
-      })
+      }),
     )}
   </div>
 );

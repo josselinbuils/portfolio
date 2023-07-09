@@ -21,13 +21,13 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
     return Promise.all(
       (await fs.readdir(DATASETS_PATH))
         .filter(
-          (fileName) => !fileName.startsWith('.') && !fileName.endsWith('.gz')
+          (fileName) => !fileName.startsWith('.') && !fileName.endsWith('.gz'),
         )
         .map(async (fileName) => {
           const { name } = path.parse(fileName);
           const url = `${DATASETS_URL}/${fileName}`;
           const preview = (await fs.readdir(PREVIEWS_PATH)).find((p) =>
-            p.includes(name)
+            p.includes(name),
           );
           if (preview === undefined) {
             throw new Error(`Unable to find preview for ${name}`);
@@ -36,7 +36,7 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
           const is3D = await is3DDataset(fileName);
 
           return { is3D, name, previewURL, url };
-        })
+        }),
     );
   } catch (error: any) {
     Logger.error(`Unable to compute datasets descriptors: ${error.stack}`);
@@ -47,7 +47,7 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
 async function is3DDataset(fileName: string): Promise<boolean> {
   try {
     const { buffer: content } = await fs.readFile(
-      path.join(DATASETS_PATH, fileName)
+      path.join(DATASETS_PATH, fileName),
     );
     const files = /\.tar$/.test(fileName)
       ? untar(content)
@@ -57,7 +57,7 @@ async function is3DDataset(fileName: string): Promise<boolean> {
   } catch (error) {
     throw extendError(
       `Unable to determine if "${fileName}" is a 3D dataset`,
-      error
+      error,
     );
   }
 }

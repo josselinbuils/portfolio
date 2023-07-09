@@ -4,7 +4,7 @@ import type { RefObject } from 'react';
 import { createRef, useEffect, useRef, useState } from 'react';
 
 export function useToolbar(
-  orientation: 'horizontal' | 'vertical' = 'horizontal'
+  orientation: 'horizontal' | 'vertical' = 'horizontal',
 ): {
   toolbarProps: ToolbarProps;
   getToolProps<T extends HTMLElement>(toolId: string): ToolProps<T>;
@@ -37,7 +37,7 @@ export function useToolbar(
       [isHorizontal ? 'ArrowRight' : 'ArrowDown']: () =>
         setActiveIndex(activeIndex < toolIds.length - 1 ? activeIndex + 1 : 0),
     },
-    focused
+    focused,
   );
 
   useEventListener('mousedown', () => {

@@ -30,13 +30,13 @@ export const Logs = forwardRef<HTMLDivElement, Props>(
                 />
               ) : (
                 <span key={`${id}-${line.key}`}>{line}</span>
-              )
+              ),
             )
           )}
         </div>
       ))}
     </div>
-  )
+  ),
 );
 
 interface Props {

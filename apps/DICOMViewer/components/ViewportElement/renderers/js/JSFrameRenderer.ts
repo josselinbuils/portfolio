@@ -61,7 +61,7 @@ export class JSFrameRenderer implements Renderer {
           this.renderViewportPixels(
             frame,
             renderingProperties,
-            viewport.getImageZoom()
+            viewport.getImageZoom(),
           );
         } else {
           this.renderImagePixels(frame, renderingProperties);
@@ -81,7 +81,7 @@ export class JSFrameRenderer implements Renderer {
   private getColorPixelValue(
     leftLimit: number,
     rightLimit: number,
-    rawValue: number
+    rawValue: number,
   ): number {
     const color = (this.lut as VOILUT).table[
       Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
@@ -93,7 +93,7 @@ export class JSFrameRenderer implements Renderer {
   private getMonochromePixelValue(
     leftLimit: number,
     rightLimit: number,
-    rawValue: number
+    rawValue: number,
   ): number {
     let intensity = 255;
 
@@ -108,7 +108,7 @@ export class JSFrameRenderer implements Renderer {
 
   private renderImagePixels(
     frame: Frame,
-    renderingProperties: RenderingProperties
+    renderingProperties: RenderingProperties,
   ): void {
     const { columns, pixelData, rescaleIntercept, rescaleSlope } = frame;
 
@@ -148,13 +148,13 @@ export class JSFrameRenderer implements Renderer {
       this.renderingContext,
       displayWidth,
       displayHeight,
-      boundedViewportSpace
+      boundedViewportSpace,
     );
   }
 
   private renderRGB(
     frame: Frame,
-    renderingProperties: RenderingProperties
+    renderingProperties: RenderingProperties,
   ): void {
     const { columns, pixelData, rows } = frame;
 
@@ -183,14 +183,14 @@ export class JSFrameRenderer implements Renderer {
       this.renderingContext,
       columns,
       rows,
-      viewportSpace
+      viewportSpace,
     );
   }
 
   private renderViewportPixels(
     frame: Frame,
     renderingProperties: RenderingProperties,
-    zoom: number
+    zoom: number,
   ): void {
     const { columns, pixelData, rescaleIntercept, rescaleSlope } = frame;
 
@@ -230,7 +230,7 @@ export class JSFrameRenderer implements Renderer {
       this.renderingContext,
       imageWidth,
       imageHeight,
-      boundedViewportSpace
+      boundedViewportSpace,
     );
   }
 }

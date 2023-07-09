@@ -61,7 +61,7 @@ export const LeftToolbar: FC<Props> = ({
         >
           <FontAwesomeIcon icon={icon} />
         </button>
-      ) : null
+      ) : null,
     )}
   </div>
 );

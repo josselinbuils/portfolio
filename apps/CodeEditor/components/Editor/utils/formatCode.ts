@@ -4,13 +4,16 @@ import { createSelection } from '../../../utils/createSelection';
 
 interface Parser {
   name: string;
-  parserFactory(): Promise<{ default: Plugin }>;
+  parserFactory(): Promise<{ default: Plugin }>[];
 }
 
 const parserDescriptors: { [language: string]: Parser } = {
   javascript: {
     name: 'babel',
-    parserFactory: () => import('prettier/parser-babel'),
+    parserFactory: () => [
+      import('prettier/plugins/babel'),
+      import('prettier/plugins/estree' as any),
+    ],
   },
 };
 
@@ -21,7 +24,7 @@ export function canFormat(language: string): boolean {
 export async function formatCode(
   code: string,
   cursorOffset: number,
-  language: string
+  language: string,
 ): Promise<EditableState> {
   const parserDescriptor = parserDescriptors[language];
 
@@ -33,13 +36,15 @@ export async function formatCode(
   }
 
   const { name, parserFactory } = parserDescriptor;
-  const prettier = (await import('prettier/standalone')).default;
-  const parser = (await parserFactory()).default;
+  const { formatWithCursor } = await import('prettier/standalone');
+  const plugins = await Promise.all(
+    parserFactory().map(async (modulePromise) => (await modulePromise).default),
+  );
 
-  const result = prettier.formatWithCursor(code, {
+  const result = await formatWithCursor(code, {
     cursorOffset,
     parser: name as BuiltInParserName,
-    plugins: [parser],
+    plugins,
     singleQuote: true,
   });
 

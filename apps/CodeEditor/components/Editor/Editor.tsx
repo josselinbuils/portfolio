@@ -66,7 +66,7 @@ export const Editor: FC<Props> = ({
   const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
   const [selection, setSelection] = useState<Selection>(() =>
-    createSelection(0)
+    createSelection(0),
   );
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
   const [activeFilename, previouslyActiveFilename, setActiveFilename] =
@@ -90,10 +90,10 @@ export const Editor: FC<Props> = ({
       onChange(state.code);
       setSelection(state.selection);
     },
-    [onChange]
+    [onChange],
   );
   const activeFile = files.find(
-    ({ name }) => name === activeFilename
+    ({ name }) => name === activeFilename,
   ) as EditorFile;
   const { pushState } = useHistory({
     active: !activeFile.shared,
@@ -134,7 +134,7 @@ export const Editor: FC<Props> = ({
         }
       },
     },
-    active
+    active,
   );
 
   useEffect(() => {
@@ -157,8 +157,8 @@ export const Editor: FC<Props> = ({
       highlightCode(
         code,
         activeFile.language,
-        selection[1] === selection[0] ? selection[0] : undefined
-      )
+        selection[1] === selection[0] ? selection[0] : undefined,
+      ),
     );
   }, [activeFile.language, code, selection]);
 
@@ -224,7 +224,7 @@ export const Editor: FC<Props> = ({
 
     if (activeFilename === name) {
       const isPreviouslyActiveFileStillOpen = files.some(
-        (file) => file.name === previouslyActiveFilename
+        (file) => file.name === previouslyActiveFilename,
       );
       const newActiveFilename = isPreviouslyActiveFileStillOpen
         ? (previouslyActiveFilename as string)
@@ -243,9 +243,9 @@ export const Editor: FC<Props> = ({
       ...files.map((file) =>
         parseInt(
           file.name.startsWith('local') ? file.name.slice(5, -3) || '0' : '-1',
-          10
-        )
-      )
+          10,
+        ),
+      ),
     );
     const name = `local${maxIndex > -1 ? maxIndex + 1 : ''}.js`;
     fileManager.push({
@@ -360,7 +360,7 @@ export const Editor: FC<Props> = ({
 
   function insertText(
     text: string,
-    newCursorOffset: number = cursorOffset + text.length
+    newCursorOffset: number = cursorOffset + text.length,
   ): void {
     updateState({
       code: spliceString(code, cursorOffset, 0, text),

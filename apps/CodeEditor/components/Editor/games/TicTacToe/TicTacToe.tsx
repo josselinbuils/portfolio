@@ -56,7 +56,7 @@ export const TicTacToe: FC = () => {
             default:
               return null;
           }
-        })
+        }),
       )}
     </div>
   );
@@ -64,7 +64,7 @@ export const TicTacToe: FC = () => {
 
 function isCaseHighlighted(
   winnerCases: Position[] | undefined,
-  { x, y }: Position
+  { x, y }: Position,
 ): boolean {
   return (
     winnerCases?.some((position) => position.x === x && position.y === y) ??

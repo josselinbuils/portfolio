@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useCallback, useRef, useState } from 'react';
 
 export function useMemState<S>(
-  initialValue: S | (() => S)
+  initialValue: S | (() => S),
 ): [S, S | undefined, Dispatch<SetStateAction<S>>] {
   const [value, setValue] = useState<S>(initialValue);
   const previousValueRef = useRef<S>();

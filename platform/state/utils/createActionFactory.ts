@@ -4,7 +4,7 @@ import type { ActionCreator, ActionFactory } from '../interfaces/ActionFactory';
 const isProduction = process.env.NODE_ENV === 'production';
 
 export function createActionFactory<Payload = void>(
-  type: string
+  type: string,
 ): ActionFactory<Payload> {
   const optimisedType = isProduction ? computeHash(type) : type;
 

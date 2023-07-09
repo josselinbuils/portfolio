@@ -47,7 +47,7 @@ export const applyForeignSelection = createActionManager<
 >('SHARED_FILE:APPLY_FOREIGN_SELECTION', (state, action) => {
   const { cid: clientID, s } = action[1];
   const cursorToEdit = state.cursors.find(
-    (cursor) => cursor.clientID === clientID
+    (cursor) => cursor.clientID === clientID,
   );
 
   if (cursorToEdit !== undefined) {

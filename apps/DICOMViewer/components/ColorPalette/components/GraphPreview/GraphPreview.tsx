@@ -45,7 +45,7 @@ export const GraphPreview: FC<Props> = ({
       x1: number,
       y1: number,
       color = 'lightgrey',
-      active = false
+      active = false,
     ): void {
       if (context === null) {
         return;
@@ -79,12 +79,12 @@ export const GraphPreview: FC<Props> = ({
                 x,
                 y,
                 `rgb(${color})`,
-                id === hoveredLUTComponentID || id === activeLUTComponentID
+                id === hoveredLUTComponentID || id === activeLUTComponentID,
               );
             }
             lastY = y;
           }
-        }
+        },
       );
 
       drawLine(-1, -GRAPH_LINE_OFFSET, -1, previewHeight + 1);
@@ -101,21 +101,21 @@ export const GraphPreview: FC<Props> = ({
         -1,
         previewHeight + 1,
         previewWidth + GRAPH_LINE_OFFSET,
-        previewHeight + 1
+        previewHeight + 1,
       );
 
       context.beginPath();
       context.moveTo(
         getX(previewWidth + GRAPH_LINE_OFFSET + 3),
-        getY(previewHeight + 1)
+        getY(previewHeight + 1),
       );
       context.lineTo(
         getX(previewWidth + GRAPH_LINE_OFFSET - 1),
-        getY(previewHeight - 2)
+        getY(previewHeight - 2),
       );
       context.lineTo(
         getX(previewWidth + GRAPH_LINE_OFFSET - 1),
-        getY(previewHeight + 4)
+        getY(previewHeight + 4),
       );
       context.closePath();
       context.fillStyle = 'lightgrey';
@@ -133,7 +133,7 @@ export const GraphPreview: FC<Props> = ({
 
   function getCloseLUTComponent(
     offsetX: number,
-    offsetY: number
+    offsetY: number,
   ): LUTComponent | undefined {
     const downX = offsetX - LEFT_OFFSET - 1;
     const downY = canvasHeight - offsetY - BOTTOM_OFFSET;
@@ -145,7 +145,7 @@ export const GraphPreview: FC<Props> = ({
           start,
           end,
           previewHeight,
-          downX
+          downX,
         );
         return Math.abs(downY - y) < 10;
       });
@@ -156,7 +156,7 @@ export const GraphPreview: FC<Props> = ({
       onLUTComponentDrag(
         downEvent.nativeEvent,
         previewWidth,
-        hoveredLUTComponentID
+        hoveredLUTComponentID,
       );
     }
   }
@@ -180,7 +180,7 @@ export const GraphPreview: FC<Props> = ({
           [styles.withActiveComponent]:
             hoveredLUTComponentID || activeLUTComponentID,
         },
-        className
+        className,
       )}
       height={canvasHeight}
       onMouseDown={handleMouseDown}
@@ -199,6 +199,6 @@ interface Props {
   onLUTComponentDrag(
     downEvent: MouseEvent,
     previewWidth: number,
-    componentId: string
+    componentId: string,
   ): void;
 }

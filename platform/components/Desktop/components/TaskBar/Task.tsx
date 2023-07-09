@@ -31,7 +31,7 @@ export const Task: FC<Props> = forwardRef(
       windowInstance,
       ...forwardedProps
     },
-    ref
+    ref,
   ) => {
     const taskRef = ref as unknown as RefObject<HTMLButtonElement>;
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export const Task: FC<Props> = forwardRef(
     const getTaskContextMenuDescriptor = useTaskContextMenu(
       appDescriptor,
       taskRef,
-      windowInstance
+      windowInstance,
     );
     const run = useTaskRunner(appDescriptor, windowInstance);
     const windowManager = useInjector(WindowManager);
@@ -64,20 +64,20 @@ export const Task: FC<Props> = forwardRef(
             makeFirstItemActive: true,
           }),
       },
-      taskButtonActive
+      taskButtonActive,
     );
 
     useKeyMap(
       { ArrowLeft: hideContextMenu },
       taskButtonActive && isContextMenuDisplayed,
-      2
+      2,
     );
 
     async function runTask(): Promise<void> {
       // Delay loader apparition to avoid displaying it when app already loaded
       const displayLoaderTimeout = setTimeout(
         () => setLoading(true),
-        LOADER_APPARITION_DELAY_MS
+        LOADER_APPARITION_DELAY_MS,
       );
       await run();
       clearTimeout(displayLoaderTimeout);
@@ -121,5 +121,5 @@ export const Task: FC<Props> = forwardRef(
         </button>
       </WithTooltip>
     );
-  }
+  },
 );

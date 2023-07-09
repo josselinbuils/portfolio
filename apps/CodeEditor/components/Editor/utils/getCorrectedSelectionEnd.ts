@@ -7,7 +7,7 @@ import { getLineBeforeCursor } from './getLineBeforeCursor';
  */
 export function getCorrectedSelectionEnd(
   code: string,
-  selection: Selection
+  selection: Selection,
 ): number {
   return selection[1] !== selection[0] &&
     getLineBeforeCursor(code, selection[1]) === ''

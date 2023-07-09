@@ -91,7 +91,7 @@ export function getObjectsCompletionMap(): { [key: string]: CompletionItem[] } {
         .map(createObjectMapper(obj));
 
       items.forEach(({ keyword }) =>
-        mapObject(`${path && `${path}.`}${keyword}`, obj[keyword])
+        mapObject(`${path && `${path}.`}${keyword}`, obj[keyword]),
       );
 
       if (path.length > 0 && items.length > 0) {

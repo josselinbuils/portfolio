@@ -22,7 +22,7 @@ export class History {
     public state: HistoryState = {
       index: -1,
       entries: [],
-    }
+    },
   ) {}
 
   pushState(currentState: EditableState, newState: EditableState): void {
@@ -114,7 +114,7 @@ export class History {
       const newIndex = index - 1;
       const prevCode = entries[index].diffs.reduceRight(
         revertDiff,
-        currentCode
+        currentCode,
       );
       const prevSelection =
         newIndex >= 0 ? entries[newIndex].selection : createSelection(0);

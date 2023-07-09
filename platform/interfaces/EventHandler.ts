@@ -1,3 +1,3 @@
 export type EventHandler<EventType extends keyof WindowEventMap> = (
-  event: WindowEventMap[EventType]
+  event: WindowEventMap[EventType],
 ) => void;

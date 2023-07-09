@@ -10,7 +10,7 @@ import { getLineOffset } from './getLineOffset';
 export function moveLines(
   code: string,
   selection: Selection,
-  direction: -1 | 1
+  direction: -1 | 1,
 ): EditableState | undefined {
   const correctedSelectionEnd = getCorrectedSelectionEnd(code, selection);
   const firstLineOffset = getLineOffset(code, selection[0]);
@@ -27,11 +27,11 @@ export function moveLines(
             code,
             firstLineOffset,
             linesToMove.length + lineAfter.length + 1,
-            `${lineAfter}\n${linesToMove}`
+            `${lineAfter}\n${linesToMove}`,
           ),
           selection: createSelection(
             selection[0] + lineAfter.length + 1,
-            selection[1] + lineAfter.length + 1
+            selection[1] + lineAfter.length + 1,
           ),
         }
       : undefined;
@@ -46,11 +46,11 @@ export function moveLines(
           code,
           lineBeforeOffset,
           lineBefore.length + linesToMove.length + 1,
-          `${linesToMove}\n${lineBefore}`
+          `${linesToMove}\n${lineBefore}`,
         ),
         selection: createSelection(
           selection[0] - lineBefore.length - 1,
-          selection[1] - lineBefore.length - 1
+          selection[1] - lineBefore.length - 1,
         ),
       }
     : undefined;

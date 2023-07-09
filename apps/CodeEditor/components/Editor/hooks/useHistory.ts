@@ -36,7 +36,7 @@ export function useHistory({
     {
       'Control+Z,Meta+Z': () => {
         const previousState = fileHistoryRef.current.undo(
-          currentStateRef.current.code
+          currentStateRef.current.code,
         );
 
         if (previousState !== undefined) {
@@ -45,7 +45,7 @@ export function useHistory({
       },
       'Control+Shift+Z,Meta+Shift+Z': () => {
         const newState = fileHistoryRef.current.redo(
-          currentStateRef.current.code
+          currentStateRef.current.code,
         );
 
         if (newState !== undefined) {
@@ -53,14 +53,14 @@ export function useHistory({
         }
       },
     },
-    active
+    active,
   );
 
   const pushState = useCallback(
     (newState: EditableState): void => {
       fileHistoryRef.current.pushState(currentStateRef.current, newState);
     },
-    [currentStateRef, fileHistoryRef]
+    [currentStateRef, fileHistoryRef],
   );
 
   return { pushState };

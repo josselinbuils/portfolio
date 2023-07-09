@@ -10,7 +10,7 @@ let wsServer: WSServer;
 /** Starts the WebSocket server used to share code if necessary. */
 export default async function ws(
   { socket, url }: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void> {
   if (wsServer === undefined) {
     const httpServer: Server = (socket as any).server;

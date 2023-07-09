@@ -23,12 +23,12 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
 
   useEffect(() => {
     const [datasetsPromise, cancelDatasetsPromise] = cancelable(
-      loadDatasetList()
+      loadDatasetList(),
     );
     datasetsPromise
       .then(async (descriptors) => {
         await Promise.all(
-          descriptors.map(({ previewURL }) => preloadImage(previewURL))
+          descriptors.map(({ previewURL }) => preloadImage(previewURL)),
         );
         return descriptors;
       })
@@ -51,8 +51,8 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
 
     const [framesPromise, cancelFramesPromise] = cancelable(
       import('./utils/loadFrames').then(async ({ loadFrames }) =>
-        loadFrames(datasetDescriptor, setLoadingProgress)
-      )
+        loadFrames(datasetDescriptor, setLoadingProgress),
+      ),
     );
     framesPromise
       .then((dicomFrames) => {
@@ -60,7 +60,7 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
         setTimeout(() => {
           setLoading(false);
           onDatasetSelected(
-            Dataset.create(datasetDescriptor.name, dicomFrames)
+            Dataset.create(datasetDescriptor.name, dicomFrames),
           );
         }, WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS);
       })

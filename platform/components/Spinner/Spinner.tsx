@@ -11,7 +11,7 @@ export const Spinner: FC<Props> = ({ color }) => {
   useEffect(() => {
     const timeoutId = window.setTimeout(
       () => setIsDisplayed(true),
-      DISPLAY_DELAY_MS
+      DISPLAY_DELAY_MS,
     );
     return () => window.clearTimeout(timeoutId);
   }, []);

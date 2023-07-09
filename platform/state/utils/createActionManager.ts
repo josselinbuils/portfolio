@@ -5,7 +5,7 @@ import { createActionFactory } from './createActionFactory';
 
 export function createActionManager<State, Payload = void>(
   type: string,
-  reduce: Reducer<State, Action<Payload>>
+  reduce: Reducer<State, Action<Payload>>,
 ): ActionManager<State, Payload> {
   const actionFactory = createActionFactory<Payload>(type);
 

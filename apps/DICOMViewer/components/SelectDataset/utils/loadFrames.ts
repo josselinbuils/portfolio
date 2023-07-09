@@ -6,7 +6,7 @@ import { untar } from '../../../utils/untar';
 
 export async function loadFrames(
   descriptor: DatasetDescriptor,
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
 ): Promise<DicomFrame[]> {
   const { name, url } = descriptor;
   const content = await getDICOMFile(url, onProgress);
@@ -17,7 +17,7 @@ export async function loadFrames(
 
 async function getDICOMFile(
   url: string,
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
 ): Promise<ArrayBuffer> {
   try {
     const response = await fetch(url).then(onFetchProgress(onProgress));

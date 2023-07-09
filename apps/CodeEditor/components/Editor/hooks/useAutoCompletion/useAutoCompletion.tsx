@@ -51,7 +51,7 @@ export function useAutoCompletion({
         const cursorPosition = getOffsetPosition(
           code,
           textAreaElement,
-          cursorOffset - correctedPartialKeyword.length
+          cursorOffset - correctedPartialKeyword.length,
         );
         const { x, y } = textAreaElement.getBoundingClientRect();
 
@@ -64,8 +64,8 @@ export function useAutoCompletion({
                   template,
                   cursorOffset,
                   correctedPartialKeyword,
-                  lineIndent
-                )
+                  lineIndent,
+                ),
               ),
             title: (
               <>
@@ -102,7 +102,7 @@ export function useAutoCompletion({
   const complete = useCallback(() => {
     const completeProps = completePropsRef.current;
     const { completionItems, correctedPartialKeyword } = getCompletionItems(
-      completeProps.partialKeyword
+      completeProps.partialKeyword,
     );
     const completionItem = completionItems[activeIndexRef.current];
 
@@ -114,8 +114,8 @@ export function useAutoCompletion({
           template,
           completeProps.cursorOffset,
           correctedPartialKeyword,
-          completeProps.lineIndent
-        )
+          completeProps.lineIndent,
+        ),
       );
     }
   }, [completePropsRef]);

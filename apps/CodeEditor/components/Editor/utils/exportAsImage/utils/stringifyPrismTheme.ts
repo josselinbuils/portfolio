@@ -10,13 +10,13 @@ export function stringifyPrismTheme(highlightedCode: string): string {
   const styleSheets = Array.from(document.styleSheets) as CSSStyleSheet[];
   const rules = styleSheets.find((sheet) =>
     Array.from(sheet.rules).some(({ cssText }) =>
-      cssText.includes(tokenClassName)
-    )
+      cssText.includes(tokenClassName),
+    ),
   );
 
   if (rules === undefined) {
     throw new Error(
-      `Unable to find Prism theme using class '${tokenClassName}'`
+      `Unable to find Prism theme using class '${tokenClassName}'`,
     );
   }
 

@@ -4,7 +4,7 @@ import RGB_FRAGMENT_SHADER_SRC from './shaders/rgb.frag';
 
 export function getTextureFormat(
   gl: WebGLRenderingContext,
-  imageFormat: NormalizedImageFormat
+  imageFormat: NormalizedImageFormat,
 ): GLenum {
   switch (imageFormat) {
     case NormalizedImageFormat.Int16:
@@ -19,7 +19,7 @@ export function getTextureFormat(
 }
 
 export function getFragmentShaderSrc(
-  imageFormat: NormalizedImageFormat
+  imageFormat: NormalizedImageFormat,
 ): string {
   switch (imageFormat) {
     case NormalizedImageFormat.Int16:

@@ -8,7 +8,7 @@ function throwError(): void {
 export const TooltipContext = createContext<{
   onEnterTooltipParent(
     descriptor: TooltipDescriptor,
-    updateDescriptorOnDisplay?: () => TooltipDescriptor
+    updateDescriptorOnDisplay?: () => TooltipDescriptor,
   ): void;
   onLeaveTooltipParent(): void;
   onMoveTooltipParent(): void;

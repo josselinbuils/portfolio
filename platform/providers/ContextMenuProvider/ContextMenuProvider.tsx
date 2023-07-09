@@ -7,7 +7,7 @@ import type { ContextMenuDescriptor } from './ContextMenuDescriptor';
 import styles from './ContextMenuProvider.module.scss';
 
 const ContextMenu = dynamic(
-  async () => (await import('./ContextMenu/ContextMenu')).ContextMenu
+  async () => (await import('./ContextMenu/ContextMenu')).ContextMenu,
 );
 
 export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
@@ -22,7 +22,7 @@ export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
       isContextMenuDisplayed: descriptor !== undefined,
       showContextMenu: setDescriptor,
     }),
-    [descriptor, hideContextMenu]
+    [descriptor, hideContextMenu],
   );
 
   return (
@@ -32,7 +32,7 @@ export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
           className: cn(child.props.className, {
             [styles.eventLess]: descriptor,
           }),
-        })
+        }),
       )}
       {descriptor && (
         <>

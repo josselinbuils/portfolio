@@ -15,7 +15,7 @@ export class WindowManager {
 
   closeWindow = (id: number): void => {
     const index = this.windowInstances.findIndex(
-      (windowInstance) => windowInstance.id === id
+      (windowInstance) => windowInstance.id === id,
     );
 
     if (index === -1) {
@@ -46,7 +46,7 @@ export class WindowManager {
   async openApp<T extends Partial<WindowProps>>(
     appDescriptor: AppDescriptor,
     windowProps: Partial<T> = {},
-    windowComponent?: WindowComponent
+    windowComponent?: WindowComponent,
   ): Promise<void> {
     if (windowComponent === undefined) {
       windowComponent = (await appDescriptor.factory()).default;
@@ -104,7 +104,7 @@ export class WindowManager {
 
   unselectAllWindows = (): void => {
     const isThereWindowSelected = this.windowInstances.some(
-      ({ active }) => active
+      ({ active }) => active,
     );
 
     if (isThereWindowSelected) {
@@ -126,7 +126,7 @@ export class WindowManager {
 
   private getWindowInstance(id: number): WindowInstance {
     const windowInstance = this.windowInstances.find(
-      (instance) => instance.id === id
+      (instance) => instance.id === id,
     );
 
     if (windowInstance === undefined) {

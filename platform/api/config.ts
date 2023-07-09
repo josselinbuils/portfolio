@@ -4,7 +4,7 @@ import { validate } from 'jsonschema';
 import configSchema from './config.schema.json';
 
 const rawConfig = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), 'config.json'), 'utf8')
+  fs.readFileSync(path.join(process.cwd(), 'config.json'), 'utf8'),
 ) as Config;
 
 export const config = validate(rawConfig, configSchema, { throwError: true })

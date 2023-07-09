@@ -9,7 +9,7 @@ const COMMENT = '// ';
 
 export function comment(
   code: string,
-  selection: Selection
+  selection: Selection,
 ): EditableState | undefined {
   const firstLineOffset = getLineOffset(code, selection[0]);
   const lastLineOffset = getLineOffset(code, selection[1]);
@@ -25,29 +25,29 @@ export function comment(
   }
 
   const uncomment = lineOffsets.every((offset) =>
-    /^((\s*\/\/.*)|(\s*))$/.test(getLine(code, offset))
+    /^((\s*\/\/.*)|(\s*))$/.test(getLine(code, offset)),
   );
 
   if (uncomment) {
     const lineOffsetsToUncomment = lineOffsets.filter(
-      (offset) => !/^\s*$/.test(getLine(code, offset))
+      (offset) => !/^\s*$/.test(getLine(code, offset)),
     );
 
     lineOffsetsToUncomment.forEach((lineOffset, index) => {
       const correctedLineOffset = lineOffset - index * COMMENT.length;
       const lineCommentOffset = getLine(newCode, correctedLineOffset).indexOf(
-        COMMENT
+        COMMENT,
       );
 
       newCode = spliceString(
         newCode,
         correctedLineOffset + lineCommentOffset,
-        COMMENT.length
+        COMMENT.length,
       );
     });
 
     const firstLineCommentOffset = getLine(code, firstLineOffset).indexOf(
-      COMMENT
+      COMMENT,
     );
 
     return {
@@ -56,7 +56,7 @@ export function comment(
         selection[0] <= firstLineOffset + firstLineCommentOffset
           ? selection[0]
           : selection[0] - COMMENT.length,
-        selection[1] - COMMENT.length * lineOffsetsToUncomment.length
+        selection[1] - COMMENT.length * lineOffsetsToUncomment.length,
       ),
     };
   }
@@ -64,14 +64,14 @@ export function comment(
   const commentOffset = lineOffsets.reduce(
     (currentCommentOffset, lineOffset) => {
       const lineCommentOffset = Array.from(getLine(code, lineOffset)).findIndex(
-        (char) => /\S/.test(char)
+        (char) => /\S/.test(char),
       );
 
       return lineCommentOffset >= 0
         ? Math.min(currentCommentOffset, lineCommentOffset)
         : currentCommentOffset;
     },
-    Number.MAX_SAFE_INTEGER
+    Number.MAX_SAFE_INTEGER,
   );
 
   if (commentOffset === Number.MAX_SAFE_INTEGER) {
@@ -88,7 +88,7 @@ export function comment(
       newCode,
       lineOffset + commentOffset + index * COMMENT.length,
       0,
-      COMMENT
+      COMMENT,
     );
   });
 
@@ -98,7 +98,7 @@ export function comment(
       selection[0] <= firstLineOffset + commentOffset
         ? selection[0]
         : selection[0] + COMMENT.length,
-      selection[1] + COMMENT.length * lineOffsetsToComment.length
+      selection[1] + COMMENT.length * lineOffsetsToComment.length,
     ),
   };
 }

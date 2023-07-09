@@ -62,7 +62,7 @@ export function useSharedFile({
       'Control+Shift+Z,Meta+Shift+Z': () =>
         dispatchToServer(serverActions.redo.create({ f: filename })),
     },
-    active
+    active,
   );
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export function useSharedFile({
         serverActions.updateClientSelection.create({
           f: filename,
           s: minifySelection(selectionRef.current),
-        })
+        }),
       );
     }
   }, [active, filename, selectionRef]);
@@ -124,7 +124,7 @@ export function useSharedFile({
 
       const newCursorOffset = getCursorOffsetAfterDiff(
         diff,
-        clientState.selection[0]
+        clientState.selection[0],
       );
       const newSelection = createSelection(newCursorOffset);
       const action = serverActions.updateCode.create({
@@ -193,7 +193,7 @@ export function useSharedFile({
         updateQueue.push(diffs[0]);
       }
     },
-    [active, codeRef, filename, selectionRef]
+    [active, codeRef, filename, selectionRef],
   );
 
   const updateSelection = useCallback(
@@ -210,12 +210,12 @@ export function useSharedFile({
           serverActions.updateClientSelection.create({
             f: filename,
             s: minifySelection(newSelection),
-          })
+          }),
         );
         lastCursorOffsetSentRef.current = createSelection(newSelection);
       }
     },
-    [filename]
+    [filename],
   );
 
   return {

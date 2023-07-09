@@ -44,7 +44,7 @@ export const Console = forwardRef<HTMLDivElement, Props>(
       {
         'Control+E,Meta+E': () => execCode(codeToExec),
       },
-      active
+      active,
     );
 
     return (
@@ -75,5 +75,5 @@ export const Console = forwardRef<HTMLDivElement, Props>(
         <Logs className={styles.logs} logs={logs} ref={logsElementRef} />
       </div>
     );
-  }
+  },
 );

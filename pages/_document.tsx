@@ -18,7 +18,7 @@ class Head extends NextHead {
         if (!Head.cache.has(file)) {
           Head.cache.set(
             file,
-            fs.readFileSync(path.join('.next', file), 'utf-8')
+            fs.readFileSync(path.join('.next', file), 'utf-8'),
           );
         }
         return (

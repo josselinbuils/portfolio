@@ -38,14 +38,14 @@ const properties = [
 export function getOffsetPosition(
   code: string,
   element: HTMLTextAreaElement,
-  cursorOffset: number
+  cursorOffset: number,
 ): Position<number> {
   const isBrowser = typeof window !== 'undefined';
   const isFirefox = isBrowser && (window as any).mozInnerScreenX !== null;
 
   if (!isBrowser) {
     throw new Error(
-      'textarea-caret-position#getCaretCoordinates should only be called in a browser'
+      'textarea-caret-position#getCaretCoordinates should only be called in a browser',
     );
   }
 

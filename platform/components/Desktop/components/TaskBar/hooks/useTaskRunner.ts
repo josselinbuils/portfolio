@@ -5,7 +5,7 @@ import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 
 export function useTaskRunner(
   appDescriptor: AppDescriptor,
-  windowInstance?: WindowInstance
+  windowInstance?: WindowInstance,
 ): () => Promise<void> {
   const windowManager = useInjector(WindowManager);
 

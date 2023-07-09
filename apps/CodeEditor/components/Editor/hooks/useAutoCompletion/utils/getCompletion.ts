@@ -4,7 +4,7 @@ export function getCompletion(
   template: string,
   cursorOffset: number,
   partialKeyword: string,
-  lineIndent: number
+  lineIndent: number,
 ): { completion: string; newCursorOffset: number } {
   const cursorOffsetInTemplate = template.indexOf(CURSOR);
 

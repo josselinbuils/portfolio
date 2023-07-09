@@ -8,12 +8,12 @@ import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {
   const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
-    windowManager.getWindowInstances()
+    windowManager.getWindowInstances(),
   );
 
   useEffect(
     () => windowManager.windowInstancesSubject.subscribe(setWindowInstances),
-    [windowManager]
+    [windowManager],
   );
 
   return (
@@ -30,7 +30,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
             visibleAreaSize={visibleAreaSize}
             {...forwardedProps}
           />
-        )
+        ),
       )}
     </>
   );

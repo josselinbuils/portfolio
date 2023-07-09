@@ -11,7 +11,7 @@ export interface Segment extends Position<number> {
 export function computeSegments(
   code: string,
   selection: Selection,
-  parent: HTMLTextAreaElement
+  parent: HTMLTextAreaElement,
 ): Segment[] {
   const segments: Segment[] = [];
   let segmentStartPosition: Position<number> | undefined;

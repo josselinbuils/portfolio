@@ -10,7 +10,7 @@ import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 export function useTaskContextMenu(
   appDescriptor: AppDescriptor,
   taskRef: RefObject<HTMLElement>,
-  windowInstance?: WindowInstance
+  windowInstance?: WindowInstance,
 ): () => ContextMenuDescriptor {
   const windowManager = useInjector(WindowManager);
 

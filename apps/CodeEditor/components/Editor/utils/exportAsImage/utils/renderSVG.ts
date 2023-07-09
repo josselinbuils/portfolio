@@ -17,7 +17,7 @@ const WOFF_FONT_URL =
 export async function renderSVG(
   code: string,
   highlightedCode: string,
-  scale: number
+  scale: number,
 ): Promise<{ height: number; svg: string; width: number }> {
   // Scales CSS properties
   const borderRadius = BORDER_RADIUS_PX * scale;
@@ -54,11 +54,11 @@ export async function renderSVG(
   const lines = code.split('\n');
   const maxLengthLine = lines.reduce(
     (str, line) => (line.length > str.length ? line : str),
-    ''
+    '',
   );
   const maxLengthLineWidth = getTextWidth(
     maxLengthLine,
-    `${fontSize}px 'JetBrainsMono'`
+    `${fontSize}px 'JetBrainsMono'`,
   );
   const width = maxLengthLineWidth + paddingLeft + paddingRight;
   const height =

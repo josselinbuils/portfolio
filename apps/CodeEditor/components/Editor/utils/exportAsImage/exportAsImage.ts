@@ -7,7 +7,7 @@ const SCALE = 2;
 
 export async function exportAsImage(
   code: string,
-  highlightedCode: string
+  highlightedCode: string,
 ): Promise<void> {
   const { height, svg, width } = await renderSVG(code, highlightedCode, SCALE);
   const image = await createImage(svg);

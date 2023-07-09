@@ -16,7 +16,7 @@ const defaultFiles: EditorFile[] = [
     name: 'ticTacToe.js',
     shared: true,
     SideComponent: dynamic(
-      async () => (await import('../games/TicTacToe/TicTacToe')).TicTacToe
+      async () => (await import('../games/TicTacToe/TicTacToe')).TicTacToe,
     ),
   },
   {
@@ -43,13 +43,13 @@ function loadFiles(): EditorFile[] {
     // Reorders the default files if it changed
     for (const file of defaultFiles) {
       const storedFileIndex = storedFiles.findIndex(
-        ({ name }) => name === file.name
+        ({ name }) => name === file.name,
       );
 
       files.push(
         storedFileIndex !== -1
           ? { ...file, ...storedFiles.splice(storedFileIndex, 1)[0] }
-          : file
+          : file,
       );
     }
     files.push(...storedFiles);

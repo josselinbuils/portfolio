@@ -14,7 +14,7 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
 
     if (error instanceof Error) {
       const position = error.stack?.match(
-        /^[^\n]+\n[^\n]+<anonymous>:(\d+:\d+)/
+        /^[^\n]+\n[^\n]+<anonymous>:(\d+:\d+)/,
       );
       const formattedPosition = position ? `\n    at ${position[1]}` : '';
 
@@ -68,7 +68,7 @@ function prettify(value: any, id: string): string | JSX.Element {
           ) : (
             // eslint-disable-next-line react/no-array-index-key
             <Shortcut key={`${id}-${index}`} keys={part.split('+')} />
-          )
+          ),
         )}
       </>
     );

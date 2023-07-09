@@ -23,7 +23,7 @@ interface ResizeObserverObserveOptions {
 
 type ResizeObserverCallback = (
   entries: ResizeObserverEntry[],
-  observer: ResizeObserver
+  observer: ResizeObserver,
 ) => void;
 
 interface ResizeObserverEntry {

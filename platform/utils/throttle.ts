@@ -1,6 +1,6 @@
 export function throttle(
   func: (...args: any[]) => any,
-  delayMs: number
+  delayMs: number,
 ): (...args: any[]) => any {
   let lastCallTime = Date.now();
   let lastArgs: any[];
@@ -20,7 +20,7 @@ export function throttle(
     if (timeout === undefined) {
       timeout = window.setTimeout(
         call,
-        Math.max(lastCallTime + delayMs - now, 0)
+        Math.max(lastCallTime + delayMs - now, 0),
       );
     }
   };

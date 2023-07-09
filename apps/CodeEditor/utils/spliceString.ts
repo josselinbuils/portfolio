@@ -2,7 +2,7 @@ export function spliceString(
   str: string,
   start: number,
   deleteCount = 0,
-  strToInsert = ''
+  strToInsert = '',
 ): string {
   const chars = str.split('');
   chars.splice(start, deleteCount, strToInsert);

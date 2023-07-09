@@ -103,7 +103,7 @@ export class SharedFileWSPlugin implements WSPlugin {
         this.dispatchAll(({ id }) =>
           clientActions.applyState.create({
             s: id === wsClient.id ? { code, selection } : { code },
-          })
+          }),
         );
         this.updateClientSelection(wsClient, selection, true);
         this.updateCode(code);
@@ -136,14 +136,14 @@ export class SharedFileWSPlugin implements WSPlugin {
         if (safetyHash !== fileState.codeHash) {
           // Requested update is obsolete so we reset client code
           wsClient.dispatch(
-            clientActions.applyState.create({ s: { code: fileState.code } })
+            clientActions.applyState.create({ s: { code: fileState.code } }),
           );
           return;
         }
         this.dispatchAll(({ id }) =>
           clientActions.applyCodeChange.create(
-            id === wsClient.id ? { d: diffs, ns: newSelection } : { d: diffs }
-          )
+            id === wsClient.id ? { d: diffs, ns: newSelection } : { d: diffs },
+          ),
         );
         this.updateClientSelection(wsClient, newSelection, true);
         fileState.history.pushState(
@@ -154,7 +154,7 @@ export class SharedFileWSPlugin implements WSPlugin {
           {
             code,
             selection: newSelection,
-          }
+          },
         );
         this.updateCode(code);
         break;
@@ -166,7 +166,7 @@ export class SharedFileWSPlugin implements WSPlugin {
   }
 
   private dispatchAll(
-    action: Action<any> | ((client: WSClient) => Action<any> | undefined)
+    action: Action<any> | ((client: WSClient) => Action<any> | undefined),
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
@@ -214,7 +214,7 @@ export class SharedFileWSPlugin implements WSPlugin {
 
   private getWSClients(): WSClient[] {
     return (this.wsServer.clients as WSClient[]).filter(
-      (client) => this.getClientState(client).filename === this.filename
+      (client) => this.getClientState(client).filename === this.filename,
     );
   }
 
@@ -232,7 +232,7 @@ export class SharedFileWSPlugin implements WSPlugin {
     this.dispatchAll((client) =>
       clientActions.applyForeignCursors.create({
         c: cursors.filter(({ clientID }) => clientID !== client.id),
-      })
+      }),
     );
   }
 
@@ -271,7 +271,7 @@ export class SharedFileWSPlugin implements WSPlugin {
   private updateClientSelection(
     client: WSClient,
     selection: Selection,
-    excludeClient = false
+    excludeClient = false,
   ): void {
     const minifiedSelection = minifySelection(selection);
 

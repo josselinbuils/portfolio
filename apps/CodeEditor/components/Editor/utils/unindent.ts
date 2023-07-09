@@ -9,7 +9,7 @@ import { getLineOffset } from './getLineOffset';
 
 export function unindent(
   code: string,
-  selection: Selection
+  selection: Selection,
 ): EditableState | undefined {
   if (selection[1] !== selection[0]) {
     const firstLineOffset = getLineOffset(code, selection[0]);
@@ -36,7 +36,7 @@ export function unindent(
       code: newCode,
       selection: createSelection(
         Math.max(selection[0] - INDENT.length, firstLineOffset),
-        selection[1] - INDENT.length * unindentCount
+        selection[1] - INDENT.length * unindentCount,
       ),
     };
   }

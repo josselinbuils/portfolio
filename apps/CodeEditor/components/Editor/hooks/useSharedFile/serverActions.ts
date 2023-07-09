@@ -10,7 +10,7 @@ export const redo =
   createActionFactory<SharedFileServerBaseAction>('SHARED_FILE:REDO');
 
 export const subscribe = createActionFactory<SharedFileServerBaseAction>(
-  'SHARED_FILE:SUBSCRIBE'
+  'SHARED_FILE:SUBSCRIBE',
 );
 
 export const undo =

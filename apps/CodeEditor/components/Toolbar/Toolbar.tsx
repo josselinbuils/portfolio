@@ -8,7 +8,7 @@ export const Toolbar: FC<Props> = ({ children, className }) => (
     {Children.map(children, (child: ReactElement) =>
       cloneElement(child, {
         className: cn(child.props.className, styles.toolButton),
-      })
+      }),
     )}
   </div>
 );

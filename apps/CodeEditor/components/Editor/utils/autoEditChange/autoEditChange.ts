@@ -28,7 +28,7 @@ const REGEX_SPACES_ONLY = /^ *$/;
 
 export function autoEditChange(
   currentState: EditableState,
-  newState: EditableState
+  newState: EditableState,
 ): EditableState | undefined {
   const diffs = getDiffs(currentState.code, newState.code);
   const [type, start, diff] = diffs.pop() as Diff;
@@ -37,7 +37,7 @@ export function autoEditChange(
     const intermediateDiff = diffs.pop() as Diff;
     const cursorOffset = getCursorOffsetBeforeDiff(
       [type, start, diff],
-      newState.selection[0]
+      newState.selection[0],
     );
     currentState = {
       code: applyDiff(currentState.code, intermediateDiff),
@@ -48,7 +48,7 @@ export function autoEditChange(
   const autoCloseChar = getAutoCloseChar(diff);
   const allowAutoComplete = isCodePortionEnd(
     currentState.code,
-    currentState.selection[0]
+    currentState.selection[0],
   );
   let result: EditableState | undefined = newState;
 

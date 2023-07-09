@@ -6,19 +6,22 @@ import { WindowManager } from '~/platform/services/WindowManager/WindowManager';
 import type { TaskDescriptor } from '../TaskDescriptor';
 
 export function useTaskDescriptors(
-  pinnedAppDescriptors: AppDescriptor[]
+  pinnedAppDescriptors: AppDescriptor[],
 ): TaskDescriptor[] {
   const windowManager = useInjector(WindowManager);
   const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
-    getTaskDescriptors(pinnedAppDescriptors, windowManager.getWindowInstances())
+    getTaskDescriptors(
+      pinnedAppDescriptors,
+      windowManager.getWindowInstances(),
+    ),
   );
 
   useEffect(
     () =>
       windowManager.windowInstancesSubject.subscribe((windowInstances) =>
-        setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances))
+        setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances)),
       ),
-    [pinnedAppDescriptors, windowManager]
+    [pinnedAppDescriptors, windowManager],
   );
 
   return tasks;
@@ -26,16 +29,16 @@ export function useTaskDescriptors(
 
 function getTaskDescriptors(
   pinnedAppDescriptors: AppDescriptor[],
-  windowInstances: WindowInstance[] = []
+  windowInstances: WindowInstance[] = [],
 ): TaskDescriptor[] {
   const pinnedTaskDescriptors: TaskDescriptor[] = pinnedAppDescriptors.map(
-    (appDescriptor) => ({ appDescriptor })
+    (appDescriptor) => ({ appDescriptor }),
   );
   const taskDescriptors = [...pinnedTaskDescriptors];
 
   windowInstances.forEach((windowInstance) => {
     const pinnedTaskDescriptor = pinnedTaskDescriptors.find(
-      (task) => task.appDescriptor === windowInstance.appDescriptor
+      (task) => task.appDescriptor === windowInstance.appDescriptor,
     );
 
     if (

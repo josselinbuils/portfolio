@@ -22,13 +22,13 @@ export const VisibleArea: FC = () => {
   useEventListener(
     'mouseup',
     () => setSelectionVisible(false),
-    selectionVisible
+    selectionVisible,
   );
 
   useEventListener('resize', () =>
     requestAnimationFrame(() =>
-      setVisibleAreaSize(getRefElementSize(visibleAreaRef))
-    )
+      setVisibleAreaSize(getRefElementSize(visibleAreaRef)),
+    ),
   );
 
   const mouseDownHandler = (downEvent: MouseEvent) => {

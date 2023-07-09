@@ -6,7 +6,7 @@ import { DATASETS_PATH, MAX_AGE } from './constants';
 
 export async function getDataset(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void> {
   const { dataset } = req.query;
   const assetPath = path.join(DATASETS_PATH, dataset as string);
@@ -25,12 +25,12 @@ export async function getDataset(
   if (isCompressed) {
     res.setHeader(
       'Access-Control-Expose-Headers',
-      'Content-Length-Uncompressed'
+      'Content-Length-Uncompressed',
     );
     res.setHeader('Content-Encoding', 'gzip');
     res.setHeader(
       'Content-Length-Uncompressed',
-      fs.statSync(assetPath).size.toString()
+      fs.statSync(assetPath).size.toString(),
     );
   }
 

@@ -10,7 +10,7 @@ const STYLE_BEHIND = 'rgba(255, 255, 255, .2)';
 export function displayCube(
   viewport: Viewport,
   canvas: HTMLCanvasElement,
-  render: () => void
+  render: () => void,
 ): void {
   const volume = viewport.dataset.volume as Volume;
   const context = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -54,17 +54,17 @@ export function displayCube(
       const pointBehindViewportDisplay = changePointSpace(
         info.pointBehindViewport as number[],
         viewport.dataset,
-        viewport
+        viewport,
       );
       const pointInFrontOfViewportDisplay = changePointSpace(
         info.pointInFrontOfViewport as number[],
         viewport.dataset,
-        viewport
+        viewport,
       );
       const pointInViewportDisplay = changePointSpace(
         info.pointInViewport as number[],
         viewport.dataset,
-        viewport
+        viewport,
       );
 
       cross.push({
@@ -77,7 +77,7 @@ export function displayCube(
       context.beginPath();
       context.moveTo(
         pointBehindViewportDisplay[0],
-        pointBehindViewportDisplay[1]
+        pointBehindViewportDisplay[1],
       );
       context.lineTo(pointInViewportDisplay[0], pointInViewportDisplay[1]);
       context.strokeStyle = STYLE_BEHIND;
@@ -103,7 +103,7 @@ export function displayCube(
     context.moveTo(pointInViewportDisplay[0], pointInViewportDisplay[1]);
     context.lineTo(
       pointInFrontOfViewportDisplay[0],
-      pointInFrontOfViewportDisplay[1]
+      pointInFrontOfViewportDisplay[1],
     );
     context.strokeStyle = STYLE_FRONT;
     context.stroke();
@@ -123,7 +123,7 @@ export function displayCube(
     cornersDisplay.x0y0z0[1],
     3,
     0,
-    Math.PI * 2
+    Math.PI * 2,
   );
   context.fillStyle = STYLE_FRONT;
   context.fill();
@@ -135,7 +135,7 @@ export function displayCube(
       pointInViewportDisplay[1],
       3,
       0,
-      Math.PI * 2
+      Math.PI * 2,
     );
     context.fillStyle = 'red';
     context.fill();

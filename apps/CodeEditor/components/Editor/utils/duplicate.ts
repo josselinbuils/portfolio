@@ -7,7 +7,7 @@ import { getLineOffset } from './getLineOffset';
 
 export function duplicate(
   code: string,
-  selection: Selection
+  selection: Selection,
 ): EditableState | undefined {
   if (selection[1] === selection[0]) {
     const line = getLine(code, selection[0]);
@@ -27,7 +27,7 @@ export function duplicate(
     code: spliceString(code, selection[1], 0, selectedText),
     selection: createSelection(
       selection[0] + selectedText.length,
-      selection[1] + selectedText.length
+      selection[1] + selectedText.length,
     ),
   };
 }

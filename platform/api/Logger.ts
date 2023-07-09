@@ -30,6 +30,6 @@ function log(level: Level, str: string): void {
   const timeString = date.toLocaleTimeString();
 
   console.log(
-    `\x1b[0m[${dateString} ${timeString}] ${formatLevel(level)} ${str}\x1b[0m`
+    `\x1b[0m[${dateString} ${timeString}] ${formatLevel(level)} ${str}\x1b[0m`,
   );
 }

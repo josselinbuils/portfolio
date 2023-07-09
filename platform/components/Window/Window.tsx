@@ -278,9 +278,9 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
             this.setStyle('transform', '');
             this.setPosition(
               lastMoveEventRef.current.clientX + dx,
-              lastMoveEventRef.current.clientY + dy
+              lastMoveEventRef.current.clientY + dy,
             );
-          }
+          },
         );
       }
 
@@ -289,7 +289,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
           'transform',
           `translate(${(moveEvent.clientX - downEvent.clientX) / 10}rem, ${
             (moveEvent.clientY - downEvent.clientY) / 10
-          }rem)`
+          }rem)`,
         );
       } else {
         this.setPosition(moveEvent.clientX + dx, moveEvent.clientY + dy);
@@ -349,7 +349,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
   toggleMaximize = (
     keepPosition = false,
     onReady: () => void = () => {},
-    onFinished: () => void = () => {}
+    onFinished: () => void = () => {},
   ): void => {
     const { props, state } = this;
     if (props.resizable === false) {
@@ -414,7 +414,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
         const transitionEndListener = () => {
           windowElement?.removeEventListener(
             'transitionend',
-            transitionEndListener
+            transitionEndListener,
           );
           this.setState({ animated: false }, () => {
             if (typeof finished === 'function') {
