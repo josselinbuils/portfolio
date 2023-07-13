@@ -1,0 +1,21 @@
+@import '@/platform/constants';
+
+.currentTime {
+  margin-left: 1.5rem;
+}
+
+.currentTime,
+.duration {
+  font-size: 1rem;
+  line-height: 1.6rem;
+  margin: auto 1rem;
+  user-select: none;
+  text-align: center;
+}
+
+.seekBar {
+  display: flex;
+  max-width: 65rem;
+  height: 3rem;
+  margin: 0 auto;
+}

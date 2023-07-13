@@ -1,0 +1,22 @@
+@import '@/platform/constants';
+
+.jamendoLink {
+  font-size: 1.4rem;
+  display: block;
+  margin-top: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+
+  &,
+  &:active,
+  &:hover,
+  &:focus {
+    color: $primaryColor;
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}

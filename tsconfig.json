@@ -1,27 +1,25 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "checkJs": true,
     "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "incremental": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "paths": {
-      "~/*": ["*"]
+      "@/root": ["*"],
+      "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2019"
+    "target": "ES2020"
   },
   "exclude": ["**/node_modules"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["node_modules/vite/client.d.ts", "**/*.ts", "**/*.tsx"]
 }

@@ -1,0 +1,39 @@
+@import '@/platform/constants';
+@import '../../constants';
+
+.button {
+  font-family: $fontFamily;
+  font-size: inherit;
+  display: inline-block;
+  padding: 0;
+  vertical-align: middle;
+  color: $textColor;
+  border: none;
+  outline: none;
+  background: none;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &:not(:disabled) {
+    &:hover {
+      color: lighten($textColor, $lightenAmountLevel1);
+    }
+
+    &:active {
+      color: $primaryColor;
+    }
+
+    &:active,
+    &.checked {
+      &:hover {
+        color: lighten($primaryColor, $lightenAmountLevel1);
+      }
+    }
+  }
+
+  &.checked {
+    color: $primaryColor;
+  }
+}

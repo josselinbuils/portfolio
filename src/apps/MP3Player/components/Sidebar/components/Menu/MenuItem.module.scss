@@ -1,0 +1,11 @@
+@import '@/platform/constants';
+
+.item {
+  font-size: 1.3em;
+  display: block;
+  margin-top: 1rem;
+
+  &.checked {
+    color: $primaryColor;
+  }
+}

@@ -1,0 +1,54 @@
+@import '@/platform/constants';
+@import '../../constants';
+
+.barPreview {
+  width: 148px;
+  height: 15px;
+  margin-bottom: 1rem;
+}
+
+.button {
+  font-size: 2rem;
+  display: block;
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0.3rem 0.5rem;
+  color: $color;
+  border: 0.1rem solid $color;
+  border-radius: $radius;
+  outline: none;
+  background: transparent;
+
+  &:active:hover {
+    background: lighten($backgroundColor, $lightenAmountLevel2);
+  }
+
+  &:hover {
+    background: lighten($backgroundColor, $lightenAmountLevel1);
+  }
+}
+
+.graphPreview {
+  width: 148px;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.colorPalette {
+  position: absolute;
+  top: calc(50%);
+  right: 1rem;
+  transform: translateY(-50%);
+  background: transparentize($backgroundColor, 0.4);
+
+  &.open {
+    padding: 0.5rem;
+    border: 0.1rem solid $color;
+    border-radius: 0.4rem;
+
+    .button {
+      margin: -0.5rem 0 0.3rem -0.5rem;
+      border: none;
+    }
+  }
+}

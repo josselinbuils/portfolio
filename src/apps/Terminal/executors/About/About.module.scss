@@ -1,0 +1,69 @@
+@import '@/platform/constants';
+
+.about {
+  position: relative;
+  display: flex;
+  margin: 0.2rem 0;
+
+  > * {
+    flex-shrink: 0;
+  }
+}
+
+.help {
+  color: #c5c5c5;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0 3.5rem;
+
+  p {
+    margin: 1.5rem 0 0 0;
+  }
+}
+
+.resume {
+  font-size: 3.9rem;
+  max-width: 22ch;
+}
+
+.social {
+  font-size: 3rem;
+
+  a + a {
+    margin-left: 2rem;
+  }
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .about {
+    flex-direction: column;
+  }
+
+  .help {
+    display: none;
+  }
+
+  .info {
+    margin: 0;
+
+    .social {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .resume {
+    font-size: 2.5rem;
+  }
+
+  .social {
+    font-size: 3rem;
+
+    a + a {
+      margin-left: 2rem;
+    }
+  }
+}

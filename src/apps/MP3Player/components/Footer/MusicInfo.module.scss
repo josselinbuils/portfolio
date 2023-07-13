@@ -1,0 +1,37 @@
+@import '@/platform/constants';
+@import '../../constants';
+
+.musicInfo {
+  line-height: 2rem;
+  overflow: hidden;
+  flex: 0 0 20ch;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 6.2rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  .artist {
+    font-size: 1.2rem;
+  }
+
+  .artist,
+  .name {
+    overflow: hidden;
+    user-select: text;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .musicInfo {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .musicInfo {
+    display: none;
+  }
+}

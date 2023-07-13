@@ -1,0 +1,22 @@
+@import '@/platform/constants';
+
+.buttonLink {
+  font-family: $fontFamily;
+  padding: 0;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+
+  &:not(:disabled) {
+    &,
+    * {
+      cursor: pointer;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}

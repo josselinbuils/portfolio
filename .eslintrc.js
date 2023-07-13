@@ -1,11 +1,10 @@
 module.exports = {
   extends: [
     '@josselinbuils/eslint-config-react',
-    'plugin:@next/next/recommended'
   ],
   rules: {
-    '@next/next/no-img-element': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
     '@typescript-eslint/no-var-requires': 'off', // applied to js files
     'default-param-last': 'off', // false positives
@@ -13,8 +12,6 @@ module.exports = {
       'error',
       {
         alphabetize: { order: 'asc', caseInsensitive: false },
-        'newlines-between': 'never',
-        warnOnUnassignedImports: true,
         groups: [
           'builtin',
           'external',
@@ -23,6 +20,14 @@ module.exports = {
           'sibling',
           'object',
         ],
+        'newlines-between': 'never',
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "internal"
+          }
+        ],
+        warnOnUnassignedImports: true,
       },
     ],
     'no-useless-constructor': 'off',

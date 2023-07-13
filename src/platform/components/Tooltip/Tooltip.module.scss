@@ -1,0 +1,8 @@
+@import '@/platform/constants';
+
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  align-content: center;
+  user-select: none;
+}

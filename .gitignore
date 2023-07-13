@@ -1,5 +1,5 @@
 .idea
-.next
+dist
 build
 config.json
 node_modules
@@ -7,3 +7,4 @@ out
 persistentState.json
 public/assets/dicom
 tmp
+tsconfig.tsbuildinfo

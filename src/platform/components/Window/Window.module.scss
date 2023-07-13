@@ -1,0 +1,85 @@
+@import '@/platform/constants';
+
+.content {
+  overflow: hidden;
+  flex-grow: 1;
+  height: 100%;
+  user-select: none;
+
+  &.frozen {
+    visibility: hidden;
+  }
+}
+
+.resize {
+  position: absolute;
+  right: -0.2rem;
+  bottom: -0.2rem;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  cursor: nwse-resize;
+  user-select: none;
+  border: none;
+  background: transparent;
+
+  appearance: none;
+}
+
+.window {
+  position: absolute;
+  right: auto;
+  bottom: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  opacity: 0.9;
+  color: inherit;
+  border: none;
+  outline: none;
+
+  &:not(.maximized) {
+    border-radius: 0.6rem; /* Needed by box shadow */
+    box-shadow: 0 0 1rem #1f1f1f;
+
+    .content {
+      border-bottom-right-radius: 0.6rem;
+      border-bottom-left-radius: 0.6rem;
+    }
+  }
+}
+
+// Modifiers
+
+.active {
+  opacity: 1;
+
+  &.frozen {
+    opacity: 0.8;
+  }
+
+  .content {
+    user-select: inherit;
+  }
+}
+
+.animated {
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  transition-property: height, left, opacity, top, width;
+}
+
+.minimized {
+  opacity: 0;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .window {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+  }
+}

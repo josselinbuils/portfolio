@@ -1,0 +1,43 @@
+@import '@/platform/constants';
+@import 'constants';
+
+$footerHeight: 7.7rem;
+
+.body {
+  display: flex;
+  overflow: hidden;
+  flex: 0 1 100%;
+}
+
+.footer {
+  flex: 0 0 $footerHeight;
+}
+
+.musics {
+  flex: 1 1 auto;
+}
+
+.player {
+  font-family: $fontFamily;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: $textColor;
+
+  &,
+  * {
+    cursor: default;
+    user-select: none;
+  }
+}
+
+.sidebar {
+  flex: 0 0 auto;
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .player {
+    font-size: 1.4rem;
+  }
+}
