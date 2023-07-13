@@ -14,7 +14,7 @@ const PUBLIC_PATH = path.join(process.cwd(), PUBLIC_DIR);
   });
 
   await startServer([
-    viteDevServer.middlewares,
     express.static(PUBLIC_PATH, { maxAge: 0 }),
+    viteDevServer.middlewares,
   ]);
 })();

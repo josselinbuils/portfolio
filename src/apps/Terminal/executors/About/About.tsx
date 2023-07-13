@@ -5,11 +5,10 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type Executor } from '../Executor';
 import styles from './About.module.scss';
-import me from './me.webp';
 
 export const About: Executor = () => (
   <div className={styles.about}>
-    <img alt="me" height={269} src={me} width={202} />
+    <img alt="me" height={269} src="/assets/me.webp" width={202} />
     <div className={styles.info}>
       <p className={styles.resume}>
         Hey, I&apos;m Josselin, a full-stack JavaScript developer :)
