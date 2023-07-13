@@ -6,5 +6,6 @@ node_modules
 out
 persistentState.json
 public/assets/dicom
+stats.html
 tmp
 tsconfig.tsbuildinfo

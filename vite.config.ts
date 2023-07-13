@@ -1,11 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from 'node:path';
 import preact from '@preact/preset-vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [preact()],
+  plugins: [
+    preact(),
+    process.env.ANALYSE === 'true' && visualizer({ open: true }),
+  ].filter(Boolean),
   publicDir: false,
   resolve: {
     alias: {
