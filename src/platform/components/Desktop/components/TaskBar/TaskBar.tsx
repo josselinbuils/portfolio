@@ -48,6 +48,7 @@ export const TaskBar: FC<Props> = ({ className }) => {
         );
       })}
       <button
+        aria-label="toggle full screen"
         className={taskStyles.task}
         onClick={toggleFullScreen}
         type="button"
