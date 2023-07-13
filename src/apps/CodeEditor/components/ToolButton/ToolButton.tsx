@@ -1,11 +1,18 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import { type ButtonHTMLAttributes, type FC, type ReactNode } from 'react';
+import { type FC, type HTMLAttributes, type JSX } from 'preact/compat';
 import { WithTooltip } from '@/platform/providers/TooltipProvider/WithTooltip';
 import styles from './ToolButton.module.scss';
 
-export const ToolButton: FC<Props> = ({
+export interface ToolButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'icon' | 'title'> {
+  className?: string;
+  icon: IconDefinition;
+  title: string | JSX.Element;
+}
+
+export const ToolButton: FC<ToolButtonProps> = ({
   className,
   icon,
   title,
@@ -21,8 +28,3 @@ export const ToolButton: FC<Props> = ({
     </button>
   </WithTooltip>
 );
-
-interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'title'> {
-  icon: IconDefinition;
-  title: string | ReactNode;
-}

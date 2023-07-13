@@ -9,19 +9,18 @@ import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import {
-  type ChangeEvent,
-  type DragEvent,
-  type FC,
   Suspense,
-  type SyntheticEvent,
-} from 'react';
+  type ChangeEvent,
+  type FC,
+  type TargetedEvent,
+} from 'preact/compat';
 import {
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-} from 'react';
+} from 'preact/compat';
 import { useMemState } from '@/platform/hooks/useMemState';
 import { highlightCode } from '@/platform/utils/highlightCode/highlightCode';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
@@ -294,8 +293,8 @@ export const Editor: FC<Props> = ({
   }
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
-    const newCode = event.target.value;
-    const newCursorOffset = event.target.selectionStart;
+    const newCode = event.currentTarget.value;
+    const newCursorOffset = event.currentTarget.selectionStart;
 
     if (newCode.length > code.length) {
       const allowAutoComplete = isCodePortionEnd(code, cursorOffset);
@@ -334,15 +333,16 @@ export const Editor: FC<Props> = ({
     }
   }
 
-  function handleSelect({ nativeEvent, target }: SyntheticEvent): void {
-    const isKeyboardEvent = nativeEvent instanceof KeyboardEvent;
-    const isMouseEvent = nativeEvent instanceof MouseEvent;
+  function handleSelect(event: TargetedEvent): void {
+    const isKeyboardEvent = event instanceof KeyboardEvent;
+    const isMouseEvent = event instanceof MouseEvent;
 
     if (!isKeyboardEvent && !isMouseEvent) {
       return;
     }
 
-    const { selectionEnd, selectionStart } = target as HTMLTextAreaElement;
+    const { selectionEnd, selectionStart } =
+      event.currentTarget as HTMLTextAreaElement;
 
     if (
       selectionEnd !== selectionStart ||
@@ -461,7 +461,7 @@ export const Editor: FC<Props> = ({
               <FontAwesomeIcon
                 className={styles.close}
                 icon={faTimes}
-                onClick={(event) => {
+                onClick={(event: Event) => {
                   event.stopPropagation();
                   closeFile(name);
                 }}
@@ -472,7 +472,7 @@ export const Editor: FC<Props> = ({
       </Tabs>
       <div className={styles.container}>
         {activeFile.SideComponent ? (
-          <Suspense>
+          <Suspense fallback={null}>
             <activeFile.SideComponent />
           </Suspense>
         ) : null}

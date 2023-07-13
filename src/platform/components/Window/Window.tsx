@@ -2,10 +2,10 @@ import cn from 'classnames';
 import React, {
   Component,
   createRef,
+  type JSX,
   type MutableRefObject,
   type PropsWithChildren,
-  type ReactElement,
-} from 'react';
+} from 'preact/compat';
 import { MouseButton } from '@/platform/constants';
 import { type Size } from '@/platform/interfaces/Size';
 import { TitleBar } from './TitleBar';
@@ -121,7 +121,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     }
   }
 
-  render(): ReactElement {
+  render(): JSX.Element {
     const {
       contentRef,
       props,
@@ -222,13 +222,12 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     }
   }
 
-  startMove = (downEvent: React.MouseEvent): void => {
+  startMove = (downEvent: MouseEvent): void => {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
 
     downEvent.preventDefault();
-    downEvent.persist();
 
     const windowElement = this.windowRef.current as HTMLElement;
     const dy = windowElement.offsetTop - downEvent.clientY;
@@ -260,7 +259,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
           this.lastDisplayProperties.maximize.width / windowElement.clientWidth;
 
         // Keeps the same position on the title bar in proportion to its width
-        const { offsetX } = downEvent.nativeEvent;
+        const { offsetX } = downEvent;
         dx +=
           offsetX * widthRatio > BUTTONS_WIDTH
             ? offsetX * (1 - widthRatio)
@@ -306,14 +305,13 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     window.addEventListener('mouseup', upHandler);
   };
 
-  startResize = (downEvent: React.MouseEvent): void => {
+  startResize = (downEvent: MouseEvent): void => {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
     let { state } = this;
 
     downEvent.preventDefault();
-    downEvent.persist();
 
     if (state.maximized) {
       return;
@@ -574,15 +572,13 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     }
   }
 
-  private unselectIfNoChildFocused = ({
-    currentTarget,
-  }: React.FocusEvent): void => {
+  private unselectIfNoChildFocused = ({ currentTarget }: FocusEvent): void => {
     const windowRef = this.windowRef.current;
 
     if (
       !windowRef ||
       currentTarget === windowRef ||
-      windowRef?.contains(currentTarget)
+      windowRef?.contains(currentTarget as Node | null)
     ) {
       return;
     }

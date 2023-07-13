@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { type FC } from 'react';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { type FC } from 'preact/compat';
+import React, { useEffect, useLayoutEffect, useRef } from 'preact/compat';
 import { RendererType, ViewType } from '@/apps/DICOMViewer/constants';
 import { MouseButton } from '@/platform/constants';
 import { useElementSize } from '@/platform/hooks/useElementSize';
@@ -151,9 +151,7 @@ export const ViewportElement: FC<Props> = ({
     onResize({ height: viewportHeight, width: viewportWidth });
   }, [onResize, viewport, viewportHeight, viewportWidth]);
 
-  const mouseDownListener = (downEvent: React.MouseEvent) => {
-    downEvent.persist();
-
+  const mouseDownListener = (downEvent: MouseEvent) => {
     if (downEvent.button === MouseButton.Right) {
       const contextMenuListener = (event: MouseEvent) => {
         event.preventDefault();
@@ -162,7 +160,7 @@ export const ViewportElement: FC<Props> = ({
       window.addEventListener('contextmenu', contextMenuListener);
     }
 
-    onCanvasMouseDown(downEvent.nativeEvent);
+    onCanvasMouseDown(downEvent);
   };
 
   return (

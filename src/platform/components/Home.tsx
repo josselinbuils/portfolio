@@ -1,5 +1,5 @@
-import { type FC } from 'react';
-import { useEffect } from 'react';
+import { type FC } from 'preact/compat';
+import { useEffect } from 'preact/compat';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
 import { useInjector } from '../providers/InjectorProvider/useInjector';

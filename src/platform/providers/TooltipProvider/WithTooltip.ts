@@ -2,10 +2,10 @@ import {
   Children,
   cloneElement,
   type FC,
+  type JSX,
   type PropsWithChildren,
-  type ReactElement,
   useContext,
-} from 'react';
+} from 'preact/compat';
 import { type TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
 
@@ -15,7 +15,7 @@ export const WithTooltip: FC<PropsWithChildren<TooltipDescriptor>> = ({
 }) => {
   const { onEnterTooltipParent, onLeaveTooltipParent, onMoveTooltipParent } =
     useContext(TooltipContext);
-  const child = Children.only(children) as ReactElement;
+  const child = Children.only(children) as JSX.Element;
 
   return cloneElement(child, {
     onClick: (event: MouseEvent) => {
@@ -44,7 +44,9 @@ export const WithTooltip: FC<PropsWithChildren<TooltipDescriptor>> = ({
         ...descriptor,
         style: {
           ...descriptor.style,
-          transform: descriptor.style?.transform?.replace(' scaleX(0)', ''),
+          transform: descriptor.style?.transform
+            ?.toString()
+            .replace(' scaleX(0)', ''),
         },
       }));
     },

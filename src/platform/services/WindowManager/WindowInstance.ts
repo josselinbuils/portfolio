@@ -1,4 +1,4 @@
-import { type RefObject } from 'react';
+import { type RefObject } from 'preact/compat';
 import { type Window } from '@/platform/components/Window/Window';
 import {
   type InjectedWindowProps,

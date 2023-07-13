@@ -1,4 +1,4 @@
-import { type RefObject } from 'react';
+import { type RefObject } from 'preact/compat';
 import { type Size } from '../interfaces/Size';
 
 export function getRefElementSize(elementRef: RefObject<HTMLElement>): Size {

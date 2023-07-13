@@ -1,12 +1,21 @@
 import cn from 'classnames';
 import {
-  type ButtonHTMLAttributes,
   type DetailedHTMLProps,
   type FC,
-} from 'react';
+  type HTMLAttributes,
+} from 'preact/compat';
 import styles from './Button.module.scss';
 
-export const Button: FC<Props> = ({
+export interface ButtonProps
+  extends DetailedHTMLProps<
+    HTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  checked?: boolean;
+  className?: string;
+}
+
+export const Button: FC<ButtonProps> = ({
   checked = false,
   children,
   className,
@@ -20,11 +29,3 @@ export const Button: FC<Props> = ({
     {children}
   </button>
 );
-
-interface Props
-  extends DetailedHTMLProps<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
-  checked?: boolean;
-}

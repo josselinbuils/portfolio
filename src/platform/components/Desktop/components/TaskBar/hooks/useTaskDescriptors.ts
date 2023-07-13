@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
 import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';

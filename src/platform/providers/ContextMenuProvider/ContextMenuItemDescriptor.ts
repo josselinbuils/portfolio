@@ -1,8 +1,8 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core/';
-import { type ReactNode } from 'react';
+import { type JSX } from 'preact/compat';
 
 export interface ContextMenuItemDescriptor {
   icon?: IconDefinition;
-  title: string | ReactNode;
+  title: string | JSX.Element;
   onClick(): void;
 }

@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
 import styles from './StatusBar.module.scss';
 

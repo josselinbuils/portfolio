@@ -1,10 +1,15 @@
 import { faJsSquare } from '@fortawesome/free-brands-svg-icons/faJsSquare';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import { type ButtonHTMLAttributes, type FC } from 'react';
+import { type FC, type JSX } from 'preact/compat';
 import styles from './Tab.module.scss';
 
-export const Tab: FC<Props> = ({
+export interface TabProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+  className?: string;
+  selected: boolean;
+}
+
+export const Tab: FC<TabProps> = ({
   children,
   className,
   selected,
@@ -21,7 +26,3 @@ export const Tab: FC<Props> = ({
     {children}
   </button>
 );
-
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  selected: boolean;
-}

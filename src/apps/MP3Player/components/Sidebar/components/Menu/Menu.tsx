@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { musicLists } from '@/apps/MP3Player/musicLists';
 import { MenuItem } from './MenuItem';

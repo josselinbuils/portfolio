@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'preact/compat';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
@@ -23,7 +23,7 @@ const CodeEditor: WindowComponent = ({
   const resizeStartHandler = useDragAndDrop(onResizeStart);
 
   function onResizeStart(
-    downEvent: React.PointerEvent,
+    downEvent: PointerEvent,
   ): ((moveEvent: PointerEvent) => void) | void {
     if (consoleElementRef.current === null) {
       return;

@@ -1,5 +1,4 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { render } from 'preact';
 import Terminal from '@/apps/Terminal/Terminal';
 import { TerminalDescriptor } from '@/apps/Terminal/TerminalDescriptor';
 import { type DefaultApp } from '@/platform/components/Home';
@@ -12,10 +11,9 @@ const defaultApp: DefaultApp = {
   windowComponent: Terminal,
 };
 
-createRoot(document.getElementById('app')!).render(
-  <StrictMode>
-    <InjectorProvider>
-      <Home defaultApp={defaultApp} />
-    </InjectorProvider>
-  </StrictMode>,
+render(
+  <InjectorProvider>
+    <Home defaultApp={defaultApp} />
+  </InjectorProvider>,
+  document.getElementById('app')!,
 );

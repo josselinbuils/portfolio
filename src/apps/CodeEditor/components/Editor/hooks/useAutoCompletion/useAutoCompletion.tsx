@@ -1,5 +1,5 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'preact/compat';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';

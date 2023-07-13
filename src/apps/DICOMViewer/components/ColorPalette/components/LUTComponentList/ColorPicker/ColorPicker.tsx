@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { throttle } from '@/platform/utils/throttle';
 import styles from './ColorPicker.module.scss';
 import { hexToRGB } from './utils/hexToRGB';
@@ -21,7 +21,7 @@ export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
       <input
         className={styles.colorPicker}
         defaultValue={rgbToHex(color)}
-        onChange={(event) => colorChangeHandler(event.target.value)}
+        onChange={(event) => colorChangeHandler(event.currentTarget.value)}
         type="color"
       />
     </figure>

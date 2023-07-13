@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { type FC } from 'react';
-import { useEffect } from 'react';
+import { type FC } from 'preact/compat';
+import { useEffect } from 'preact/compat';
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
 import styles from './Tooltip.module.scss';
 import { type TooltipDescriptor } from './TooltipDescriptor';

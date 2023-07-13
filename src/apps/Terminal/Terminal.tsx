@@ -1,7 +1,7 @@
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useList } from '@josselinbuils/hooks/useList';
 import { Deferred } from '@josselinbuils/utils/Deferred';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'preact/compat';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import styles from './Terminal.module.scss';

@@ -1,5 +1,5 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
-import { type RefObject } from 'react';
+import { type RefObject } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type ContextMenuDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';

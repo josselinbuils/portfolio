@@ -1,5 +1,5 @@
-import { type ReactElement, Suspense } from 'react';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { type JSX, Suspense } from 'preact/compat';
+import { useCallback, useLayoutEffect, useState } from 'preact/compat';
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
@@ -135,7 +135,7 @@ const DICOMViewer: WindowComponent = ({
     }
   }
 
-  function render(): ReactElement | null {
+  function render(): JSX.Element | null {
     if (!dataset) {
       return (
         <SelectDataset
@@ -167,7 +167,7 @@ const DICOMViewer: WindowComponent = ({
             viewport={viewport}
           />
           {showTools && rendererType === RendererType.JavaScript && (
-            <Suspense>
+            <Suspense fallback={null}>
               <ColorPalette onLUTComponentsUpdate={setLUTComponents} />
             </Suspense>
           )}

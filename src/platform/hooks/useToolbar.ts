@@ -1,7 +1,7 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import { type RefObject } from 'react';
-import { createRef, useEffect, useRef, useState } from 'react';
+import { type JSX, type RefObject } from 'preact/compat';
+import { createRef, useEffect, useRef, useState } from 'preact/compat';
 
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal',
@@ -98,7 +98,7 @@ interface ToolProps<T extends HTMLElement> {
 
 interface ToolbarProps {
   className: string | undefined;
-  role: string;
+  role: JSX.AriaRole;
   onBlur(): void;
   onFocus(): void;
 }

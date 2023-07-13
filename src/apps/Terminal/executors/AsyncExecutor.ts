@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { type Executor, type ExecutorProps } from './Executor';
 
 export interface AsyncExecutor extends FC<ExecutorProps & AsyncExecutorProps> {

@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import cn from 'classnames';
-import { type ButtonHTMLAttributes, type FC, type RefObject } from 'react';
-import { forwardRef, useEffect, useState } from 'react';
+import { type HTMLAttributes, type RefObject } from 'preact/compat';
+import { forwardRef, useEffect, useState } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
@@ -16,13 +16,13 @@ import { useTaskRunner } from './hooks/useTaskRunner';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface TaskProps extends HTMLAttributes<HTMLButtonElement> {
   appDescriptor: AppDescriptor;
   taskButtonActive: boolean;
   windowInstance?: WindowInstance;
 }
 
-export const Task: FC<Props> = forwardRef(
+export const Task = forwardRef<HTMLButtonElement, TaskProps>(
   (
     {
       appDescriptor,

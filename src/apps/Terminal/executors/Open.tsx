@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'preact/compat';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
 // Open executor dynamically imported in Terminal so no cycle

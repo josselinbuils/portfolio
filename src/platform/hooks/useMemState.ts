@@ -1,9 +1,9 @@
-import { type Dispatch, type SetStateAction } from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { type StateUpdater } from 'preact/compat';
+import { useCallback, useRef, useState } from 'preact/compat';
 
 export function useMemState<S>(
   initialValue: S | (() => S),
-): [S, S | undefined, Dispatch<SetStateAction<S>>] {
+): [S, S | undefined, StateUpdater<S>] {
   const [value, setValue] = useState<S>(initialValue);
   const previousValueRef = useRef<S>();
 

@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { type FC, type ReactNode } from 'react';
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { type FC, type JSX } from 'preact/compat';
+import { useLayoutEffect, useMemo, useRef } from 'preact/compat';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { getLineNumber } from '../../utils/getLineNumber';
 import styles from './LineNumbers.module.scss';
@@ -46,9 +46,9 @@ function computeLineNumbers(
   lineCount: number,
   code: string,
   selection: Selection,
-): ReactNode[] {
+): JSX.Element[] {
   const activeLine = getLineNumber(code, selection[0]) + 1;
-  const numbers: ReactNode[] = [];
+  const numbers: JSX.Element[] = [];
 
   for (let i = 1; i <= lineCount; i++) {
     numbers.push(

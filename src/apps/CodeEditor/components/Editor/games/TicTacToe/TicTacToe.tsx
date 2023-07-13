@@ -1,5 +1,5 @@
-import { type FC } from 'react';
-import { useEffect, useState } from 'react';
+import { type FC } from 'preact/compat';
+import { useEffect, useState } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './TicTacToe.module.scss';
 import { Cross, Grid, Round } from './components/Elements/Elements';

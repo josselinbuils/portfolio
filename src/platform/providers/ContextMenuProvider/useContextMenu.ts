@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext } from 'preact/compat';
 import { type ContextMenuManager } from './ContextMenuContext';
 import { ContextMenuContext } from './ContextMenuContext';
 

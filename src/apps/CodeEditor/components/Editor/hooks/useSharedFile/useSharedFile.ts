@@ -1,6 +1,6 @@
 import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'preact/compat';
 import { type ClientState } from '@/apps/CodeEditor/interfaces/ClientState';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';

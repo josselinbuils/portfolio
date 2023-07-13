@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { type FC } from 'react';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import { type FC } from 'preact/compat';
+import React, { useLayoutEffect, useRef, useState } from 'preact/compat';
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { applyPolynomialInterpolation } from '@/apps/DICOMViewer/utils/math/applyPolynomialInterpolation';
 import { scaleLUTComponents } from '@/apps/DICOMViewer/utils/scaleLUTComponents';
@@ -151,18 +151,14 @@ export const GraphPreview: FC<Props> = ({
       });
   }
 
-  function handleMouseDown(downEvent: React.MouseEvent): void {
+  function handleMouseDown(downEvent: MouseEvent): void {
     if (hoveredLUTComponentID !== undefined) {
-      onLUTComponentDrag(
-        downEvent.nativeEvent,
-        previewWidth,
-        hoveredLUTComponentID,
-      );
+      onLUTComponentDrag(downEvent, previewWidth, hoveredLUTComponentID);
     }
   }
 
-  function handleMouseMove(moveEvent: React.MouseEvent): void {
-    const { offsetX, offsetY } = moveEvent.nativeEvent;
+  function handleMouseMove(moveEvent: MouseEvent): void {
+    const { offsetX, offsetY } = moveEvent;
     const closeLUTComponent = getCloseLUTComponent(offsetX, offsetY);
 
     if (closeLUTComponent !== undefined) {

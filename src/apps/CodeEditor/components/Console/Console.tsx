@@ -3,7 +3,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
-import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useEffect, useLayoutEffect, useRef } from 'preact/compat';
 import { Shortcut } from '../Shortcut/Shortcut';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';

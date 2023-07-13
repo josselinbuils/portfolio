@@ -1,6 +1,6 @@
 import cn from 'classnames';
-import { type FC } from 'react';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { type FC } from 'preact/compat';
+import { useEffect, useLayoutEffect, useState } from 'preact/compat';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
 import { preloadImage } from '@/platform/utils/preloadImage';

@@ -1,5 +1,5 @@
-import { type FC, type PropsWithChildren, Suspense } from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { type FC, type PropsWithChildren, Suspense } from 'preact/compat';
+import { useCallback, useMemo, useRef, useState } from 'preact/compat';
 import { lazy } from '@/platform/utils/lazy';
 import { type TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 import { TooltipContext } from './TooltipContext';
@@ -81,7 +81,7 @@ export const TooltipProvider: FC<PropsWithChildren<unknown>> = ({
     <TooltipContext.Provider value={value}>
       {children}
       {descriptor && displayed && (
-        <Suspense>
+        <Suspense fallback={null}>
           <Tooltip {...descriptor} onDOMReady={onTooltipDOMReady} />
         </Suspense>
       )}

@@ -1,4 +1,4 @@
-import { type Reducer } from 'react';
+import { type Reducer } from 'preact/compat';
 import { type Action } from './Action';
 import { type ActionFactory } from './ActionFactory';
 

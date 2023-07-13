@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext } from 'preact/compat';
 import { InjectorContext } from './InjectorContext';
 
 export function useInjector<T>(

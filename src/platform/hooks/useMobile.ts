@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'preact/compat';
 import { MOBILE_BREAKPOINT_PX } from '../constants';
 
 export function useMobile(): boolean {

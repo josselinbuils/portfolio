@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext } from 'preact/compat';
 import { type ContextMenuDescriptor } from './ContextMenuDescriptor';
 
 export const ContextMenuContext = createContext<ContextMenuManager>({

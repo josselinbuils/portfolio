@@ -1,5 +1,5 @@
-import { type FC, type PropsWithChildren } from 'react';
-import { useState } from 'react';
+import { type FC, type PropsWithChildren } from 'preact/compat';
+import { useState } from 'preact/compat';
 import { InjectorContext } from './InjectorContext';
 
 export const InjectorProvider: FC<PropsWithChildren<unknown>> = ({

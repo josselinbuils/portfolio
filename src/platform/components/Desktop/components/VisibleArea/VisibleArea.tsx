@@ -1,6 +1,6 @@
 import { useEventListener } from '@josselinbuils/hooks/useEventListener';
-import { type FC, type MouseEvent, Suspense } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { type FC, Suspense } from 'preact/compat';
+import { useEffect, useRef, useState } from 'preact/compat';
 import { type Size } from '@/platform/interfaces/Size';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
 import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
@@ -48,7 +48,7 @@ export const VisibleArea: FC = () => {
     >
       <Windows visibleAreaSize={visibleAreaSize} />
       {selectionVisible && (
-        <Suspense>
+        <Suspense fallback={null}>
           <Selection />
         </Suspense>
       )}

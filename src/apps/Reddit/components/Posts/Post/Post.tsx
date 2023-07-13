@@ -1,7 +1,7 @@
 import { faComment } from '@fortawesome/free-regular-svg-icons/faComment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import { type FC, type MouseEvent } from 'react';
+import { type FC } from 'preact/compat';
 import { type RedditPost } from '../../../interfaces/RedditPost';
 import styles from './Post.module.scss';
 import { PostDetails } from './PostDetails';
@@ -11,7 +11,13 @@ import { getPreviewResolution } from './utils/getPreviewResolution';
 
 const REDDIT_URL = 'https://www.reddit.com';
 
-export const Post: FC<Props> = ({
+export interface PostProps extends RedditPost {
+  currentSubreddit: string;
+  outdated: boolean;
+  onClickSubreddit(subreddit: string): void;
+}
+
+export const Post: FC<PostProps> = ({
   numComments,
   outdated,
   permalink,
@@ -33,7 +39,7 @@ export const Post: FC<Props> = ({
   }
 
   const clickHandler = (event: MouseEvent) => {
-    if ((event.target as HTMLElement).nodeName !== 'BUTTON') {
+    if ((event.currentTarget as HTMLElement).nodeName !== 'BUTTON') {
       window.open(`${REDDIT_URL}${permalink}`);
     }
   };
@@ -69,9 +75,3 @@ export const Post: FC<Props> = ({
     </div>
   );
 };
-
-interface Props extends RedditPost {
-  currentSubreddit: string;
-  outdated: boolean;
-  onClickSubreddit(subreddit: string): void;
-}

@@ -1,5 +1,5 @@
-import { type FC } from 'react';
-import React, { createRef, useContext } from 'react';
+import { type FC } from 'preact/compat';
+import React, { createRef, useContext } from 'preact/compat';
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
@@ -18,18 +18,16 @@ export const SeekBar: FC = () => {
   const { currentMusic, currentTime, progress } = audioState;
 
   function onSeekStart(
-    downEvent: React.PointerEvent,
+    downEvent: PointerEvent,
   ): ((moveEvent: PointerEvent) => void) | void {
     if (progressBarRef.current === null || currentMusic === undefined) {
       return;
     }
 
     const progressBarWidth = progressBarRef.current.clientWidth;
-    const dx = downEvent.nativeEvent.offsetX - downEvent.clientX;
+    const dx = downEvent.offsetX - downEvent.clientX;
 
-    setCurrentTime(
-      (downEvent as React.MouseEvent).nativeEvent.offsetX / progressBarWidth,
-    );
+    setCurrentTime((downEvent as MouseEvent).offsetX / progressBarWidth);
 
     return (moveEvent: PointerEvent) =>
       setCurrentTime((moveEvent.clientX + dx) / progressBarWidth);

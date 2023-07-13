@@ -1,5 +1,5 @@
-import { type FC, type PropsWithChildren } from 'react';
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { type FC, type PropsWithChildren } from 'preact/compat';
+import { createContext, useEffect, useMemo, useState } from 'preact/compat';
 import { type AudioState } from './AudioController';
 import { AudioController } from './AudioController';
 

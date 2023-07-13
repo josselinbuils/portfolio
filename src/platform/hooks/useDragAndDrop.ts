@@ -1,16 +1,12 @@
-import type React from 'react';
 import { MouseButton } from '../constants';
 import { type EventHandler } from '../interfaces/EventHandler';
 import { noop } from '../utils/noop';
 
-type PointerMoveHandler = EventHandler<'pointermove'>;
-type PointerUpHandler = EventHandler<'pointerup'>;
-
 export function useDragAndDrop(
-  downHandler: (downEvent: React.PointerEvent) => PointerMoveHandler | void,
-  upHandler: PointerUpHandler = noop,
-): (downEvent: React.PointerEvent) => void {
-  return function dragAndDropHandler(downEvent: React.PointerEvent): void {
+  downHandler: (downEvent: PointerEvent) => EventHandler<'pointermove'> | void,
+  upHandler: EventHandler<'pointerup'> = noop,
+): (downEvent: PointerEvent) => void {
+  return function dragAndDropHandler(downEvent: PointerEvent): void {
     if (downEvent.button !== MouseButton.Left) {
       return;
     }
@@ -20,7 +16,6 @@ export function useDragAndDrop(
     // Handler could be canceled inside down handler
     if (moveHandler !== undefined) {
       downEvent.preventDefault();
-      downEvent.persist();
 
       const hookUpHandler = (upEvent: PointerEvent) => {
         window.removeEventListener('pointermove', moveHandler);

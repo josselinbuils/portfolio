@@ -1,5 +1,5 @@
-import { type FC } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { type FC } from 'preact/compat';
+import { useEffect, useRef, useState } from 'preact/compat';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { type RedditPost } from '../../interfaces/RedditPost';

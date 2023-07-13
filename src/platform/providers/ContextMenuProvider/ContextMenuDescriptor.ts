@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
 import { type ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 

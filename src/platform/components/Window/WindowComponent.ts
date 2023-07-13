@@ -1,4 +1,4 @@
-import { type FC, type RefObject } from 'react';
+import { type FC, type RefObject } from 'preact/compat';
 import { type Size } from '@/platform/interfaces/Size';
 import { type Window, type WindowProps } from './Window';
 

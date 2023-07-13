@@ -1,11 +1,5 @@
-import {
-  lazy as reactLazy,
-  type ComponentType,
-  type LazyExoticComponent,
-} from 'react';
+import { lazy as reactLazy } from 'preact/compat';
 
-export function lazy<T extends ComponentType<any>>(
-  factory: () => Promise<T>,
-): LazyExoticComponent<T> {
+export function lazy<T>(factory: () => Promise<T>): T {
   return reactLazy(async () => ({ default: await factory() }));
 }

@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext } from 'preact/compat';
 import { type TooltipDescriptor } from '../../components/Tooltip/TooltipDescriptor';
 
 function throwError(): void {

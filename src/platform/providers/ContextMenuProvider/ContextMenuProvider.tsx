@@ -1,11 +1,17 @@
 import cn from 'classnames';
 import {
   type FC,
+  type JSX,
   type PropsWithChildren,
-  type ReactElement,
   Suspense,
-} from 'react';
-import { Children, cloneElement, useCallback, useMemo, useState } from 'react';
+} from 'preact/compat';
+import {
+  Children,
+  cloneElement,
+  useCallback,
+  useMemo,
+  useState,
+} from 'preact/compat';
 import { lazy } from '@/platform/utils/lazy';
 import { ContextMenuContext } from './ContextMenuContext';
 import { type ContextMenuDescriptor } from './ContextMenuDescriptor';
@@ -32,7 +38,7 @@ export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
 
   return (
     <ContextMenuContext.Provider value={value}>
-      {Children.map(children as ReactElement[], (child) =>
+      {Children.map(children as JSX.Element[], (child) =>
         cloneElement(child, {
           className: cn(child.props.className, {
             [styles.eventLess]: descriptor,
@@ -40,7 +46,7 @@ export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
         }),
       )}
       {descriptor && (
-        <Suspense>
+        <Suspense fallback={null}>
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div className={styles.overlay} onMouseDown={hideContextMenu} />
           <ContextMenu {...descriptor} onHide={hideContextMenu} />

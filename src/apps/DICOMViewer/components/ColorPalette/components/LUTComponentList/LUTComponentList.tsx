@@ -2,7 +2,7 @@ import { faPlusSquare } from '@fortawesome/free-regular-svg-icons/faPlusSquare';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { ColorPicker } from './ColorPicker/ColorPicker';
 import styles from './LUTComponentList.module.scss';

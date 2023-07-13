@@ -33,7 +33,7 @@ export async function openFile(file?: File): Promise<EditorFile | undefined> {
     element.setAttribute('type', 'file');
     element.style.display = 'none';
     element.addEventListener('change', async (event: Event) => {
-      file = (event.target as HTMLInputElement).files?.[0];
+      file = (event.currentTarget as HTMLInputElement).files?.[0];
 
       if (file === undefined) {
         resolve(undefined);

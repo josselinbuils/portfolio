@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'react';
+import { type FC } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './Elements.module.scss';
 

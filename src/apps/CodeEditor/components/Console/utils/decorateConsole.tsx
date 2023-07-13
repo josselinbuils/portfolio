@@ -1,4 +1,5 @@
 import { type ListManager } from '@josselinbuils/hooks/useList';
+import { type JSX } from 'preact/compat';
 import { createGUID } from '@/platform/utils/createGUID';
 import { highlightCode } from '@/platform/utils/highlightCode/highlightCode';
 import { Shortcut } from '../../Shortcut/Shortcut';

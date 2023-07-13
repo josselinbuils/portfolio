@@ -1,5 +1,5 @@
-import { type FC } from 'react';
-import { useMemo } from 'react';
+import { type FC } from 'preact/compat';
+import { useMemo } from 'preact/compat';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './LineHighlight.module.scss';
