@@ -94,6 +94,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
     return (
       <WithTooltip className={styles.tooltip} title={tooltip}>
         <button
+          aria-label={appDescriptor.name}
           className={cn(styles.task, {
             [styles.notMobileFriendly]: !isMobileFriendly,
             [styles.taskButtonActive]: taskButtonActive,
