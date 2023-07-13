@@ -1,4 +1,9 @@
+import path from 'node:path';
+import express from 'express';
+import { PUBLIC_DIR } from './constants';
 import { startServer } from './startServer';
+
+const PUBLIC_PATH = path.join(process.cwd(), PUBLIC_DIR);
 
 (async () => {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -8,5 +13,8 @@ import { startServer } from './startServer';
     server: { middlewareMode: true },
   });
 
-  await startServer([viteDevServer.middlewares]);
+  await startServer([
+    viteDevServer.middlewares,
+    express.static(PUBLIC_PATH, { maxAge: 0 }),
+  ]);
 })();

@@ -1,5 +1,4 @@
 import http from 'node:http';
-import path from 'node:path';
 import express, {
   type NextFunction,
   type Request,
@@ -14,19 +13,16 @@ import registerRedditAPI from '@/apps/Reddit/api/Reddit.api';
 import { Logger } from '@/platform/api/Logger';
 import {
   API_URL_PATH,
-  ASSETS_MAX_AGE_SECONDS,
   ENV_DEV,
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   PORT,
-  PUBLIC_DIR,
 } from './constants';
 
 const ENV = process.env.NODE_ENV || ENV_DEV;
 const DEBUG = process.env.DEBUG === 'true';
 const HTTP_PREFIX = process.env.HTTP_PREFIX || HTTP_DEFAULT_PREFIX;
-const PUBLIC_PATH = path.join(process.cwd(), PUBLIC_DIR);
 
 export async function startServer(
   middlewares: RequestHandler[],
@@ -69,10 +65,6 @@ export async function startServer(
   const redditAPIRouter = express.Router();
   registerRedditAPI(redditAPIRouter);
   mainRouter.use(`${API_URL_PATH}/Reddit`, redditAPIRouter);
-
-  mainRouter.use(
-    express.static(PUBLIC_PATH, { maxAge: ASSETS_MAX_AGE_SECONDS }),
-  );
 
   middlewares.forEach((middleware) => mainRouter.use(middleware));
 

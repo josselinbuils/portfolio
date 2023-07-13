@@ -6,4 +6,4 @@ export const HTTP_INTERNAL_ERROR = 500;
 export const HTTP_NOT_FOUND = 404;
 export const PORT = 3000;
 export const PUBLIC_DIR = '/public';
-export const ASSETS_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
+export const ASSETS_MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;
