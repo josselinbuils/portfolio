@@ -18,7 +18,7 @@ export const FontAwesomeIcon = forwardRef<SVGSVGElement, FontAwesomeIconProps>(
         role="img"
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${width} ${height}`}
-        className={cn('svg-inline--fa', `fa-${icon.iconName}`)}
+        className={cn('svg-inline--fa', `fa-${icon.iconName}`, className)}
         ref={ref}
         {...forwardedProps}
       >
