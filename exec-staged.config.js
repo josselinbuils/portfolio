@@ -8,7 +8,7 @@ module.exports = [
     commands: ['csscomb -tv'],
   },
   {
-    regex: /\.(js|md|tsx?|scss)$/,
+    regex: /\.(js|json|md|tsx?|scss)$/,
     commands: ['prettier --write', 'git add'],
   },
 ];

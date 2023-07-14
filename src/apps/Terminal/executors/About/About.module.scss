@@ -1,4 +1,4 @@
-@import '@/platform/constants';
+@import '@/platform/_constants';
 
 .about {
   position: relative;
@@ -27,6 +27,7 @@
 
 .resume {
   font-size: 3.9rem;
+  line-height: 1.2;
   max-width: 22ch;
 }
 

@@ -38,7 +38,7 @@ export const BashError: Executor = ({ args }) => {
 
   return (
     <p className={styles.error}>
-      -bash: {command}: {errorMessage}
+      zsh: {command}: {errorMessage}
     </p>
   );
 };

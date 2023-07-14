@@ -1,4 +1,4 @@
-@import '../../constants';
+@import '../../_constants';
 
 $lineNumbersWidth: 4rem;
 $tabsHeight: 3rem;
@@ -57,7 +57,7 @@ ul.autoCompletionMenu {
   top: 3rem;
   right: 0;
   bottom: 0;
-  left: 3.3rem;
+  left: $toolbarWidth;
   display: flex;
 }
 

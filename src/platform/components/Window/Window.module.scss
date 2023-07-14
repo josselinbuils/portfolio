@@ -1,4 +1,5 @@
-@import '@/platform/constants';
+@import '@/platform/_constants';
+@import './_constants';
 
 .content {
   overflow: hidden;
@@ -40,12 +41,12 @@
   outline: none;
 
   &:not(.maximized) {
-    border-radius: 0.6rem; /* Needed by box shadow */
+    border-radius: $windowRadius; /* Needed by box shadow */
     box-shadow: 0 0 1rem #1f1f1f;
 
     .content {
-      border-bottom-right-radius: 0.6rem;
-      border-bottom-left-radius: 0.6rem;
+      border-bottom-right-radius: $windowRadius;
+      border-bottom-left-radius: $windowRadius;
     }
   }
 }

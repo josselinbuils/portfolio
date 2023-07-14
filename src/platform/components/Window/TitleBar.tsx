@@ -24,7 +24,7 @@ export const TitleBar: FC<Props> = ({
 
   return (
     <header
-      className={cn(styles.titlebar, className, {
+      className={cn(styles.titleBar, className, {
         [styles.maximized]: maximized,
       })}
       style={{ background, color }}

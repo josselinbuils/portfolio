@@ -50,8 +50,8 @@ const CodeEditor: WindowComponent = ({
       minWidth={800}
       ref={windowRef}
       title="CodeEditor"
-      titleBackground="#f0f0f0"
-      titleColor="#2f2f2f"
+      titleBackground="#434548"
+      titleColor="#c3c3c3"
       {...injectedWindowProps}
     >
       <div className={styles.codeEditor}>

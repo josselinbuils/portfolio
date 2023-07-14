@@ -9,11 +9,9 @@ import { About } from './executors/About/About';
 import { type AsyncExecutor } from './executors/AsyncExecutor';
 import { isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';
-import { Command } from './executors/Command/Command';
+import { Command, PREFIX_SIZE_CH } from './executors/Command/Command';
 import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
-
-const USER = 'guest';
 
 const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
   about: async () => About,
@@ -27,7 +25,7 @@ const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
 
 const initialExecutions: Execution[] = [
   {
-    args: [USER, 'about'],
+    args: ['about'],
     executor: Command,
     id: 0,
   },
@@ -122,7 +120,7 @@ const Terminal: WindowComponent = ({
       }
       executionManager.update();
     } else {
-      loadExecutor(Command, [USER, userInput]);
+      loadExecutor(Command, [userInput]);
       setUserInput('');
       setCaretIndex(0);
     }
@@ -152,7 +150,7 @@ const Terminal: WindowComponent = ({
     const args = cleanStr.split(' ');
     const command = args[0];
 
-    await loadExecutor(Command, [USER, str]);
+    await loadExecutor(Command, [str]);
 
     if (command.length > 0) {
       if (commands[commands.length - 1] !== str) {
@@ -179,7 +177,7 @@ const Terminal: WindowComponent = ({
 
   function getCaretOffset(): number {
     if (!waiting) {
-      return USER.length + caretIndex + 2;
+      return PREFIX_SIZE_CH + caretIndex;
     }
     if (query) {
       return query.str.length + caretIndex + 1;
@@ -321,13 +319,13 @@ const Terminal: WindowComponent = ({
   return (
     <Window
       active={active}
-      background="rgba(30, 30, 30, 0.9)"
+      background="rgba(0, 0, 0, 0.85)"
       minHeight={400}
       minWidth={800}
       ref={windowRef}
       title="Terminal"
-      titleBackground="#f0f0f0"
-      titleColor="#2f2f2f"
+      titleBackground="#333333"
+      titleColor="#f2f2f2"
       {...injectedWindowProps}
     >
       <div className={styles.terminal} ref={terminalRef}>
@@ -354,10 +352,10 @@ const Terminal: WindowComponent = ({
             ),
         )}
         <noscript className={styles.error}>
-          ✘ failed to run command bin/bash: JavaScript disabled
+          ✘ failed to run command bin/zsh: JavaScript disabled
         </noscript>
         <div className={styles.userInput}>
-          {!waiting && <Command args={[USER, userInput]} />}
+          {!waiting && <Command args={[userInput]} />}
           {query && (
             <UserQuery
               args={[query.str, formatAnswer(userInput, query.hideAnswer)]}
