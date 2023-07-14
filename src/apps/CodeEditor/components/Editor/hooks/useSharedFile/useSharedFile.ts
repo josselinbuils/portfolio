@@ -1,5 +1,3 @@
-import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useCallback, useEffect, useReducer, useRef } from 'preact/compat';
 import { type ClientState } from '@/apps/CodeEditor/interfaces/ClientState';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
@@ -12,6 +10,8 @@ import {
   getDiffs,
 } from '@/apps/CodeEditor/utils/diffs';
 import { minifySelection } from '@/apps/CodeEditor/utils/minifySelection';
+import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { createReducer } from '@/platform/state/utils/createReducer';
 import { computeHash } from '@/platform/utils/computeHash';
 import { dispatchToServer, registerClient } from '../../utils/shareState';

@@ -1,7 +1,7 @@
-import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import { type MutableRefObject } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
+import { useList } from '@/platform/hooks/useList';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { type AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';

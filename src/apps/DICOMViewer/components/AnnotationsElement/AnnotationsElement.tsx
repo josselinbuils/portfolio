@@ -1,11 +1,11 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type FC, type RefObject } from 'preact/compat';
 import { useRef } from 'preact/compat';
 import { type ViewType } from '@/apps/DICOMViewer/constants';
 import { RendererType } from '@/apps/DICOMViewer/constants';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { type Annotations } from '../../interfaces/Annotations';

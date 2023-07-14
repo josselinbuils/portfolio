@@ -1,13 +1,13 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { useContext, useEffect, useState } from 'preact/compat';
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '@/apps/MP3Player/utils/loadMusics';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { Select } from '@/platform/components/Select/Select';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';

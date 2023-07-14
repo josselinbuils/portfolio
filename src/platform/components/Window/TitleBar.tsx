@@ -1,9 +1,9 @@
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
 import styles from './TitleBar.module.scss';
 

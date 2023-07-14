@@ -1,6 +1,6 @@
 import { faRedditAlien } from '@fortawesome/free-brands-svg-icons/faRedditAlien';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type FC } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import styles from './Logo.module.scss';
 
 export const Logo: FC = () => (

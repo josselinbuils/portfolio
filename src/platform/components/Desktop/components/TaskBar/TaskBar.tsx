@@ -1,8 +1,8 @@
 import { faExpand } from '@fortawesome/free-solid-svg-icons/faExpand';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { APP_DESCRIPTORS } from '@/platform/appDescriptors';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
 import { Task } from './Task';
 import taskStyles from './Task.module.scss';

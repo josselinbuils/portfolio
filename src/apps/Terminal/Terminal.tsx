@@ -1,9 +1,9 @@
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import { useList } from '@josselinbuils/hooks/useList';
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useEffect, useRef, useState } from 'preact/compat';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { useList } from '@/platform/hooks/useList';
 import styles from './Terminal.module.scss';
 import { About } from './executors/About/About';
 import { type AsyncExecutor } from './executors/AsyncExecutor';

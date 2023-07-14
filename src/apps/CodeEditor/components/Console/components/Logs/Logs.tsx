@@ -1,7 +1,7 @@
 import { faBomb } from '@fortawesome/free-solid-svg-icons/faBomb';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { forwardRef } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { type Log } from '../../Log';
 import { LogLevel } from '../../Log';
 import styles from './Logs.module.scss';

@@ -1,6 +1,6 @@
-import { useEventListener } from '@josselinbuils/hooks/useEventListener';
 import { type FC } from 'preact/compat';
 import { useState } from 'preact/compat';
+import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './Selection.module.scss';
 

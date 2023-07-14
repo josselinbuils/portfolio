@@ -1,9 +1,9 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import { forwardRef, useEffect, useLayoutEffect, useRef } from 'preact/compat';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { useList } from '@/platform/hooks/useList';
 import { Shortcut } from '../Shortcut/Shortcut';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';
@@ -14,14 +14,14 @@ import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
 import { observeMutations } from './utils/observeMutations';
 
-interface Props {
+export interface ConsoleProps {
   active: boolean;
   className?: string;
   codeToExec: string | undefined;
   height: string;
 }
 
-export const Console = forwardRef<HTMLDivElement, Props>(
+export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
   ({ active, className, codeToExec = '', height }, ref) => {
     const [logs, logManager] = useList<Log>([]);
     const logsElementRef = useRef<HTMLDivElement>(null);

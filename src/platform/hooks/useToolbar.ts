@@ -1,7 +1,7 @@
-import { useEventListener } from '@josselinbuils/hooks/useEventListener';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { type JSX, type RefObject } from 'preact/compat';
 import { createRef, useEffect, useRef, useState } from 'preact/compat';
+import { useEventListener } from '@/platform/hooks/useEventListener';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
 
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal',

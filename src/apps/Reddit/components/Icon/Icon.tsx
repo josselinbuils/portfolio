@@ -1,8 +1,8 @@
 import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { cancelable } from '@/platform/utils/cancelable';
 import styles from './Icon.module.scss';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';

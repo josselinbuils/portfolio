@@ -1,7 +1,7 @@
 import { faMusic } from '@fortawesome/free-solid-svg-icons/faMusic';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { type Music } from '../../interfaces/Music';
 import styles from './MusicPreview.module.scss';
 

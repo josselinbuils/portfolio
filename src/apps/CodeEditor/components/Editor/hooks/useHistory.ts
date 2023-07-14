@@ -1,9 +1,9 @@
-import { useDynamicRef } from '@josselinbuils/hooks/useDynamicRef';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import { useCallback, useRef } from 'preact/compat';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { History } from '@/apps/CodeEditor/utils/History';
+import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
 
 export function useHistory({
   active,

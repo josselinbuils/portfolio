@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
 import cn from 'classnames';
 import { type HTMLAttributes, type RefObject } from 'preact/compat';
 import { forwardRef, useEffect, useState } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';

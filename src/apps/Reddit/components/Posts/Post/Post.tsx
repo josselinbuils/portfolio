@@ -1,7 +1,7 @@
 import { faComment } from '@fortawesome/free-regular-svg-icons/faComment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
 import { type RedditPost } from '../../../interfaces/RedditPost';
 import styles from './Post.module.scss';
 import { PostDetails } from './PostDetails';

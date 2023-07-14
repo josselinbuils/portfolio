@@ -4,9 +4,6 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useKeyMap } from '@josselinbuils/hooks/useKeyMap';
-import { useList } from '@josselinbuils/hooks/useList';
 import cn from 'classnames';
 import {
   Suspense,
@@ -21,6 +18,9 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
 import { highlightCode } from '@/platform/utils/highlightCode/highlightCode';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
@@ -58,7 +58,14 @@ import { moveLines } from './utils/moveLines';
 import { showShortcuts } from './utils/showShortcuts';
 import { unindent } from './utils/unindent';
 
-export const Editor: FC<Props> = ({
+export interface EditorProps {
+  className?: string;
+  code: string;
+  onChange(code: string): void;
+  onCursorPositionUpdate(cursorPosition: CursorPosition): void;
+}
+
+export const Editor: FC<EditorProps> = ({
   className,
   code,
   onChange,
@@ -545,10 +552,3 @@ export const Editor: FC<Props> = ({
     </div>
   );
 };
-
-interface Props {
-  className?: string;
-  code: string;
-  onChange(code: string): void;
-  onCursorPositionUpdate(cursorPosition: CursorPosition): void;
-}
