@@ -19,20 +19,3 @@ img {
 
   -webkit-user-drag: none;
 }
-
-@font-face {
-  font-family: 'JetBrainsMono';
-  font-weight: 400;
-  font-style: normal;
-
-  font-display: swap;
-  src:
-    local('JetBrainsMono'),
-    local('JetBrains Mono'),
-    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2')
-      format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff')
-      format('woff'),
-    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/ttf/JetBrainsMono-Regular.ttf')
-      format('truetype');
-}
