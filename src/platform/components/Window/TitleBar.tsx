@@ -34,6 +34,7 @@ export const TitleBar: FC<Props> = ({
         {...otherToolbarProps}
       >
         <button
+          aria-label="close"
           className={cn(styles.button, styles.close)}
           onClick={onClose}
           style={{ color }}
@@ -43,6 +44,7 @@ export const TitleBar: FC<Props> = ({
           <FontAwesomeIcon icon={faTimes} />
         </button>
         <button
+          aria-label="minimize"
           className={cn(styles.button, styles.minimize)}
           onClick={onMinimise}
           style={{ color }}
@@ -53,6 +55,7 @@ export const TitleBar: FC<Props> = ({
         </button>
         {showMaximizeButton && (
           <button
+            aria-label="maximize"
             className={cn(styles.button, styles.maximize)}
             onClick={onToggleMaximize}
             style={{ color }}
