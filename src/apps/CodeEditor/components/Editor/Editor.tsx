@@ -344,7 +344,7 @@ export const Editor: FC<EditorProps> = ({
     const isKeyboardEvent = event instanceof KeyboardEvent;
     const isMouseEvent = event instanceof MouseEvent;
 
-    if (!isKeyboardEvent && !isMouseEvent) {
+    if (!event.currentTarget || (!isKeyboardEvent && !isMouseEvent)) {
       return;
     }
 
