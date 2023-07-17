@@ -10,11 +10,11 @@ import styles from './TaskBar.module.scss';
 import { useTaskDescriptors } from './hooks/useTaskDescriptors';
 import { getTaskId } from './utils/getTaskId';
 
-interface Props {
+export interface TaskBarProps {
   className?: string;
 }
 
-export const TaskBar: FC<Props> = ({ className }) => {
+export const TaskBar: FC<TaskBarProps> = ({ className }) => {
   const { getToolProps, isToolActive, toolbarProps } = useToolbar('vertical');
   const taskDescriptors = useTaskDescriptors(APP_DESCRIPTORS);
   const { className: toolbarClassName, ...otherToolbarProps } = toolbarProps;

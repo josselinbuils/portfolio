@@ -2,9 +2,7 @@ import { type FC, type PropsWithChildren } from 'preact/compat';
 import { useState } from 'preact/compat';
 import { InjectorContext } from './InjectorContext';
 
-export const InjectorProvider: FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const InjectorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [injectionMap] = useState({});
 
   return (

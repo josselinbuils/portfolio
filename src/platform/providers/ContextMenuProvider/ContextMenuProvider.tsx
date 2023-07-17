@@ -21,9 +21,7 @@ const ContextMenu = lazy(
   async () => (await import('./ContextMenu/ContextMenu')).ContextMenu,
 );
 
-export const ContextMenuProvider: FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const ContextMenuProvider: FC<PropsWithChildren> = ({ children }) => {
   const [descriptor, setDescriptor] = useState<ContextMenuDescriptor>();
   const hideContextMenu = useCallback(() => setDescriptor(undefined), []);
 

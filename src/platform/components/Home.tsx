@@ -3,7 +3,6 @@ import { useEffect } from 'preact/compat';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
 import { useInjector } from '../providers/InjectorProvider/useInjector';
-import { TooltipProvider } from '../providers/TooltipProvider/TooltipProvider';
 import { WindowManager } from '../services/WindowManager/WindowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
@@ -39,9 +38,7 @@ export const Home: FC<Props> = ({ defaultApp, lazyApp }) => {
 
   return (
     <ContextMenuProvider>
-      <TooltipProvider>
-        <Desktop />
-      </TooltipProvider>
+      <Desktop />
     </ContextMenuProvider>
   );
 };

@@ -2,11 +2,11 @@ import cn from 'classnames';
 import { type HTMLAttributes, type RefObject } from 'preact/compat';
 import { forwardRef, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { WithTooltip } from '@/platform/providers/TooltipProvider/WithTooltip';
 import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
 import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
 import { noop } from '@/platform/utils/noop';
@@ -92,7 +92,12 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
     );
 
     return (
-      <WithTooltip className={styles.tooltip} title={tooltip}>
+      <WithTooltip
+        className={cn(styles.tooltip, {
+          [styles.windowInstanceActive]: windowInstanceActive,
+        })}
+        title={tooltip}
+      >
         <button
           aria-label={appDescriptor.name}
           className={cn(styles.task, {

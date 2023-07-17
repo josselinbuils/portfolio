@@ -11,7 +11,7 @@ export const AudioContext = createContext<{
   audioState: undefined,
 });
 
-export const AudioProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const AudioProvider: FC<PropsWithChildren> = ({ children }) => {
   const audioController = useMemo(() => new AudioController(), []);
   const [audioState, setAudioState] = useState<AudioState>();
 

@@ -1,26 +1,22 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
-import { useEffect } from 'preact/compat';
+import { type CSSProperties, type JSX, type FC } from 'preact/compat';
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
+import type { Position } from '@/platform/interfaces/Position';
 import styles from './Tooltip.module.scss';
-import { type TooltipDescriptor } from './TooltipDescriptor';
 
-interface TooltipProps extends TooltipDescriptor {
-  onDOMReady(): void;
+export interface TooltipProps {
+  className?: string;
+  position: Position;
+  style?: CSSProperties;
+  title: string | JSX.Element;
 }
 
 export const Tooltip: FC<TooltipProps> = ({
   className,
-  onDOMReady,
   position,
   style,
   title,
 }) => {
-  useEffect(onDOMReady, [onDOMReady]);
-
-  if (position === undefined) {
-    return null;
-  }
   const { x, y } = position;
 
   return (

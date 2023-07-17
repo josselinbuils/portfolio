@@ -5,4 +5,6 @@
   z-index: 1000;
   align-content: center;
   user-select: none;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
