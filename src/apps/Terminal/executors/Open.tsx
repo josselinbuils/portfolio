@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'preact/compat';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 // Open executor dynamically imported in Terminal so no cycle
 // eslint-disable-next-line import/no-cycle
 import { getAppDescriptors } from '@/platform/utils/getAppDescriptors';
@@ -8,7 +7,6 @@ import { CommandHelp } from '../components/CommandHelp/CommandHelp';
 import { type Executor } from './Executor';
 
 export const Open: Executor = ({ args }) => {
-  const windowManager = useInjector(WindowManager);
   const appDescriptors = useMemo(getAppDescriptors, []);
   const appNames = Object.keys(appDescriptors);
   const appDescriptor = appDescriptors[args[0]];
@@ -18,7 +16,7 @@ export const Open: Executor = ({ args }) => {
     if (exists) {
       windowManager.openApp(appDescriptor);
     }
-  }, [appDescriptor, exists, windowManager]);
+  }, [appDescriptor, exists]);
 
   return exists ? null : (
     <CommandHelp

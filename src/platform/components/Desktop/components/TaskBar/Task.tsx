@@ -6,9 +6,8 @@ import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
 import styles from './Task.module.scss';
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
@@ -43,7 +42,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
       windowInstance,
     );
     const run = useTaskRunner(appDescriptor, windowInstance);
-    const windowManager = useInjector(WindowManager);
+
     const windowInstanceActive = windowInstance && windowInstance.active;
     const running = !!windowInstance || loading;
     const { icon, iconScale = 1, isMobileFriendly } = appDescriptor;
@@ -54,7 +53,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
         const y = Math.round(taskClientRect.top + taskClientRect.height / 3);
         windowManager.setMinimizedTopPosition(windowInstance.id, y);
       }
-    }, [taskRef, windowInstance, windowManager]);
+    }, [taskRef, windowInstance]);
 
     useKeyMap(
       {

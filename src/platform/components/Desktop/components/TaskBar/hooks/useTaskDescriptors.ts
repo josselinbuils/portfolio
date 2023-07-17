@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { type TaskDescriptor } from '../TaskDescriptor';
 
 export function useTaskDescriptors(
   pinnedAppDescriptors: AppDescriptor[],
 ): TaskDescriptor[] {
-  const windowManager = useInjector(WindowManager);
   const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
     getTaskDescriptors(
       pinnedAppDescriptors,
@@ -21,7 +19,7 @@ export function useTaskDescriptors(
       windowManager.windowInstancesSubject.subscribe((windowInstances) =>
         setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances)),
       ),
-    [pinnedAppDescriptors, windowManager],
+    [pinnedAppDescriptors],
   );
 
   return tasks;

@@ -1,14 +1,11 @@
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 
 export function useTaskRunner(
   appDescriptor: AppDescriptor,
   windowInstance?: WindowInstance,
 ): () => Promise<void> {
-  const windowManager = useInjector(WindowManager);
-
   return async function run(): Promise<void> {
     if (windowInstance !== undefined) {
       const { id } = windowInstance;

@@ -2,8 +2,7 @@ import { type FC, Suspense } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/compat';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Size } from '@/platform/interfaces/Size';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { getRefElementSize } from '@/platform/utils/getRefElementSize';
 import { lazy } from '@/platform/utils/lazy';
 import styles from './VisibleArea.module.scss';
@@ -15,7 +14,6 @@ export const VisibleArea: FC = () => {
   const [selectionVisible, setSelectionVisible] = useState(false);
   const [visibleAreaSize, setVisibleAreaSize] = useState<Size>();
   const visibleAreaRef = useRef<HTMLDivElement>(null);
-  const windowManager = useInjector(WindowManager);
 
   useEffect(() => setVisibleAreaSize(getRefElementSize(visibleAreaRef)), []);
 

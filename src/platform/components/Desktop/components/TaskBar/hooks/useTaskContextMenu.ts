@@ -3,17 +3,14 @@ import { type RefObject } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type ContextMenuDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 
 export function useTaskContextMenu(
   appDescriptor: AppDescriptor,
   taskRef: RefObject<HTMLElement>,
   windowInstance?: WindowInstance,
 ): () => ContextMenuDescriptor {
-  const windowManager = useInjector(WindowManager);
-
   return function getTaskContextMenuDescriptor(): ContextMenuDescriptor {
     if (taskRef.current === null) {
       throw new Error('Unable to retrieve task html element');

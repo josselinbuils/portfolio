@@ -1,4 +1,4 @@
 import { hydrate } from 'preact';
-import { App } from './App';
+import { Home } from './Home';
 
-hydrate(<App />, document.getElementById('app')!);
+hydrate(<Home />, document.getElementById('app')!);

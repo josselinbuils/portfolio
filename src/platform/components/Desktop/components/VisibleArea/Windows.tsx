@@ -1,19 +1,17 @@
 import { type FC } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
 import { type Size } from '@/platform/interfaces/Size';
-import { useInjector } from '@/platform/providers/InjectorProvider/useInjector';
-import { type WindowInstance } from '@/platform/services/WindowManager/WindowInstance';
-import { WindowManager } from '@/platform/services/WindowManager/WindowManager';
+import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 
 export const Windows: FC<Props> = ({ visibleAreaSize }) => {
-  const windowManager = useInjector(WindowManager);
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
     windowManager.getWindowInstances(),
   );
 
   useEffect(
     () => windowManager.windowInstancesSubject.subscribe(setWindowInstances),
-    [windowManager],
+    [],
   );
 
   return (

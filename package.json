@@ -6,10 +6,11 @@
   "scripts": {
     "analyse": "ANALYSE=true vite build",
     "build": "yarn build:client && yarn build:server && node prerender.mjs",
-    "build:client": "vite build --ssrManifest",
+    "build:client": "vite build",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
     "dev": "ts-node-dev -r tsconfig-paths/register --project ./server/tsconfig.json server/devServer.ts",
-    "lint": "eslint .",
+    "lint": "yarn lint:code && yarn lint:typings",
+    "lint:code": "eslint .",
     "lint:typings": "tsc",
     "pre-commit": "exec-staged",
     "prepare": "husky install",

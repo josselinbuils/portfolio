@@ -1,9 +1,8 @@
 import { type FC } from 'preact/compat';
 import { useEffect } from 'preact/compat';
+import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
-import { useInjector } from '../providers/InjectorProvider/useInjector';
-import { WindowManager } from '../services/WindowManager/WindowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
 import { type WindowComponent } from './Window/WindowComponent';
@@ -13,18 +12,19 @@ export interface DefaultApp {
   windowComponent: WindowComponent;
 }
 
-interface Props {
+export interface AppProps {
   defaultApp?: DefaultApp;
   lazyApp?: string;
 }
 
-export const Home: FC<Props> = ({ defaultApp, lazyApp }) => {
-  const windowManager = useInjector(WindowManager, (manager) => {
-    if (defaultApp !== undefined) {
-      const { appDescriptor, windowComponent } = defaultApp;
-      manager.openApp(appDescriptor, undefined, windowComponent);
-    }
-  });
+let initialised = false;
+
+export const App: FC<AppProps> = ({ defaultApp, lazyApp }) => {
+  if (defaultApp !== undefined && !initialised) {
+    const { appDescriptor, windowComponent } = defaultApp;
+    windowManager.openApp(appDescriptor, undefined, windowComponent);
+    initialised = true;
+  }
 
   useEffect(() => {
     if (lazyApp !== undefined) {
@@ -34,7 +34,7 @@ export const Home: FC<Props> = ({ defaultApp, lazyApp }) => {
         windowManager.openApp(descriptor, { startMaximized: true });
       }
     }
-  }, [lazyApp, windowManager]);
+  }, [lazyApp]);
 
   return (
     <ContextMenuProvider>
