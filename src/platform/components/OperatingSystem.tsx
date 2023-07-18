@@ -1,8 +1,10 @@
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { type FC } from 'preact/compat';
 import { useEffect } from 'preact/compat';
-import { windowManager } from '@/platform/services/windowManager/windowManager';
+import '../global.scss';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { ContextMenuProvider } from '../providers/ContextMenuProvider/ContextMenuProvider';
+import { windowManager } from '../services/windowManager/windowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
 import { type WindowComponent } from './Window/WindowComponent';
@@ -12,14 +14,17 @@ export interface DefaultApp {
   windowComponent: WindowComponent;
 }
 
-export interface AppProps {
+export interface OperatingSystemProps {
   defaultApp?: DefaultApp;
   lazyApp?: string;
 }
 
 let initialised = false;
 
-export const App: FC<AppProps> = ({ defaultApp, lazyApp }) => {
+export const OperatingSystem: FC<OperatingSystemProps> = ({
+  defaultApp,
+  lazyApp,
+}) => {
   if (defaultApp !== undefined && !initialised) {
     const { appDescriptor, windowComponent } = defaultApp;
     windowManager.openApp(appDescriptor, undefined, windowComponent);
