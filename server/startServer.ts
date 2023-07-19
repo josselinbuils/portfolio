@@ -1,23 +1,23 @@
 import http from 'node:http';
+import path from 'node:path';
 import express, {
   type NextFunction,
   type Request,
   type Response,
   type Router,
 } from 'express';
+import { glob } from 'glob';
 import SourceMapSupport from 'source-map-support';
-import registerCodeEditorAPI from '@/apps/CodeEditor/api/CodeEditor.api';
-import registerDICOMViewerAPI from '@/apps/DICOMViewer/api/DICOMViewer.api';
-import registerMP3PlayerAPI from '@/apps/MP3Player/api/MP3Player.api';
-import registerRedditAPI from '@/apps/Reddit/api/Reddit.api';
 import { Logger } from '@/platform/api/Logger';
 import {
+  API_EXTENSION,
   API_URL_PATH,
   ENV_DEV,
   HTTP_DEFAULT_PREFIX,
   HTTP_INTERNAL_ERROR,
   HTTP_NOT_FOUND,
   PORT,
+  SOURCE_DIR,
 } from './constants';
 
 const DEBUG = process.env.DEBUG === 'true';
@@ -50,21 +50,17 @@ export async function startServer(
     next();
   });
 
-  const codeEditorAPIRouter = express.Router();
-  await registerCodeEditorAPI(codeEditorAPIRouter, httpServer);
-  mainRouter.use(`${API_URL_PATH}/CodeEditor`, codeEditorAPIRouter);
+  const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`);
 
-  const dicomViewerAPIRouter = express.Router();
-  registerDICOMViewerAPI(dicomViewerAPIRouter);
-  mainRouter.use(`${API_URL_PATH}/DICOMViewer`, dicomViewerAPIRouter);
-
-  const mp3PlayerAPIRouter = express.Router();
-  registerMP3PlayerAPI(mp3PlayerAPIRouter);
-  mainRouter.use(`${API_URL_PATH}/MP3Player`, mp3PlayerAPIRouter);
-
-  const redditAPIRouter = express.Router();
-  registerRedditAPI(redditAPIRouter);
-  mainRouter.use(`${API_URL_PATH}/Reddit`, redditAPIRouter);
+  await Promise.all(
+    apiFiles.map(async (apiFile) => {
+      const { default: registerAPI } = await import(apiFile);
+      const apiRouter = express.Router();
+      const apiName = path.basename(apiFile, API_EXTENSION);
+      registerAPI(apiRouter, httpServer);
+      mainRouter.use(`${API_URL_PATH}/${apiName}`, apiRouter);
+    }),
+  );
 
   registerMiddlewares(mainRouter);
 
