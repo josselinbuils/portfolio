@@ -3,7 +3,7 @@ import express, {
   type NextFunction,
   type Request,
   type Response,
-  type RequestHandler,
+  type Router,
 } from 'express';
 import SourceMapSupport from 'source-map-support';
 import registerCodeEditorAPI from '@/apps/CodeEditor/api/CodeEditor.api';
@@ -20,12 +20,12 @@ import {
   PORT,
 } from './constants';
 
-const ENV = process.env.NODE_ENV || ENV_DEV;
 const DEBUG = process.env.DEBUG === 'true';
+const ENV = process.env.NODE_ENV || ENV_DEV;
 const HTTP_PREFIX = process.env.HTTP_PREFIX || HTTP_DEFAULT_PREFIX;
 
 export async function startServer(
-  middlewares: RequestHandler[],
+  registerMiddlewares: (router: Router) => unknown,
 ): Promise<void> {
   Logger.info(`Starting portfolio server in ${ENV} mode...`);
 
@@ -66,7 +66,7 @@ export async function startServer(
   registerRedditAPI(redditAPIRouter);
   mainRouter.use(`${API_URL_PATH}/Reddit`, redditAPIRouter);
 
-  middlewares.forEach((middleware) => mainRouter.use(middleware));
+  registerMiddlewares(mainRouter);
 
   mainRouter.all('*', (_, res) => res.status(HTTP_NOT_FOUND).end());
 

@@ -13,8 +13,8 @@ const PUBLIC_PATH = path.join(process.cwd(), PUBLIC_DIR);
     server: { middlewareMode: true },
   });
 
-  await startServer([
-    express.static(PUBLIC_PATH, { maxAge: 0 }),
-    viteDevServer.middlewares,
-  ]);
+  await startServer((router) => {
+    router.use(express.static(PUBLIC_PATH, { maxAge: 0 }));
+    router.use(viteDevServer.middlewares);
+  });
 })();
