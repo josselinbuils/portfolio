@@ -57,7 +57,7 @@ function findWindowingInFunctionalGroup(
 }
 
 function floatStringsToArray(
-  parsedFile: typeof DataSet,
+  parsedFile: DataSet,
   tag: string,
   slice?: number,
 ): number[] | number[][] | undefined {
