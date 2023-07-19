@@ -2,7 +2,7 @@ module.exports = {
     extends: [
         '@josselinbuils/eslint-config-react',
     ],
-    ignorePatterns: ['dist/**/*'],
+    ignorePatterns: ['build/**/*', 'dist/**/*'],
     rules: {
         '@typescript-eslint/consistent-type-imports': 'error',
         '@typescript-eslint/no-non-null-assertion': 'off',
@@ -31,6 +31,7 @@ module.exports = {
                 warnOnUnassignedImports: true,
             },
         ],
+        'no-empty-function': 'off',
         'no-useless-constructor': 'off',
         'react/function-component-definition': 'off',
         'react/jsx-no-bind': 'off',
