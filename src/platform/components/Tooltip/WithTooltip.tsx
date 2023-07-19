@@ -24,6 +24,10 @@ export const WithTooltip: FC<WithTooltipProps> = ({
   const [position, setPosition] = useState<Position>();
   const child = Children.only(children) as JSX.Element;
 
+  if (position && child.props.disabled) {
+    setPosition(undefined);
+  }
+
   return cloneElement(child, {
     children: (
       <>
