@@ -33,7 +33,7 @@ export const OperatingSystem: FC<OperatingSystemProps> = ({
 
   useEffect(() => {
     if (lazyApp !== undefined) {
-      const descriptor = getAppDescriptors()[lazyApp];
+      const descriptor = getAppDescriptors()[lazyApp.toLowerCase()];
 
       if (descriptor !== undefined) {
         windowManager.openApp(descriptor, { startMaximized: true });

@@ -7,7 +7,7 @@
     "analyse": "ANALYSE=true vite build",
     "build": "rimraf build && yarn build:client && yarn build:server && node prerender.mjs && rimraf dist && cpx \"build/**/*\" dist && rimraf build",
     "build:client": "vite build",
-    "build:server": "vite build --ssr src/entry-server.tsx",
+    "build:server": "vite build --ssr",
     "dev": "ts-node-dev -r tsconfig-paths/register --project ./server/tsconfig.json ./server/devServer.ts",
     "lint": "yarn lint:code && yarn lint:typings",
     "lint:code": "eslint .",

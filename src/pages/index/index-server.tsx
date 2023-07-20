@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { renderToString } from 'preact-render-to-string';
-import { Home } from './Home';
+import { Index } from './Index';
 
 export function render(): string {
-  return renderToString(<Home />);
+  return renderToString(<Index />);
 }
