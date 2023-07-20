@@ -3,6 +3,18 @@ import { createRef, useEffect, useRef, useState } from 'preact/compat';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 
+export interface ToolProps<T extends HTMLElement> {
+  ref: RefObject<T>;
+  tabIndex: number;
+}
+
+export interface ToolbarProps {
+  className: string | undefined;
+  role: JSX.AriaRole;
+  onBlur(): void;
+  onFocus(): void;
+}
+
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal',
 ): {
@@ -89,16 +101,4 @@ export function useToolbar(
       role: 'toolbar',
     },
   };
-}
-
-interface ToolProps<T extends HTMLElement> {
-  ref: RefObject<T>;
-  tabIndex: number;
-}
-
-interface ToolbarProps {
-  className: string | undefined;
-  role: JSX.AriaRole;
-  onBlur(): void;
-  onFocus(): void;
 }

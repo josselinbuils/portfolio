@@ -27,6 +27,7 @@ export default defineConfig(async ({ ssrBuild }) => {
           ]),
         ),
       },
+      sourcemap: true,
     },
     plugins: [
       preact(),
