@@ -52,15 +52,16 @@ export async function startServer(
 
   const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`);
 
-  await Promise.all(
-    apiFiles.map(async (apiFile) => {
-      const { default: registerAPI } = await import(apiFile);
-      const apiRouter = express.Router();
-      const apiName = path.basename(apiFile, API_EXTENSION);
-      registerAPI(apiRouter, httpServer);
-      mainRouter.use(`${API_URL_PATH}/${apiName}`, apiRouter);
-    }),
-  );
+  // await Promise.all(
+  //   apiFiles.map(async (apiFile) => {
+  //     console.log(apiFile);
+  //     const { default: registerAPI } = await import(apiFile);
+  //     const apiRouter = express.Router();
+  //     const apiName = path.basename(apiFile, API_EXTENSION);
+  //     registerAPI(apiRouter, httpServer);
+  //     mainRouter.use(`${API_URL_PATH}/${apiName}`, apiRouter);
+  //   }),
+  // );
 
   registerMiddlewares(mainRouter);
 

@@ -13,6 +13,8 @@ import { Command, PREFIX_SIZE_CH } from './executors/Command/Command';
 import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
 
+console.log({ styles });
+
 const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
   about: async () => About,
   bm: async () =>

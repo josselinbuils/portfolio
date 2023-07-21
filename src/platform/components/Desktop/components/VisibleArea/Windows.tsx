@@ -19,7 +19,6 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
       {windowInstances.map(
         ({ id, windowComponent: WindowComponent, ...forwardedProps }) => (
           <WindowComponent
-            key={id}
             id={id}
             onClose={windowManager.closeWindow}
             onMinimise={windowManager.hideWindow}
@@ -27,6 +26,7 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
             onUnselect={windowManager.unselectWindow}
             visibleAreaSize={visibleAreaSize}
             {...forwardedProps}
+            key={id}
           />
         ),
       )}

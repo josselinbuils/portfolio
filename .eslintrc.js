@@ -9,6 +9,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['error', {ignoreRestSiblings: true}],
         '@typescript-eslint/no-var-requires': 'off', // applied to js files
         'default-param-last': 'off', // false positives
+        'import/no-extraneous-dependencies': false,
         'import/order': [
             'error',
             {

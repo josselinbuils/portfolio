@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,
     "baseUrl": ".",
@@ -9,17 +10,19 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "lib": ["dom", "esnext"],
-    "module": "ESNext",
+    "module": "esnext",
+    "moduleDetection": "force",
     "moduleResolution": "bundler",
     "noEmit": true,
     "paths": {
-      "@/root": ["*"],
+      "@/root/*": ["*"],
       "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020"
+    "target": "esnext",
+    "types": ["bun-types"]
   },
   "exclude": ["**/node_modules"],
   "include": ["node_modules/vite/client.d.ts", "**/*.ts", "**/*.tsx"]

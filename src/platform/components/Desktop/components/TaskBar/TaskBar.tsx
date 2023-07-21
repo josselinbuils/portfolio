@@ -40,10 +40,10 @@ export const TaskBar: FC<TaskBarProps> = ({ className }) => {
           <Task
             appDescriptor={appDescriptor}
             id={id}
-            key={id}
             taskButtonActive={isToolActive(id)}
             windowInstance={windowInstance}
             {...getToolProps(id)}
+            key={id}
           />
         );
       })}

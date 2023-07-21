@@ -1,6 +1,6 @@
 import { NormalizedImageFormat } from '@/apps/DICOMViewer/constants';
-import GRAYSCALE_FRAGMENT_SHADER_SRC from './shaders/grayscale.frag?raw';
-import RGB_FRAGMENT_SHADER_SRC from './shaders/rgb.frag?raw';
+import GRAYSCALE_FRAGMENT_SHADER_SRC from './shaders/grayscale.frag';
+import RGB_FRAGMENT_SHADER_SRC from './shaders/rgb.frag';
 
 export function getTextureFormat(
   gl: WebGLRenderingContext,
