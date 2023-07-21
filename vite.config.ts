@@ -19,6 +19,9 @@ export default defineConfig(async ({ ssrBuild }) => {
         input: Object.fromEntries(
           pageNames.map((pageName) => [pageName, `${pageName}.html`]),
         ),
+        output: {
+          experimentalMinChunkSize: 20000,
+        },
       },
       sourcemap: true,
     },
