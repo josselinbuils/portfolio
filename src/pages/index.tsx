@@ -3,7 +3,7 @@ import Terminal from '@/apps/Terminal/Terminal';
 import { TerminalDescriptor } from '@/apps/Terminal/TerminalDescriptor';
 import { OperatingSystem } from '@/platform/components/OperatingSystem';
 
-export const Index: FC = () => (
+const IndexPage: FC = () => (
   <OperatingSystem
     defaultApp={{
       appDescriptor: TerminalDescriptor,
@@ -11,3 +11,5 @@ export const Index: FC = () => (
     }}
   />
 );
+
+export default IndexPage;

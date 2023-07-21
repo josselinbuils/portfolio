@@ -62,7 +62,7 @@ export async function startServer(
     }),
   );
 
-  registerMiddlewares(mainRouter);
+  await registerMiddlewares(mainRouter);
 
   mainRouter.all('*', (_, res) => res.status(HTTP_NOT_FOUND).end());
 

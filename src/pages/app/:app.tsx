@@ -1,7 +1,7 @@
 import { type FC } from 'preact/compat';
 import { OperatingSystem } from '@/platform/components/OperatingSystem';
 
-export const App: FC = () => {
+const AppPage: FC = () => {
   const lazyApp =
     typeof window !== 'undefined'
       ? window.location.pathname.split('/')[2]
@@ -9,3 +9,5 @@ export const App: FC = () => {
 
   return <OperatingSystem lazyApp={lazyApp} />;
 };
+
+export default AppPage;
