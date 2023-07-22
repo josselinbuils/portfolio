@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { glob } from 'glob';
 import renderToString from 'preact-render-to-string';
 import { createServer, type Plugin, type ViteDevServer } from 'vite';
 
@@ -12,30 +13,48 @@ const documentPath = path.join(pagesDirPath, '_document.tsx');
 
 export function vitePluginPage(): Plugin {
   let viteDevServerPromise: Promise<ViteDevServer> | undefined;
+  let pageNames: string[];
 
   return {
     name: 'vite-plugin-page',
     enforce: 'pre',
-    configureServer(server) {
-      server.watcher.add(documentPath);
-      server.watcher.on('all', async (_, filename) => {
-        if (filename === documentPath) {
-          const module = server.moduleGraph.getModuleById(VIRTUAL_DOCUMENT_ID);
-          if (module) {
-            server.moduleGraph.invalidateModule(module!);
-          }
-          if (server.ws) {
-            server.ws.send({
-              type: 'full-reload',
-              path: '*',
-            });
-          }
+    async config(userConfig) {
+      if (userConfig.build?.rollupOptions?.input !== undefined) {
+        throw new Error(
+          'build.rollupOptions.input must not be set by user because it will be done by vite-plugin-page.',
+        );
+      }
+
+      pageNames = await listSourcePages();
+
+      return {
+        build: {
+          rollupOptions: {
+            input: Object.fromEntries(
+              pageNames.map((pageName) => [pageName, `${pageName}.html`]),
+            ),
+          },
+        },
+      };
+    },
+    async configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const { url } = req;
+
+        if (!url) {
+          next();
+          return;
         }
-      });
-      return () => {
-        server.middlewares.use(async (req, res) => {
+
+        const matchingPageName = pageNames.find((pageName) =>
+          new RegExp(
+            `^/${pageName.replace(/index$/, '').replace(/:[^/]+/, '[^/]+')}$`,
+          ).test(url),
+        );
+
+        if (matchingPageName) {
           const { render } = (await server.ssrLoadModule(
-            `${VIRTUAL_ENTRY_SERVER_PREFIX}index`,
+            `${VIRTUAL_ENTRY_SERVER_PREFIX}${matchingPageName}`,
           )) as any;
           res.end(
             await server.transformIndexHtml?.(
@@ -44,8 +63,10 @@ export function vitePluginPage(): Plugin {
               req.originalUrl,
             ),
           );
-        });
-      };
+        } else {
+          next();
+        }
+      });
     },
     resolveId(source) {
       if (source === VIRTUAL_DOCUMENT_ID) {
@@ -114,6 +135,12 @@ export function render() {
       }
     },
   };
+}
+
+async function listSourcePages() {
+  return (
+    await glob('**/[!_]*.tsx', { cwd: path.join(process.cwd(), 'src/pages') })
+  ).map((filePath) => filePath.replace(/\.tsx$/, ''));
 }
 
 function withDocType(html: string): string {
