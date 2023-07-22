@@ -1,7 +1,7 @@
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
+import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons/faFileCirclePlus';
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
-import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
@@ -403,7 +403,7 @@ export const Editor: FC<EditorProps> = ({
     <div className={cn(styles.editor, className)}>
       <Toolbar className={styles.toolbar}>
         <ToolButton
-          icon={faPlus}
+          icon={faFileCirclePlus}
           onClick={createFile}
           title={
             <>

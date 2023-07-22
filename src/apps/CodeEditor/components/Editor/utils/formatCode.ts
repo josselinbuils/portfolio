@@ -8,12 +8,46 @@ interface Parser {
 }
 
 const parserDescriptors: { [language: string]: Parser } = {
+  css: {
+    name: 'css',
+    parserFactory: () => [import('prettier/plugins/postcss')],
+  },
+  html: {
+    name: 'html',
+    parserFactory: () => [import('prettier/plugins/html')],
+  },
   javascript: {
     name: 'babel',
     parserFactory: () => [
       import('prettier/plugins/babel'),
       import('prettier/plugins/estree' as any),
     ],
+  },
+  json: {
+    name: 'json',
+    parserFactory: () => [
+      import('prettier/plugins/babel'),
+      import('prettier/plugins/estree' as any),
+    ],
+  },
+  markdown: {
+    name: 'markdown',
+    parserFactory: () => [import('prettier/plugins/markdown')],
+  },
+  scss: {
+    name: 'scss',
+    parserFactory: () => [import('prettier/plugins/postcss')],
+  },
+  typescript: {
+    name: 'babel-ts',
+    parserFactory: () => [
+      import('prettier/plugins/babel'),
+      import('prettier/plugins/estree' as any),
+    ],
+  },
+  yaml: {
+    name: 'yaml',
+    parserFactory: () => [import('prettier/plugins/yaml')],
   },
 };
 

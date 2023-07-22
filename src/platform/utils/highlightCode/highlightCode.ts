@@ -6,7 +6,6 @@ import 'prismjs/components/prism-json.min';
 import 'prismjs/components/prism-markdown.min';
 import 'prismjs/components/prism-markup-templating.min';
 import 'prismjs/components/prism-markup.min';
-import 'prismjs/components/prism-php.min';
 import 'prismjs/components/prism-scss.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-yaml.min';
