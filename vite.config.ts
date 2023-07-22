@@ -9,6 +9,13 @@ import { vitePluginPage } from './config/vitePluginPage';
 export default defineConfig(({ ssrBuild }) => ({
   build: {
     outDir: ssrBuild ? 'build/server' : 'build',
+    rollupOptions: {
+      onwarn: (log, warn) => {
+        if (!log.message.includes('Use of eval')) {
+          warn(log);
+        }
+      },
+    },
     sourcemap: true,
   },
   plugins: [
