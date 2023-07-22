@@ -344,12 +344,12 @@ export const Editor: FC<EditorProps> = ({
     const isKeyboardEvent = event instanceof KeyboardEvent;
     const isMouseEvent = event instanceof MouseEvent;
 
-    if (!event.currentTarget || (!isKeyboardEvent && !isMouseEvent)) {
+    if (!event.target || (!isKeyboardEvent && !isMouseEvent)) {
       return;
     }
 
     const { selectionEnd, selectionStart } =
-      event.currentTarget as HTMLTextAreaElement;
+      event.target as HTMLTextAreaElement;
 
     if (
       selectionEnd !== selectionStart ||
