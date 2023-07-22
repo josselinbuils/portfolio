@@ -5,7 +5,7 @@ import { type FC, type RefObject } from 'preact/compat';
 import { useRef } from 'preact/compat';
 import { type ViewType } from '@/apps/DICOMViewer/constants';
 import { RendererType } from '@/apps/DICOMViewer/constants';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { type Annotations } from '../../interfaces/Annotations';

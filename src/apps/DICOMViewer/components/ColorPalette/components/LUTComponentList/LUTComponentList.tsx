@@ -3,7 +3,7 @@ import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArr
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { type FC } from 'preact/compat';
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { ColorPicker } from './ColorPicker/ColorPicker';
 import styles from './LUTComponentList.module.scss';
 

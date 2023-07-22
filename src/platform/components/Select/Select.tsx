@@ -1,7 +1,7 @@
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 import cn from 'classnames';
 import { type FC, type PropsWithChildren } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import styles from './Select.module.scss';
 
 export const Select: FC<PropsWithChildren<Props>> = ({

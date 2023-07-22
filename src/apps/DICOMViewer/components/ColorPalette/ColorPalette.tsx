@@ -2,7 +2,7 @@ import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { type LUTComponent } from '../../interfaces/LUTComponent';
 import styles from './ColorPalette.module.scss';
 import { BarPreview } from './components/BarPreview/BarPreview';

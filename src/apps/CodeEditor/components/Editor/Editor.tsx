@@ -18,7 +18,7 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';

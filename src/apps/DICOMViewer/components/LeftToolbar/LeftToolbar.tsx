@@ -5,7 +5,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { MouseButton } from '@/platform/constants';
 import { MouseTool, ViewType } from '../../constants';
 import { type Viewport } from '../../models/Viewport';

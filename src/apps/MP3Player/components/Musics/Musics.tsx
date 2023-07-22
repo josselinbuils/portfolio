@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from 'preact/compat';
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '@/apps/MP3Player/utils/loadMusics';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { Select } from '@/platform/components/Select/Select';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';

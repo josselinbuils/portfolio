@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { type HTMLAttributes, type RefObject } from 'preact/compat';
 import { forwardRef, useEffect, useState } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';

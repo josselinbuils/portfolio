@@ -1,4 +1,3 @@
-import '@fortawesome/fontawesome-svg-core/styles.css';
 import { type FC } from 'preact/compat';
 import { useEffect } from 'preact/compat';
 import '../global.scss';

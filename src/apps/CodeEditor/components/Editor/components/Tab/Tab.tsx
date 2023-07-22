@@ -1,7 +1,7 @@
 import { faJsSquare } from '@fortawesome/free-brands-svg-icons/faJsSquare';
 import cn from 'classnames';
 import { type FC, type JSX } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import styles from './Tab.module.scss';
 
 export interface TabProps extends JSX.HTMLAttributes<HTMLButtonElement> {

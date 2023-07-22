@@ -2,7 +2,7 @@ import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { cancelable } from '@/platform/utils/cancelable';
 import styles from './Icon.module.scss';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
