@@ -12,7 +12,7 @@
     "lint:typings": "tsc",
     "pre-commit": "exec-staged",
     "prepare": "husky install",
-    "start": "ts-node -r tsconfig-paths/register --project ./server/tsconfig.json ./server/server.ts"
+    "start": "NODE_ENV=production ts-node -r tsconfig-paths/register --project ./server/tsconfig.json ./server/server.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "6.4.0",
