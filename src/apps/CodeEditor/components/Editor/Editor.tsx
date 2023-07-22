@@ -341,10 +341,7 @@ export const Editor: FC<EditorProps> = ({
   }
 
   function handleSelect(event: TargetedEvent): void {
-    const isKeyboardEvent = event instanceof KeyboardEvent;
-    const isMouseEvent = event instanceof MouseEvent;
-
-    if (!event.target || (!isKeyboardEvent && !isMouseEvent)) {
+    if (!event.target) {
       return;
     }
 
@@ -517,6 +514,10 @@ export const Editor: FC<EditorProps> = ({
             className={styles.textarea}
             onBlur={() => setActive(false)}
             onChange={handleChange}
+            onClick={(event) => {
+              // Waits for selectionEnd and selectionStart to be updated
+              setTimeout(() => handleSelect(event), 0);
+            }}
             onDragEnd={() => setDisplayDragOverlay(false)}
             onDragEnter={() => {
               setDisplayDragOverlay(true);
