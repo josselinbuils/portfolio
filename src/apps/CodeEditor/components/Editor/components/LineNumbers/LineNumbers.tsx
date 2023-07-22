@@ -3,12 +3,13 @@ import { type FC, type JSX } from 'preact/compat';
 import { useLayoutEffect, useMemo, useRef } from 'preact/compat';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { getLineNumber } from '../../utils/getLineNumber';
+import { getTextWidth } from '../../utils/getTextWidth';
 import styles from './LineNumbers.module.scss';
 
 interface Props {
   className?: string;
   code: string;
-  lineCount: number;
+  editorWidth: number;
   scrollTop: number;
   selection: Selection;
 }
@@ -16,13 +17,13 @@ interface Props {
 export const LineNumbers: FC<Props> = ({
   className,
   code,
-  lineCount,
+  editorWidth,
   scrollTop,
   selection,
 }) => {
   const lineNumbers = useMemo(
-    () => computeLineNumbers(lineCount, code, selection),
-    [code, lineCount, selection],
+    () => computeLineNumbers(code, selection, editorWidth),
+    [code, editorWidth, selection],
   );
   const lineNumbersElementRef = useRef<HTMLDivElement>(null);
 
@@ -43,22 +44,32 @@ export const LineNumbers: FC<Props> = ({
 };
 
 function computeLineNumbers(
-  lineCount: number,
   code: string,
   selection: Selection,
+  editorWidth: number,
 ): JSX.Element[] {
   const activeLine = getLineNumber(code, selection[0]) + 1;
+  const lines = code.split('\n');
   const numbers: JSX.Element[] = [];
 
-  for (let i = 1; i <= lineCount; i++) {
+  for (let lineNumber = 1; lineNumber <= lines.length; lineNumber++) {
+    const lineWidth = getTextWidth(
+      lines[lineNumber - 1],
+      `13px 'JetBrainsMono'`,
+    );
+    const lineHeight = editorWidth > 0 ? Math.ceil(lineWidth / editorWidth) : 1;
+
     numbers.push(
-      i === activeLine ? (
-        <span className={styles.activeLine} key={`${i}-current`}>
-          {i}
+      lineNumber === activeLine ? (
+        <span className={styles.activeLine} key={`${lineNumber}-current`}>
+          {lineNumber}
         </span>
       ) : (
-        <span key={i}>{i}</span>
+        <span key={lineNumber}>{lineNumber}</span>
       ),
+      ...Array.from({ length: lineHeight - 1 }, (i) => (
+        <span key={`${lineNumber}-empty-${i}`}> </span>
+      )),
     );
   }
   return numbers;

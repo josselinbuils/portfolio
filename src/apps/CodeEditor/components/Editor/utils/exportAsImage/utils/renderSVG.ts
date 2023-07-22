@@ -1,5 +1,5 @@
+import { getTextWidth } from '../../getTextWidth';
 import { blobToBase64 } from './blobToBase64';
-import { getTextWidth } from './getTextWidth';
 import { stringifyPrismTheme } from './stringifyPrismTheme';
 
 const BASE_FONT_SIZE_PX = 12;

@@ -52,6 +52,7 @@ import { canFormat, formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
+import { getWidthWithoutPadding } from './utils/getWidthWithoutPadding';
 import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { moveLines } from './utils/moveLines';
@@ -83,7 +84,6 @@ export const Editor: FC<EditorProps> = ({
   const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
   const [activeFilename, previouslyActiveFilename, setActiveFilename] =
     useMemState<string>(files[0].name);
-  const [lineCount, setLineCount] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
@@ -179,14 +179,6 @@ export const Editor: FC<EditorProps> = ({
     const y = getLineNumber(code, cursorOffset) + 1;
     onCursorPositionUpdate({ offset: cursorOffset, x, y });
   }, [code, cursorOffset, onCursorPositionUpdate]);
-
-  useLayoutEffect(() => {
-    const newLineCount = (code.match(/\n/g)?.length || 0) + 1;
-
-    if (newLineCount !== lineCount) {
-      setLineCount(newLineCount);
-    }
-  }, [code, lineCount]);
 
   useLayoutEffect(() => {
     const textAreaElement = textAreaElementRef.current;
@@ -483,7 +475,7 @@ export const Editor: FC<EditorProps> = ({
         <LineNumbers
           className={styles.lineNumbers}
           code={code}
-          lineCount={lineCount}
+          editorWidth={getWidthWithoutPadding(textAreaElementRef.current)}
           scrollTop={scrollTop}
           selection={selection}
         />
