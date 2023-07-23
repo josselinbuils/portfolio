@@ -6,6 +6,5 @@ export const CodeEditorDescriptor: AppDescriptor = {
   factory: () => import('./CodeEditor'),
   icon: faCode,
   iconScale: 0.85,
-  isMobileFriendly: false,
   name: 'CodeEditor',
 };

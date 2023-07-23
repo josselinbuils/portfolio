@@ -6,6 +6,5 @@ export const TeraviaDescriptor: AppDescriptor = {
   factory: () => import('./Teravia'),
   icon: faGamepad,
   iconScale: 0.8,
-  isMobileFriendly: false,
   name: 'Teravia',
 };

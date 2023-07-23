@@ -8,6 +8,5 @@ export const TerminalDescriptor: AppDescriptor = {
   factory: () => import('./Terminal'),
   icon: faTerminal,
   iconScale: 0.8,
-  isMobileFriendly: true,
   name: 'Terminal',
 };

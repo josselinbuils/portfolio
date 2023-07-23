@@ -5,6 +5,5 @@ export const BlogDescriptor: AppDescriptor = {
   description: 'Stuff I want to share.',
   factory: () => import('./Blog'),
   icon: faBlog,
-  isMobileFriendly: true,
   name: 'Blog',
 };

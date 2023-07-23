@@ -1,13 +1,26 @@
-@import '@/platform/_constants';
+@import '@/platform/_constants.scss';
+@import './_constants.scss';
 
 .taskBar {
   z-index: 999;
-  display: flex;
   overflow: hidden;
-  flex-basis: 6rem;
+  flex-basis: $taskBarWidth;
+  flex-direction: column;
   flex-grow: 0;
   flex-shrink: 0;
   height: 100vh;
   color: $textColor;
   background: $backgroundColor;
+}
+
+@media only screen and (max-width: $mobileBreakpoint) {
+  .taskBar {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+  .taskBar {
+    display: flex;
+  }
 }

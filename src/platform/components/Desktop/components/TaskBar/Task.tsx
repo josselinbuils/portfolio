@@ -45,7 +45,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
 
     const windowInstanceActive = windowInstance && windowInstance.active;
     const running = !!windowInstance || loading;
-    const { icon, iconScale = 1, isMobileFriendly } = appDescriptor;
+    const { icon, iconScale = 1 } = appDescriptor;
 
     useEffect(() => {
       if (taskRef.current !== null && windowInstance !== undefined) {
@@ -100,7 +100,6 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
         <button
           aria-label={appDescriptor.name}
           className={cn(styles.task, {
-            [styles.notMobileFriendly]: !isMobileFriendly,
             [styles.taskButtonActive]: taskButtonActive,
             [styles.windowInstanceActive]: windowInstanceActive,
           })}

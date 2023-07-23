@@ -1,4 +1,3 @@
-import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import cn from 'classnames';
@@ -12,7 +11,6 @@ import { Select } from '@/platform/components/Select/Select';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
 import { AudioContext } from '../AudioProvider/AudioProvider';
-import { Button } from '../Button/Button';
 import styles from './Musics.module.scss';
 
 const ORDERS = [
@@ -21,19 +19,12 @@ const ORDERS = [
   { name: 'Top Week', value: 'popularity_week' },
 ];
 
-interface Props {
+export interface MusicsProps {
   className?: string;
   musicList: MusicList;
-  onMenuButtonClick: () => unknown;
-  showMenuButton: boolean;
 }
 
-export const Musics: FC<Props> = ({
-  className,
-  musicList,
-  onMenuButtonClick,
-  showMenuButton,
-}) => {
+export const Musics: FC<MusicsProps> = ({ className, musicList }) => {
   const { audioController, audioState } = useContext(AudioContext);
   const [musics, setMusics] = useState<Music[]>([]);
   const [jamendoOrder, setJamendoOrder] = useState<string>('popularity_total');
@@ -68,11 +59,6 @@ export const Musics: FC<Props> = ({
       {loading && <Spinner color="#007ad8" />}
       <div className={styles.header}>
         <div className={styles.listInfo}>
-          {showMenuButton && (
-            <Button className={styles.menuButton} onClick={onMenuButtonClick}>
-              <FontAwesomeIcon icon={faBars} />
-            </Button>
-          )}
           <h2>{musicList.name}</h2>
           <Select
             className={styles.select}

@@ -5,6 +5,5 @@ export const DICOMViewerDescriptor: AppDescriptor = {
   description: 'Medical image viewer.',
   factory: () => import('./DICOMViewer'),
   icon: faHeartbeat,
-  isMobileFriendly: false,
   name: 'DICOMViewer',
 };

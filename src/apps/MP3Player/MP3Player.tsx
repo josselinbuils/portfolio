@@ -1,7 +1,6 @@
-import { useCallback, useLayoutEffect, useState } from 'preact/compat';
+import { useCallback, useState } from 'preact/compat';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
-import { useMobile } from '@/platform/hooks/useMobile';
 import styles from './MP3Player.module.scss';
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
 import { Footer } from './components/Footer/Footer';
@@ -11,26 +10,13 @@ import { type MusicList } from './interfaces/MusicList';
 import { musicLists } from './musicLists';
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
-  const isMobile = useMobile();
   const [activeMusicList, setActiveMusicList] = useState<MusicList>(
     musicLists[0],
   );
-  const [showSidebar, setShowSidebar] = useState(!isMobile);
 
-  useLayoutEffect(() => {
-    setShowSidebar(!isMobile);
-  }, [isMobile]);
-
-  const onClickMusicList = useCallback(
-    (playlist: MusicList) => {
-      setActiveMusicList(playlist);
-
-      if (isMobile) {
-        setShowSidebar(false);
-      }
-    },
-    [isMobile],
-  );
+  const onClickMusicList = useCallback((playlist: MusicList) => {
+    setActiveMusicList(playlist);
+  }, []);
 
   return (
     <Window
@@ -49,16 +35,9 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
             <Sidebar
               activeMusicList={activeMusicList}
               className={styles.sidebar}
-              isMobile={isMobile}
-              isVisible={showSidebar}
               onClickMusicList={onClickMusicList}
             />
-            <Musics
-              className={styles.musics}
-              musicList={activeMusicList}
-              showMenuButton={isMobile}
-              onMenuButtonClick={() => setShowSidebar(!showSidebar)}
-            />
+            <Musics className={styles.musics} musicList={activeMusicList} />
           </div>
           <Footer className={styles.footer} />
         </div>

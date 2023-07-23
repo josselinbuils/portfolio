@@ -6,6 +6,5 @@ export interface AppDescriptor {
   factory: () => Promise<{ default: WindowComponent }>;
   icon: IconDefinition;
   iconScale?: number;
-  isMobileFriendly: boolean;
   name: string;
 }

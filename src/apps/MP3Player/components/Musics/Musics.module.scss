@@ -28,11 +28,6 @@ $previewSize: 3.5rem;
   }
 }
 
-.menuButton {
-  font-size: 3rem;
-  margin-right: 1ch;
-}
-
 .musicList {
   display: flex;
   flex-direction: column;
@@ -161,16 +156,5 @@ $previewSize: 3.5rem;
   th {
     padding: 0.3rem 1.5rem 1rem 0;
     text-align: left;
-  }
-}
-
-@media only screen and (max-width: $mobileBreakpoint) {
-  .album,
-  .tableHeader {
-    display: none;
-  }
-
-  .listInfo {
-    margin-top: 0.5rem;
   }
 }
