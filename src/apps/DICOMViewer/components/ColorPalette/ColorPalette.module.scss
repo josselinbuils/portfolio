@@ -46,8 +46,8 @@
     border-radius: $radiusXs;
 
     .button {
-      margin-top: -$spacingS;
-      margin-left: -$spacingS;
+      margin-top: (-$spacingS);
+      margin-left: (-$spacingS);
       border: none;
     }
   }
