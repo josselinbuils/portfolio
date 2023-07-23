@@ -26,6 +26,8 @@
   width: $taskBarWidth;
   height: $taskBarWidth;
   text-align: center;
+  border: 0.1rem solid transparent;
+  border-right: 0;
   background: $backgroundColor;
 
   &:first-child {
@@ -44,6 +46,10 @@
     }
   }
 
+  &:hover {
+    border-color: darken($darkGrey, 5%);
+  }
+
   &:hover,
   &.taskButtonActive {
     background: $darkGrey;
@@ -55,6 +61,10 @@
 
   &.windowInstanceActive {
     background: $grey;
+
+    &:hover {
+      border-color: darken($lightGrey, 5%);
+    }
 
     &:hover,
     &.taskButtonActive {
@@ -75,10 +85,13 @@
   margin: 0;
   padding: $spacingS $spacingM $spacingS $spacingS;
   color: $textColor;
+  border: 0.1rem solid darken($darkGrey, 5%);
+  border-left: 0;
   border-radius: 0 $radiusS $radiusS 0;
   background: $darkGrey;
 
   &.windowInstanceActive {
+    border-color: darken($lightGrey, 5%);
     background: $lightGrey;
   }
 }

@@ -1,12 +1,12 @@
 @import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
-$buttonSize: $toolbarWidth - $spacingXs * 2 - 0.1rem;
+$buttonSize: $toolbarWidth - $spacingXs * 2;
 
 .toolButton {
   $color: #b8babc;
 
-  font-size: 1.8rem;
+  font-size: calc($toolbarWidth / 2.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,8 +15,9 @@ $buttonSize: $toolbarWidth - $spacingXs * 2 - 0.1rem;
   padding: 0;
   vertical-align: middle;
   color: $color;
-  border: none;
-  border-radius: $radiusXs;
+  border: 0.1rem solid transparent;
+  border-right: 0;
+  border-radius: $radiusXs 0 0 $radiusXs;
   outline: none;
   background: none;
 
@@ -26,6 +27,7 @@ $buttonSize: $toolbarWidth - $spacingXs * 2 - 0.1rem;
 
   &:not(:disabled) {
     &:hover {
+      border-color: $borderColorPrimary;
       background: lighten($backgroundPrimaryColor, 10%);
     }
 
@@ -37,15 +39,16 @@ $buttonSize: $toolbarWidth - $spacingXs * 2 - 0.1rem;
 
 .tooltip {
   font-family: $fontFamily;
-  font-size: 1.2rem;
+  font-size: $fontSize;
   line-height: $buttonSize;
   display: flex;
   box-sizing: border-box;
   height: $buttonSize;
-  margin: 0 0 0 (-$spacingXs);
-  padding: 0 0.6rem;
+  margin: 0;
+  padding: 0 $spacingM 0 $spacingS;
   color: #b8babc;
-  border: none;
+  border: 0.1rem solid $borderColorPrimary;
+  border-left: 0;
   border-radius: 0 $radiusXs $radiusXs 0;
   background: lighten($backgroundPrimaryColor, 10%);
 }

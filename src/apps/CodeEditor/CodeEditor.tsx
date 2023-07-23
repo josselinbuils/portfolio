@@ -18,7 +18,7 @@ const CodeEditor: WindowComponent = ({
     x: 0,
     y: 0,
   });
-  const [consoleHeight, setConsoleHeight] = useState('40%');
+  const [consoleHeight, setConsoleHeight] = useState('35%');
   const consoleElementRef = useRef<HTMLDivElement>(null);
   const resizeStartHandler = useDragAndDrop(onResizeStart);
 
@@ -46,8 +46,8 @@ const CodeEditor: WindowComponent = ({
     <Window
       active={active}
       background="#45484a"
-      minHeight={600}
-      minWidth={800}
+      minHeight={675}
+      minWidth={900}
       ref={windowRef}
       title="CodeEditor"
       titleBackground="#434548"

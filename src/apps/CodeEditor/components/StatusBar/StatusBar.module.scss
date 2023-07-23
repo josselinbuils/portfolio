@@ -1,13 +1,14 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 .statusBar {
   font-size: 1.1rem;
-  line-height: 1.9rem;
+  line-height: 2.4rem;
   z-index: 1;
   overflow: hidden;
   box-sizing: border-box;
-  height: 2rem;
-  padding: 0 0.7rem;
+  height: 2.5rem;
+  padding: 0 $spacingS;
   text-align: right;
   color: $textPrimaryColor;
   border-top: 0.1rem solid $borderColorPrimary;

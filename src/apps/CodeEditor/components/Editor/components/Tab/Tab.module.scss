@@ -2,19 +2,20 @@
 @import '../../../../_constants.scss';
 
 .icon {
-  font-size: 1.4rem;
-  margin-right: 0.7rem;
+  font-size: 1.6rem;
+  margin-right: $spacingS;
+  vertical-align: text-top;
 }
 
 .tab {
   $color: #b8babc;
 
   font-family: $fontFamily;
-  font-size: 1.1rem;
+  font-size: $fontSize;
   position: relative;
   display: inline-block;
   height: 100%;
-  padding: 0 $spacingS;
+  padding: 0 $spacingM;
   user-select: none;
   color: $color;
   border: none;
