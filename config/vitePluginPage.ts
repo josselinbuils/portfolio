@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { glob } from 'glob';
-import renderToString from 'preact-render-to-string';
 import { createServer, type Plugin, type ViteDevServer } from 'vite';
 
 export const VIRTUAL_DOCUMENT_ID = 'virtual:page:document';
@@ -102,7 +101,10 @@ import Document from '${VIRTUAL_DOCUMENT_ID}';
 import Page from '${VIRTUAL_ENTRY_PAGE_PREFIX}${pageName}';
 
 export function render() {
-  return renderToString(Document({ entryScriptUrl: '${VIRTUAL_ENTRY_CLIENT_PREFIX}${pageName}' }));
+  return renderToString(Document({
+    children: Page(),
+    entryScriptUrl: '${VIRTUAL_ENTRY_CLIENT_PREFIX}${pageName}'
+  }));
 }
 `;
       }
@@ -116,17 +118,10 @@ export function render() {
         }
         const viteDevServer = await viteDevServerPromise;
 
-        const { default: Document } = await viteDevServer.ssrLoadModule(
-          VIRTUAL_DOCUMENT_ID,
+        const { render } = await viteDevServer.ssrLoadModule(
+          `${VIRTUAL_ENTRY_SERVER_PREFIX}${pageName}`,
         );
-
-        return withDocType(
-          renderToString(
-            Document({
-              entryScriptUrl: `${VIRTUAL_ENTRY_CLIENT_PREFIX}${pageName}`,
-            }),
-          ),
-        );
+        return withDocType(render());
       }
     },
     async buildEnd() {
