@@ -2,13 +2,13 @@ import { useEffect, useState } from 'preact/compat';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
-import { type TaskDescriptor } from '../TaskDescriptor';
+import { type AppTaskDescriptor } from '../TaskDescriptor';
 
-export function useTaskDescriptors(
+export function useAppTaskDescriptors(
   pinnedAppDescriptors: AppDescriptor[],
-): TaskDescriptor[] {
-  const [tasks, setTasks] = useState<TaskDescriptor[]>(() =>
-    getTaskDescriptors(
+): AppTaskDescriptor[] {
+  const [tasks, setTasks] = useState<AppTaskDescriptor[]>(() =>
+    getAppTaskDescriptors(
       pinnedAppDescriptors,
       windowManager.getWindowInstances(),
     ),
@@ -16,27 +16,26 @@ export function useTaskDescriptors(
 
   useEffect(
     () =>
-      windowManager.windowInstancesSubject.subscribe((windowInstances) =>
-        setTasks(getTaskDescriptors(pinnedAppDescriptors, windowInstances)),
-      ),
+      windowManager.windowInstancesSubject.subscribe((windowInstances) => {
+        setTasks(getAppTaskDescriptors(pinnedAppDescriptors, windowInstances));
+      }),
     [pinnedAppDescriptors],
   );
 
   return tasks;
 }
 
-function getTaskDescriptors(
+function getAppTaskDescriptors(
   pinnedAppDescriptors: AppDescriptor[],
   windowInstances: WindowInstance[] = [],
-): TaskDescriptor[] {
-  const pinnedTaskDescriptors: TaskDescriptor[] = pinnedAppDescriptors.map(
-    (appDescriptor) => ({ appDescriptor }),
-  );
-  const taskDescriptors = [...pinnedTaskDescriptors];
+): AppTaskDescriptor[] {
+  const taskDescriptors: AppTaskDescriptor[] = pinnedAppDescriptors
+    .slice()
+    .map((appDescriptor) => ({ ...appDescriptor }));
 
   windowInstances.forEach((windowInstance) => {
-    const pinnedTaskDescriptor = pinnedTaskDescriptors.find(
-      (task) => task.appDescriptor === windowInstance.appDescriptor,
+    const pinnedTaskDescriptor = taskDescriptors.find(
+      (task) => task.name === windowInstance.appDescriptor.name,
     );
 
     if (
@@ -48,7 +47,7 @@ function getTaskDescriptors(
       const { appDescriptor } = windowInstance;
 
       taskDescriptors.push({
-        appDescriptor,
+        ...appDescriptor,
         windowInstance,
       });
     }

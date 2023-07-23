@@ -37,8 +37,11 @@
   }
 
   &:last-child {
-    border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
+
+    &:not(:hover) {
+      border-bottom-right-radius: 8px;
+    }
   }
 
   &:hover,

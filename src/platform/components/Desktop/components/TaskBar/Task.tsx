@@ -4,32 +4,25 @@ import { forwardRef, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
-import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
 import styles from './Task.module.scss';
+import { type TaskDescriptor } from './TaskDescriptor';
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
+import { isAppTaskDescriptor } from './utils/isAppTaskDescriptor';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
 interface TaskProps extends HTMLAttributes<HTMLButtonElement> {
-  appDescriptor: AppDescriptor;
   taskButtonActive: boolean;
-  windowInstance?: WindowInstance;
+  taskDescriptor: TaskDescriptor;
 }
 
 export const Task = forwardRef<HTMLButtonElement, TaskProps>(
   (
-    {
-      appDescriptor,
-      onClick = noop,
-      taskButtonActive,
-      windowInstance,
-      ...forwardedProps
-    },
+    { onClick = noop, taskButtonActive, taskDescriptor, ...forwardedProps },
     ref,
   ) => {
     const taskRef = ref as unknown as RefObject<HTMLButtonElement>;
@@ -37,15 +30,18 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
     const { hideContextMenu, isContextMenuDisplayed, showContextMenu } =
       useContextMenu();
     const getTaskContextMenuDescriptor = useTaskContextMenu(
-      appDescriptor,
+      taskDescriptor,
       taskRef,
-      windowInstance,
     );
-    const run = useTaskRunner(appDescriptor, windowInstance);
+    const run = useTaskRunner(taskDescriptor);
 
+    const { description, icon, iconScale = 1, name } = taskDescriptor;
+
+    const windowInstance = isAppTaskDescriptor(taskDescriptor)
+      ? taskDescriptor.windowInstance
+      : undefined;
     const windowInstanceActive = windowInstance && windowInstance.active;
     const running = !!windowInstance || loading;
-    const { icon, iconScale = 1 } = appDescriptor;
 
     useEffect(() => {
       if (taskRef.current !== null && windowInstance !== undefined) {
@@ -57,11 +53,16 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
 
     useKeyMap(
       {
-        ArrowRight: () =>
-          showContextMenu({
-            ...getTaskContextMenuDescriptor(),
-            makeFirstItemActive: true,
-          }),
+        ArrowRight: () => {
+          const taskContextMenuDescriptor = getTaskContextMenuDescriptor();
+
+          if (taskContextMenuDescriptor !== undefined) {
+            showContextMenu({
+              ...taskContextMenuDescriptor,
+              makeFirstItemActive: true,
+            });
+          }
+        },
       },
       taskButtonActive,
     );
@@ -85,8 +86,8 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
 
     const tooltip = (
       <>
-        <header>{appDescriptor.name}</header>
-        <p className={styles.tooltipBody}>{appDescriptor.description}</p>
+        <header>{name}</header>
+        <p className={styles.tooltipBody}>{description}</p>
       </>
     );
 
@@ -98,7 +99,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
         title={tooltip}
       >
         <button
-          aria-label={appDescriptor.name}
+          aria-label={name}
           className={cn(styles.task, {
             [styles.taskButtonActive]: taskButtonActive,
             [styles.windowInstanceActive]: windowInstanceActive,
@@ -109,7 +110,12 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
           }}
           onContextMenu={(event) => {
             event.preventDefault();
-            showContextMenu(getTaskContextMenuDescriptor());
+
+            const taskContextMenuDescriptor = getTaskContextMenuDescriptor();
+
+            if (taskContextMenuDescriptor !== undefined) {
+              showContextMenu(taskContextMenuDescriptor);
+            }
           }}
           ref={taskRef}
           tabIndex={-1}

@@ -1,10 +1,16 @@
 import { type TaskDescriptor } from '../TaskDescriptor';
+import { isAppTaskDescriptor } from './isAppTaskDescriptor';
 
 export function getTaskId(
-  { appDescriptor, windowInstance }: TaskDescriptor,
+  taskDescriptor: TaskDescriptor,
   // Necessary to recompute minimized position when task position changes
   index: number,
 ): string {
-  const instanceKey = windowInstance !== undefined ? windowInstance.id : '';
-  return `${appDescriptor.name}${index}${instanceKey}`;
+  const instanceKey =
+    isAppTaskDescriptor(taskDescriptor) &&
+    taskDescriptor.windowInstance !== undefined
+      ? taskDescriptor.windowInstance.id
+      : '';
+
+  return `${taskDescriptor.name}${index}${instanceKey}`;
 }

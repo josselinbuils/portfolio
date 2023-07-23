@@ -1,27 +1,31 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { type RefObject } from 'preact/compat';
-import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type ContextMenuDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
-import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+import { type TaskDescriptor } from '../TaskDescriptor';
+import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 
 export function useTaskContextMenu(
-  appDescriptor: AppDescriptor,
+  taskDescriptor: TaskDescriptor,
   taskRef: RefObject<HTMLElement>,
-  windowInstance?: WindowInstance,
-): () => ContextMenuDescriptor {
-  return function getTaskContextMenuDescriptor(): ContextMenuDescriptor {
+): () => ContextMenuDescriptor | undefined {
+  return function getTaskContextMenuDescriptor() {
+    if (!isAppTaskDescriptor(taskDescriptor)) {
+      return undefined;
+    }
+
     if (taskRef.current === null) {
       throw new Error('Unable to retrieve task html element');
     }
 
+    const { icon, name, windowInstance } = taskDescriptor;
     const { right: x, y } = taskRef.current.getBoundingClientRect();
     const items: ContextMenuItemDescriptor[] = [
       {
-        icon: appDescriptor.icon,
-        title: appDescriptor.name,
-        onClick: () => windowManager.openApp(appDescriptor),
+        icon,
+        title: name,
+        onClick: () => windowManager.openApp(taskDescriptor),
       },
     ];
 

@@ -1,14 +1,15 @@
-import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
-import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+import { type TaskDescriptor } from '../TaskDescriptor';
+import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 
 export function useTaskRunner(
-  appDescriptor: AppDescriptor,
-  windowInstance?: WindowInstance,
+  taskDescriptor: TaskDescriptor,
 ): () => Promise<void> {
   return async function run(): Promise<void> {
-    if (windowInstance !== undefined) {
-      const { id } = windowInstance;
+    if (!isAppTaskDescriptor(taskDescriptor)) {
+      await taskDescriptor.action();
+    } else if (taskDescriptor.windowInstance !== undefined) {
+      const { id } = taskDescriptor.windowInstance;
 
       if (windowManager.isWindowVisible(id)) {
         if (windowManager.isWindowSelected(id)) {
@@ -20,7 +21,7 @@ export function useTaskRunner(
         windowManager.showWindow(id);
       }
     } else {
-      await windowManager.openApp(appDescriptor);
+      await windowManager.openApp(taskDescriptor);
     }
   };
 }

@@ -43,9 +43,11 @@ export const WithTooltip: FC<WithTooltipProps> = ({
       const target = event.currentTarget as HTMLElement;
       const { right: x, y, height } = target.getBoundingClientRect();
       setPosition({ x, y: Math.round(y + height / 2) });
+      child.props.onMouseEnter?.(event);
     },
-    onMouseLeave: () => {
+    onMouseLeave: (event: MouseEvent) => {
       setPosition(undefined);
+      child.props.onMouseLeave?.(event);
     },
   });
 };
