@@ -1,3 +1,10 @@
+.blogWindow {
+  $background: #fbfbfb;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .iframe {
   border: none;
 }

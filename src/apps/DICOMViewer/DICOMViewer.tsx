@@ -278,7 +278,7 @@ const DICOMViewer: WindowComponent = ({
 
   return (
     <Window
-      background="black"
+      className={styles.dicomViewerWindow}
       minHeight={534}
       minWidth={880}
       ref={windowRef}

@@ -11,7 +11,7 @@ const Teravia: WindowComponent = ({
 }) => (
   <Window
     active={active}
-    background="#1a1d1e"
+    className={styles.teraviaWindow}
     keepContentRatio
     maxHeight={791}
     maxWidth={1367}

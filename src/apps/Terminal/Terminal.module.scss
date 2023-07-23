@@ -1,6 +1,13 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
+.terminalWindow {
+  $background: rgba(0, 0, 0, 0.85);
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .caret {
   position: absolute;
   top: 0;

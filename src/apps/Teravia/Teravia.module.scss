@@ -1,3 +1,10 @@
+.teraviaWindow {
+  $background: #1a1d1e;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .iframe {
   border: none;
 }

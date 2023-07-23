@@ -135,8 +135,8 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     } = this;
     const {
       active,
-      background,
       children,
+      className,
       id,
       onClose,
       onMinimise,
@@ -150,24 +150,26 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     const { animated, height, left, maximized, minimized, top, width } = state;
     const frozen = isFrozen();
 
-    const className = cn(styles.window, {
-      [styles.active]: active,
-      [styles.animated]: animated,
-      [styles.frozen]: frozen,
-      [styles.maximized]: maximized,
-      [styles.minimized]: minimized,
-    });
-
     return (
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <dialog
         aria-label={`Window: ${title}`}
-        className={className}
+        className={cn(
+          styles.window,
+          {
+            [styles.active]: active,
+            [styles.animated]: animated,
+            [styles.frozen]: frozen,
+            [styles.maximized]: maximized,
+            [styles.minimized]: minimized,
+          },
+          className,
+        )}
         onBlur={unselectIfNoChildFocused}
         onFocus={() => onSelect(id)}
         onMouseDown={() => onSelect(id)}
         ref={windowRef}
-        style={{ background, height, left, top, width, zIndex }}
+        style={{ height, left, top, width, zIndex }}
       >
         <TitleBar
           background={titleBackground}
@@ -595,7 +597,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
 
 export interface WindowProps {
   active: boolean;
-  background: string;
+  className?: string;
   keepContentRatio?: boolean;
   id: number;
   maxHeight?: number;

@@ -20,7 +20,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      background="#111625"
+      className={styles.mp3PlayerWindow}
       minHeight={641}
       minWidth={950}
       ref={windowRef}

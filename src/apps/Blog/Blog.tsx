@@ -10,7 +10,7 @@ const Blog: WindowComponent = ({
 }) => (
   <Window
     active={active}
-    background="#fbfbfb"
+    className={styles.blogWindow}
     minHeight={700}
     minWidth={830}
     ref={windowRef}

@@ -1,6 +1,13 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
+.redditWindow {
+  $background: #fbfbfb;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .body {
   position: relative;
   overflow-y: scroll;

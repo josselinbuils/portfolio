@@ -3,6 +3,13 @@
 
 $footerHeight: 7.7rem;
 
+.mp3PlayerWindow {
+  $background: #111625;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .body {
   display: flex;
   overflow: hidden;

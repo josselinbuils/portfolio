@@ -1,5 +1,12 @@
 @import './_constants.scss';
 
+.codeEditorWindow {
+  $background: #45484a;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .codeEditor {
   font-family: $fontFamily;
   line-height: $lineHeight;

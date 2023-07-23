@@ -1,6 +1,13 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
+.dicomViewerWindow {
+  $background: black;
+
+  border-color: darken($background, 5%);
+  background: $background;
+}
+
 .dicomViewer {
   font-family: $fontFamily;
   font-size: 1.3rem;

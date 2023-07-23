@@ -319,7 +319,7 @@ const Terminal: WindowComponent = ({
   return (
     <Window
       active={active}
-      background="rgba(0, 0, 0, 0.85)"
+      className={styles.terminalWindow}
       minHeight={400}
       minWidth={800}
       ref={windowRef}

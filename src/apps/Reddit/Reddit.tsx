@@ -26,7 +26,7 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      background="#fbfbfb"
+      className={styles.redditWindow}
       minHeight={600}
       minWidth={850}
       ref={windowRef}

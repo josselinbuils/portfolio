@@ -45,7 +45,7 @@ const CodeEditor: WindowComponent = ({
   return (
     <Window
       active={active}
-      background="#45484a"
+      className={styles.codeEditorWindow}
       minHeight={675}
       minWidth={900}
       ref={windowRef}
