@@ -7,8 +7,11 @@
 
 .runIndicator {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: $spacingXs;
+  bottom: $spacingXs;
+  left: $spacingXs;
+  height: 0.4rem;
+  border-radius: $radiusXxs;
   background: $primaryColor;
 }
 
@@ -23,6 +26,20 @@
   width: $taskBarWidth;
   height: $taskBarWidth;
   text-align: center;
+  background: $backgroundColor;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+
+    &:not(:hover) {
+      border-top-right-radius: 8px;
+    }
+  }
+
+  &:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
 
   &:hover,
   &.taskButtonActive {
@@ -77,12 +94,5 @@
   }
   100% {
     transform: scale(1);
-  }
-}
-
-@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
-  .runIndicator {
-    left: 0;
-    height: 0.3rem;
   }
 }

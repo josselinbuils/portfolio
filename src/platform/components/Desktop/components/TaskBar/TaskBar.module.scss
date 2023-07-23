@@ -8,9 +8,8 @@
   flex-direction: column;
   flex-grow: 0;
   flex-shrink: 0;
-  height: 100vh;
+  height: fit-content;
   color: $textColor;
-  background: $backgroundColor;
 }
 
 @media only screen and (max-width: $mobileBreakpoint) {
