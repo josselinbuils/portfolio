@@ -1,9 +1,10 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
-$titleBarHeight: 2.8rem;
+$titleBarHeight: 3rem;
 
 .button {
+  font-size: $titleBarHeight * 0.5;
   float: left;
   width: $titleBarHeight;
   height: 100%;
