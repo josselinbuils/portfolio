@@ -1,9 +1,10 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 .toolbar {
   overflow: hidden;
   box-sizing: border-box;
-  padding: 0.4rem;
+  padding: $spacingXs;
   text-align: center;
   border-right: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;

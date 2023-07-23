@@ -10,12 +10,12 @@ $previewSize: 3.5rem;
 }
 
 .artistName {
-  margin: 0.3rem 0 0;
+  margin: $spacingXs 0 0;
 }
 
 .header {
   flex: 0 0 auto;
-  padding-right: 0.8rem;
+  padding-right: $spacingS;
 }
 
 .listInfo {
@@ -31,7 +31,7 @@ $previewSize: 3.5rem;
 .musicList {
   display: flex;
   flex-direction: column;
-  margin: 0.5rem 1.5rem 1.5rem 1.5rem;
+  margin: $spacingS $spacingM $spacingM $spacingM;
 
   table {
     width: calc(100% - 1rem);
@@ -42,7 +42,7 @@ $previewSize: 3.5rem;
       position: relative;
       overflow: hidden;
       height: 4.6rem;
-      padding-right: 1.5rem;
+      padding-right: $spacingL;
       user-select: text;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -154,7 +154,7 @@ $previewSize: 3.5rem;
   width: 100%;
 
   th {
-    padding: 0.3rem 1.5rem 1rem 0;
+    padding: $spacingXs $spacingL $spacingM 0;
     text-align: left;
   }
 }

@@ -10,6 +10,12 @@ $lightenAmountLevel1: 20%;
 $lightenAmountLevel2: 25%;
 $lightenAmountLevel3: 30%;
 
+$spacingXs: 0.4rem;
+$spacingS: 0.8rem;
+$spacingM: 1.2rem;
+$spacingL: 2rem;
+$spacingXl: 3.2rem;
+
 @mixin clearButton {
   text-align: inherit;
   color: inherit;

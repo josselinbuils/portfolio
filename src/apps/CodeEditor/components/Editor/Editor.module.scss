@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 $lineNumbersWidth: 4rem;
@@ -24,8 +25,7 @@ ul.autoCompletionMenu {
     font-family: $fontFamily;
     font-size: 1.2rem;
     line-height: 1.4rem;
-    height: 2rem;
-    padding: 0.3rem 0.6rem;
+    padding: $spacingS;
     color: #b8babc;
 
     &[aria-current='true'] {

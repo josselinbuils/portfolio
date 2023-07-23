@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import '../../../_constants.scss';
 
 .anchor {
@@ -6,12 +7,12 @@
 
 .details {
   font-size: 1.1rem;
-  margin: 0.7rem 0.7rem 0 0;
+  margin: $spacingS $spacingS 0 0;
   color: $textSecondaryColor;
 }
 
 .subreddit {
   font-weight: bold;
-  margin-right: 0.8rem;
+  margin-right: $spacingS;
   color: $textColor;
 }

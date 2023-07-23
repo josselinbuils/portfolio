@@ -1,6 +1,7 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
-$buttonSize: $toolbarWidth - 0.4rem * 2 - 0.1rem;
+$buttonSize: $toolbarWidth - $spacingXs * 2 - 0.1rem;
 
 .toolButton {
   $color: #b8babc;
@@ -41,7 +42,7 @@ $buttonSize: $toolbarWidth - 0.4rem * 2 - 0.1rem;
   display: flex;
   box-sizing: border-box;
   height: $buttonSize;
-  margin: 0 0 0 -0.3rem;
+  margin: 0 0 0 -$spacingXs;
   padding: 0 0.6rem;
   color: #b8babc;
   border: none;

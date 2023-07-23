@@ -12,7 +12,6 @@
   display: block;
   width: 3.2rem;
   height: 3.2rem;
-  padding: 0.3rem 0.5rem;
   color: $color;
   border: 0.1rem solid $color;
   border-radius: $radius;
@@ -42,12 +41,13 @@
   background: transparentize($backgroundColor, 0.4);
 
   &.open {
-    padding: 0.5rem;
+    padding: $spacingS;
     border: 0.1rem solid $color;
     border-radius: 0.4rem;
 
     .button {
-      margin: -0.5rem 0 0.3rem -0.5rem;
+      margin-top: -$spacingS;
+      margin-left: -$spacingS;
       border: none;
     }
   }

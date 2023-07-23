@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import '../../../_constants.scss';
 
 .aside {
@@ -12,7 +13,7 @@
 }
 
 .comments {
-  margin-left: 0.4rem;
+  margin-left: $spacingXs;
 }
 
 .footer {
@@ -28,7 +29,7 @@
 .post {
   display: flex;
   width: 55rem;
-  margin: 2rem auto 0 auto;
+  margin: $spacingL auto 0 auto;
   color: $textColor;
   border: 0.1rem solid $borderColor;
   border-radius: 0.4rem;

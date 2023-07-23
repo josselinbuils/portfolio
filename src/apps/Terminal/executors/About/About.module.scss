@@ -35,7 +35,7 @@
   font-size: 3rem;
 
   a + a {
-    margin-left: 2rem;
+    margin-left: $spacingL;
   }
 }
 
@@ -52,7 +52,7 @@
     margin: 0;
 
     .social {
-      margin-bottom: 1rem;
+      margin-bottom: $spacingM;
     }
   }
 
@@ -64,7 +64,7 @@
     font-size: 3rem;
 
     a + a {
-      margin-left: 2rem;
+      margin-left: $spacingL;
     }
   }
 }

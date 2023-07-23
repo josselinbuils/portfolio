@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import './_constants.scss';
 
 .caret {
@@ -20,7 +21,7 @@
   overflow-y: auto;
   box-sizing: border-box;
   height: 100%;
-  padding: 0.5rem 0.8rem;
+  padding: $spacingXs $spacingS;
   color: $textColor;
 }
 

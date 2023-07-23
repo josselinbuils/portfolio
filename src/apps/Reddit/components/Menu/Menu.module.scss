@@ -1,8 +1,9 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 .menu {
-  margin: 2rem 0 0 2rem;
-  padding: 1.5rem 2rem;
+  margin: $spacingL 0 0 $spacingL;
+  padding: $spacingS $spacingM;
   color: $textColor;
   border: 0.1rem solid $borderColor;
   border-radius: 0.4rem;
