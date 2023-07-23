@@ -131,12 +131,12 @@ $previewSize: 3.5rem;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 0.5rem;
+    border-radius: $radiusXs;
     background: $secondaryColor;
   }
 
   &::-webkit-scrollbar-track {
-    border-radius: 0.5rem;
+    border-radius: $radiusXs;
   }
 }
 

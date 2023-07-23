@@ -1,5 +1,4 @@
 @import '@/platform/_constants.scss';
-@import './_constants.scss';
 
 $titleBarHeight: 3rem;
 
@@ -71,11 +70,11 @@ $titleBarHeight: 3rem;
   }
 
   &:not(.maximized) {
-    border-top-left-radius: $windowRadius;
-    border-top-right-radius: $windowRadius;
+    border-top-left-radius: $radiusS;
+    border-top-right-radius: $radiusS;
 
     .close {
-      border-top-left-radius: $windowRadius;
+      border-top-left-radius: $radiusS;
     }
   }
 }

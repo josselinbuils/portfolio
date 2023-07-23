@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 .bar {
@@ -13,7 +14,7 @@
 .barContainer,
 .bar {
   height: 0.4rem;
-  border-radius: 0.2rem;
+  border-radius: $radiusXxs;
 }
 
 .progressBar {
@@ -35,6 +36,6 @@
   width: 1rem;
   height: 1rem;
   content: '';
-  border-radius: 0.5rem;
+  border-radius: $radiusXs;
   background: $primaryColor;
 }

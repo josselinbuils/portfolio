@@ -1,3 +1,5 @@
+@import '@/platform/_constants.scss';
+
 $primaryColor: #cc7832;
 $secondaryColor: #007ad8;
 $backgroundPrimaryColor: #434548;
@@ -34,7 +36,7 @@ $toolbarWidth: 3.6rem;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 0.5rem;
+    border-radius: $radiusXs;
     background-color: $backgroundTertiaryColor;
 
     &:hover {
@@ -43,6 +45,6 @@ $toolbarWidth: 3.6rem;
   }
 
   &::-webkit-scrollbar-track {
-    border-radius: 0.5rem;
+    border-radius: $radiusXs;
   }
 }

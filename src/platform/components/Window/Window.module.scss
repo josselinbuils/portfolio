@@ -1,5 +1,4 @@
 @import '@/platform/_constants.scss';
-@import './_constants.scss';
 
 .content {
   overflow: hidden;
@@ -41,12 +40,12 @@
   outline: none;
 
   &:not(.maximized) {
-    border-radius: $windowRadius; /* Needed by box shadow */
+    border-radius: $radiusS; /* Needed by box shadow */
     box-shadow: 0 0 1rem #1f1f1f;
 
     .content {
-      border-bottom-right-radius: $windowRadius;
-      border-bottom-left-radius: $windowRadius;
+      border-bottom-right-radius: $radiusS;
+      border-bottom-left-radius: $radiusS;
     }
   }
 }

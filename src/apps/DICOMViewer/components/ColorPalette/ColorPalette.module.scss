@@ -14,7 +14,7 @@
   height: 3.2rem;
   color: $color;
   border: 0.1rem solid $color;
-  border-radius: $radius;
+  border-radius: $radiusXs;
   outline: none;
   background: transparent;
 
@@ -43,7 +43,7 @@
   &.open {
     padding: $spacingS;
     border: 0.1rem solid $color;
-    border-radius: 0.4rem;
+    border-radius: $radiusXs;
 
     .button {
       margin-top: -$spacingS;
