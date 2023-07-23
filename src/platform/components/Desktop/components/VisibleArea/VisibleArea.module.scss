@@ -1,6 +1,9 @@
+@import '@/platform/_constants.scss';
+
 .visibleArea {
   position: relative;
   flex-basis: auto;
   flex-grow: 1;
   flex-shrink: 1;
+  margin: $spacingXs $spacingXs $spacingXs 0;
 }

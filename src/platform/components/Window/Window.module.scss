@@ -37,16 +37,12 @@
   opacity: 0.9;
   color: inherit;
   border: none;
+  border-radius: $radiusS;
   outline: none;
 
-  &:not(.maximized) {
-    border-radius: $radiusS; /* Needed by box shadow */
-    box-shadow: 0 0 1rem #1f1f1f;
-
-    .content {
-      border-bottom-right-radius: $radiusS;
-      border-bottom-left-radius: $radiusS;
-    }
+  .content {
+    border-bottom-right-radius: $radiusS;
+    border-bottom-left-radius: $radiusS;
   }
 }
 

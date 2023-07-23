@@ -7,9 +7,9 @@
 
 .runIndicator {
   position: absolute;
-  right: $spacingXs;
-  bottom: $spacingXs;
-  left: $spacingXs;
+  right: $spacingM;
+  bottom: 0.6rem;
+  left: $spacingM;
   height: 0.4rem;
   border-radius: $radiusXxs;
   background: $primaryColor;
@@ -70,7 +70,7 @@
   box-sizing: border-box;
   height: $taskBarWidth;
   margin: 0;
-  padding: 0.7rem 1.5rem 0.7rem 0.5rem;
+  padding: $spacingS $spacingM $spacingS $spacingS;
   color: $textColor;
   border-radius: 0 $radiusS $radiusS 0;
   background: $darkGrey;

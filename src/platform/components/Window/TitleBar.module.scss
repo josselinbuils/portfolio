@@ -62,6 +62,8 @@ $titleBarHeight: 3rem;
   line-height: $titleBarHeight;
   height: $titleBarHeight;
   text-align: center;
+  border-top-left-radius: $radiusS;
+  border-top-right-radius: $radiusS;
 
   &,
   * {
@@ -69,13 +71,8 @@ $titleBarHeight: 3rem;
     user-select: none;
   }
 
-  &:not(.maximized) {
+  .close {
     border-top-left-radius: $radiusS;
-    border-top-right-radius: $radiusS;
-
-    .close {
-      border-top-left-radius: $radiusS;
-    }
   }
 }
 
