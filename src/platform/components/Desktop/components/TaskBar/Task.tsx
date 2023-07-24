@@ -123,7 +123,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
           {...forwardedProps}
         >
           <FontAwesomeIcon
-            className={cn({ [styles.loading]: loading })}
+            className={cn(styles.icon, { [styles.loading]: loading })}
             icon={icon}
             style={{ fontSize: `${iconScale}em` }}
           />

@@ -1,6 +1,10 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
+.icon {
+  margin-bottom: $spacingXs;
+}
+
 .loading {
   animation: loading 1s 0s ease-in-out infinite;
 }
@@ -110,5 +114,14 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes runnin {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-0.6rem);
   }
 }
