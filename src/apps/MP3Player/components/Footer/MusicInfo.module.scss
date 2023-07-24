@@ -3,6 +3,7 @@
 
 .musicInfo {
   line-height: 2rem;
+  display: flex;
   overflow: hidden;
   flex: 0 0 20ch;
   flex-direction: column;
@@ -21,11 +22,5 @@
     user-select: text;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-}
-
-@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
-  .musicInfo {
-    display: flex;
   }
 }
