@@ -6,6 +6,8 @@ import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 
+const BORDER_RADIUS_MARGIN_PX = 6;
+
 export function useTaskContextMenu(
   taskDescriptor: TaskDescriptor,
   taskRef: RefObject<HTMLElement>,
@@ -43,7 +45,9 @@ export function useTaskContextMenu(
       style: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
+        marginLeft: -BORDER_RADIUS_MARGIN_PX,
         minHeight: taskRef.current.clientHeight,
+        paddingLeft: BORDER_RADIUS_MARGIN_PX,
       },
     };
   };

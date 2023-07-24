@@ -93,6 +93,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   return (
     <ul
       className={cn(styles.contextMenu, className)}
+      onMouseLeave={() => setActiveIndex(defaultActiveIndex)}
       style={{
         ...style,
         left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
