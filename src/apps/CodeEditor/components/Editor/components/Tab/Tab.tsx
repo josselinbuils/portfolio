@@ -1,4 +1,4 @@
-import { faJsSquare } from '@fortawesome/free-brands-svg-icons/faJsSquare';
+import { faFileCode } from '@fortawesome/free-solid-svg-icons/faFileCode';
 import cn from 'classnames';
 import { type FC, type JSX } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
@@ -22,7 +22,7 @@ export const Tab: FC<TabProps> = ({
     type="button"
     {...forwardedProps}
   >
-    <FontAwesomeIcon className={styles.icon} icon={faJsSquare} />
+    <FontAwesomeIcon className={styles.icon} icon={faFileCode} />
     {children}
   </button>
 );
