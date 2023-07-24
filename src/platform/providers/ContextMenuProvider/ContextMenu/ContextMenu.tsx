@@ -15,6 +15,7 @@ export interface ContextMenuProps extends ContextMenuDescriptor {
 
 export const ContextMenu: FC<ContextMenuProps> = ({
   className,
+  enterWithTab,
   items: itemsWithoutID,
   onHide,
   makeFirstItemActive = false,
@@ -69,6 +70,13 @@ export const ContextMenu: FC<ContextMenuProps> = ({
         setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
       Enter: clickOnActiveItem,
       Escape: onHide,
+      Tab: () => {
+        if (enterWithTab) {
+          clickOnActiveItem();
+        } else {
+          return false;
+        }
+      },
     },
     true,
     2,

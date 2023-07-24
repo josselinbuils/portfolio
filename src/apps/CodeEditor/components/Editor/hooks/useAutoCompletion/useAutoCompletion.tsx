@@ -57,6 +57,7 @@ export function useAutoCompletion({
 
         showContextMenu({
           className: menuClassName,
+          enterWithTab: true,
           items: completionItems.map(({ displayName, template }) => ({
             onClick: () =>
               onCompletionRef.current(

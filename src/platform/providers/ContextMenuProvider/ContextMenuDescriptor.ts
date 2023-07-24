@@ -4,9 +4,10 @@ import { type ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
 
 export interface ContextMenuDescriptor {
   className?: string;
+  enterWithTab?: boolean;
   items: ContextMenuItemDescriptor[];
   makeFirstItemActive?: boolean;
+  onActivate?(index: number): void;
   position?: Position;
   style?: CSSProperties;
-  onActivate?(index: number): void;
 }
