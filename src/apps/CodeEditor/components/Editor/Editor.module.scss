@@ -4,42 +4,46 @@
 $lineNumbersWidth: 5rem;
 $tabsHeight: 3.6rem;
 
-ul.autoCompletionMenu {
+.menu {
   @include scrollbar;
 
-  overflow: auto;
-  min-width: 15rem;
-  max-height: 12rem;
-  margin-top: 1.7rem;
-  margin-left: -0.7rem;
   border: 0.1rem solid #2e2e2e;
+  border-radius: $radiusS;
   background: #505254;
-
-  li:first-child,
-  li:last-child {
-    margin: 0;
-  }
 
   button {
     font-family: $fontFamily;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     line-height: 1.4rem;
     padding: $spacingS;
     color: #b8babc;
+    border-radius: $radiusS;
 
     &[aria-current='true'] {
       background: #5b5d61;
     }
-
-    > div:first-child {
-      display: none;
-    }
-
-    mark {
-      color: $primaryColor;
-      background: transparent;
-    }
   }
+}
+
+ul.autoCompletionMenu {
+  min-width: 15rem;
+  max-height: 12rem;
+  margin-top: 1.7rem;
+  margin-left: -0.7rem;
+
+  mark {
+    color: $primaryColor;
+    background: transparent;
+  }
+}
+
+.newFileContextMenu {
+  width: 20rem;
+  height: 22rem;
+  transform: translate(
+    calc(-50% - $lineNumbersWidth / 2 - $toolbarWidth / 2),
+    -50%
+  );
 }
 
 .close {

@@ -77,8 +77,35 @@
   }
 }
 
+.contextMenu {
+  font-size: 1.4rem;
+  height: $taskBarWidth;
+  padding: $spacingXs;
+  color: $textColor;
+  border-radius: $radiusS;
+  background: $backgroundColor;
+
+  button {
+    line-height: 2rem;
+    padding: $spacingXs $spacingL $spacingXs $spacingS;
+    border-radius: $radiusS;
+
+    &[aria-current='true'] {
+      background: lighten($backgroundColor, $lightenAmountLevel1);
+    }
+  }
+}
+
+.contextMenuIcon {
+  font-size: 1.6rem;
+  display: inline-block;
+  width: 2.5rem;
+  padding-right: $spacingS;
+  text-align: center;
+}
+
 .tooltip {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-family: $fontFamily;
   font-size: 1.4rem;
   display: flex;
   overflow: hidden;

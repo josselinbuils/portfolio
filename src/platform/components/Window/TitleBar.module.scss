@@ -57,7 +57,7 @@ $titleBarHeight: 3rem;
 }
 
 .titleBar {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-family: $fontFamily;
   font-size: 1.4rem;
   line-height: $titleBarHeight;
   height: $titleBarHeight;

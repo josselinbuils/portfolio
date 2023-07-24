@@ -1,8 +1,10 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { type RefObject } from 'preact/compat';
+import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { type ContextMenuDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
 import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+import styles from '../Task.module.scss';
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 
@@ -25,21 +27,34 @@ export function useTaskContextMenu(
     const { right: x, y } = taskRef.current.getBoundingClientRect();
     const items: ContextMenuItemDescriptor[] = [
       {
-        icon,
-        title: name,
+        title: (
+          <>
+            <div className={styles.contextMenuIcon}>
+              <FontAwesomeIcon icon={icon} />
+            </div>
+            {name}
+          </>
+        ),
         onClick: () => windowManager.openApp(taskDescriptor),
       },
     ];
 
     if (windowInstance !== undefined) {
       items.push({
-        icon: faTimes,
-        title: 'Close',
+        title: (
+          <>
+            <div className={styles.contextMenuIcon}>
+              <FontAwesomeIcon icon={faTimes} />
+            </div>
+            Close
+          </>
+        ),
         onClick: () => windowManager.closeWindow(windowInstance.id),
       });
     }
 
     return {
+      className: styles.contextMenu,
       items,
       position: { x, y },
       style: {

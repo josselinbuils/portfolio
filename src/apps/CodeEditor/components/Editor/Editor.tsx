@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
+import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
@@ -39,6 +40,7 @@ import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { Tab } from './components/Tab/Tab';
 import { Tabs } from './components/Tabs/Tabs';
+import { SUPPORTED_LANGUAGES } from './constants';
 import { type Completion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useAutoCompletion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
@@ -49,6 +51,7 @@ import { comment } from './utils/comment';
 import { duplicate } from './utils/duplicate';
 import { fileSaver } from './utils/fileSaver';
 import { canFormat, formatCode } from './utils/formatCode';
+import { getExtensionFromLanguage } from './utils/getExtensionFromLanguage';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
@@ -93,10 +96,11 @@ export const Editor: FC<EditorProps> = ({
     code,
     cursorOffset,
     lineIndent: getLineIndent(code, cursorOffset),
-    menuClassName: styles.autoCompletionMenu,
+    menuClassName: cn(styles.menu, styles.autoCompletionMenu),
     onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
+  const { showContextMenu } = useContextMenu();
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
@@ -243,22 +247,49 @@ export const Editor: FC<EditorProps> = ({
   }
 
   function createFile(): void {
-    const maxIndex = Math.max(
-      ...files.map((file) =>
-        parseInt(
-          file.name.startsWith('local') ? file.name.slice(5, -3) || '0' : '-1',
-          10,
-        ),
-      ),
-    );
-    const name = `local${maxIndex > -1 ? maxIndex + 1 : ''}.js`;
-    fileManager.push({
-      content: '',
-      language: 'javascript',
-      name,
-      shared: false,
+    const textAreaElement = textAreaElementRef.current;
+
+    if (textAreaElement === null) {
+      return;
+    }
+
+    const { height, width, x, y } = textAreaElement.getBoundingClientRect();
+
+    showContextMenu({
+      className: cn(styles.menu, styles.newFileContextMenu),
+      items: SUPPORTED_LANGUAGES.map(({ language, label }) => ({
+        onClick: () => {
+          const maxIndex = Math.max(
+            ...files.map((file) =>
+              parseInt(
+                file.name.startsWith('local')
+                  ? file.name.slice(5, -3) || '0'
+                  : '-1',
+                10,
+              ),
+            ),
+          );
+
+          const name = `local${
+            maxIndex > -1 ? maxIndex + 1 : ''
+          }.${getExtensionFromLanguage(language)}`;
+
+          fileManager.push({
+            content: '',
+            language,
+            name,
+            shared: false,
+          });
+          setActiveFilename(name);
+        },
+        title: label,
+      })),
+      makeFirstItemActive: true,
+      position: {
+        x: Math.round(x + width / 2),
+        y: Math.round(y + height / 2),
+      },
     });
-    setActiveFilename(name);
   }
 
   function disableAutoCompletion(): void {
@@ -445,7 +476,7 @@ export const Editor: FC<EditorProps> = ({
           title="Show shortcuts"
         />
       </Toolbar>
-      <Tabs className={styles.tabs} label="Files">
+      <Tabs className={styles.tabs}>
         {files.map(({ name }, index) => (
           <Tab
             key={name}

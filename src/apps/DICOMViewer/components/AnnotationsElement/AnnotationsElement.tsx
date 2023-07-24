@@ -55,20 +55,40 @@ export const AnnotationsElement: FC<Props> = ({
   }
 
   function showRendererTypeMenu(): void {
-    const items = [RendererType.JavaScript, RendererType.WebGL].map((type) => ({
-      icon: getMenuItemIcon(type === rendererType),
-      title: type,
-      onClick: () => onRendererTypeSwitch(type),
-    }));
+    const items = [RendererType.JavaScript, RendererType.WebGL].map((type) => {
+      const icon = getMenuItemIcon(type === rendererType);
+
+      return {
+        title: (
+          <>
+            <div className={styles.contextMenuIcon}>
+              {icon && <FontAwesomeIcon icon={icon} />}
+            </div>
+            {type}
+          </>
+        ),
+        onClick: () => onRendererTypeSwitch(type),
+      };
+    });
     showMenu(rendererElementRef, items);
   }
 
   function showViewTypeMenu(): void {
-    const items = availableViewTypes.map((type) => ({
-      icon: getMenuItemIcon(type === annotations.viewType),
-      title: type,
-      onClick: () => onViewTypeSwitch(type),
-    }));
+    const items = availableViewTypes.map((type) => {
+      const icon = getMenuItemIcon(type === annotations.viewType);
+
+      return {
+        title: (
+          <>
+            <div className={styles.contextMenuIcon}>
+              {icon && <FontAwesomeIcon icon={icon} />}
+            </div>
+            {type}
+          </>
+        ),
+        onClick: () => onViewTypeSwitch(type),
+      };
+    });
     showMenu(viewTypeElementRef, items);
   }
 

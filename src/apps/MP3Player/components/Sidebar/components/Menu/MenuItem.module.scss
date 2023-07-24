@@ -3,7 +3,7 @@
 .item {
   font-size: 1.3em;
   display: block;
-  margin-top: 1rem;
+  margin-top: $spacingS;
 
   &.checked {
     color: $primaryColor;

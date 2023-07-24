@@ -102,11 +102,10 @@ export const ContextMenu: FC<ContextMenuProps> = ({
       ref={listElementRef}
       role="menu"
     >
-      {items.map(({ icon, id, onClick, title }, index) => (
+      {items.map(({ id, onClick, title }, index) => (
         <ContextMenuItem
           active={index === activeIndex}
           key={id}
-          icon={icon}
           onMouseMove={() => {
             if (activeIndex !== index) {
               setActiveIndex(index);

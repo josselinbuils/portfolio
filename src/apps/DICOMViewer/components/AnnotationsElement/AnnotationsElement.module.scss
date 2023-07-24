@@ -1,3 +1,4 @@
+@import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
 $overlay-margin: 1rem;
@@ -25,9 +26,38 @@ $overlay-margin: 1rem;
 
 .contextMenu {
   font-family: $fontFamily;
+  font-size: 1.3rem;
+  min-width: 13rem;
   color: $color;
   border: 0.1rem solid white;
+  border-radius: $radiusXs;
   background-color: $backgroundColor;
+
+  li {
+    &:first-child {
+      margin-top: $spacingXs;
+    }
+
+    &:last-child {
+      margin-bottom: $spacingXs;
+    }
+  }
+
+  button {
+    line-height: 2rem;
+    padding: $spacingXs $spacingM $spacingXs 0;
+
+    &[aria-current='true'] {
+      background: lighten($backgroundColor, $lightenAmountLevel1);
+    }
+  }
+}
+
+.contextMenuIcon {
+  display: inline-block;
+  width: 2.5rem;
+  padding-left: $spacingXs;
+  text-align: center;
 }
 
 .overlayBottomLeft {

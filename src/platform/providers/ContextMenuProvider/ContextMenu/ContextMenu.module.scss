@@ -1,15 +1,15 @@
 @import '@/platform/_constants.scss';
 
 .contextMenu {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-  font-size: 1.3rem;
   position: fixed;
   z-index: 1000;
-  min-width: 12rem;
-  margin: 0;
-  padding: 0;
+  overflow: auto;
+  box-sizing: border-box;
   user-select: none;
-  color: $textColor;
-  border-radius: $radiusXs;
-  background: $backgroundColor;
+
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-inline-start: 0;
 }
