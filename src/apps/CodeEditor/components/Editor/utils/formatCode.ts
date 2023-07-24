@@ -1,34 +1,43 @@
 import { type BuiltInParserName, type Plugin } from 'prettier';
+import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
 import { type EditableState } from '../../../interfaces/EditableState';
 import { createSelection } from '../../../utils/createSelection';
+import { type SupportedLanguage } from '../interfaces/SupportedLanguage';
 
 interface Parser {
   name: string;
   parserFactory(): Promise<{ default: Plugin }>[];
 }
 
-const parserDescriptors: { [language: string]: Parser } = {
+const babelParserFactory = () => [
+  import('prettier/plugins/babel'),
+  import('prettier/plugins/estree' as any),
+];
+
+const htmlParserFactory = () => [import('prettier/plugins/html')];
+
+const postCssParserFactory = () => [import('prettier/plugins/postcss')];
+
+const parserDescriptors: PartialRecord<SupportedLanguage, Parser> = {
   css: {
     name: 'css',
-    parserFactory: () => [import('prettier/plugins/postcss')],
+    parserFactory: postCssParserFactory,
   },
   html: {
     name: 'html',
-    parserFactory: () => [import('prettier/plugins/html')],
+    parserFactory: htmlParserFactory,
   },
   javascript: {
     name: 'babel',
-    parserFactory: () => [
-      import('prettier/plugins/babel'),
-      import('prettier/plugins/estree' as any),
-    ],
+    parserFactory: babelParserFactory,
   },
   json: {
     name: 'json',
-    parserFactory: () => [
-      import('prettier/plugins/babel'),
-      import('prettier/plugins/estree' as any),
-    ],
+    parserFactory: babelParserFactory,
+  },
+  jsx: {
+    name: 'babel',
+    parserFactory: babelParserFactory,
   },
   markdown: {
     name: 'markdown',
@@ -36,14 +45,23 @@ const parserDescriptors: { [language: string]: Parser } = {
   },
   scss: {
     name: 'scss',
-    parserFactory: () => [import('prettier/plugins/postcss')],
+    parserFactory: postCssParserFactory,
+  },
+  svg: {
+    name: 'html',
+    parserFactory: htmlParserFactory,
+  },
+  tsx: {
+    name: 'babel-ts',
+    parserFactory: babelParserFactory,
   },
   typescript: {
     name: 'babel-ts',
-    parserFactory: () => [
-      import('prettier/plugins/babel'),
-      import('prettier/plugins/estree' as any),
-    ],
+    parserFactory: babelParserFactory,
+  },
+  xml: {
+    name: 'html',
+    parserFactory: htmlParserFactory,
   },
   yaml: {
     name: 'yaml',
@@ -52,7 +70,7 @@ const parserDescriptors: { [language: string]: Parser } = {
 };
 
 export function canFormat(language: string): boolean {
-  return parserDescriptors[language] !== undefined;
+  return parserDescriptors[language as SupportedLanguage] !== undefined;
 }
 
 export async function formatCode(
@@ -60,7 +78,7 @@ export async function formatCode(
   cursorOffset: number,
   language: string,
 ): Promise<EditableState> {
-  const parserDescriptor = parserDescriptors[language];
+  const parserDescriptor = parserDescriptors[language as SupportedLanguage];
 
   if (parserDescriptor === undefined) {
     return {

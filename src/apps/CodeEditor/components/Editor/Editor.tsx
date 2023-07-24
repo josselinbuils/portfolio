@@ -22,13 +22,13 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
-import { highlightCode } from '@/platform/utils/highlightCode/highlightCode';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
 import { type EditableState } from '../../interfaces/EditableState';
 import { type Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
+import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
 import { Shortcut } from '../Shortcut/Shortcut';
 import { ToolButton } from '../ToolButton/ToolButton';

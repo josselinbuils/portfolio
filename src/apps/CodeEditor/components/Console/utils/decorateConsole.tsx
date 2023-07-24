@@ -1,7 +1,7 @@
 import { type JSX } from 'preact/compat';
 import { type ListManager } from '@/platform/hooks/useList';
 import { createGUID } from '@/platform/utils/createGUID';
-import { highlightCode } from '@/platform/utils/highlightCode/highlightCode';
+import { highlightCode } from '../../../utils/highlightCode/highlightCode';
 import { Shortcut } from '../../Shortcut/Shortcut';
 import { type Log } from '../Log';
 import { LogLevel } from '../Log';

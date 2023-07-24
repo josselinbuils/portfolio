@@ -1,0 +1,16 @@
+export type SupportedExtension =
+  | 'cjs'
+  | 'css'
+  | 'html'
+  | 'js'
+  | 'mjs'
+  | 'json'
+  | 'jsx'
+  | 'md'
+  | 'scss'
+  | 'svg'
+  | 'ts'
+  | 'tsx'
+  | 'xml'
+  | 'yaml'
+  | 'yml';

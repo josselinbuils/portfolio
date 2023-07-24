@@ -1,22 +1,5 @@
 import { type EditorFile } from '../interfaces/EditorFile';
-
-const LANGUAGE: { [language: string]: string } = {
-  css: 'css',
-  html: 'xml',
-  js: 'javascript',
-  jsx: 'javascript',
-  json: 'json',
-  md: 'markdown',
-  mk: 'makefile',
-  php: 'php',
-  scss: 'scss',
-  ts: 'typescript',
-  tsx: 'typescript',
-  twig: 'twig',
-  xml: 'xml',
-  yaml: 'yaml',
-  yml: 'yaml',
-};
+import { getLanguageFromExtension } from './getLanguageFromExtension';
 
 const MAX_FILE_SIZE_BYTES = 50000;
 
@@ -53,16 +36,21 @@ export async function openFile(file?: File): Promise<EditorFile | undefined> {
 async function readFile(file: File): Promise<EditorFile> {
   return new Promise<EditorFile>((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Unable to read file'));
+    reader.onerror = () => reject(new Error('Unable to read file.'));
     reader.onload = (event) => {
-      const extension = file.name.split('.').pop() || 'js';
+      const extension = file.name.split('.').pop() ?? '';
+      const language = getLanguageFromExtension(extension);
 
-      resolve({
-        content: (event.target?.result as string) || '',
-        language: LANGUAGE[extension],
-        name: file.name,
-        shared: false,
-      });
+      if (language === undefined) {
+        reject(new Error('Unsupported extension.'));
+      } else {
+        resolve({
+          content: (event.target?.result as string) || '',
+          language,
+          name: file.name,
+          shared: false,
+        });
+      }
     };
     reader.readAsText(file);
   });
