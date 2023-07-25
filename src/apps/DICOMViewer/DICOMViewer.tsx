@@ -4,7 +4,6 @@ import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { MouseButton } from '@/platform/constants';
-import { WithMenu } from '@/platform/providers/WithMenu/WithMenu';
 import { lazy } from '@/platform/utils/lazy';
 import styles from './DICOMViewer.module.scss';
 import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsElement';
@@ -172,17 +171,15 @@ const DICOMViewer: WindowComponent = ({
               <ColorPalette onLUTComponentsUpdate={setLUTComponents} />
             </Suspense>
           )}
-          <WithMenu>
-            <AnnotationsElement
-              annotations={annotations}
-              availableViewTypes={getAvailableViewTypes(
-                viewport.dataset,
-                rendererType,
-              )}
-              onRendererTypeSwitch={setRendererType}
-              onViewTypeSwitch={switchViewType}
-            />
-          </WithMenu>
+          <AnnotationsElement
+            annotations={annotations}
+            availableViewTypes={getAvailableViewTypes(
+              viewport.dataset,
+              rendererType,
+            )}
+            onRendererTypeSwitch={setRendererType}
+            onViewTypeSwitch={switchViewType}
+          />
         </>
       );
     }

@@ -1,6 +1,6 @@
-import { useCallback, useLayoutEffect, useRef } from 'preact/compat';
+import { type JSX, useCallback, useLayoutEffect, useRef } from 'preact/compat';
+import { useMenu } from '@/platform/components/Menu/useMenu';
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
-import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import { getCompletion } from './utils/getCompletion';
@@ -22,10 +22,19 @@ export function useAutoCompletion({
   menuClassName: string;
   textAreaElement: HTMLTextAreaElement | null;
   onCompletion(completion: Completion): void;
-}): { hasCompletionItems: boolean; complete(): void } {
+}): {
+  complete(): void;
+  hasCompletionItems: boolean;
+  menuElement: JSX.Element | null;
+} {
   const activeIndexRef = useRef(-1);
   const onCompletionRef = useDynamicRef(onCompletion);
-  const { hideMenu, isMenuDisplayed: hasCompletionItems, showMenu } = useMenu();
+  const {
+    hideMenu,
+    isMenuDisplayed: hasCompletionItems,
+    menuElement,
+    showMenu,
+  } = useMenu();
   const partialKeyword = active
     ? (getLineBeforeCursor(code, cursorOffset)
         .split(/[ ([{]/)
@@ -117,7 +126,7 @@ export function useAutoCompletion({
     }
   }, [completePropsRef]);
 
-  return { hasCompletionItems, complete };
+  return { complete, hasCompletionItems, menuElement };
 }
 
 export interface Completion {

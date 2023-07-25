@@ -2,7 +2,6 @@ import { useRef, useState } from 'preact/compat';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
-import { WithMenu } from '@/platform/providers/WithMenu/WithMenu';
 import styles from './CodeEditor.module.scss';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
@@ -56,14 +55,12 @@ const CodeEditor: WindowComponent = ({
       {...injectedWindowProps}
     >
       <div className={styles.codeEditor}>
-        <WithMenu>
-          <Editor
-            className={styles.editor}
-            code={code}
-            onChange={setCode}
-            onCursorPositionUpdate={setCursorPosition}
-          />
-        </WithMenu>
+        <Editor
+          className={styles.editor}
+          code={code}
+          onChange={setCode}
+          onCursorPositionUpdate={setCursorPosition}
+        />
         <div className={styles.resizeBar} onPointerDown={resizeStartHandler} />
         <Console
           active={active}

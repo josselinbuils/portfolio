@@ -1,8 +1,10 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { type RefObject } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type MenuDescriptor } from '@/platform/components/Menu/Menu';
-import { type MenuItemDescriptor } from '@/platform/components/Menu/MenuItem';
+import {
+  type MenuDescriptor,
+  type MenuItemDescriptor,
+} from '@/platform/components/Menu/Menu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import styles from '../Task.module.scss';
 import { type TaskDescriptor } from '../TaskDescriptor';

@@ -1,11 +1,7 @@
 @import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
-$buttonSize: $toolbarWidth - $spacingXs * 2;
+@import './_constants.scss';
 
 .toolButton {
-  $color: #b8babc;
-
   font-size: calc($toolbarWidth / 2.2);
   display: flex;
   align-items: center;
@@ -14,7 +10,7 @@ $buttonSize: $toolbarWidth - $spacingXs * 2;
   height: $buttonSize;
   padding: 0;
   vertical-align: middle;
-  color: $color;
+  color: $buttonColor;
   border: 0.1rem solid transparent;
   border-right: 0;
   border-radius: $radiusS 0 0 $radiusS;
@@ -25,15 +21,9 @@ $buttonSize: $toolbarWidth - $spacingXs * 2;
     opacity: 0.5;
   }
 
-  &:not(:disabled) {
-    &:hover {
-      border-color: $borderColorPrimary;
-      background: lighten($backgroundPrimaryColor, 10%);
-    }
-
-    &:active {
-      color: $primaryColor;
-    }
+  &:not(:disabled):hover {
+    border-color: $borderColorPrimary;
+    background: lighten($backgroundPrimaryColor, 10%);
   }
 }
 

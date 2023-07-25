@@ -6,8 +6,10 @@ import { useRef } from 'preact/compat';
 import { type ViewType } from '@/apps/DICOMViewer/constants';
 import { RendererType } from '@/apps/DICOMViewer/constants';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type MenuItemDescriptor } from '@/platform/components/Menu/MenuItem';
-import { useMenu } from '@/platform/providers/WithMenu/useMenu';
+import {
+  type MenuItemDescriptor,
+  useMenu,
+} from '@/platform/components/Menu/useMenu';
 import { type Annotations } from '../../interfaces/Annotations';
 import styles from './AnnotationsElement.module.scss';
 
@@ -27,7 +29,7 @@ export const AnnotationsElement: FC<Props> = ({
     windowWidth,
     zoom,
   } = annotations;
-  const { showMenu } = useMenu();
+  const { menuElement, showMenu } = useMenu();
   const rendererElementRef = useRef<HTMLButtonElement>(null);
   const viewTypeElementRef = useRef<HTMLButtonElement>(null);
 
@@ -134,6 +136,7 @@ export const AnnotationsElement: FC<Props> = ({
         <p className={styles.annotation}>wc: {windowCenter || '-'}</p>
         <p className={styles.annotation}>ww: {windowWidth || '-'}</p>
       </div>
+      {menuElement}
     </>
   );
 };

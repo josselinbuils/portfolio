@@ -12,7 +12,12 @@ import { useKeyMap } from '../../hooks/useKeyMap';
 import type { Position } from '../../interfaces/Position';
 import { createGUID } from '../../utils/createGUID';
 import styles from './Menu.module.scss';
-import { MenuItem, type MenuItemDescriptor } from './MenuItem';
+import {
+  MenuItem,
+  type MenuItemDescriptor,
+} from './components/MenuItem/MenuItem';
+
+export { type MenuItemDescriptor };
 
 export interface MenuDescriptor {
   className?: string;

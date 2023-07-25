@@ -19,10 +19,10 @@ import {
   useState,
 } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
+import { useMenu } from '@/platform/components/Menu/useMenu';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
-import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
@@ -32,6 +32,7 @@ import { createSelection } from '../../utils/createSelection';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
 import { Shortcut } from '../Shortcut/Shortcut';
+import { PopoverToolButton } from '../ToolButton/PopoverToolButton';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';
 import styles from './Editor.module.scss';
@@ -46,6 +47,7 @@ import { useAutoCompletion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
 import { type EditorFile } from './interfaces/EditorFile';
+import { type SupportedLanguage } from './interfaces/SupportedLanguage';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
 import { duplicate } from './utils/duplicate';
@@ -91,7 +93,11 @@ export const Editor: FC<EditorProps> = ({
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
   const cursorOffset = selection[0];
-  const { complete, hasCompletionItems } = useAutoCompletion({
+  const {
+    complete,
+    hasCompletionItems,
+    menuElement: autoCompletionMenuElement,
+  } = useAutoCompletion({
     active: autoCompleteActive,
     code,
     cursorOffset,
@@ -100,7 +106,7 @@ export const Editor: FC<EditorProps> = ({
     onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
-  const { showMenu } = useMenu();
+  const { showMenu, menuElement } = useMenu();
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
@@ -125,6 +131,10 @@ export const Editor: FC<EditorProps> = ({
     filename: activeFilename,
     selection,
   });
+  const newFileMenuItems = SUPPORTED_LANGUAGES.map(({ language, label }) => ({
+    onClick: () => createFile(language),
+    title: label,
+  }));
 
   useKeyMap(
     {
@@ -133,7 +143,7 @@ export const Editor: FC<EditorProps> = ({
       'CtrlCmd+:,CtrlCmd+/': () => updateState(comment(code, selection)),
       'CtrlCmd+D': () => updateState(duplicate(code, selection)),
       'CtrlCmd+O': () => open(undefined),
-      'CtrlCmd+P': createFile,
+      'CtrlCmd+P': openNewFileMenu,
       'CtrlCmd+S': format,
       Escape: () => {
         if (autoCompleteActive) {
@@ -245,50 +255,27 @@ export const Editor: FC<EditorProps> = ({
     fileManager.set(updatedFiles);
   }
 
-  function createFile(): void {
-    const textAreaElement = textAreaElementRef.current;
+  function createFile(language: SupportedLanguage): void {
+    const maxIndex = Math.max(
+      ...files.map((file) =>
+        parseInt(
+          file.name.startsWith('local') ? file.name.slice(5, -3) || '0' : '-1',
+          10,
+        ),
+      ),
+    );
 
-    if (textAreaElement === null) {
-      return;
-    }
+    const name = `local${
+      maxIndex > -1 ? maxIndex + 1 : ''
+    }.${getExtensionFromLanguage(language)}`;
 
-    const { height, width, x, y } = textAreaElement.getBoundingClientRect();
-
-    showMenu({
-      className: cn(styles.menu, styles.newFileMenu),
-      items: SUPPORTED_LANGUAGES.map(({ language, label }) => ({
-        onClick: () => {
-          const maxIndex = Math.max(
-            ...files.map((file) =>
-              parseInt(
-                file.name.startsWith('local')
-                  ? file.name.slice(5, -3) || '0'
-                  : '-1',
-                10,
-              ),
-            ),
-          );
-
-          const name = `local${
-            maxIndex > -1 ? maxIndex + 1 : ''
-          }.${getExtensionFromLanguage(language)}`;
-
-          fileManager.push({
-            content: '',
-            language,
-            name,
-            shared: false,
-          });
-          setActiveFilename(name);
-        },
-        title: label,
-      })),
-      makeFirstItemActive: true,
-      position: {
-        x: Math.round(x + width / 2),
-        y: Math.round(y + height / 2),
-      },
+    fileManager.push({
+      content: '',
+      language,
+      name,
+      shared: false,
     });
+    setActiveFilename(name);
   }
 
   function disableAutoCompletion(): void {
@@ -417,6 +404,26 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
+  function openNewFileMenu(): void {
+    const textAreaElement = textAreaElementRef.current;
+
+    if (textAreaElement === null) {
+      return;
+    }
+
+    const { height, width, x, y } = textAreaElement.getBoundingClientRect();
+
+    showMenu({
+      className: cn(styles.menu, styles.newFileMenu),
+      items: newFileMenuItems,
+      makeFirstItemActive: true,
+      position: {
+        x: Math.round(x + width / 2),
+        y: Math.round(y + height / 2),
+      },
+    });
+  }
+
   function updateState(newState: EditableState | undefined): void {
     if (newState === undefined) {
       return;
@@ -432,9 +439,9 @@ export const Editor: FC<EditorProps> = ({
   return (
     <div className={cn(styles.editor, className)}>
       <Toolbar className={styles.toolbar}>
-        <ToolButton
+        <PopoverToolButton
           icon={faFileCirclePlus}
-          onClick={createFile}
+          menu={{ items: newFileMenuItems }}
           title={
             <>
               New&nbsp;
@@ -572,6 +579,8 @@ export const Editor: FC<EditorProps> = ({
           )}
         </div>
       </div>
+      {autoCompletionMenuElement}
+      {menuElement}
     </div>
   );
 };

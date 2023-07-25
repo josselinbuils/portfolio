@@ -2,9 +2,9 @@ import cn from 'classnames';
 import { type HTMLAttributes, type RefObject } from 'preact/compat';
 import { forwardRef, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
+import { useMenu } from '@/platform/components/Menu/useMenu';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
 import styles from './Task.module.scss';
@@ -27,7 +27,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
   ) => {
     const taskRef = ref as unknown as RefObject<HTMLButtonElement>;
     const [loading, setLoading] = useState(false);
-    const { hideMenu, isMenuDisplayed, showMenu } = useMenu();
+    const { hideMenu, isMenuDisplayed, menuElement, showMenu } = useMenu();
     const getTaskMenuDescriptor = useTaskContextMenu(taskDescriptor, taskRef);
     const run = useTaskRunner(taskDescriptor);
 
@@ -122,6 +122,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
           />
           {running && <div className={styles.runIndicator} />}
         </button>
+        {menuElement}
       </WithTooltip>
     );
   },

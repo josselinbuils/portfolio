@@ -1,0 +1,47 @@
+@import '@/platform/_constants.scss';
+@import './_constants.scss';
+
+.active {
+  border-color: $borderColorPrimary;
+  background: lighten($backgroundPrimaryColor, 10%);
+}
+
+.linkWithMenu {
+  position: fixed;
+  z-index: 1001;
+  width: 0.5rem;
+  height: $buttonSize - 0.2rem; // - border size
+  margin-left: -0.1rem;
+  border: 0.1rem solid $borderColorPrimary;
+  border-right: 0;
+  border-left: 0;
+  background: lighten($backgroundPrimaryColor, 10%);
+}
+
+ul.menu {
+  @include scrollbar;
+
+  min-width: 15rem;
+  height: 22rem;
+  margin-left: 0.3rem;
+  border: 0.1rem solid $borderColorPrimary;
+  border-radius: 0 $radiusS $radiusS $radiusS;
+  background: lighten($backgroundPrimaryColor, 10%);
+
+  button {
+    font-family: $fontFamily;
+    font-size: 1.3rem;
+    line-height: 1.4rem;
+    padding: $spacingS $spacingL $spacingS $spacingS;
+    color: $buttonColor;
+    border-radius: $radiusS;
+
+    &[aria-current='true'] {
+      background: lighten($backgroundPrimaryColor, 20%);
+    }
+  }
+}
+
+.popoverToolButton {
+  position: relative;
+}
