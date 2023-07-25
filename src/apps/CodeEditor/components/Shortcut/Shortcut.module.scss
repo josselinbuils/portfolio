@@ -12,8 +12,9 @@
   padding: 0 $spacingXs;
   white-space: nowrap;
   color: lighten($backgroundPrimaryColor, 10%);
-  border-radius: $radiusXs;
+  border-radius: $radiusXxs;
   background-color: #b8babc;
+  box-shadow: 0.2rem 0.2rem black;
 }
 
 .plus {

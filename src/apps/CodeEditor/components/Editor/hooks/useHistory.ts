@@ -34,7 +34,7 @@ export function useHistory({
 
   useKeyMap(
     {
-      'Control+Z,Meta+Z': () => {
+      'CtrlCmd+Z': () => {
         const previousState = fileHistoryRef.current.undo(
           currentStateRef.current.code,
         );
@@ -43,7 +43,7 @@ export function useHistory({
           applyStateRef.current(previousState);
         }
       },
-      'Control+Shift+Z,Meta+Shift+Z': () => {
+      'CtrlCmd+Shift+Z': () => {
         const newState = fileHistoryRef.current.redo(
           currentStateRef.current.code,
         );

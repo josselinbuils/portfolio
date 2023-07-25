@@ -57,9 +57,9 @@ export function useSharedFile({
 
   useKeyMap(
     {
-      'Control+Z,Meta+Z': () =>
+      'CtrlCmd+Z': () =>
         dispatchToServer(serverActions.undo.create({ f: filename })),
-      'Control+Shift+Z,Meta+Shift+Z': () =>
+      'CtrlCmd+Shift+Z': () =>
         dispatchToServer(serverActions.redo.create({ f: filename })),
     },
     active,

@@ -130,12 +130,11 @@ export const Editor: FC<EditorProps> = ({
     {
       'Alt+Shift+ArrowDown': () => updateState(moveLines(code, selection, 1)),
       'Alt+Shift+ArrowUp': () => updateState(moveLines(code, selection, -1)),
-      'Control+:,Control+/,Meta+:,Meta+/': () =>
-        updateState(comment(code, selection)),
-      'Control+D,Meta+D': () => updateState(duplicate(code, selection)),
-      'Control+N,Meta+N': createFile,
-      'Control+O,Meta+O': () => open(undefined),
-      'Control+S,Meta+S': format,
+      'CtrlCmd+:,CtrlCmd+/': () => updateState(comment(code, selection)),
+      'CtrlCmd+D': () => updateState(duplicate(code, selection)),
+      'CtrlCmd+O': () => open(undefined),
+      'CtrlCmd+P': createFile,
+      'CtrlCmd+S': format,
       Escape: () => {
         if (autoCompleteActive) {
           setAutoCompleteActive(false);
@@ -439,7 +438,7 @@ export const Editor: FC<EditorProps> = ({
           title={
             <>
               New&nbsp;
-              <Shortcut keys={['Ctrl', 'N']} />
+              <Shortcut keys={['CtrlCmd', 'P']} />
             </>
           }
         />
@@ -449,7 +448,7 @@ export const Editor: FC<EditorProps> = ({
           title={
             <>
               Open&nbsp;
-              <Shortcut keys={['Ctrl', 'O']} />
+              <Shortcut keys={['CtrlCmd', 'O']} />
             </>
           }
         />
@@ -460,7 +459,7 @@ export const Editor: FC<EditorProps> = ({
           title={
             <>
               Format&nbsp;
-              <Shortcut keys={['Ctrl', 'S']} />
+              <Shortcut keys={['CtrlCmd', 'S']} />
             </>
           }
         />

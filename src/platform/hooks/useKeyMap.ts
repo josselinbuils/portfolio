@@ -1,4 +1,5 @@
 import { useEffect } from 'preact/compat';
+import { getKeyFromEvent, normaliseKeys } from '../utils/keys';
 import { useEventListener } from './useEventListener';
 
 const priorities = [] as number[];
@@ -29,12 +30,14 @@ export function useKeyMap(
         return;
       }
 
-      const eventKeyStr = getEventKeyStr(event);
+      const eventKeyStr = getKeyFromEvent(event);
 
       for (const [keyStr, handler] of Object.entries(keyMap)) {
         const isTarget =
           keyStr === '*' ||
-          keyStr.split(',').some((subKeyStr) => subKeyStr === eventKeyStr);
+          normaliseKeys(keyStr)
+            .split(',')
+            .some((subKeyStr) => subKeyStr === eventKeyStr);
 
         if (isTarget) {
           if (handler(event) !== false) {
@@ -46,21 +49,4 @@ export function useKeyMap(
     },
     active,
   );
-}
-
-function getEventKeyStr({
-  altKey,
-  ctrlKey,
-  key,
-  metaKey,
-  shiftKey,
-}: KeyboardEvent): string {
-  let eventKeyStr = altKey && key !== 'Alt' ? 'Alt+' : '';
-
-  eventKeyStr += ctrlKey && key !== 'Control' ? 'Control+' : '';
-  eventKeyStr += metaKey && key !== 'Meta' ? 'Meta+' : '';
-  eventKeyStr += shiftKey && key !== 'Shift' ? 'Shift+' : '';
-  eventKeyStr += key.length === 1 ? key.toUpperCase() : key;
-
-  return eventKeyStr;
 }

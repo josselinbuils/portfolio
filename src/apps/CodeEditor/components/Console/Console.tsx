@@ -42,7 +42,7 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
 
     useKeyMap(
       {
-        'Control+E,Meta+E': () => execCode(codeToExec),
+        'CtrlCmd+E': () => execCode(codeToExec),
       },
       active,
     );
@@ -60,8 +60,8 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
             onClick={() => execCode(codeToExec)}
             title={
               <>
-                Execute
-                <Shortcut keys={['Ctrl', 'E']} />
+                Execute&nbsp;
+                <Shortcut keys={['CtrlCmd', 'E']} />
               </>
             }
           />

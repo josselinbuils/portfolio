@@ -57,7 +57,7 @@ const Terminal: WindowComponent = ({
   useKeyMap(
     {
       'Control+C': cancel,
-      'Control+K,Meta+K': () => {
+      'CtrlCmd+K': () => {
         if (waiting && !query) {
           return false;
         }
