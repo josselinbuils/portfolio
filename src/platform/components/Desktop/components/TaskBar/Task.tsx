@@ -121,8 +121,8 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
             style={{ fontSize: `${iconScale}em` }}
           />
           {running && <div className={styles.runIndicator} />}
+          {menuElement}
         </button>
-        {menuElement}
       </WithTooltip>
     );
   },
