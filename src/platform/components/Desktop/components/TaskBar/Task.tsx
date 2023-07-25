@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
+import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
 import styles from './Task.module.scss';
@@ -93,8 +93,9 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
         <button
           aria-label={name}
           className={cn(styles.task, {
-            [styles.taskButtonActive]: taskButtonActive,
-            [styles.windowInstanceActive]: windowInstanceActive,
+            [styles.taskButtonActive]: taskButtonActive && !isMenuDisplayed,
+            [styles.windowInstanceActive]:
+              windowInstanceActive && !isMenuDisplayed,
           })}
           onClick={(event) => {
             runTask();

@@ -1,6 +1,10 @@
-import { type FC } from 'preact/compat';
-import { type MenuItemDescriptor } from '../MenuItemDescriptor';
+import { type FC, type JSX } from 'preact/compat';
 import styles from './MenuItem.module.scss';
+
+export interface MenuItemDescriptor {
+  title: string | JSX.Element;
+  onClick(): void;
+}
 
 export interface MenuItemProps extends MenuItemDescriptor {
   active: boolean;

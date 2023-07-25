@@ -1,13 +1,28 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/compat';
-import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { createGUID } from '@/platform/utils/createGUID';
-import { ROOT_FONT_SIZE_PX } from '../../../constants';
-import { type MenuDescriptor } from '../MenuDescriptor';
-import { type MenuItemDescriptor } from '../MenuItemDescriptor';
+import {
+  type CSSProperties,
+  type FC,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'preact/compat';
+import { ROOT_FONT_SIZE_PX } from '../../constants';
+import { useKeyMap } from '../../hooks/useKeyMap';
+import type { Position } from '../../interfaces/Position';
+import { createGUID } from '../../utils/createGUID';
 import styles from './Menu.module.scss';
-import { MenuItem } from './MenuItem';
+import { MenuItem, type MenuItemDescriptor } from './MenuItem';
+
+export interface MenuDescriptor {
+  className?: string;
+  enterWithTab?: boolean;
+  items: MenuItemDescriptor[];
+  makeFirstItemActive?: boolean;
+  onActivate?(index: number): void;
+  position?: Position;
+  style?: CSSProperties;
+}
 
 export interface MenuProps extends MenuDescriptor {
   onHide(): void;

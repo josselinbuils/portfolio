@@ -2,7 +2,6 @@ import { type FC } from 'preact/compat';
 import { useEffect } from 'preact/compat';
 import '../global.scss';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
-import { MenuProvider } from '../providers/MenuProvider/MenuProvider';
 import { windowManager } from '../services/windowManager/windowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
@@ -40,9 +39,5 @@ export const OperatingSystem: FC<OperatingSystemProps> = ({
     }
   }, [lazyApp]);
 
-  return (
-    <MenuProvider>
-      <Desktop />
-    </MenuProvider>
-  );
+  return <Desktop />;
 };

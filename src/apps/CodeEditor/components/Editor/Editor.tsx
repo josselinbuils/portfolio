@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
-import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
+import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';

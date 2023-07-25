@@ -6,8 +6,8 @@ import { useRef } from 'preact/compat';
 import { type ViewType } from '@/apps/DICOMViewer/constants';
 import { RendererType } from '@/apps/DICOMViewer/constants';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type MenuItemDescriptor } from '@/platform/providers/MenuProvider/MenuItemDescriptor';
-import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
+import { type MenuItemDescriptor } from '@/platform/components/Menu/MenuItem';
+import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { type Annotations } from '../../interfaces/Annotations';
 import styles from './AnnotationsElement.module.scss';
 

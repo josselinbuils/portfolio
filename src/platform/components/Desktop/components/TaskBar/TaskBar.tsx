@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { APP_DESCRIPTORS } from '@/platform/appDescriptors';
 import { useToolbar } from '@/platform/hooks/useToolbar';
+import { WithMenu } from '@/platform/providers/WithMenu/WithMenu';
 import { Task } from './Task';
 import styles from './TaskBar.module.scss';
 import { useAppTaskDescriptors } from './hooks/useAppTaskDescriptors';
@@ -42,13 +43,15 @@ export const TaskBar: FC<TaskBarProps> = ({ className }) => {
           const id = getTaskId(taskDescriptor, index);
 
           return (
-            <Task
-              id={id}
-              key={id}
-              taskButtonActive={isToolActive(id)}
-              taskDescriptor={taskDescriptor}
-              {...getToolProps(id)}
-            />
+            <WithMenu>
+              <Task
+                id={id}
+                key={id}
+                taskButtonActive={isToolActive(id)}
+                taskDescriptor={taskDescriptor}
+                {...getToolProps(id)}
+              />
+            </WithMenu>
           );
         },
       )}

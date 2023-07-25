@@ -1,5 +1,5 @@
 import { createContext } from 'preact/compat';
-import { type MenuDescriptor } from './MenuDescriptor';
+import { type MenuDescriptor } from '../../components/Menu/Menu';
 
 export const MenuContext = createContext<MenuManager>({
   isMenuDisplayed: false,

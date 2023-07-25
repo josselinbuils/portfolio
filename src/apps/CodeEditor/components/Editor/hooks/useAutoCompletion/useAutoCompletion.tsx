@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useRef } from 'preact/compat';
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
-import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
+import { useMenu } from '@/platform/providers/WithMenu/useMenu';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import { getCompletion } from './utils/getCompletion';
