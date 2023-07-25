@@ -21,11 +21,6 @@ export interface MenuManager {
 
 const Menu = lazy(async () => (await import('./Menu')).Menu);
 
-const MenuOverlay = lazy(
-  async () =>
-    (await import('./components/MenuOverlay/MenuOverlay')).MenuOverlay,
-);
-
 export function useMenu(): MenuManager {
   const [menuDescriptor, setMenuDescriptor] = useState<MenuDescriptor>();
   const hideMenu = useCallback(() => setMenuDescriptor(undefined), []);
@@ -33,10 +28,7 @@ export function useMenu(): MenuManager {
   const menuElement = menuDescriptor ? (
     <Suspense fallback={null}>
       {createPortal(
-        <>
-          <MenuOverlay hideMenu={hideMenu} />
-          <Menu {...menuDescriptor} onHide={hideMenu} />
-        </>,
+        <Menu {...menuDescriptor} onHide={hideMenu} />,
         document.body,
       )}
     </Suspense>

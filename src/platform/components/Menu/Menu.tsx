@@ -16,6 +16,7 @@ import {
   MenuItem,
   type MenuItemDescriptor,
 } from './components/MenuItem/MenuItem';
+import { MenuOverlay } from './components/MenuOverlay/MenuOverlay';
 
 export { type MenuItemDescriptor };
 
@@ -117,33 +118,36 @@ export const Menu: FC<MenuProps> = ({
   const { x, y } = position;
 
   return (
-    <ul
-      className={cn(styles.contextMenu, className)}
-      onMouseLeave={() => setActiveIndex(items.length === 1 ? 0 : -1)}
-      style={{
-        ...style,
-        left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
-        top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
-      }}
-      ref={listElementRef}
-      role="menu"
-    >
-      {items.map(({ id, onClick, title }, index) => (
-        <MenuItem
-          active={index === activeIndex}
-          key={id}
-          onMouseMove={() => {
-            if (activeIndex !== index) {
-              setActiveIndex(index);
-            }
-          }}
-          onClick={() => {
-            onClick();
-            onHide();
-          }}
-          title={title}
-        />
-      ))}
-    </ul>
+    <>
+      <ul
+        className={cn(styles.contextMenu, className)}
+        onMouseLeave={() => setActiveIndex(items.length === 1 ? 0 : -1)}
+        style={{
+          ...style,
+          left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
+          top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
+        }}
+        ref={listElementRef}
+        role="menu"
+      >
+        {items.map(({ id, onClick, title }, index) => (
+          <MenuItem
+            active={index === activeIndex}
+            key={id}
+            onMouseMove={() => {
+              if (activeIndex !== index) {
+                setActiveIndex(index);
+              }
+            }}
+            onClick={() => {
+              onClick();
+              onHide();
+            }}
+            title={title}
+          />
+        ))}
+      </ul>
+      <MenuOverlay hideMenu={onHide} />
+    </>
   );
 };
