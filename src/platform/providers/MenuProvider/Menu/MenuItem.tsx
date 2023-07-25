@@ -1,13 +1,13 @@
 import { type FC } from 'preact/compat';
-import { type ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
-import styles from './ContextMenuItem.module.scss';
+import { type MenuItemDescriptor } from '../MenuItemDescriptor';
+import styles from './MenuItem.module.scss';
 
-export interface ContextMenuItemProps extends ContextMenuItemDescriptor {
+export interface MenuItemProps extends MenuItemDescriptor {
   active: boolean;
   onMouseMove(): void;
 }
 
-export const ContextMenuItem: FC<ContextMenuItemProps> = ({
+export const MenuItem: FC<MenuItemProps> = ({
   active,
   onClick,
   onMouseMove,

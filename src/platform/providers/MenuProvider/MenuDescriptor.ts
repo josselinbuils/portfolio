@@ -1,11 +1,11 @@
 import { type CSSProperties } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
-import { type ContextMenuItemDescriptor } from './ContextMenuItemDescriptor';
+import { type MenuItemDescriptor } from './MenuItemDescriptor';
 
-export interface ContextMenuDescriptor {
+export interface MenuDescriptor {
   className?: string;
   enterWithTab?: boolean;
-  items: ContextMenuItemDescriptor[];
+  items: MenuItemDescriptor[];
   makeFirstItemActive?: boolean;
   onActivate?(index: number): void;
   position?: Position;

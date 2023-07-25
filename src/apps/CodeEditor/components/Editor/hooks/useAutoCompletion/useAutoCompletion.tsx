@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useRef } from 'preact/compat';
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
-import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
+import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
 import { getLineBeforeCursor } from '../../utils/getLineBeforeCursor';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import { getCompletion } from './utils/getCompletion';
@@ -25,11 +25,7 @@ export function useAutoCompletion({
 }): { hasCompletionItems: boolean; complete(): void } {
   const activeIndexRef = useRef(-1);
   const onCompletionRef = useDynamicRef(onCompletion);
-  const {
-    hideContextMenu,
-    isContextMenuDisplayed: hasCompletionItems,
-    showContextMenu,
-  } = useContextMenu();
+  const { hideMenu, isMenuDisplayed: hasCompletionItems, showMenu } = useMenu();
   const partialKeyword = active
     ? (getLineBeforeCursor(code, cursorOffset)
         .split(/[ ([{]/)
@@ -55,7 +51,7 @@ export function useAutoCompletion({
         );
         const { x, y } = textAreaElement.getBoundingClientRect();
 
-        showContextMenu({
+        showMenu({
           className: menuClassName,
           enterWithTab: true,
           items: completionItems.map(({ displayName, template }) => ({
@@ -85,18 +81,18 @@ export function useAutoCompletion({
           },
         });
 
-        return hideContextMenu;
+        return hideMenu;
       }
     }
   }, [
     code,
     cursorOffset,
-    hideContextMenu,
+    hideMenu,
     lineIndent,
     menuClassName,
     onCompletionRef,
     partialKeyword,
-    showContextMenu,
+    showMenu,
     textAreaElement,
   ]);
 

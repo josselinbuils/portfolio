@@ -1,8 +1,8 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { type RefObject } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type ContextMenuDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuDescriptor';
-import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
+import { type MenuDescriptor } from '@/platform/providers/MenuProvider/MenuDescriptor';
+import { type MenuItemDescriptor } from '@/platform/providers/MenuProvider/MenuItemDescriptor';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import styles from '../Task.module.scss';
 import { type TaskDescriptor } from '../TaskDescriptor';
@@ -13,8 +13,8 @@ const BORDER_RADIUS_MARGIN_PX = 6;
 export function useTaskContextMenu(
   taskDescriptor: TaskDescriptor,
   taskRef: RefObject<HTMLElement>,
-): () => ContextMenuDescriptor | undefined {
-  return function getTaskContextMenuDescriptor() {
+): () => MenuDescriptor | undefined {
+  return function getTaskMenuDescriptor() {
     if (!isAppTaskDescriptor(taskDescriptor)) {
       return undefined;
     }
@@ -25,7 +25,7 @@ export function useTaskContextMenu(
 
     const { icon, name, windowInstance } = taskDescriptor;
     const { right: x, y } = taskRef.current.getBoundingClientRect();
-    const items: ContextMenuItemDescriptor[] = [
+    const items: MenuItemDescriptor[] = [
       {
         title: (
           <>

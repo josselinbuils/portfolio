@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
+import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
 import styles from './Task.module.scss';
@@ -27,12 +27,8 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
   ) => {
     const taskRef = ref as unknown as RefObject<HTMLButtonElement>;
     const [loading, setLoading] = useState(false);
-    const { hideContextMenu, isContextMenuDisplayed, showContextMenu } =
-      useContextMenu();
-    const getTaskContextMenuDescriptor = useTaskContextMenu(
-      taskDescriptor,
-      taskRef,
-    );
+    const { hideMenu, isMenuDisplayed, showMenu } = useMenu();
+    const getTaskMenuDescriptor = useTaskContextMenu(taskDescriptor, taskRef);
     const run = useTaskRunner(taskDescriptor);
 
     const { description, icon, iconScale = 1, name } = taskDescriptor;
@@ -54,11 +50,11 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
     useKeyMap(
       {
         ArrowRight: () => {
-          const taskContextMenuDescriptor = getTaskContextMenuDescriptor();
+          const taskMenuDescriptor = getTaskMenuDescriptor();
 
-          if (taskContextMenuDescriptor !== undefined) {
-            showContextMenu({
-              ...taskContextMenuDescriptor,
+          if (taskMenuDescriptor !== undefined) {
+            showMenu({
+              ...taskMenuDescriptor,
               makeFirstItemActive: true,
             });
           }
@@ -67,11 +63,7 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
       taskButtonActive,
     );
 
-    useKeyMap(
-      { ArrowLeft: hideContextMenu },
-      taskButtonActive && isContextMenuDisplayed,
-      2,
-    );
+    useKeyMap({ ArrowLeft: hideMenu }, taskButtonActive && isMenuDisplayed, 2);
 
     async function runTask(): Promise<void> {
       // Delay loader apparition to avoid displaying it when app already loaded
@@ -111,10 +103,10 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
           onContextMenu={(event) => {
             event.preventDefault();
 
-            const taskContextMenuDescriptor = getTaskContextMenuDescriptor();
+            const taskMenuDescriptor = getTaskMenuDescriptor();
 
-            if (taskContextMenuDescriptor !== undefined) {
-              showContextMenu(taskContextMenuDescriptor);
+            if (taskMenuDescriptor !== undefined) {
+              showMenu(taskMenuDescriptor);
             }
           }}
           ref={taskRef}

@@ -6,8 +6,8 @@ import { useRef } from 'preact/compat';
 import { type ViewType } from '@/apps/DICOMViewer/constants';
 import { RendererType } from '@/apps/DICOMViewer/constants';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type ContextMenuItemDescriptor } from '@/platform/providers/ContextMenuProvider/ContextMenuItemDescriptor';
-import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
+import { type MenuItemDescriptor } from '@/platform/providers/MenuProvider/MenuItemDescriptor';
+import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
 import { type Annotations } from '../../interfaces/Annotations';
 import styles from './AnnotationsElement.module.scss';
 
@@ -27,7 +27,7 @@ export const AnnotationsElement: FC<Props> = ({
     windowWidth,
     zoom,
   } = annotations;
-  const { showContextMenu } = useContextMenu();
+  const { showMenu } = useMenu();
   const rendererElementRef = useRef<HTMLButtonElement>(null);
   const viewTypeElementRef = useRef<HTMLButtonElement>(null);
 
@@ -35,16 +35,16 @@ export const AnnotationsElement: FC<Props> = ({
     return isItemActive ? faCheck : undefined;
   }
 
-  function showMenu(
+  function showContextMenu(
     elementRef: RefObject<HTMLElement>,
-    items: ContextMenuItemDescriptor[],
+    items: MenuItemDescriptor[],
   ): void {
     if (elementRef.current === null) {
       return;
     }
     const { bottom, left } = elementRef.current.getBoundingClientRect();
 
-    showContextMenu({
+    showMenu({
       className: styles.contextMenu,
       items,
       position: {
@@ -70,7 +70,7 @@ export const AnnotationsElement: FC<Props> = ({
         onClick: () => onRendererTypeSwitch(type),
       };
     });
-    showMenu(rendererElementRef, items);
+    showContextMenu(rendererElementRef, items);
   }
 
   function showViewTypeMenu(): void {
@@ -89,7 +89,7 @@ export const AnnotationsElement: FC<Props> = ({
         onClick: () => onViewTypeSwitch(type),
       };
     });
-    showMenu(viewTypeElementRef, items);
+    showContextMenu(viewTypeElementRef, items);
   }
 
   return (

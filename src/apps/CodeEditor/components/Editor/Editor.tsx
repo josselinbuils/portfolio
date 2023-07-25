@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
-import { useContextMenu } from '@/platform/providers/ContextMenuProvider/useContextMenu';
+import { useMenu } from '@/platform/providers/MenuProvider/useMenu';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
@@ -100,7 +100,7 @@ export const Editor: FC<EditorProps> = ({
     onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
-  const { showContextMenu } = useContextMenu();
+  const { showMenu } = useMenu();
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
@@ -254,8 +254,8 @@ export const Editor: FC<EditorProps> = ({
 
     const { height, width, x, y } = textAreaElement.getBoundingClientRect();
 
-    showContextMenu({
-      className: cn(styles.menu, styles.newFileContextMenu),
+    showMenu({
+      className: cn(styles.menu, styles.newFileMenu),
       items: SUPPORTED_LANGUAGES.map(({ language, label }) => ({
         onClick: () => {
           const maxIndex = Math.max(

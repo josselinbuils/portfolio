@@ -4,16 +4,16 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'preact/compat';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { createGUID } from '@/platform/utils/createGUID';
 import { ROOT_FONT_SIZE_PX } from '../../../constants';
-import { type ContextMenuDescriptor } from '../ContextMenuDescriptor';
-import { type ContextMenuItemDescriptor } from '../ContextMenuItemDescriptor';
-import styles from './ContextMenu.module.scss';
-import { ContextMenuItem } from './ContextMenuItem';
+import { type MenuDescriptor } from '../MenuDescriptor';
+import { type MenuItemDescriptor } from '../MenuItemDescriptor';
+import styles from './Menu.module.scss';
+import { MenuItem } from './MenuItem';
 
-export interface ContextMenuProps extends ContextMenuDescriptor {
+export interface MenuProps extends MenuDescriptor {
   onHide(): void;
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({
+export const Menu: FC<MenuProps> = ({
   className,
   enterWithTab,
   items: itemsWithoutID,
@@ -25,9 +25,9 @@ export const ContextMenu: FC<ContextMenuProps> = ({
 }) => {
   const defaultActiveIndex = makeFirstItemActive ? 0 : -1;
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
-  const [items, setItems] = useState<
-    (ContextMenuItemDescriptor & { id: string })[]
-  >([]);
+  const [items, setItems] = useState<(MenuItemDescriptor & { id: string })[]>(
+    [],
+  );
   const listElementRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => onActivate(activeIndex), [activeIndex, onActivate]);
@@ -109,7 +109,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({
       role="menu"
     >
       {items.map(({ id, onClick, title }, index) => (
-        <ContextMenuItem
+        <MenuItem
           active={index === activeIndex}
           key={id}
           onMouseMove={() => {
