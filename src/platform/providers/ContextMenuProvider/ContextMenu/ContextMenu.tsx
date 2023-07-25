@@ -30,25 +30,6 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   >([]);
   const listElementRef = useRef<HTMLUListElement>(null);
 
-  useLayoutEffect(() => {
-    const listElement = listElementRef.current;
-
-    if (listElement === null || listElement.firstElementChild === null) {
-      return;
-    }
-
-    const listHeight = listElement.clientHeight;
-    const itemHeight = listElement.firstElementChild.clientHeight;
-    const maxScrollTop = activeIndex * itemHeight;
-    const minScrollTop = maxScrollTop + itemHeight - listHeight;
-
-    if (listElement.scrollTop > maxScrollTop) {
-      listElement.scrollTop = maxScrollTop;
-    } else if (listElement.scrollTop < minScrollTop) {
-      listElement.scrollTop = minScrollTop;
-    }
-  }, [activeIndex]);
-
   useEffect(() => onActivate(activeIndex), [activeIndex, onActivate]);
 
   useLayoutEffect(() => {
@@ -62,12 +43,37 @@ export const ContextMenu: FC<ContextMenuProps> = ({
     }
   }
 
+  function updateActiveIndexWithKeyboard(newIndex: number) {
+    setActiveIndex(newIndex);
+
+    const listElement = listElementRef.current;
+
+    if (listElement === null || listElement.firstElementChild === null) {
+      return;
+    }
+
+    const listHeight = listElement.clientHeight;
+    const itemHeight = listElement.firstElementChild.clientHeight;
+    const maxScrollTop = newIndex * itemHeight;
+    const minScrollTop = maxScrollTop + itemHeight - listHeight;
+
+    if (listElement.scrollTop > maxScrollTop) {
+      listElement.scrollTop = maxScrollTop;
+    } else if (listElement.scrollTop < minScrollTop) {
+      listElement.scrollTop = minScrollTop;
+    }
+  }
+
   useKeyMap(
     {
       ArrowDown: () =>
-        setActiveIndex(activeIndex < items.length - 1 ? activeIndex + 1 : 0),
+        updateActiveIndexWithKeyboard(
+          activeIndex < items.length - 1 ? activeIndex + 1 : 0,
+        ),
       ArrowUp: () =>
-        setActiveIndex(activeIndex > 0 ? activeIndex - 1 : items.length - 1),
+        updateActiveIndexWithKeyboard(
+          activeIndex > 0 ? activeIndex - 1 : items.length - 1,
+        ),
       Enter: clickOnActiveItem,
       Escape: onHide,
       Tab: () => {
@@ -93,7 +99,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   return (
     <ul
       className={cn(styles.contextMenu, className)}
-      onMouseLeave={() => setActiveIndex(defaultActiveIndex)}
+      onMouseLeave={() => setActiveIndex(items.length === 1 ? 0 : -1)}
       style={{
         ...style,
         left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,

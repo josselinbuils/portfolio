@@ -79,6 +79,7 @@
 
 .contextMenu {
   font-size: 1.4rem;
+  box-sizing: border-box;
   height: $taskBarWidth;
   padding: $spacingXs;
   color: $textColor;
