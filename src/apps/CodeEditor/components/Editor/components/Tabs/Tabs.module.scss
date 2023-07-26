@@ -1,7 +1,9 @@
 @import '../../../../_constants.scss';
 
 .tabs {
+  overflow-x: auto;
   box-sizing: border-box;
+  white-space: nowrap;
   border-bottom: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
 }
