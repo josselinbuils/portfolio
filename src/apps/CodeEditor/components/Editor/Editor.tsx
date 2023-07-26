@@ -488,9 +488,9 @@ export const Editor: FC<EditorProps> = ({
           menu={{
             items: (
               [
+                ['Open', openCodeSnippetAsPng],
                 ['Download as PNG', downloadCodeSnippetAsPng],
                 ['Download as SVG', downloadCodeSnippetAsSvg],
-                ['Open', openCodeSnippetAsPng],
               ] as const
             ).map(([title, onClick]) => ({ onClick, title })),
           }}
