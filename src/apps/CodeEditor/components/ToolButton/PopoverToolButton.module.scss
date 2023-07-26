@@ -22,7 +22,7 @@ ul.menu {
   @include scrollbar;
 
   min-width: 15rem;
-  height: 22rem;
+  max-height: 22rem;
   margin-left: 0.3rem;
   border: 0.1rem solid $borderColorPrimary;
   border-radius: 0 $radiusS $radiusS $radiusS;

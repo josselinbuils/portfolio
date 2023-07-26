@@ -284,11 +284,18 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
-  async function exportCodeSnippet(): Promise<void> {
-    const { exportAsImage } = await import(
+  async function downloadCodeSnippetAsPng(): Promise<void> {
+    const { downloadAsPng } = await import(
       './utils/exportAsImage/exportAsImage'
     );
-    await exportAsImage(code, highlightedCode);
+    await downloadAsPng(code, highlightedCode);
+  }
+
+  async function downloadCodeSnippetAsSvg(): Promise<void> {
+    const { downloadAsSvg } = await import(
+      './utils/exportAsImage/exportAsImage'
+    );
+    await downloadAsSvg(code, highlightedCode);
   }
 
   async function format(): Promise<void> {
@@ -404,6 +411,11 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
+  async function openCodeSnippetAsPng(): Promise<void> {
+    const { openAsPng } = await import('./utils/exportAsImage/exportAsImage');
+    await openAsPng(code, highlightedCode);
+  }
+
   function openNewFileMenu(): void {
     const textAreaElement = textAreaElementRef.current;
 
@@ -470,10 +482,18 @@ export const Editor: FC<EditorProps> = ({
             </>
           }
         />
-        <ToolButton
+        <PopoverToolButton
           disabled={code.length === 0}
           icon={faCamera}
-          onClick={exportCodeSnippet}
+          menu={{
+            items: (
+              [
+                ['Download as PNG', downloadCodeSnippetAsPng],
+                ['Download as SVG', downloadCodeSnippetAsSvg],
+                ['Open', openCodeSnippetAsPng],
+              ] as const
+            ).map(([title, onClick]) => ({ onClick, title })),
+          }}
           title="Export as image"
         />
         <ToolButton

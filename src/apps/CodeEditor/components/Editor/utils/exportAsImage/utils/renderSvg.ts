@@ -14,11 +14,18 @@ const PADDING_LEFT_PX = 20;
 const WOFF_FONT_URL =
   'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2';
 
-export async function renderSVG(
+export interface RenderedSvg {
+  dataUrl: string;
+  height: number;
+  svg: string;
+  width: number;
+}
+
+export async function renderSvg(
   code: string,
   highlightedCode: string,
   scale: number,
-): Promise<{ height: number; svg: string; width: number }> {
+): Promise<RenderedSvg> {
   // Scales CSS properties
   const borderRadius = BORDER_RADIUS_PX * scale;
   const fontSize = BASE_FONT_SIZE_PX * scale;
@@ -101,5 +108,7 @@ export async function renderSVG(
 </svg>
 `;
 
-  return { height, svg, width };
+  const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+
+  return { dataUrl, height, svg, width };
 }

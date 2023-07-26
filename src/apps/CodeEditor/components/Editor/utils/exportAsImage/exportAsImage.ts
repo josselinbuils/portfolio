@@ -1,25 +1,38 @@
-import { createImage } from './utils/createImage';
+import { convertSvg } from './utils/convertSvg';
 import { download } from './utils/download';
-import { renderSVG } from './utils/renderSVG';
+import { renderSvg } from './utils/renderSvg';
 
-const FILENAME = 'snippet.jpg';
 const SCALE = 2;
 
-export async function exportAsImage(
+export async function downloadAsPng(
   code: string,
   highlightedCode: string,
 ): Promise<void> {
-  const { height, svg, width } = await renderSVG(code, highlightedCode, SCALE);
-  const image = await createImage(svg);
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const context = canvas.getContext('2d');
+  const svg = await renderSvg(code, highlightedCode, SCALE);
+  const dataUrl = await convertSvg(svg, 'image/png');
 
-  if (context === null) {
-    throw new Error('Unable to retrieve 2d context');
-  }
+  download('snippet.png', dataUrl);
+}
 
-  context.drawImage(image, 0, 0);
-  download(FILENAME, canvas.toDataURL('image/png'));
+export async function downloadAsSvg(
+  code: string,
+  highlightedCode: string,
+): Promise<void> {
+  const { dataUrl } = await renderSvg(code, highlightedCode, SCALE);
+
+  download('snippet.svg', dataUrl);
+}
+
+export async function openAsPng(
+  code: string,
+  highlightedCode: string,
+): Promise<void> {
+  const svg = await renderSvg(code, highlightedCode, SCALE);
+  const dataUrl = await convertSvg(svg, 'image/png');
+
+  window
+    .open()
+    ?.document.write(
+      `<iframe allowfullscreen src="${dataUrl}" style="border:0; height:100%; width:100%;"></iframe>`,
+    );
 }
