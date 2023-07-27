@@ -2,7 +2,7 @@
 
 My portfolio :)
 
-[Visit](https://josselinbuils.me)
+[Visit](https://josselinbuils.dev)
 
 ![Preview](https://raw.githubusercontent.com/josselinbuils/portfolio/master/preview.jpg)
 
