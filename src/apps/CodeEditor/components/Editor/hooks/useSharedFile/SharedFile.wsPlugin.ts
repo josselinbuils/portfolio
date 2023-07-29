@@ -36,18 +36,16 @@ interface PersistentState {
   };
 }
 
-const sharedFiles = fileSaver.defaultFiles
-  .filter(({ shared }) => shared)
-  .map(({ name }) => name);
+const sharedFiles = fileSaver.defaultFiles.filter(({ shared }) => shared);
 
 export default class SharedFileWsPlugin implements WSPlugin {
   readonly name = 'sharedFile';
   private readonly state: Record<string, FileState> = Object.fromEntries(
-    sharedFiles.map((sharedFile) => [
-      sharedFile,
+    sharedFiles.map(({ content, name }) => [
+      name,
       {
-        code: '',
-        codeHash: computeHash(''),
+        code: content,
+        codeHash: computeHash(content),
         history: new History(),
       },
     ]),
@@ -96,7 +94,7 @@ export default class SharedFileWsPlugin implements WSPlugin {
   reduce(wsClient: WSClient, action: Action<any>): void {
     const [type, payload] = action as Action<SharedFileServerBaseAction>;
 
-    if (!payload || !sharedFiles.includes(payload.f)) {
+    if (!payload || this.state[payload.f] === undefined) {
       return;
     }
 

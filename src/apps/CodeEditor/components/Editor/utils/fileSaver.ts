@@ -5,13 +5,72 @@ const STORAGE_KEY = 'codeEditor';
 
 const defaultFiles: EditorFile[] = [
   {
-    content: '',
+    content: `\
+// Rewrite the for loop without the await keyword and keep the same behavior
+
+(async () => {
+  for (let i = 0; i < 5; i++) {
+    await sleep(i * 1000);
+    console.log(i);
+  }
+})();
+
+function sleep(timeMs) {
+  return new Promise((resolve) => setTimeout(resolve, timeMs));
+}
+`,
     language: 'javascript',
     name: 'shared.js',
     shared: true,
   },
   {
-    content: '',
+    content: `\
+/*
+ * Hello 🖖 Today, we will try to beat the computer in a Tic Tac Toe game!
+ *
+ * When it is your turn to play, you will receive the grid which is an array of
+ * arrays (1 by line) containing the following marks:
+ * - 'x' is the mark of the computer.
+ * - 'o' is your mark.
+ * - '' is an empty case.
+ *
+ * Here is an example of grid:
+ * [
+ *   ['o', '', ''], // Row 1
+ *   ['', 'x', ''], // Row 2
+ *   ['x', '', ''], // Row 3
+ * ]
+ *
+ * The goal is to implement an AI to beat the computer 🏅
+ */
+
+const { onMyTurn, placeMyMark, start } = window.ticTacToe;
+
+onMyTurn((grid) => {
+  for (let i = 0; i < 3; i++) {
+    if (grid[i][0] === 'x' && grid[i][1] === 'x' && grid[i][2] === '') {
+      placeMyMark(2, i);
+      return;
+    } else if (grid[i][0] === 'x' && grid[i][1] === '' && grid[i][2] === 'x') {
+      placeMyMark(1, i);
+      return;
+    } else if (grid[i][0] === '' && grid[i][1] === 'x' && grid[i][2] === 'x') {
+      placeMyMark(0, i);
+      return;
+    }
+  }
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (grid[i][j] === '') {
+        placeMyMark(j, i);
+        return;
+      }
+    }
+  }
+});
+
+start();
+`,
     language: 'javascript',
     name: 'ticTacToe.js',
     shared: true,
