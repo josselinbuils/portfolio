@@ -2,12 +2,12 @@ import { type WSClient } from '@/apps/CodeEditor/api/WSClient';
 import { type WSPlugin, type WSServer } from '@/apps/CodeEditor/api/WSServer';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type ActionFromFactory } from '@/platform/state/interfaces/ActionFactory';
-import { type Grid } from './GameManager';
-import { getInitialGrid } from './GameManager';
-import * as clientActions from './clientActions';
-import * as serverActions from './serverActions';
+import { type Grid } from './utils/GameManager';
+import { getInitialGrid } from './utils/GameManager';
+import * as clientActions from './utils/clientActions';
+import * as serverActions from './utils/serverActions';
 
-export class TicTacToeWSPlugin implements WSPlugin {
+export default class TicTacToeWsPlugin implements WSPlugin {
   readonly name = 'ticTacToe';
   private readonly clients: WSClient[] = [];
   private grid = getInitialGrid();

@@ -10,6 +10,7 @@ import { minifySelection } from '@/apps/CodeEditor/utils/minifySelection';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type PayloadFromFactory } from '@/platform/state/interfaces/ActionFactory';
 import { computeHash } from '@/platform/utils/computeHash';
+import { fileSaver } from '../../utils/fileSaver';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
 import { type SharedFileServerBaseAction } from './serverActions';
@@ -29,36 +30,52 @@ interface FileState {
 }
 
 interface PersistentState {
-  code: string;
-  historyState: HistoryState;
+  [filename: string]: {
+    code: string;
+    historyState: HistoryState;
+  };
 }
 
-export class SharedFileWSPlugin implements WSPlugin {
-  readonly name: string;
-  private readonly filename: string;
-  private readonly fileState: FileState = {
-    code: '',
-    codeHash: computeHash(''),
-    history: new History(),
-  };
+const sharedFiles = fileSaver.defaultFiles
+  .filter(({ shared }) => shared)
+  .map(({ name }) => name);
+
+export default class SharedFileWsPlugin implements WSPlugin {
+  readonly name = 'sharedFile';
+  private readonly state: Record<string, FileState> = Object.fromEntries(
+    sharedFiles.map((sharedFile) => [
+      sharedFile,
+      {
+        code: '',
+        codeHash: computeHash(''),
+        history: new History(),
+      },
+    ]),
+  );
   private readonly wsServer: WSServer;
 
-  constructor(wsServer: WSServer, filename: string) {
-    this.filename = filename;
-    this.name = `sharedFile:${filename}`;
+  constructor(wsServer: WSServer) {
     this.wsServer = wsServer;
   }
 
-  loadPersistentState({ code, historyState }: PersistentState): void {
-    const { fileState } = this;
+  loadPersistentState(persistentState: PersistentState): void {
+    Object.entries(persistentState).forEach(
+      ([filename, { code, historyState }]) => {
+        const fileState = this.state[filename];
 
-    fileState.code = code;
-    fileState.codeHash = computeHash(code);
-    fileState.history = new History(historyState);
+        fileState.code = code;
+        fileState.codeHash = computeHash(code);
+        fileState.history = new History(historyState);
+      },
+    );
   }
 
-  onWSClientClose(): void {
-    this.sendCursors();
+  onWSClientClose(client: WSClient): void {
+    const clientState = client.getState<ClientState>(this.name);
+
+    if (clientState !== undefined && clientState.filename !== undefined) {
+      this.sendCursors(clientState.filename);
+    }
   }
 
   onWSClientOpen(client: WSClient): void {
@@ -79,18 +96,21 @@ export class SharedFileWSPlugin implements WSPlugin {
   reduce(wsClient: WSClient, action: Action<any>): void {
     const [type, payload] = action as Action<SharedFileServerBaseAction>;
 
-    if (!payload || payload.f !== this.filename) {
+    if (!payload || !sharedFiles.includes(payload.f)) {
       return;
     }
 
     switch (type) {
-      case serverActions.subscribe.type:
-        this.subscribe(wsClient);
+      case serverActions.subscribe.type: {
+        const filename = payload.f;
+        this.subscribe(filename, wsClient);
         break;
+      }
 
       case serverActions.redo.type:
       case serverActions.undo.type: {
-        const { fileState } = this;
+        const filename = payload.f;
+        const fileState = this.state[filename];
         const historyFunction =
           type === serverActions.undo.type ? 'undo' : 'redo';
         const state = fileState.history[historyFunction](fileState.code);
@@ -100,13 +120,13 @@ export class SharedFileWSPlugin implements WSPlugin {
         }
         const { code, selection } = state;
 
-        this.dispatchAll(({ id }) =>
+        this.dispatchAll(filename, ({ id }) =>
           clientActions.applyState.create({
             s: id === wsClient.id ? { code, selection } : { code },
           }),
         );
         this.updateClientSelection(wsClient, selection, true);
-        this.updateCode(code);
+        this.updateCode(filename, code);
         break;
       }
 
@@ -126,7 +146,9 @@ export class SharedFileWSPlugin implements WSPlugin {
           ns: newSelection,
           sh: safetyHash,
         } = payload as PayloadFromFactory<typeof serverActions.updateCode>;
-        const { fileState } = this;
+
+        const filename = payload.f;
+        const fileState = this.state[filename];
 
         if (currentSelection === undefined || newSelection === undefined) {
           return;
@@ -140,7 +162,7 @@ export class SharedFileWSPlugin implements WSPlugin {
           );
           return;
         }
-        this.dispatchAll(({ id }) =>
+        this.dispatchAll(filename, ({ id }) =>
           clientActions.applyCodeChange.create(
             id === wsClient.id ? { d: diffs, ns: newSelection } : { d: diffs },
           ),
@@ -156,7 +178,7 @@ export class SharedFileWSPlugin implements WSPlugin {
             selection: newSelection,
           },
         );
-        this.updateCode(code);
+        this.updateCode(filename, code);
         break;
       }
 
@@ -166,11 +188,12 @@ export class SharedFileWSPlugin implements WSPlugin {
   }
 
   private dispatchAll(
+    filename: string,
     action: Action<any> | ((client: WSClient) => Action<any> | undefined),
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
-    this.getWSClients().forEach((wsClient) => {
+    this.getWSClients(filename).forEach((wsClient) => {
       const clientAction = actionCreator(wsClient);
 
       if (clientAction !== undefined) {
@@ -179,9 +202,9 @@ export class SharedFileWSPlugin implements WSPlugin {
     });
   }
 
-  private fixCursorOffsets(): void {
-    const clients = this.getWSClients();
-    const { fileState } = this;
+  private fixCursorOffsets(filename: string): void {
+    const clients = this.getWSClients(filename);
+    const fileState = this.state[filename];
     const codeLength = fileState.code.length;
 
     for (const client of clients) {
@@ -200,8 +223,8 @@ export class SharedFileWSPlugin implements WSPlugin {
     return clientState;
   }
 
-  private getCursors(): ClientCursor[] {
-    return this.getWSClients().map((client) => {
+  private getCursors(filename: string): ClientCursor[] {
+    return this.getWSClients(filename).map((client) => {
       const { cursorColor, selection } = this.getClientState(client);
 
       return {
@@ -212,24 +235,27 @@ export class SharedFileWSPlugin implements WSPlugin {
     });
   }
 
-  private getWSClients(): WSClient[] {
+  private getWSClients(filename: string): WSClient[] {
     return (this.wsServer.clients as WSClient[]).filter(
-      (client) => this.getClientState(client).filename === this.filename,
+      (client) => this.getClientState(client).filename === filename,
     );
   }
 
   private savePersistentState(): void {
-    const { code, history } = this.fileState;
-
-    this.wsServer.savePersistentState(this.name, {
-      code,
-      historyState: history.state,
-    });
+    this.wsServer.savePersistentState(
+      this.name,
+      Object.fromEntries(
+        Object.entries(this.state).map(([filename, { code, history }]) => [
+          filename,
+          { code, historyState: history.state },
+        ]),
+      ),
+    );
   }
 
-  private sendCursors(): void {
-    const cursors = this.getCursors();
-    this.dispatchAll((client) =>
+  private sendCursors(filename: string): void {
+    const cursors = this.getCursors(filename);
+    this.dispatchAll(filename, (client) =>
       clientActions.applyForeignCursors.create({
         c: cursors.filter(({ clientID }) => clientID !== client.id),
       }),
@@ -243,28 +269,24 @@ export class SharedFileWSPlugin implements WSPlugin {
     });
   }
 
-  private subscribe(wsClient: WSClient): void {
+  private subscribe(filename: string, wsClient: WSClient): void {
     const { cursorColor } = this.getClientState(wsClient);
-    const { filename, fileState } = this;
+    const { code } = this.state[filename];
 
     this.setClientState(wsClient, { filename });
 
-    const state = {
-      code: fileState.code,
-      cursorColor,
-      id: wsClient.id,
-    };
+    const state = { code, cursorColor, id: wsClient.id };
     wsClient.dispatch(clientActions.applyState.create({ s: state }));
-    this.sendCursors();
+    this.sendCursors(filename);
   }
 
-  private updateCode(code: string): void {
-    const { fileState } = this;
+  private updateCode(filename: string, code: string): void {
+    const fileState = this.state[filename];
 
     fileState.code = code;
     fileState.codeHash = computeHash(code);
 
-    this.fixCursorOffsets();
+    this.fixCursorOffsets(filename);
     this.savePersistentState();
   }
 
@@ -274,9 +296,14 @@ export class SharedFileWSPlugin implements WSPlugin {
     excludeClient = false,
   ): void {
     const minifiedSelection = minifySelection(selection);
+    const clientState = client.getState<ClientState>(this.name);
+
+    if (clientState === undefined || clientState.filename === undefined) {
+      return;
+    }
 
     this.setClientState(client, { selection });
-    this.dispatchAll(({ id }) => {
+    this.dispatchAll(clientState.filename, ({ id }) => {
       if (id !== client.id) {
         return clientActions.applyForeignSelection.create({
           cid: client.id,

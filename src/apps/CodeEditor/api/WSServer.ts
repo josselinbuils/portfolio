@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import { type IncomingMessage } from 'node:http';
 import path from 'node:path';
+import { glob } from 'glob';
 import type WebSocket from 'ws';
 import { WebSocketServer } from 'ws';
 import { Logger } from '@/platform/api/Logger';
@@ -52,8 +53,16 @@ export class WSServer {
     return client;
   }
 
-  async init(plugins: WSPlugin[]) {
-    this.plugins = plugins;
+  async init() {
+    const pluginPaths = await glob('src/apps/CodeEditor/**/*.wsPlugin.ts', {
+      absolute: true,
+    });
+    this.plugins = await Promise.all(
+      pluginPaths.map(async (pluginPath) => {
+        const { default: Plugin } = await import(pluginPath);
+        return new Plugin(this);
+      }),
+    );
     await this.loadPersistentState();
   }
 

@@ -107,7 +107,9 @@ export class History {
 
     if (index > -1) {
       if (entries[index] === undefined) {
-        console.debug({ entries, index, state: entries[index] });
+        console.debug(
+          JSON.stringify({ entries, index, state: entries[index] }, null, 2),
+        );
         throw new Error('Inconsistent history state');
       }
 
