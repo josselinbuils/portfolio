@@ -1,7 +1,13 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import cn from 'classnames';
-import { forwardRef, useEffect, useLayoutEffect, useRef } from 'preact/compat';
+import {
+  forwardRef,
+  type PropsWithChildren,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'preact/compat';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { Shortcut } from '../Shortcut/Shortcut';
@@ -14,7 +20,7 @@ import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
 import { observeMutations } from './utils/observeMutations';
 
-export interface ConsoleProps {
+export interface ConsoleProps extends PropsWithChildren {
   active: boolean;
   className?: string;
   codeToExec: string | undefined;
@@ -22,7 +28,7 @@ export interface ConsoleProps {
 }
 
 export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
-  ({ active, className, codeToExec = '', height }, ref) => {
+  ({ active, children, className, codeToExec = '', height }, ref) => {
     const [logs, logManager] = useList<Log>([]);
     const logsElementRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +78,12 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
             title="Clear"
           />
         </Toolbar>
+        {children && (
+          <>
+            {children}
+            <div className={styles.separator} />
+          </>
+        )}
         <Logs className={styles.logs} logs={logs} ref={logsElementRef} />
       </div>
     );

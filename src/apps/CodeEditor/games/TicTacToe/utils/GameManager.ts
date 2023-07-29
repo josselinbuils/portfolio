@@ -2,7 +2,10 @@ import { Subject } from '@josselinbuils/utils/Subject';
 import { type Position } from '@/platform/interfaces/Position';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type ActionFromFactory } from '@/platform/state/interfaces/ActionFactory';
-import { dispatchToServer, registerClient } from '../../../utils/shareState';
+import {
+  dispatchToServer,
+  registerClient,
+} from '../../../components/Editor/utils/shareState';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
 

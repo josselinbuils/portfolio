@@ -2,30 +2,10 @@
 @import '../../_constants.scss';
 
 $lineNumbersWidth: 5rem;
-$tabsHeight: 3.6rem;
-
-.menu {
-  @include scrollbar;
-
-  border: 0.1rem solid #2e2e2e;
-  border-radius: $radiusS;
-  background: #505254;
-
-  button {
-    font-family: $fontFamily;
-    font-size: 1.3rem;
-    line-height: 1.4rem;
-    padding: $spacingS;
-    color: #b8babc;
-    border-radius: $radiusS;
-
-    &[aria-current='true'] {
-      background: #5b5d61;
-    }
-  }
-}
 
 ul.autoCompletionMenu {
+  @include menu;
+
   min-width: 15rem;
   max-height: 12rem;
   margin-top: 1.7rem;
@@ -37,54 +17,18 @@ ul.autoCompletionMenu {
   }
 }
 
-.newFileMenu {
-  width: 20rem;
-  height: 22rem;
-  transform: translate(
-    calc(-50% - $lineNumbersWidth / 2 - $toolbarWidth / 2),
-    -50%
-  );
-}
-
-.close {
-  margin-left: 0.7rem;
-}
-
 .code {
   position: relative;
   flex: 1 1 100%;
 }
 
-.container {
+.editor {
   position: absolute;
   top: $tabsHeight;
   right: 0;
   bottom: 0;
   left: $toolbarWidth;
   display: flex;
-}
-
-.dragAndDropOverlay {
-  font-size: 2rem;
-  position: absolute;
-  z-index: 1;
-  top: 2.8rem;
-  bottom: 0.1rem;
-  left: 7.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: calc(100% - 7.2rem);
-  pointer-events: none;
-  border: 0.3rem dashed $textPrimaryColor;
-  background: #2b2b2b;
-}
-
-.editor {
-  position: relative;
-  color: $textSecondaryColor;
-  background: $backgroundSecondaryColor;
 }
 
 .code::before {
@@ -127,22 +71,6 @@ ul.autoCompletionMenu {
 
 .lineNumbers {
   flex: 0 0 $lineNumbersWidth;
-}
-
-.tabs {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: $toolbarWidth;
-  height: $tabsHeight;
-}
-
-.toolbar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: $toolbarWidth;
 }
 
 .textarea {

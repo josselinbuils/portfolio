@@ -1,4 +1,4 @@
-import { getTextWidth } from '../../getTextWidth';
+import { getTextWidth } from '../../../components/Editor/utils/getTextWidth';
 import { blobToBase64 } from './blobToBase64';
 import { stringifyPrismTheme } from './stringifyPrismTheme';
 

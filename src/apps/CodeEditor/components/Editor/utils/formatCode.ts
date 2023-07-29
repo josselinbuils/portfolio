@@ -1,8 +1,8 @@
 import { type BuiltInParserName, type Plugin } from 'prettier';
 import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
 import { type EditableState } from '../../../interfaces/EditableState';
+import { type SupportedLanguage } from '../../../interfaces/SupportedLanguage';
 import { createSelection } from '../../../utils/createSelection';
-import { type SupportedLanguage } from '../interfaces/SupportedLanguage';
 
 interface Parser {
   name: string;
@@ -68,10 +68,6 @@ const parserDescriptors: PartialRecord<SupportedLanguage, Parser> = {
     parserFactory: () => [import('prettier/plugins/yaml')],
   },
 };
-
-export function canFormat(language: string): boolean {
-  return parserDescriptors[language as SupportedLanguage] !== undefined;
-}
 
 export async function formatCode(
   code: string,

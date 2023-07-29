@@ -2,21 +2,25 @@
 
 .console {
   position: relative;
+  display: flex;
+  overflow: hidden;
   outline: none;
 }
 
 .logs {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: $toolbarWidth;
+  flex: 1 1 100%;
+}
+
+.separator {
+  flex: 0 0 1rem;
+  box-sizing: border-box;
+  cursor: row-resize;
+  color: $textPrimaryColor;
+  border-right: 0.1rem solid $borderColorPrimary;
+  border-left: 0.1rem solid $borderColorPrimary;
+  background: $backgroundPrimaryColor;
 }
 
 .toolbar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: $toolbarWidth;
+  flex: 0 0 $toolbarWidth;
 }

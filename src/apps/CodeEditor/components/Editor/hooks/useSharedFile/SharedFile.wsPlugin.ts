@@ -10,7 +10,7 @@ import { minifySelection } from '@/apps/CodeEditor/utils/minifySelection';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type PayloadFromFactory } from '@/platform/state/interfaces/ActionFactory';
 import { computeHash } from '@/platform/utils/computeHash';
-import { fileSaver } from '../../utils/fileSaver';
+import { fileSaver } from '../../../../utils/fileSaver';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
 import { type SharedFileServerBaseAction } from './serverActions';

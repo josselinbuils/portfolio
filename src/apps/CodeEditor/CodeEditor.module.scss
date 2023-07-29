@@ -15,6 +15,10 @@
       format('truetype');
 }
 
+.close {
+  margin-left: 0.7rem;
+}
+
 .codeEditorWindow {
   $background: #45484a;
 
@@ -39,8 +43,19 @@
 }
 
 .editor {
+  position: relative;
   flex-grow: 1;
   flex-shrink: 1;
+  color: $textSecondaryColor;
+  background: $backgroundSecondaryColor;
+}
+
+ul.newFileMenu {
+  @include menu;
+
+  width: 20rem;
+  height: 22rem;
+  transform: translate(-50%, -50%);
 }
 
 .resizeBar {
@@ -52,4 +67,20 @@
   border-top: 0.1rem solid $borderColorPrimary;
   border-bottom: 0.1rem solid $borderColorPrimary;
   background: $backgroundPrimaryColor;
+}
+
+.tabs {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: $toolbarWidth;
+  height: $tabsHeight;
+}
+
+.toolbar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: $toolbarWidth;
 }

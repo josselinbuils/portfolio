@@ -17,6 +17,7 @@ const TOOLBAR_HEIGHT = 22;
 
 export class Window extends Component<PropsWithChildren<WindowProps>, State> {
   visible = true;
+  readonly windowRef = createRef<HTMLDialogElement>();
 
   private contentRatio?: number;
   private readonly contentRef = createRef<HTMLElement>();
@@ -24,7 +25,6 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
     maximize?: { height: number; left: number; top: number; width: number };
     minimize?: { height: number; left: number; top: number; width: number };
   } = {};
-  private readonly windowRef = createRef<HTMLDialogElement>();
 
   constructor(props: WindowProps) {
     super(props);

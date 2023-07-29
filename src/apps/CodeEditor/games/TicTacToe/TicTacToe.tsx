@@ -2,7 +2,9 @@ import { type FC } from 'preact/compat';
 import { useEffect, useState } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './TicTacToe.module.scss';
-import { Cross, Grid, Round } from './components/Elements/Elements';
+import { Cross } from './components/Cross';
+import { Grid } from './components/Grid';
+import { Round } from './components/Round';
 import { type Grid as IGrid } from './utils/GameManager';
 import { GameManager } from './utils/GameManager';
 
@@ -31,33 +33,34 @@ export const TicTacToe: FC = () => {
 
   return (
     <div className={styles.ticTacToe}>
-      <Grid />
-      {grid?.map((row, y) =>
-        row.map((mark, x) => {
-          switch (mark) {
-            case 'x':
-              return (
-                <Cross
-                  highlighted={isCaseHighlighted(winnerCases, { x, y })}
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`${x}${y}`}
-                  position={{ x, y }}
-                />
-              );
-            case 'o':
-              return (
-                <Round
-                  highlighted={isCaseHighlighted(winnerCases, { x, y })}
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`${x}${y}`}
-                  position={{ x, y }}
-                />
-              );
-            default:
-              return null;
-          }
-        }),
-      )}
+      <Grid>
+        {grid?.map((row, y) =>
+          row.map((mark, x) => {
+            switch (mark) {
+              case 'x':
+                return (
+                  <Cross
+                    highlighted={isCaseHighlighted(winnerCases, { x, y })}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${x}${y}`}
+                    position={{ x, y }}
+                  />
+                );
+              case 'o':
+                return (
+                  <Round
+                    highlighted={isCaseHighlighted(winnerCases, { x, y })}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${x}${y}`}
+                    position={{ x, y }}
+                  />
+                );
+              default:
+                return null;
+            }
+          }),
+        )}
+      </Grid>
     </div>
   );
 };

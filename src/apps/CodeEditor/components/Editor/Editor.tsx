@@ -1,16 +1,5 @@
-import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
-import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons/faFileCirclePlus';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
-import { faStream } from '@fortawesome/free-solid-svg-icons/faStream';
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
-import {
-  Suspense,
-  type ChangeEvent,
-  type FC,
-  type TargetedEvent,
-} from 'preact/compat';
+import { type ChangeEvent, type FC, type TargetedEvent } from 'preact/compat';
 import {
   useCallback,
   useEffect,
@@ -18,42 +7,28 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
-import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { useMenu } from '@/platform/components/Menu/useMenu';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
-import { useList } from '@/platform/hooks/useList';
-import { useMemState } from '@/platform/hooks/useMemState';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
 import { type EditableState } from '../../interfaces/EditableState';
+import { type EditorFile } from '../../interfaces/EditorFile';
 import { type Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
-import { Shortcut } from '../Shortcut/Shortcut';
-import { PopoverToolButton } from '../ToolButton/PopoverToolButton';
-import { ToolButton } from '../ToolButton/ToolButton';
-import { Toolbar } from '../Toolbar/Toolbar';
 import styles from './Editor.module.scss';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
-import { Tab } from './components/Tab/Tab';
-import { Tabs } from './components/Tabs/Tabs';
-import { SUPPORTED_LANGUAGES } from './constants';
 import { type Completion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useAutoCompletion } from './hooks/useAutoCompletion/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
-import { type EditorFile } from './interfaces/EditorFile';
-import { type SupportedLanguage } from './interfaces/SupportedLanguage';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
 import { comment } from './utils/comment';
 import { duplicate } from './utils/duplicate';
-import { fileSaver } from './utils/fileSaver';
-import { canFormat, formatCode } from './utils/formatCode';
-import { getExtensionFromLanguage } from './utils/getExtensionFromLanguage';
+import { formatCode } from './utils/formatCode';
 import { getLineBeforeCursor } from './utils/getLineBeforeCursor';
 import { getLineIndent } from './utils/getLineIndent';
 import { getLineNumber } from './utils/getLineNumber';
@@ -61,10 +36,10 @@ import { getWidthWithoutPadding } from './utils/getWidthWithoutPadding';
 import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { moveLines } from './utils/moveLines';
-import { showShortcuts } from './utils/showShortcuts';
 import { unindent } from './utils/unindent';
 
 export interface EditorProps {
+  activeFile: EditorFile;
   className?: string;
   code: string;
   onChange(code: string): void;
@@ -72,6 +47,7 @@ export interface EditorProps {
 }
 
 export const Editor: FC<EditorProps> = ({
+  activeFile,
   className,
   code,
   onChange,
@@ -81,14 +57,10 @@ export const Editor: FC<EditorProps> = ({
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
-  const [displayDragOverlay, setDisplayDragOverlay] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
   const [selection, setSelection] = useState<Selection>(() =>
     createSelection(0),
   );
-  const [files, fileManager] = useList<EditorFile>(fileSaver.loadFiles);
-  const [activeFilename, previouslyActiveFilename, setActiveFilename] =
-    useMemState<string>(files[0].name);
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
   const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
@@ -102,11 +74,10 @@ export const Editor: FC<EditorProps> = ({
     code,
     cursorOffset,
     lineIndent: getLineIndent(code, cursorOffset),
-    menuClassName: cn(styles.menu, styles.autoCompletionMenu),
+    menuClassName: styles.autoCompletionMenu,
     onCompletion: applyAutoCompletion,
     textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
   });
-  const { showMenu, menuElement } = useMenu();
   const applyState = useCallback(
     (state: EditableState): void => {
       onChange(state.code);
@@ -114,13 +85,10 @@ export const Editor: FC<EditorProps> = ({
     },
     [onChange],
   );
-  const activeFile = files.find(
-    ({ name }) => name === activeFilename,
-  ) as EditorFile;
   const { pushState } = useHistory({
     active: !activeFile.shared,
     code,
-    fileName: activeFilename,
+    fileName: activeFile.name,
     selection,
     applyState,
   });
@@ -128,13 +96,9 @@ export const Editor: FC<EditorProps> = ({
     active: activeFile.shared,
     applyClientState,
     code,
-    filename: activeFilename,
+    filename: activeFile.name,
     selection,
   });
-  const newFileMenuItems = SUPPORTED_LANGUAGES.map(({ language, label }) => ({
-    onClick: () => createFile(language),
-    title: label,
-  }));
 
   useKeyMap(
     {
@@ -142,8 +106,6 @@ export const Editor: FC<EditorProps> = ({
       'Alt+Shift+ArrowUp': () => updateState(moveLines(code, selection, -1)),
       'CtrlCmd+:,CtrlCmd+/': () => updateState(comment(code, selection)),
       'CtrlCmd+D': () => updateState(duplicate(code, selection)),
-      'CtrlCmd+O': () => open(undefined),
-      'CtrlCmd+P': openNewFileMenu,
       'CtrlCmd+S': format,
       Escape: () => {
         if (autoCompleteActive) {
@@ -161,11 +123,6 @@ export const Editor: FC<EditorProps> = ({
     },
     active,
   );
-
-  useEffect(() => {
-    activeFile.content = code;
-    fileSaver.saveFiles(files);
-  }, [activeFile, code, files, activeFile.shared]);
 
   useLayoutEffect(() => {
     applyState({
@@ -236,66 +193,10 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
-  function closeFile(name: string): void {
-    const fileToClose = files.find((file) => file.name === name) as EditorFile;
-
-    if (activeFilename === name) {
-      const isPreviouslyActiveFileStillOpen = files.some(
-        (file) => file.name === previouslyActiveFilename,
-      );
-      const newActiveFilename = isPreviouslyActiveFileStillOpen
-        ? (previouslyActiveFilename as string)
-        : (files.find((file) => file !== fileToClose) as EditorFile).name;
-
-      setActiveFilename(newActiveFilename);
-    }
-
-    const updatedFiles = [...files];
-    updatedFiles.splice(files.indexOf(fileToClose), 1);
-    fileManager.set(updatedFiles);
-  }
-
-  function createFile(language: SupportedLanguage): void {
-    const maxIndex = Math.max(
-      ...files.map((file) =>
-        parseInt(
-          file.name.startsWith('local') ? file.name.slice(5, -3) || '0' : '-1',
-          10,
-        ),
-      ),
-    );
-
-    const name = `local${
-      maxIndex > -1 ? maxIndex + 1 : ''
-    }.${getExtensionFromLanguage(language)}`;
-
-    fileManager.push({
-      content: '',
-      language,
-      name,
-      shared: false,
-    });
-    setActiveFilename(name);
-  }
-
   function disableAutoCompletion(): void {
     if (autoCompleteActive) {
       setAutoCompleteActive(false);
     }
-  }
-
-  async function downloadCodeSnippetAsPng(): Promise<void> {
-    const { downloadAsPng } = await import(
-      './utils/exportAsImage/exportAsImage'
-    );
-    await downloadAsPng(code, highlightedCode);
-  }
-
-  async function downloadCodeSnippetAsSvg(): Promise<void> {
-    const { downloadAsSvg } = await import(
-      './utils/exportAsImage/exportAsImage'
-    );
-    await downloadAsSvg(code, highlightedCode);
   }
 
   async function format(): Promise<void> {
@@ -345,17 +246,6 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
-  async function handleDrop(event: DragEvent): Promise<void> {
-    event.preventDefault();
-    setDisplayDragOverlay(false);
-
-    const file = event.dataTransfer?.files?.[0];
-
-    if (file !== undefined) {
-      return open(file);
-    }
-  }
-
   function handleSelect(event: TargetedEvent): void {
     if (!event.target) {
       return;
@@ -394,48 +284,6 @@ export const Editor: FC<EditorProps> = ({
     });
   }
 
-  async function open(file?: File): Promise<void> {
-    try {
-      const { openFile } = await import('./utils/openFile');
-      const editorFile = await openFile(file);
-
-      if (editorFile !== undefined) {
-        if (files.some(({ name }) => name === editorFile.name)) {
-          closeFile(editorFile.name);
-        }
-        fileManager.push(editorFile);
-        setActiveFilename(editorFile.name);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function openCodeSnippetAsPng(): Promise<void> {
-    const { openAsPng } = await import('./utils/exportAsImage/exportAsImage');
-    await openAsPng(code, highlightedCode);
-  }
-
-  function openNewFileMenu(): void {
-    const textAreaElement = textAreaElementRef.current;
-
-    if (textAreaElement === null) {
-      return;
-    }
-
-    const { height, width, x, y } = textAreaElement.getBoundingClientRect();
-
-    showMenu({
-      className: cn(styles.menu, styles.newFileMenu),
-      items: newFileMenuItems,
-      makeFirstItemActive: true,
-      position: {
-        x: Math.round(x + width / 2),
-        y: Math.round(y + height / 2),
-      },
-    });
-  }
-
   function updateState(newState: EditableState | undefined): void {
     if (newState === undefined) {
       return;
@@ -450,157 +298,65 @@ export const Editor: FC<EditorProps> = ({
 
   return (
     <div className={cn(styles.editor, className)}>
-      <Toolbar className={styles.toolbar}>
-        <PopoverToolButton
-          icon={faFileCirclePlus}
-          menu={{ items: newFileMenuItems }}
-          title={
+      <LineNumbers
+        className={styles.lineNumbers}
+        code={code}
+        editorWidth={getWidthWithoutPadding(textAreaElementRef.current)}
+        scrollTop={scrollTop}
+        selection={selection}
+      />
+      <div className={styles.code}>
+        <div className={styles.graphicalObjects} ref={codeElementRef}>
+          <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+          {textAreaElementRef.current && (
             <>
-              New&nbsp;
-              <Shortcut keys={['CtrlCmd', 'P']} />
-            </>
-          }
-        />
-        <ToolButton
-          icon={faFolderOpen}
-          onClick={() => open()}
-          title={
-            <>
-              Open&nbsp;
-              <Shortcut keys={['CtrlCmd', 'O']} />
-            </>
-          }
-        />
-        <ToolButton
-          disabled={code.length === 0 || !canFormat(activeFile.language)}
-          icon={faStream}
-          onClick={format}
-          title={
-            <>
-              Format&nbsp;
-              <Shortcut keys={['CtrlCmd', 'S']} />
-            </>
-          }
-        />
-        <PopoverToolButton
-          disabled={code.length === 0}
-          icon={faCamera}
-          menu={{
-            items: (
-              [
-                ['Open', openCodeSnippetAsPng],
-                ['Download as PNG', downloadCodeSnippetAsPng],
-                ['Download as SVG', downloadCodeSnippetAsSvg],
-              ] as const
-            ).map(([title, onClick]) => ({ onClick, title })),
-          }}
-          title="Export as image"
-        />
-        <ToolButton
-          icon={faCircleInfo}
-          onClick={showShortcuts}
-          title="Show shortcuts"
-        />
-      </Toolbar>
-      <Tabs className={styles.tabs}>
-        {files.map(({ name }, index) => (
-          <Tab
-            key={name}
-            onClick={() => setActiveFilename(name)}
-            selected={name === activeFilename}
-          >
-            {name}
-            {index >= fileSaver.defaultFiles.length && (
-              <FontAwesomeIcon
-                className={styles.close}
-                icon={faTimes}
-                onClick={(event: Event) => {
-                  event.stopPropagation();
-                  closeFile(name);
-                }}
+              {activeFile.shared &&
+                cursors.map((cursor) => (
+                  <Cursor
+                    code={code}
+                    color={cursor.color}
+                    key={cursor.clientID}
+                    selection={cursor.selection}
+                    parent={textAreaElementRef.current as HTMLTextAreaElement}
+                  />
+                ))}
+              <LineHighlight
+                code={code}
+                parent={textAreaElementRef.current as HTMLTextAreaElement}
+                selection={selection}
               />
-            )}
-          </Tab>
-        ))}
-      </Tabs>
-      <div className={styles.container}>
-        {activeFile.SideComponent ? (
-          <Suspense fallback={null}>
-            <activeFile.SideComponent />
-          </Suspense>
-        ) : null}
-        <LineNumbers
-          className={styles.lineNumbers}
-          code={code}
-          editorWidth={getWidthWithoutPadding(textAreaElementRef.current)}
-          scrollTop={scrollTop}
-          selection={selection}
-        />
-        <div className={styles.code}>
-          <div className={styles.graphicalObjects} ref={codeElementRef}>
-            <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-            {textAreaElementRef.current && (
-              <>
-                {activeFile.shared &&
-                  cursors.map((cursor) => (
-                    <Cursor
-                      code={code}
-                      color={cursor.color}
-                      key={cursor.clientID}
-                      selection={cursor.selection}
-                      parent={textAreaElementRef.current as HTMLTextAreaElement}
-                    />
-                  ))}
-                <LineHighlight
-                  code={code}
-                  parent={textAreaElementRef.current as HTMLTextAreaElement}
-                  selection={selection}
-                />
-              </>
-            )}
-          </div>
-          <textarea
-            className={styles.textarea}
-            onBlur={() => setActive(false)}
-            onChange={handleChange}
-            onClick={(event) => {
-              // Waits for selectionEnd and selectionStart to be updated
-              setTimeout(() => handleSelect(event), 0);
-            }}
-            onDragEnd={() => setDisplayDragOverlay(false)}
-            onDragEnter={() => {
-              setDisplayDragOverlay(true);
-              return false;
-            }}
-            onDragLeave={() => setDisplayDragOverlay(false)}
-            onDragOver={() => false}
-            onDrop={handleDrop as (event: DragEvent) => void}
-            onKeyDown={(event) => {
-              // Waits for selectionEnd and selectionStart to be updated
-              setTimeout(() => handleSelect(event), 0);
-            }}
-            onMouseDown={(event) => {
-              disableAutoCompletion();
-              // Waits for selectionEnd and selectionStart to be updated
-              setTimeout(() => handleSelect(event), 0);
-            }}
-            onFocus={() => setActive(true)}
-            onSelect={handleSelect}
-            onScroll={({ target }) =>
-              setScrollTop((target as HTMLTextAreaElement).scrollTop)
-            }
-            ref={textAreaElementRef}
-            spellCheck={false}
-            style={activeFile.shared ? { caretColor: cursorColor } : undefined}
-            value={code}
-          />
-          {displayDragOverlay && (
-            <div className={styles.dragAndDropOverlay}>Drop to open</div>
+            </>
           )}
         </div>
+        <textarea
+          className={styles.textarea}
+          onBlur={() => setActive(false)}
+          onChange={handleChange}
+          onClick={(event) => {
+            // Waits for selectionEnd and selectionStart to be updated
+            setTimeout(() => handleSelect(event), 0);
+          }}
+          onKeyDown={(event) => {
+            // Waits for selectionEnd and selectionStart to be updated
+            setTimeout(() => handleSelect(event), 0);
+          }}
+          onMouseDown={(event) => {
+            disableAutoCompletion();
+            // Waits for selectionEnd and selectionStart to be updated
+            setTimeout(() => handleSelect(event), 0);
+          }}
+          onFocus={() => setActive(true)}
+          onSelect={handleSelect}
+          onScroll={({ target }) =>
+            setScrollTop((target as HTMLTextAreaElement).scrollTop)
+          }
+          ref={textAreaElementRef}
+          spellCheck={false}
+          style={activeFile.shared ? { caretColor: cursorColor } : undefined}
+          value={code}
+        />
       </div>
       {autoCompletionMenuElement}
-      {menuElement}
     </div>
   );
 };
