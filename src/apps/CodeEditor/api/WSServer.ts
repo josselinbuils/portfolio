@@ -115,9 +115,9 @@ export class WSServer {
 
   private async loadPersistentState(): Promise<void> {
     try {
-      this.state = JSON.parse(
-        await fs.readFile(PERSISTENT_STATE_FILE_PATH, 'utf8'),
-      );
+      const rawState = await fs.readFile(PERSISTENT_STATE_FILE_PATH, 'utf8');
+
+      this.state = JSON.parse(rawState || '{}');
 
       for (const plugin of this.plugins) {
         if (plugin.name in this.state) {

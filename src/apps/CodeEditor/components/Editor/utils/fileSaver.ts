@@ -6,7 +6,7 @@ const STORAGE_KEY = 'codeEditor';
 const defaultFiles: EditorFile[] = [
   {
     content: `\
-// Rewrite the for loop without the await keyword and keep the same behavior
+// Rewrite the for loop without the await keyword and keep the same behaviour
 
 (async () => {
   for (let i = 0; i < 5; i++) {
