@@ -152,11 +152,11 @@ export const Editor: FC<EditorProps> = ({
   }, [activeFile.language, code, selection]);
 
   useEffect(() => {
+    setLintIssues([]);
+
     if (!['tsx', 'typescript'].includes(activeFile.language)) {
       return;
     }
-
-    setLintIssues([]);
 
     const [debouncePromise, cancelDebouncePromise] = cancelable(
       new Promise<void>((resolve) => {

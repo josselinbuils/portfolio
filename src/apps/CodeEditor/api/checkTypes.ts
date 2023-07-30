@@ -32,6 +32,8 @@ const categoryToLintLevelMap: PartialRecord<
   [DiagnosticCategory.Warning]: 'warning',
 };
 
+const excludedTsCodes = [2307];
+
 const libs = {
   '/dom.d.ts': loadTypeScriptLibrary('lib.dom.d.ts'),
   '/es2015.d.ts': loadTypeScriptLibrary('lib.es2015.d.ts'),
@@ -162,7 +164,8 @@ export function checkTypes(code: string): LintIssue[] {
 
           return length !== undefined &&
             level !== undefined &&
-            start !== undefined
+            start !== undefined &&
+            !excludedTsCodes.includes(tsCode)
             ? {
                 length,
                 level,
