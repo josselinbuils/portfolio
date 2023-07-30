@@ -6,6 +6,7 @@ import {
   useState,
 } from 'preact/compat';
 import { lazy } from '@/platform/utils/lazy';
+import { CursorDelayedLoader } from '../CursorDelayedLoader/CursorDelayedLoader';
 import { type MenuDescriptor } from './Menu';
 import { type MenuItemDescriptor } from './components/MenuItem/MenuItem';
 
@@ -26,7 +27,7 @@ export function useMenu(): MenuManager {
   const hideMenu = useCallback(() => setMenuDescriptor(undefined), []);
 
   const menuElement = menuDescriptor ? (
-    <Suspense fallback={null}>
+    <Suspense fallback={<CursorDelayedLoader />}>
       {createPortal(
         <Menu {...menuDescriptor} onHide={hideMenu} />,
         document.body,

@@ -1,17 +1,19 @@
-import { type FC, Suspense } from 'preact/compat';
-import { useEffect, useRef, useState } from 'preact/compat';
+import { Suspense, type FC, useEffect, useRef, useState } from 'preact/compat';
 import { useEventListener } from '@/platform/hooks/useEventListener';
+import { type Position } from '@/platform/interfaces/Position';
 import { type Size } from '@/platform/interfaces/Size';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { getRefElementSize } from '@/platform/utils/getRefElementSize';
 import { lazy } from '@/platform/utils/lazy';
+import { CursorDelayedLoader } from '../../../CursorDelayedLoader/CursorDelayedLoader';
 import styles from './VisibleArea.module.scss';
 import { Windows } from './Windows';
 
 const Selection = lazy(async () => (await import('./Selection')).Selection);
 
 export const VisibleArea: FC = () => {
-  const [selectionVisible, setSelectionVisible] = useState(false);
+  const [selectionStartPosition, setSelectionStartPosition] =
+    useState<Position<number>>();
   const [visibleAreaSize, setVisibleAreaSize] = useState<Size>();
   const visibleAreaRef = useRef<HTMLDivElement>(null);
 
@@ -19,8 +21,8 @@ export const VisibleArea: FC = () => {
 
   useEventListener(
     'mouseup',
-    () => setSelectionVisible(false),
-    selectionVisible,
+    () => setSelectionStartPosition(undefined),
+    !!selectionStartPosition,
   );
 
   useEventListener('resize', () =>
@@ -34,7 +36,10 @@ export const VisibleArea: FC = () => {
       return;
     }
     windowManager.unselectAllWindows();
-    setSelectionVisible(true);
+    setSelectionStartPosition({
+      x: downEvent.clientX,
+      y: downEvent.clientY,
+    });
   };
 
   return (
@@ -45,9 +50,9 @@ export const VisibleArea: FC = () => {
       ref={visibleAreaRef}
     >
       <Windows visibleAreaSize={visibleAreaSize} />
-      {selectionVisible && (
-        <Suspense fallback={null}>
-          <Selection />
+      {!!selectionStartPosition && (
+        <Suspense fallback={<CursorDelayedLoader />}>
+          <Selection startPosition={selectionStartPosition} />
         </Suspense>
       )}
     </div>

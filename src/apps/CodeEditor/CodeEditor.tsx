@@ -4,7 +4,7 @@ import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons/faFileCircle
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
-import { Suspense, useEffect, useRef, useState } from 'preact/compat';
+import { useEffect, useRef, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 import { Window } from '@/platform/components/Window/Window';
@@ -279,11 +279,7 @@ const CodeEditor: WindowComponent = ({
           height={consoleHeight}
           ref={consoleElementRef}
         >
-          {activeFile.SideComponent ? (
-            <Suspense fallback={null}>
-              <activeFile.SideComponent />
-            </Suspense>
-          ) : null}
+          {!!activeFile.SideComponent && <activeFile.SideComponent />}
         </Console>
         <StatusBar
           className={styles.statusBar}

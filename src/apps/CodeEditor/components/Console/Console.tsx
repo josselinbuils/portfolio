@@ -4,9 +4,11 @@ import cn from 'classnames';
 import {
   forwardRef,
   type PropsWithChildren,
+  Suspense,
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
 } from 'preact/compat';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
@@ -15,6 +17,7 @@ import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';
 import styles from './Console.module.scss';
 import { type Log } from './Log';
+import { Loader } from './components/Loader';
 import { Logs } from './components/Logs/Logs';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
@@ -30,6 +33,7 @@ export interface ConsoleProps extends PropsWithChildren {
 export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
   ({ active, children, className, codeToExec = '', height }, ref) => {
     const [logs, logManager] = useList<Log>([]);
+    const [loading, setLoading] = useState(false);
     const logsElementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -52,6 +56,8 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
       },
       active,
     );
+
+    console.debug(loading);
 
     return (
       <div
@@ -80,8 +86,10 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
         </Toolbar>
         {children && (
           <>
-            {children}
-            <div className={styles.separator} />
+            <Suspense fallback={<Loader onStateChange={setLoading} />}>
+              {children}
+            </Suspense>
+            {!loading && <div className={styles.separator} />}
           </>
         )}
         <Logs className={styles.logs} logs={logs} ref={logsElementRef} />

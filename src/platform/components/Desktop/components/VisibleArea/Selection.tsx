@@ -1,34 +1,30 @@
-import { type FC } from 'preact/compat';
-import { useState } from 'preact/compat';
+import { type FC, useState } from 'preact/compat';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './Selection.module.scss';
 
-export const Selection: FC = () => {
+export interface SelectionProps {
+  startPosition: Position<number>;
+}
+
+export const Selection: FC<SelectionProps> = ({ startPosition }) => {
   const [cursorPosition, setCursorPosition] = useState<Position<number>>();
-  const [cursorStartPosition, setCursorStartPosition] =
-    useState<Position<number>>();
 
   useEventListener('mousemove', (moveEvent: MouseEvent) => {
-    const position = {
+    setCursorPosition({
       x: moveEvent.clientX,
       y: moveEvent.clientY,
-    };
-
-    if (cursorStartPosition === undefined) {
-      setCursorStartPosition(position);
-    }
-    setCursorPosition(position);
+    });
   });
 
-  return cursorPosition !== undefined && cursorStartPosition !== undefined ? (
+  return cursorPosition !== undefined ? (
     <div
       className={styles.selection}
       style={{
-        height: Math.abs(cursorPosition.y - cursorStartPosition.y),
-        left: Math.min(cursorStartPosition.x, cursorPosition.x),
-        top: Math.min(cursorStartPosition.y, cursorPosition.y),
-        width: Math.abs(cursorPosition.x - cursorStartPosition.x),
+        height: Math.abs(cursorPosition.y - startPosition.y),
+        left: Math.min(startPosition.x, cursorPosition.x),
+        top: Math.min(startPosition.y, cursorPosition.y),
+        width: Math.abs(cursorPosition.x - startPosition.x),
       }}
     />
   ) : null;
