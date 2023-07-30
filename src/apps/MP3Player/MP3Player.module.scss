@@ -3,11 +3,13 @@
 
 $footerHeight: 7.7rem;
 
-.mp3PlayerWindow {
-  $background: #111625;
+.mp3PlayerTitleBar {
+  color: $textColor;
+}
 
-  border-color: darken($background, 5%);
-  background: $background;
+.mp3PlayerWindow {
+  border-color: darken($backgroundColor, 5%);
+  background: $backgroundColor;
 }
 
 .body {

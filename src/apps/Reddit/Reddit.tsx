@@ -31,7 +31,7 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       minWidth={850}
       ref={windowRef}
       title="Reddit"
-      titleColor="#ff4501"
+      titleClassName={styles.redditTitleBar}
       {...injectedWindowProps}
     >
       <div className={styles.reddit}>

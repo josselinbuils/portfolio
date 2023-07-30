@@ -324,8 +324,7 @@ const Terminal: WindowComponent = ({
       minWidth={800}
       ref={windowRef}
       title="Terminal"
-      titleBackground="#333333"
-      titleColor="#f2f2f2"
+      titleClassName={styles.terminalTitleBar}
       {...injectedWindowProps}
     >
       <div className={styles.terminal} ref={terminalRef}>

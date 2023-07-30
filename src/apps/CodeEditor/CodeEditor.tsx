@@ -195,8 +195,7 @@ const CodeEditor: WindowComponent = ({
       minWidth={900}
       ref={windowRef}
       title="CodeEditor"
-      titleBackground="#434548"
-      titleColor="#c3c3c3"
+      titleClassName={styles.codeEditorTitleBar}
       {...injectedWindowProps}
     >
       <div className={styles.codeEditor}>

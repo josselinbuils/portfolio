@@ -1,8 +1,25 @@
+.blogTitleBar {
+  color: #24292e;
+}
+
 .blogWindow {
-  $background: #fbfbfb;
+  $background: white;
 
   border-color: darken($background, 5%);
   background: $background;
+}
+
+@media (prefers-color-scheme: dark) {
+  .blogTitleBar {
+    color: #decebe;
+  }
+
+  .blogWindow {
+    $background: #393939;
+
+    border-color: darken($background, 5%);
+    background: $background;
+  }
 }
 
 .iframe {

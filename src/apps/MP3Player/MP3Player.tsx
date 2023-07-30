@@ -26,7 +26,7 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
       ref={windowRef}
       resizable
       title="MP3Player"
-      titleColor="#efefef"
+      titleClassName={styles.mp3PlayerTitleBar}
       {...injectedWindowProps}
     >
       <AudioProvider>

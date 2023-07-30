@@ -7,9 +7,20 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { useToolbar } from '@/platform/hooks/useToolbar';
 import styles from './TitleBar.module.scss';
 
-export const TitleBar: FC<Props> = ({
-  background,
-  color,
+export interface TitleBarProps {
+  className: string | undefined;
+  frozen: boolean;
+  maximized: boolean;
+  showMaximizeButton: boolean;
+  title: string;
+  onClose(): void;
+  onMinimise(): void;
+  onMoveStart(downEvent: MouseEvent): void;
+  onToggleMaximize(): void;
+}
+
+export const TitleBar: FC<TitleBarProps> = ({
+  className,
   frozen,
   maximized,
   onClose,
@@ -20,14 +31,16 @@ export const TitleBar: FC<Props> = ({
   title,
 }) => {
   const { getToolProps, toolbarProps } = useToolbar();
-  const { className, ...otherToolbarProps } = toolbarProps;
+  const { className: toolbarClassName, ...otherToolbarProps } = toolbarProps;
 
   return (
     <header
-      className={cn(styles.titleBar, className, {
-        [styles.maximized]: maximized,
-      })}
-      style={{ background, color }}
+      className={cn(
+        styles.titleBar,
+        toolbarClassName,
+        { [styles.maximized]: maximized },
+        className,
+      )}
     >
       <div
         className={cn(styles.buttons, { [styles.frozen]: frozen })}
@@ -37,7 +50,6 @@ export const TitleBar: FC<Props> = ({
           aria-label="close"
           className={cn(styles.button, styles.close)}
           onClick={onClose}
-          style={{ color }}
           type="button"
           {...getToolProps<HTMLButtonElement>(`closeButton${title}`)}
         >
@@ -47,7 +59,6 @@ export const TitleBar: FC<Props> = ({
           aria-label="minimize"
           className={cn(styles.button, styles.minimize)}
           onClick={onMinimise}
-          style={{ color }}
           type="button"
           {...getToolProps<HTMLButtonElement>(`minimizeButton${title}`)}
         >
@@ -58,7 +69,6 @@ export const TitleBar: FC<Props> = ({
             aria-label="maximize"
             className={cn(styles.button, styles.maximize)}
             onClick={onToggleMaximize}
-            style={{ color }}
             type="button"
             {...getToolProps<HTMLButtonElement>(`toggleMaximizeButton${title}`)}
           >
@@ -78,16 +88,3 @@ export const TitleBar: FC<Props> = ({
     </header>
   );
 };
-
-interface Props {
-  background?: string;
-  color: string;
-  frozen: boolean;
-  maximized: boolean;
-  showMaximizeButton: boolean;
-  title: string;
-  onClose(): void;
-  onMinimise(): void;
-  onMoveStart(downEvent: MouseEvent): void;
-  onToggleMaximize(): void;
-}

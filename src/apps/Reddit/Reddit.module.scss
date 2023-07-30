@@ -1,6 +1,10 @@
 @import '@/platform/_constants.scss';
 @import './_constants.scss';
 
+.redditTitleBar {
+  color: $reddit;
+}
+
 .redditWindow {
   $background: #fbfbfb;
 

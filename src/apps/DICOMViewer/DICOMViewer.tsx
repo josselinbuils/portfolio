@@ -283,7 +283,7 @@ const DICOMViewer: WindowComponent = ({
       minWidth={880}
       ref={windowRef}
       title="DICOMViewer"
-      titleColor="#efefef"
+      titleClassName={styles.dicomViewerTitleBar}
       {...injectedWindowProps}
     >
       <div className={styles.dicomViewer}>

@@ -15,7 +15,50 @@ const BUTTONS_WIDTH = 66;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
-export class Window extends Component<PropsWithChildren<WindowProps>, State> {
+export interface WindowProps extends PropsWithChildren {
+  active: boolean;
+  className?: string;
+  keepContentRatio?: boolean;
+  id: number;
+  maxHeight?: number;
+  maxWidth?: number;
+  minHeight: number;
+  minimizedTopPosition?: number;
+  minWidth: number;
+  resizable?: boolean;
+  startMaximized?: boolean;
+  title: string;
+  titleClassName?: string;
+  visibleAreaSize: Size | undefined;
+  zIndex: number;
+  onClose(id: number): void;
+  onMinimise(id: number): void;
+  onResize?(size: Size): void;
+  onSelect(id: number): void;
+  onUnselect(id: number): void;
+}
+
+interface WindowState {
+  animated: boolean;
+  height: string;
+  left: string;
+  maximized: boolean;
+  moving: boolean;
+  minimized: boolean;
+  resizing: boolean;
+  top: string;
+  width: string;
+}
+
+interface WindowAnimation {
+  finished(finishedCallback: () => void): WindowAnimation;
+
+  ready(readyCallback: () => void): WindowAnimation;
+
+  start(): void;
+}
+
+export class Window extends Component<WindowProps, WindowState> {
   visible = true;
   readonly windowRef = createRef<HTMLDialogElement>();
 
@@ -133,6 +176,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       unselectIfNoChildFocused,
       windowRef,
     } = this;
+
     const {
       active,
       children,
@@ -143,10 +187,10 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       onSelect,
       resizable = true,
       title,
-      titleBackground,
-      titleColor,
+      titleClassName,
       zIndex,
     } = props;
+
     const { animated, height, left, maximized, minimized, top, width } = state;
     const frozen = isFrozen();
 
@@ -172,8 +216,7 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
         style={{ height, left, top, width, zIndex }}
       >
         <TitleBar
-          background={titleBackground}
-          color={titleColor}
+          className={titleClassName}
           frozen={frozen}
           showMaximizeButton={resizable}
           title={title}
@@ -593,48 +636,4 @@ export class Window extends Component<PropsWithChildren<WindowProps>, State> {
       }
     }, 0);
   };
-}
-
-export interface WindowProps {
-  active: boolean;
-  className?: string;
-  keepContentRatio?: boolean;
-  id: number;
-  maxHeight?: number;
-  maxWidth?: number;
-  minHeight: number;
-  minimizedTopPosition?: number;
-  minWidth: number;
-  resizable?: boolean;
-  startMaximized?: boolean;
-  title: string;
-  titleBackground?: string;
-  titleColor: string;
-  visibleAreaSize: Size | undefined;
-  zIndex: number;
-  onClose(id: number): void;
-  onMinimise(id: number): void;
-  onResize?(size: Size): void;
-  onSelect(id: number): void;
-  onUnselect(id: number): void;
-}
-
-interface State {
-  animated: boolean;
-  height: string;
-  left: string;
-  maximized: boolean;
-  moving: boolean;
-  minimized: boolean;
-  resizing: boolean;
-  top: string;
-  width: string;
-}
-
-interface WindowAnimation {
-  finished(finishedCallback: () => void): WindowAnimation;
-
-  ready(readyCallback: () => void): WindowAnimation;
-
-  start(): void;
 }
