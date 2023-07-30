@@ -57,8 +57,6 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
       active,
     );
 
-    console.debug(loading);
-
     return (
       <div
         className={cn(styles.console, className)}
