@@ -1,5 +1,4 @@
-import { type Environment, type hooks, type Token } from 'prismjs';
-import Prism from 'prismjs';
+import Prism, { type Environment, type hooks, type Token } from 'prismjs';
 import 'prismjs/components/prism-css.min';
 import 'prismjs/components/prism-javascript.min';
 import 'prismjs/components/prism-json.min';

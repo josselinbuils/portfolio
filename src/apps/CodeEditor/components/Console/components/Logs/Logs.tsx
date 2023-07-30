@@ -2,8 +2,7 @@ import { faBomb } from '@fortawesome/free-solid-svg-icons/faBomb';
 import cn from 'classnames';
 import { forwardRef } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
-import { type Log } from '../../Log';
-import { LogLevel } from '../../Log';
+import { LogLevel, type Log } from '../../Log';
 import styles from './Logs.module.scss';
 
 export const Logs = forwardRef<HTMLDivElement, Props>(

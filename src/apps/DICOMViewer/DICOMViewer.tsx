@@ -1,5 +1,10 @@
-import { type JSX, Suspense } from 'preact/compat';
-import { useCallback, useLayoutEffect, useState } from 'preact/compat';
+import {
+  type JSX,
+  Suspense,
+  useCallback,
+  useLayoutEffect,
+  useState,
+} from 'preact/compat';
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';

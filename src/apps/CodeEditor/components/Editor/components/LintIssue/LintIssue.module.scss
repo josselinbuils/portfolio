@@ -1,0 +1,15 @@
+@import '../../../../_constants.scss';
+
+.lintIssue {
+  position: absolute;
+  display: inline-block;
+  height: 1.2em;
+}
+
+.error {
+  border-bottom: 1px dashed red;
+}
+
+.warning {
+  border-bottom: 1px dashed #ffed28;
+}

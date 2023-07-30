@@ -1,5 +1,4 @@
-import { type FC } from 'preact/compat';
-import { useEffect, useState } from 'preact/compat';
+import { type FC, useEffect, useState } from 'preact/compat';
 import styles from './Spinner.module.scss';
 
 const DISPLAY_DELAY_MS = 100;

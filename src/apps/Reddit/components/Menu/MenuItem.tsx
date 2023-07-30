@@ -1,6 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
-import { useLayoutEffect, useState } from 'preact/compat';
+import { type FC, useLayoutEffect, useState } from 'preact/compat';
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';

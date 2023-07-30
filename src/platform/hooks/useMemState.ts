@@ -1,5 +1,9 @@
-import { type StateUpdater } from 'preact/compat';
-import { useCallback, useRef, useState } from 'preact/compat';
+import {
+  type StateUpdater,
+  useCallback,
+  useRef,
+  useState,
+} from 'preact/compat';
 
 export function useMemState<S>(
   initialValue: S | (() => S),

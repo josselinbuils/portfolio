@@ -1,6 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
-import React, { useEffect, useLayoutEffect, useRef } from 'preact/compat';
+import { type FC, useEffect, useLayoutEffect, useRef } from 'preact/compat';
 import { RendererType, ViewType } from '@/apps/DICOMViewer/constants';
 import { MouseButton } from '@/platform/constants';
 import { useElementSize } from '@/platform/hooks/useElementSize';

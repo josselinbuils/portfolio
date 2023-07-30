@@ -1,6 +1,11 @@
 import cn from 'classnames';
-import { type FC, type JSX } from 'preact/compat';
-import { useLayoutEffect, useMemo, useRef } from 'preact/compat';
+import {
+  type FC,
+  type JSX,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'preact/compat';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { getLineNumber } from '../../utils/getLineNumber';
 import { getTextWidth } from '../../utils/getTextWidth';

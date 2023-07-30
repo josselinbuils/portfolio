@@ -1,5 +1,4 @@
-import { type FC } from 'preact/compat';
-import { useEffect, useState } from 'preact/compat';
+import { type FC, useEffect, useState } from 'preact/compat';
 import { type Size } from '@/platform/interfaces/Size';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';

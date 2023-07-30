@@ -2,8 +2,7 @@ import fs from 'node:fs/promises';
 import { type IncomingMessage } from 'node:http';
 import path from 'node:path';
 import { glob } from 'glob';
-import type WebSocket from 'ws';
-import { WebSocketServer } from 'ws';
+import { type WebSocket, WebSocketServer } from 'ws';
 import { Logger } from '@/platform/api/Logger';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { ExecQueue } from './ExecQueue';
@@ -36,11 +35,8 @@ export class WSServer {
   }
 
   handleUpgrade(req: IncomingMessage): void {
-    this.server.handleUpgrade(
-      req,
-      req.socket,
-      Buffer.from([]),
-      (ws: WebSocket) => this.server.emit('connection', ws, req),
+    this.server.handleUpgrade(req, req.socket, Buffer.from([]), (ws) =>
+      this.server.emit('connection', ws, req),
     );
   }
 

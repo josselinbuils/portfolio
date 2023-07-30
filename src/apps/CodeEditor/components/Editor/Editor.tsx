@@ -1,6 +1,8 @@
 import cn from 'classnames';
-import { type ChangeEvent, type FC, type TargetedEvent } from 'preact/compat';
 import {
+  type ChangeEvent,
+  type FC,
+  type TargetedEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,6 +10,7 @@ import {
   useState,
 } from 'preact/compat';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { cancelable } from '@/platform/utils/cancelable';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
@@ -21,8 +24,11 @@ import styles from './Editor.module.scss';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
-import { type Completion } from './hooks/useAutoCompletion/useAutoCompletion';
-import { useAutoCompletion } from './hooks/useAutoCompletion/useAutoCompletion';
+import { LintIssue } from './components/LintIssue/LintIssue';
+import {
+  type Completion,
+  useAutoCompletion,
+} from './hooks/useAutoCompletion/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
@@ -58,6 +64,7 @@ export const Editor: FC<EditorProps> = ({
   const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [highlightedCode, setHighlightedCode] = useState('');
+  const [lintIssues, setLintIssues] = useState<any[]>([]);
   const [selection, setSelection] = useState<Selection>(() =>
     createSelection(0),
   );
@@ -143,6 +150,38 @@ export const Editor: FC<EditorProps> = ({
       ),
     );
   }, [activeFile.language, code, selection]);
+
+  useEffect(() => {
+    if (!['tsx', 'typescript'].includes(activeFile.language)) {
+      return;
+    }
+
+    setLintIssues([]);
+
+    const [debouncePromise, cancelDebouncePromise] = cancelable(
+      new Promise<void>((resolve) => {
+        setTimeout(resolve, 500);
+      }),
+    );
+
+    const [checkTypesPromise, cancelCheckTypesPromise] = cancelable(
+      debouncePromise
+        .then(() =>
+          fetch('/api/CodeEditor/check-types', {
+            body: code,
+            method: 'POST',
+          }),
+        )
+        .then((response) => response.json() as Promise<LintIssue[]>),
+    );
+
+    checkTypesPromise.then(setLintIssues);
+
+    return () => {
+      cancelDebouncePromise();
+      cancelCheckTypesPromise();
+    };
+  }, [activeFile.language, code]);
 
   useEffect(() => {
     const x = getLineBeforeCursor(code, cursorOffset).length + 1;
@@ -320,6 +359,13 @@ export const Editor: FC<EditorProps> = ({
                     parent={textAreaElementRef.current as HTMLTextAreaElement}
                   />
                 ))}
+              {lintIssues.map((issue) => (
+                <LintIssue
+                  code={code}
+                  issue={issue}
+                  parent={textAreaElementRef.current as HTMLTextAreaElement}
+                />
+              ))}
               <LineHighlight
                 code={code}
                 parent={textAreaElementRef.current as HTMLTextAreaElement}
@@ -351,7 +397,7 @@ export const Editor: FC<EditorProps> = ({
             setScrollTop((target as HTMLTextAreaElement).scrollTop)
           }
           ref={textAreaElementRef}
-          spellCheck={false}
+          spellCheck={'false' as any}
           style={activeFile.shared ? { caretColor: cursorColor } : undefined}
           value={code}
         />

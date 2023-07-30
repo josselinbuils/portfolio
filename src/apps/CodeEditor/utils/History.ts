@@ -1,8 +1,7 @@
 import { type EditableState } from '../interfaces/EditableState';
 import { type Selection } from '../interfaces/Selection';
 import { createSelection } from './createSelection';
-import { type Diff } from './diffs';
-import { applyDiff, getDiffs, revertDiff } from './diffs';
+import { applyDiff, getDiffs, revertDiff, type Diff } from './diffs';
 import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;

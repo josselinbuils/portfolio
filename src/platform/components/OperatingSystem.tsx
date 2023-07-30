@@ -1,5 +1,4 @@
-import { type FC } from 'preact/compat';
-import { useEffect } from 'preact/compat';
+import { type FC, useEffect } from 'preact/compat';
 import '../global.scss';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { windowManager } from '../services/windowManager/windowManager';

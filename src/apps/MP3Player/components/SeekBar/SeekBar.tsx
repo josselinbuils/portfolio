@@ -1,5 +1,4 @@
-import { type FC } from 'preact/compat';
-import React, { createRef, useContext } from 'preact/compat';
+import { type FC, createRef, useContext } from 'preact/compat';
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';

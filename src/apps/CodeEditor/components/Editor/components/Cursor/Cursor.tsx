@@ -1,11 +1,9 @@
-import { type FC } from 'preact/compat';
-import { useEffect, useState } from 'preact/compat';
+import { type FC, useEffect, useState } from 'preact/compat';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { type Position } from '@/platform/interfaces/Position';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './Cursor.module.scss';
-import { type Segment } from './utils/computeSegments';
-import { computeSegments } from './utils/computeSegments';
+import { computeSegments, type Segment } from './utils/computeSegments';
 
 interface Props {
   code: string;

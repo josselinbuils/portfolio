@@ -1,12 +1,10 @@
-import { type FC } from 'preact/compat';
-import { useEffect, useState } from 'preact/compat';
+import { type FC, useEffect, useState } from 'preact/compat';
 import { type Position } from '@/platform/interfaces/Position';
 import styles from './TicTacToe.module.scss';
 import { Cross } from './components/Cross';
 import { Grid } from './components/Grid';
 import { Round } from './components/Round';
-import { type Grid as IGrid } from './utils/GameManager';
-import { GameManager } from './utils/GameManager';
+import { GameManager, type Grid as IGrid } from './utils/GameManager';
 
 export const TicTacToe: FC = () => {
   const [grid, setGrid] = useState<IGrid>();

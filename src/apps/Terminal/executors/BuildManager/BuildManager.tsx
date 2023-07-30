@@ -1,12 +1,10 @@
 import cn from 'classnames';
-import { type MutableRefObject } from 'preact/compat';
-import { useEffect, useState } from 'preact/compat';
+import { type MutableRefObject, useEffect, useState } from 'preact/compat';
 import { useList } from '@/platform/hooks/useList';
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { type AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
-import { type BMError } from './BuildManagerClient';
-import { BuildManagerClient } from './BuildManagerClient';
+import { BuildManagerClient, type BMError } from './BuildManagerClient';
 import { type Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';

@@ -1,8 +1,7 @@
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
-import { useContext, useEffect, useState } from 'preact/compat';
+import { type FC, useContext, useEffect, useState } from 'preact/compat';
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '@/apps/MP3Player/utils/loadMusics';

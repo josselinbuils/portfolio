@@ -1,11 +1,11 @@
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { createSelection } from '@/apps/CodeEditor/utils/createSelection';
-import { type Diff } from '@/apps/CodeEditor/utils/diffs';
 import {
   applyDiff,
   DiffType,
   getCursorOffsetBeforeDiff,
   getDiffs,
+  type Diff,
 } from '@/apps/CodeEditor/utils/diffs';
 import { isIntoBrackets } from '@/apps/CodeEditor/utils/isIntoBrackets';
 import { spliceString } from '@/apps/CodeEditor/utils/spliceString';

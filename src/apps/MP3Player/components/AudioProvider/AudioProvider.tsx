@@ -1,7 +1,12 @@
-import { type FC, type PropsWithChildren } from 'preact/compat';
-import { createContext, useEffect, useMemo, useState } from 'preact/compat';
-import { type AudioState } from './AudioController';
-import { AudioController } from './AudioController';
+import {
+  createContext,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'preact/compat';
+import { AudioController, type AudioState } from './AudioController';
 
 export const AudioContext = createContext<{
   audioController: AudioController | undefined;

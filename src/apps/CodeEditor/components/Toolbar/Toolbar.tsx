@@ -1,6 +1,5 @@
 import cn from 'classnames';
-import { type FC, type JSX } from 'preact/compat';
-import { Children, cloneElement } from 'preact/compat';
+import { Children, cloneElement, type FC, type JSX } from 'preact/compat';
 import styles from './Toolbar.module.scss';
 
 export interface ToolbarProps {

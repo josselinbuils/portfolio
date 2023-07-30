@@ -3,8 +3,7 @@ import { type ListManager } from '@/platform/hooks/useList';
 import { createGUID } from '@/platform/utils/createGUID';
 import { highlightCode } from '../../../utils/highlightCode/highlightCode';
 import { Shortcut } from '../../Shortcut/Shortcut';
-import { type Log } from '../Log';
-import { LogLevel } from '../Log';
+import { LogLevel, type Log } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {
   const originalConsoleError = console.error.bind(console.error);

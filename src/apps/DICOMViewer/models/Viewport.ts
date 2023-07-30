@@ -1,5 +1,4 @@
-import { type RendererType } from '../constants';
-import { ViewType } from '../constants';
+import { type RendererType, ViewType } from '../constants';
 import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { type LUTComponent } from '../interfaces/LUTComponent';
 import { V } from '../utils/math/Vector';
