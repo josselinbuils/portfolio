@@ -13,6 +13,7 @@ import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
+import { cancelable } from '@/platform/utils/cancelable';
 import styles from './CodeEditor.module.scss';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
@@ -30,6 +31,7 @@ import { fileSaver } from './utils/fileSaver';
 import { getExtensionFromLanguage } from './utils/getExtensionFromLanguage';
 import { highlightCode } from './utils/highlightCode/highlightCode';
 import { showShortcuts } from './utils/showShortcuts';
+import { typeScriptService } from './utils/typeScript/typeScriptService';
 
 const CodeEditor: WindowComponent = ({
   active,
@@ -40,6 +42,7 @@ const CodeEditor: WindowComponent = ({
   const [activeFilename, previouslyActiveFilename, setActiveFilename] =
     useMemState<string>(files[0].name);
   const [code, setCode] = useState('');
+  const [codeToExec, setCodeToExec] = useState('');
   const [cursorPosition, setCursorPosition] = useState({
     offset: 0,
     x: 0,
@@ -63,6 +66,28 @@ const CodeEditor: WindowComponent = ({
     activeFile.content = code;
     fileSaver.saveFiles(files);
   }, [activeFile, code, files, activeFile.shared]);
+
+  useEffect(() => {
+    switch (activeFile.language) {
+      case 'javascript':
+      case 'jsx':
+        setCodeToExec(code);
+        break;
+
+      case 'typescript':
+      case 'tsx': {
+        const [transpilePromise, cancelTranspilePromise] = cancelable(
+          typeScriptService.transpile(code),
+        );
+        transpilePromise.then(setCodeToExec);
+        return cancelTranspilePromise;
+      }
+
+      default:
+        setCodeToExec('');
+        break;
+    }
+  }, [activeFile.language, code]);
 
   useKeyMap({
     'CtrlCmd+O': () => open(undefined),
@@ -274,7 +299,7 @@ const CodeEditor: WindowComponent = ({
         <Console
           active={active}
           className={styles.console}
-          codeToExec={code}
+          codeToExec={codeToExec}
           height={consoleHeight}
           ref={consoleElementRef}
         >

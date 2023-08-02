@@ -6,7 +6,6 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'preact/compat';
@@ -21,6 +20,7 @@ import { type Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
+import { typeScriptService } from '../../utils/typeScript/typeScriptService';
 import styles from './Editor.module.scss';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
@@ -107,13 +107,6 @@ export const Editor: FC<EditorProps> = ({
     filename: activeFile.name,
     selection,
   });
-  const tsWorker = useMemo(() => {
-    const worker = new Worker(new URL('./utils/tsWorker.ts', import.meta.url), {
-      type: 'module',
-    });
-    worker.onmessage = ({ data }) => setLintIssues(data.lintIssues);
-    return worker;
-  }, []);
 
   useKeyMap(
     {
@@ -172,15 +165,12 @@ export const Editor: FC<EditorProps> = ({
       }),
     );
 
-    debouncePromise.then(() => {
-      tsWorker.postMessage({
-        code,
-        cursorOffset: selection[1] === selection[0] ? selection[0] : undefined,
-      });
-    });
+    debouncePromise
+      .then(() => typeScriptService.checkTypes(code))
+      .then(setLintIssues);
 
     return cancelDebouncePromise;
-  }, [activeFile.language, code, selection, tsWorker]);
+  }, [activeFile.language, code]);
 
   useEffect(() => {
     const x = getLineBeforeCursor(code, cursorOffset).length + 1;
