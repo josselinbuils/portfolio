@@ -11,7 +11,11 @@ export default defineConfig(({ ssrBuild }) => ({
     outDir: ssrBuild ? 'build/server' : 'build',
     rollupOptions: {
       onwarn: (log, warn) => {
-        if (!log.message.includes('Use of eval')) {
+        if (
+          !['perf_hooks', 'Use of eval'].some((entry) =>
+            log.message.includes(entry),
+          )
+        ) {
           warn(log);
         }
       },
