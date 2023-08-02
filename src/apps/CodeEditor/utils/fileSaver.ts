@@ -15,12 +15,12 @@ const defaultFiles: EditorFile[] = [
   }
 })();
 
-function sleep(timeMs) {
+function sleep(timeMs: number) {
   return new Promise((resolve) => setTimeout(resolve, timeMs));
 }
 `,
-    language: 'javascript',
-    name: 'shared.js',
+    language: 'typescript',
+    name: 'shared.ts',
     shared: true,
   },
   {
@@ -43,6 +43,17 @@ function sleep(timeMs) {
  *
  * The goal is to implement an AI to beat the computer 🏅
  */
+
+type Mark = 'x' | 'o' | '';
+type Grid = [[Mark, Mark, Mark], [Mark, Mark, Mark], [Mark, Mark, Mark]];
+
+interface Window {
+  ticTacToe: {
+    onMyTurn(callback: (grid: Grid) => unknown): void;
+    placeMyMark(x: number, y: number): void;
+    start(): void;
+  };
+}
 
 const { onMyTurn, placeMyMark, start } = window.ticTacToe;
 
@@ -71,8 +82,8 @@ onMyTurn((grid) => {
 
 start();
 `,
-    language: 'javascript',
-    name: 'ticTacToe.js',
+    language: 'typescript',
+    name: 'ticTacToe.ts',
     shared: true,
     SideComponent: lazy(
       async () => (await import('../games/TicTacToe/TicTacToe')).TicTacToe,
