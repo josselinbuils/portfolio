@@ -1,6 +1,4 @@
 /** @see https://jakerunzer.com/running-ts-in-browser */
-import fs from 'node:fs';
-import path from 'node:path';
 import {
   DiagnosticCategory,
   JsxEmit,
@@ -18,11 +16,23 @@ import {
   type SourceFile,
   type System,
 } from 'typescript';
+import dom from 'typescript/lib/lib.dom.d?raw';
+import libEs2015Collection from 'typescript/lib/lib.es2015.collection.d?raw';
+import libEs2015Core from 'typescript/lib/lib.es2015.core.d?raw';
+import libEs2015 from 'typescript/lib/lib.es2015.d?raw';
+import libEs2015Generator from 'typescript/lib/lib.es2015.generator.d?raw';
+import libEs2015Iterable from 'typescript/lib/lib.es2015.iterable.d?raw';
+import libEs2015Promise from 'typescript/lib/lib.es2015.promise.d?raw';
+import libEs2015Proxy from 'typescript/lib/lib.es2015.proxy.d?raw';
+import libEs2015Reflect from 'typescript/lib/lib.es2015.reflect.d?raw';
+import libEs2015Symbol from 'typescript/lib/lib.es2015.symbol.d?raw';
+import libEs2015SymbolWellKnown from 'typescript/lib/lib.es2015.symbol.wellknown.d?raw';
+import libEs5 from 'typescript/lib/lib.es5.d?raw';
 import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
 import {
   type LintIssue,
   type LintIssueLevel,
-} from '../components/Editor/components/LintIssue/LintIssue';
+} from '../components/LintIssue/LintIssue';
 
 const categoryToLintLevelMap: PartialRecord<
   DiagnosticCategory,
@@ -35,27 +45,19 @@ const categoryToLintLevelMap: PartialRecord<
 const excludedTsCodes = [2307];
 
 const libs = {
-  '/dom.d.ts': loadTypeScriptLibrary('lib.dom.d.ts'),
-  '/es2015.d.ts': loadTypeScriptLibrary('lib.es2015.d.ts'),
-  '/lib.es5.d.ts': loadTypeScriptLibrary('lib.es5.d.ts'),
-  '/lib.es2015.d.ts': loadTypeScriptLibrary('lib.es2015.d.ts'),
-  '/lib.es2015.core.d.ts': loadTypeScriptLibrary('lib.es2015.core.d.ts'),
-  '/lib.es2015.collection.d.ts': loadTypeScriptLibrary(
-    'lib.es2015.collection.d.ts',
-  ),
-  '/lib.es2015.generator.d.ts': loadTypeScriptLibrary(
-    'lib.es2015.generator.d.ts',
-  ),
-  '/lib.es2015.promise.d.ts': loadTypeScriptLibrary('lib.es2015.promise.d.ts'),
-  '/lib.es2015.iterable.d.ts': loadTypeScriptLibrary(
-    'lib.es2015.iterable.d.ts',
-  ),
-  '/lib.es2015.proxy.d.ts': loadTypeScriptLibrary('lib.es2015.proxy.d.ts'),
-  '/lib.es2015.reflect.d.ts': loadTypeScriptLibrary('lib.es2015.reflect.d.ts'),
-  '/lib.es2015.symbol.d.ts': loadTypeScriptLibrary('lib.es2015.symbol.d.ts'),
-  '/lib.es2015.symbol.wellknown.d.ts': loadTypeScriptLibrary(
-    'lib.es2015.symbol.wellknown.d.ts',
-  ),
+  '/dom.d.ts': dom,
+  '/es2015.d.ts': libEs2015,
+  '/lib.es5.d.ts': libEs5,
+  '/lib.es2015.d.ts': libEs2015,
+  '/lib.es2015.core.d.ts': libEs2015Core,
+  '/lib.es2015.collection.d.ts': libEs2015Collection,
+  '/lib.es2015.generator.d.ts': libEs2015Generator,
+  '/lib.es2015.promise.d.ts': libEs2015Promise,
+  '/lib.es2015.iterable.d.ts': libEs2015Iterable,
+  '/lib.es2015.proxy.d.ts': libEs2015Proxy,
+  '/lib.es2015.reflect.d.ts': libEs2015Reflect,
+  '/lib.es2015.symbol.d.ts': libEs2015Symbol,
+  '/lib.es2015.symbol.wellknown.d.ts': libEs2015SymbolWellKnown,
 };
 
 function createSystem(files: { [name: string]: string }): System {
@@ -66,7 +68,7 @@ function createSystem(files: { [name: string]: string }): System {
       throw new Error('createDirectory not implemented');
     },
     directoryExists: (directory) =>
-      Object.keys(files).some((p) => p.startsWith(directory)),
+      Object.keys(files).some((path) => path.startsWith(directory)),
     exit: () => {
       throw new Error('exit not implemented');
     },
@@ -78,7 +80,7 @@ function createSystem(files: { [name: string]: string }): System {
     },
     readDirectory: (directory) => (directory === '/' ? Object.keys(files) : []),
     readFile: (fileName) => files[fileName],
-    resolvePath: (p) => p,
+    resolvePath: (path) => path,
     newLine: '\n',
     useCaseSensitiveFileNames: true,
     write: () => {
@@ -198,12 +200,5 @@ function getMessageFromDiagnosticMessageChain({
         )}`,
       messageText,
     ) ?? messageText
-  );
-}
-
-function loadTypeScriptLibrary(library: string): string {
-  return fs.readFileSync(
-    path.join(process.cwd(), `node_modules/typescript/lib/${library}`),
-    'utf8',
   );
 }

@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'preact/compat';
@@ -106,6 +107,13 @@ export const Editor: FC<EditorProps> = ({
     filename: activeFile.name,
     selection,
   });
+  const tsWorker = useMemo(() => {
+    const worker = new Worker(new URL('./utils/tsWorker.ts', import.meta.url), {
+      type: 'module',
+    });
+    worker.onmessage = ({ data }) => setLintIssues(data.lintIssues);
+    return worker;
+  }, []);
 
   useKeyMap(
     {
@@ -160,28 +168,19 @@ export const Editor: FC<EditorProps> = ({
 
     const [debouncePromise, cancelDebouncePromise] = cancelable(
       new Promise<void>((resolve) => {
-        setTimeout(resolve, 500);
+        setTimeout(resolve, 100);
       }),
     );
 
-    const [checkTypesPromise, cancelCheckTypesPromise] = cancelable(
-      debouncePromise
-        .then(() =>
-          fetch('/api/CodeEditor/check-types', {
-            body: code,
-            method: 'POST',
-          }),
-        )
-        .then((response) => response.json() as Promise<LintIssue[]>),
-    );
+    debouncePromise.then(() => {
+      tsWorker.postMessage({
+        code,
+        cursorOffset: selection[1] === selection[0] ? selection[0] : undefined,
+      });
+    });
 
-    checkTypesPromise.then(setLintIssues);
-
-    return () => {
-      cancelDebouncePromise();
-      cancelCheckTypesPromise();
-    };
-  }, [activeFile.language, code]);
+    return cancelDebouncePromise;
+  }, [activeFile.language, code, selection, tsWorker]);
 
   useEffect(() => {
     const x = getLineBeforeCursor(code, cursorOffset).length + 1;
