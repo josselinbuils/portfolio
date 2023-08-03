@@ -1,16 +1,44 @@
+import { type LintIssue } from '../../components/Editor/components/LintIssue/LintIssue';
 import { checkTypes } from './checkTypes';
 import { createLanguageService } from './createLanguageService';
+import {
+  type WorkerAction,
+  type WorkerActionGenericHandler,
+  type WorkerResponse,
+  type WorkerResponseResult,
+} from './interfaces';
 
-onmessage = ({ data }) => {
-  const { action, args, uuid } = data;
+export type CheckTypesActionHandler = WorkerActionGenericHandler<
+  'checkTypes',
+  [string],
+  LintIssue[]
+>;
 
-  switch (action) {
+export type TranspileActionHandler = WorkerActionGenericHandler<
+  'transpile',
+  [string],
+  string
+>;
+
+export type WorkerActionHandler =
+  | CheckTypesActionHandler
+  | TranspileActionHandler;
+
+onmessage = ({
+  data: action,
+}: MessageEvent<WorkerAction<WorkerActionHandler>>) => {
+  const { args, type, uuid } = action;
+
+  switch (type) {
     case 'checkTypes':
-      postMessage({ result: checkTypes(args[0]), uuid });
+      sendWorkerResponse<CheckTypesActionHandler>(uuid, checkTypes(args[0]));
       break;
 
     case 'transpile':
-      postMessage({ result: createLanguageService(args[0]).transpile(), uuid });
+      sendWorkerResponse<TranspileActionHandler>(
+        uuid,
+        createLanguageService(args[0]).transpile(),
+      );
       break;
 
     default:
@@ -18,3 +46,10 @@ onmessage = ({ data }) => {
       break;
   }
 };
+
+function sendWorkerResponse<Handler extends WorkerActionGenericHandler>(
+  uuid: string,
+  result: WorkerResponseResult<Handler>,
+) {
+  postMessage({ result, uuid } satisfies WorkerResponse<Handler>);
+}
