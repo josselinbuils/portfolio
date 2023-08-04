@@ -1,17 +1,12 @@
 import {
   Children,
   cloneElement,
-  createPortal,
   type FC,
   type JSX,
   type PropsWithChildren,
-  useState,
 } from 'preact/compat';
-import {
-  Tooltip,
-  type TooltipProps,
-} from '@/platform/components/Tooltip/Tooltip';
-import { type Position } from '@/platform/interfaces/Position';
+import { type TooltipProps } from '@/platform/components/Tooltip/Tooltip';
+import { useTooltip } from './useTooltip';
 
 export type WithTooltipProps = PropsWithChildren<
   Omit<TooltipProps, 'position'>
@@ -19,34 +14,30 @@ export type WithTooltipProps = PropsWithChildren<
 
 export const WithTooltip: FC<WithTooltipProps> = ({
   children,
-  ...descriptor
+  ...tooltipProps
 }) => {
-  const [position, setPosition] = useState<Position>();
+  const { hideTooltip, tooltipElement, showTooltip } = useTooltip(tooltipProps);
   const child = Children.only(children) as JSX.Element;
 
-  if (position && child.props.disabled) {
-    setPosition(undefined);
+  if (tooltipElement && child.props.disabled) {
+    hideTooltip();
   }
 
   return cloneElement(child, {
     children: (
       <>
         {child.props.children}
-        {position &&
-          createPortal(
-            <Tooltip {...descriptor} position={position} />,
-            document.body,
-          )}
+        {tooltipElement}
       </>
     ),
     onMouseEnter: (event: MouseEvent) => {
       const target = event.currentTarget as HTMLElement;
       const { right: x, y, height } = target.getBoundingClientRect();
-      setPosition({ x, y: Math.round(y + height / 2) });
+      showTooltip({ x, y: Math.round(y + height / 2) });
       child.props.onMouseEnter?.(event);
     },
     onMouseLeave: (event: MouseEvent) => {
-      setPosition(undefined);
+      hideTooltip();
       child.props.onMouseLeave?.(event);
     },
   });

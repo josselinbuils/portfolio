@@ -334,8 +334,12 @@ export const Editor: FC<EditorProps> = ({
         selection={selection}
       />
       <div className={styles.code}>
-        <div className={styles.graphicalObjects} ref={codeElementRef}>
-          <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+        <div
+          className={styles.highlightedCode}
+          dangerouslySetInnerHTML={{ __html: highlightedCode }}
+          ref={codeElementRef}
+        />
+        <div className={styles.graphicalObjects}>
           {textAreaElementRef.current && (
             <>
               {activeFile.shared &&

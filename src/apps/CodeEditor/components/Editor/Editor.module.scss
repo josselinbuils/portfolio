@@ -48,6 +48,7 @@ ul.autoCompletionMenu {
 }
 
 .graphicalObjects,
+.highlightedCode,
 .textarea {
   @include scrollbar;
 
@@ -69,12 +70,17 @@ ul.autoCompletionMenu {
   overflow-wrap: break-word;
 }
 
+.highlightedCode {
+  z-index: 1;
+  //z-index: 3;
+}
+
 .lineNumbers {
   flex: 0 0 $lineNumbersWidth;
 }
 
 .textarea {
-  z-index: 1;
+  z-index: 2;
   resize: none;
   color: transparent;
   background: transparent;
