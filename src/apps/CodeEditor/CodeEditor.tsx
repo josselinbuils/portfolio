@@ -140,14 +140,14 @@ const CodeEditor: WindowComponent = ({
     const { downloadAsPng } = await import(
       './utils/exportAsImage/exportAsImage'
     );
-    await downloadAsPng(code, highlightCode(code, activeFile.language));
+    await downloadAsPng(code, highlightCode(code, activeFile.language, 'html'));
   }
 
   async function downloadCodeSnippetAsSvg(): Promise<void> {
     const { downloadAsSvg } = await import(
       './utils/exportAsImage/exportAsImage'
     );
-    await downloadAsSvg(code, highlightCode(code, activeFile.language));
+    await downloadAsSvg(code, highlightCode(code, activeFile.language, 'html'));
   }
 
   function onResizeStart(
@@ -189,7 +189,7 @@ const CodeEditor: WindowComponent = ({
 
   async function openCodeSnippetAsPng(): Promise<void> {
     const { openAsPng } = await import('./utils/exportAsImage/exportAsImage');
-    await openAsPng(code, highlightCode(code, activeFile.language));
+    await openAsPng(code, highlightCode(code, activeFile.language, 'html'));
   }
 
   function openNewFileMenu(): void {

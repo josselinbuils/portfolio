@@ -1,3 +1,4 @@
+import { type JSX } from 'preact/compat';
 import Prism, { Token } from 'prismjs';
 import 'prismjs/components/prism-css.min';
 import 'prismjs/components/prism-javascript.min';
@@ -24,19 +25,37 @@ interface ProcessedToken extends Token {
 export function highlightCode(
   code: string,
   language: string,
+  outputFormat: 'html',
   cursorOffset?: number,
-): string {
+): string;
+
+export function highlightCode(
+  code: string,
+  language: string,
+  outputFormat: 'react',
+  cursorOffset?: number,
+): JSX.Element;
+
+export function highlightCode(
+  code: string,
+  language: string,
+  outputFormat: 'html' | 'react',
+  cursorOffset?: number,
+): string | JSX.Element {
   if (Prism.languages[language] === undefined) {
-    return escapeHtml(code);
+    return outputFormat === 'html' ? escapeHtml(code) : <>{escapeHtml(code)}</>;
   }
 
   const elements = processElements(
     Prism.tokenize(code, Prism.languages[language]),
     cursorOffset,
   );
-  const highlighted = stringify(elements);
 
-  return highlighted.slice(-1) === '\n' ? `${highlighted} ` : highlighted;
+  if (outputFormat === 'html') {
+    const highlighted = stringify(elements);
+    return highlighted.slice(-1) === '\n' ? `${highlighted} ` : highlighted;
+  }
+  return reactify(elements);
 }
 
 function addOffsets(elements: (string | Token)[], offset = 0): void {
@@ -145,6 +164,33 @@ function processElements(
   return elements as (string | ProcessedToken)[];
 }
 
+function reactify(
+  input: string | ProcessedToken | (string | ProcessedToken)[],
+): JSX.Element {
+  if (typeof input === 'string') {
+    return <>{Prism.util.encode(input)}</>;
+  }
+  if (Array.isArray(input)) {
+    return <>{input.map((element) => reactify(element))}</>;
+  }
+
+  const { content, offset, type } = input;
+
+  return (
+    <span
+      className={styles[type]}
+      data-offset={
+        ['builtin', 'class-name', 'function', 'other'].includes(type)
+          ? offset
+          : undefined
+      }
+      key={`${type}-${offset}`}
+    >
+      {reactify(content)}
+    </span>
+  );
+}
+
 function stringify(
   input: string | ProcessedToken | (string | ProcessedToken)[],
 ): string {
@@ -155,19 +201,9 @@ function stringify(
     return input.map((element) => stringify(element)).join('');
   }
 
-  const { content, offset, type } = input;
+  const { content, type } = input;
 
-  const attributes: Record<string, number | string> = {};
-
-  if (styles[type]) {
-    attributes.class = styles[type];
-  }
-
-  if (['builtin', 'class-name', 'function', 'other'].includes(type)) {
-    attributes['data-offset'] = offset;
-  }
-
-  return `<span${Object.entries(attributes)
-    .map(([key, value]) => ` ${key}="${value}"`)
-    .join('')}>${stringify(content)}</span>`;
+  return styles[type]
+    ? `<span class="${styles[type]}">${stringify(content)}</span>`
+    : stringify(content);
 }

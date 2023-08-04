@@ -2,6 +2,7 @@ import cn from 'classnames';
 import {
   type ChangeEvent,
   type FC,
+  type JSX,
   type TargetedEvent,
   useCallback,
   useEffect,
@@ -64,7 +65,7 @@ export const Editor: FC<EditorProps> = ({
   const [autoCompleteActive, setAutoCompleteActive] = useState(false);
   const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
-  const [highlightedCode, setHighlightedCode] = useState('');
+  const [highlightedCode, setHighlightedCode] = useState<JSX.Element>();
   const [lintIssues, setLintIssues] = useState<any[]>([]);
   const [selection, setSelection] = useState<Selection>(() =>
     createSelection(0),
@@ -147,6 +148,7 @@ export const Editor: FC<EditorProps> = ({
       highlightCode(
         code,
         activeFile.language,
+        'react',
         selection[1] === selection[0] ? selection[0] : undefined,
       ),
     );
@@ -334,11 +336,9 @@ export const Editor: FC<EditorProps> = ({
         selection={selection}
       />
       <div className={styles.code}>
-        <div
-          className={styles.highlightedCode}
-          dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          ref={codeElementRef}
-        />
+        <div className={styles.highlightedCode} ref={codeElementRef}>
+          {highlightedCode}
+        </div>
         <div className={styles.graphicalObjects}>
           {textAreaElementRef.current && (
             <>

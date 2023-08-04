@@ -73,7 +73,7 @@ function prettify(value: any, id: string): string | JSX.Element {
       </>
     );
   } else if (isPrimitive) {
-    prettified = highlightCode(`${value}`, 'javascript');
+    prettified = highlightCode(`${value}`, 'javascript', 'react');
   } else if (Array.isArray(value)) {
     const items = value
       .map((v) => prettify(v, id))
