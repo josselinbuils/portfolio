@@ -41,9 +41,9 @@ const Terminal: WindowComponent = ({
   ...injectedWindowProps
 }) => {
   const [caretIndex, setCaretIndex] = useState(0);
-  const [commands, commandManager] = useList<string>(
-    initialExecutions[0].args.slice(1),
-  );
+  const [commands, commandManager] = useList<string>([
+    initialExecutions[0].args[0],
+  ]);
   const [commandIndex, setCommandIndex] = useState(1);
   const [executions, executionManager] = useList<Execution>(initialExecutions);
   const [userInput, setUserInput] = useState('');
