@@ -119,9 +119,9 @@ const Terminal: WindowComponent = ({
       }
       executionManager.update();
     } else {
-      loadExecutor(Command, [userInput]);
       setUserInput('');
       setCaretIndex(0);
+      await loadExecutor(Command, [userInput]);
     }
   }
 
@@ -130,6 +130,8 @@ const Terminal: WindowComponent = ({
     const cleanStr = str.split(' ').filter(Boolean).join(' ');
 
     if (query) {
+      setUserInput('');
+      setCaretIndex(0);
       await loadExecutor(UserQuery, [
         query.str,
         formatAnswer(str, query.hideAnswer),
@@ -149,9 +151,16 @@ const Terminal: WindowComponent = ({
     const args = cleanStr.split(' ');
     const command = args[0];
 
-    await loadExecutor(Command, [str]);
-
     if (command.length > 0) {
+      let executor: Executor | AsyncExecutor | undefined;
+
+      if (executors[command] !== undefined) {
+        executor = await executors[command](); // Has to be done before any state change
+      }
+
+      setUserInput('');
+      setCaretIndex(0);
+
       if (commands[commands.length - 1] !== str) {
         commandManager.push(str);
         setCommandIndex(commands.length + 1);
@@ -161,12 +170,19 @@ const Terminal: WindowComponent = ({
 
       if (command === 'clear') {
         executionManager.clear();
-      } else if (executors[command] !== undefined) {
-        const executor = await executors[command]();
-        await loadExecutor(executor, args.slice(1));
+      } else if (executor !== undefined) {
+        await Promise.all([
+          loadExecutor(Command, [str]),
+          loadExecutor(executor, args.slice(1)),
+        ]);
       } else {
-        await loadExecutor(BashError, [command]);
+        await Promise.all([
+          loadExecutor(Command, [str]),
+          loadExecutor(BashError, [command]),
+        ]);
       }
+    } else {
+      await loadExecutor(Command, [str]);
     }
   }
 
@@ -199,11 +215,7 @@ const Terminal: WindowComponent = ({
 
       execution.inProgress = true;
       execution.releaseHandler = deferred.resolve;
-      execution.queryUserHandler = (
-        str: string,
-        callback: (userInput: string) => void,
-        hideAnswer = false,
-      ) => {
+      execution.queryUserHandler = (str, callback, hideAnswer = false) => {
         execution.query = { callback, hideAnswer, str };
         executionManager.update();
       };
@@ -267,8 +279,6 @@ const Terminal: WindowComponent = ({
         break;
 
       case 'Enter':
-        setUserInput('');
-        setCaretIndex(0);
         exec(userInput);
         break;
 
