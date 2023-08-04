@@ -166,9 +166,9 @@ function processElements(
 
 function reactify(
   input: string | ProcessedToken | (string | ProcessedToken)[],
-): JSX.Element {
+): string | JSX.Element {
   if (typeof input === 'string') {
-    return <>{Prism.util.encode(input)}</>;
+    return input;
   }
   if (Array.isArray(input)) {
     return <>{input.map((element) => reactify(element))}</>;
