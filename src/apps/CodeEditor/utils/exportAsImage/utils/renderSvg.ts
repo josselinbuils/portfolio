@@ -51,8 +51,14 @@ export async function renderSvg(
   // Cleans code
   const removeUselessSpaces = (str: string) =>
     str.replace(/^\s+/, '').replace(/\s+$/, '');
+
+  const removeUselessMarkup = (str: string) =>
+    str
+      .replace(/ data-[^=]+="[^"]+"/g, '')
+      .replace(/<span>([^<]+)<\/span>/g, '$1');
+
   code = removeUselessSpaces(code);
-  highlightedCode = removeUselessSpaces(highlightedCode);
+  highlightedCode = removeUselessMarkup(removeUselessSpaces(highlightedCode));
 
   // Stringifies Prism theme
   const prismTheme = stringifyPrismTheme(highlightedCode);

@@ -157,7 +157,17 @@ function stringify(
 
   const { content, offset, type } = input;
 
-  return `<span${
-    styles[type] ? ` class="${styles[type]}"` : ''
-  } data-offset="${offset}">${stringify(content)}</span>`;
+  const attributes: Record<string, number | string> = {};
+
+  if (styles[type]) {
+    attributes.class = styles[type];
+  }
+
+  if (['builtin', 'class-name', 'function', 'other'].includes(type)) {
+    attributes['data-offset'] = offset;
+  }
+
+  return `<span${Object.entries(attributes)
+    .map(([key, value]) => ` ${key}="${value}"`)
+    .join('')}>${stringify(content)}</span>`;
 }

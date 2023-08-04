@@ -91,8 +91,8 @@ start();
   },
   {
     content: '',
-    language: 'javascript',
-    name: 'local.js',
+    language: 'typescript',
+    name: 'local.ts',
     shared: false,
   },
 ];
