@@ -51,11 +51,13 @@ export function highlightCode(
     cursorOffset,
   );
 
+  const highlighted = stringify(elements);
+  const endWithEmptyLine = highlighted.slice(-1) === '\n';
+
   if (outputFormat === 'html') {
-    const highlighted = stringify(elements);
-    return highlighted.slice(-1) === '\n' ? `${highlighted} ` : highlighted;
+    return endWithEmptyLine ? `${highlighted} ` : highlighted;
   }
-  return reactify(elements);
+  return reactify(endWithEmptyLine ? [...elements, ' '] : elements);
 }
 
 function addOffsets(elements: (string | Token)[], offset = 0): void {
@@ -100,9 +102,24 @@ function processElements(
   const elements = rawElements
     .map((token) =>
       typeof token === 'string' && /[a-zA-Z0-9]+/.test(token)
-        ? token
-            .split(' ')
-            .map((part) => (part ? new Token('other', part) : ' '))
+        ? (token
+            .split('')
+            .map((part) => {
+              if (/^[a-zA-Z0-9]+$/.test(part)) {
+                return new Token('other', part);
+              }
+              return part;
+            })
+            .map((part, index, array) => {
+              const nextPart = array[index + 1];
+
+              if (part instanceof Token && nextPart instanceof Token) {
+                nextPart.content = `${part.content}${nextPart.content}`;
+                return undefined;
+              }
+              return part;
+            })
+            .filter(Boolean) as (string | Token)[])
         : token,
     )
     .flat();
