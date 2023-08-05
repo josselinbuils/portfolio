@@ -42,9 +42,10 @@ const Terminal: WindowComponent = ({
 }) => {
   const [caretIndex, setCaretIndex] = useState(0);
   const [commands, commandManager] = useList<string>([
+    'bm logs -f',
     initialExecutions[0].args[0],
   ]);
-  const [commandIndex, setCommandIndex] = useState(1);
+  const [commandIndex, setCommandIndex] = useState(commands.length);
   const [executions, executionManager] = useList<Execution>(initialExecutions);
   const [userInput, setUserInput] = useState('');
   const executorIdRef = useRef(initialExecutions.length - 1);
