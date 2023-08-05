@@ -1,5 +1,5 @@
 @import '@/platform/_constants.scss';
 @import '../../_constants.scss';
 
-$buttonColor: #b8babc;
+$buttonColor: $textPrimaryColor;
 $buttonSize: $toolbarWidth - $spacingXs * 2;

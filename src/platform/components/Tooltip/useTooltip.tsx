@@ -1,22 +1,29 @@
 import { createPortal, type JSX, useCallback, useState } from 'preact/compat';
-import { type Position } from '@/platform/interfaces/Position';
+import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
 import { Tooltip, type TooltipProps } from './Tooltip';
 
-export function useTooltip(tooltipProps: Omit<TooltipProps, 'position'>): {
+// TODO fix position if partially hidden because of screen limits
+export function useTooltip(initialTooltipProps: Partial<TooltipProps>): {
   hideTooltip(): unknown;
-  showTooltip(position: Position): unknown;
+  showTooltip(props: Partial<TooltipProps>): unknown;
   tooltipElement: JSX.Element | null;
 } {
-  const [position, setPosition] = useState<Position>();
+  const initialTooltipPropsRef = useDynamicRef(initialTooltipProps);
+  const [tooltipProps, setTooltipProps] = useState<TooltipProps | undefined>();
 
-  const tooltipElement = position
-    ? createPortal(
-        <Tooltip {...tooltipProps} position={position} />,
-        document.body,
-      )
+  const tooltipElement = tooltipProps
+    ? createPortal(<Tooltip {...tooltipProps} />, document.body)
     : null;
 
-  const hideTooltip = useCallback(() => setPosition(undefined), []);
+  const hideTooltip = useCallback(() => setTooltipProps(undefined), []);
+  const showTooltip = useCallback(
+    (props: Partial<TooltipProps>) =>
+      setTooltipProps({
+        ...initialTooltipPropsRef.current,
+        ...props,
+      } as TooltipProps),
+    [initialTooltipPropsRef],
+  );
 
-  return { hideTooltip, tooltipElement, showTooltip: setPosition };
+  return { hideTooltip, showTooltip, tooltipElement };
 }

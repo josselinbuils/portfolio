@@ -29,9 +29,9 @@ import { type EditorFile } from './interfaces/EditorFile';
 import { type SupportedLanguage } from './interfaces/SupportedLanguage';
 import { fileSaver } from './utils/fileSaver';
 import { getExtensionFromLanguage } from './utils/getExtensionFromLanguage';
+import { getLanguageService } from './utils/getLanguageService';
 import { highlightCode } from './utils/highlightCode/highlightCode';
 import { showShortcuts } from './utils/showShortcuts';
-import { typeScriptService } from './utils/typeScript/typeScriptService';
 
 const CodeEditor: WindowComponent = ({
   active,
@@ -68,25 +68,12 @@ const CodeEditor: WindowComponent = ({
   }, [activeFile, code, files, activeFile.shared]);
 
   useEffect(() => {
-    switch (activeFile.language) {
-      case 'javascript':
-      case 'jsx':
-        setCodeToExec(code);
-        break;
-
-      case 'typescript':
-      case 'tsx': {
-        const [transpilePromise, cancelTranspilePromise] = cancelable(
-          typeScriptService.transpile(code),
-        );
-        transpilePromise.then(setCodeToExec);
-        return cancelTranspilePromise;
-      }
-
-      default:
-        setCodeToExec('');
-        break;
-    }
+    const languageService = getLanguageService(activeFile.language);
+    const [transpilePromise, cancelTranspilePromise] = cancelable(
+      Promise.resolve(languageService.transpile(code)),
+    );
+    transpilePromise.then(setCodeToExec);
+    return cancelTranspilePromise;
   }, [activeFile.language, code]);
 
   useKeyMap({

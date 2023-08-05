@@ -4,10 +4,10 @@ import styles from './TicTacToe.module.scss';
 import { Cross } from './components/Cross';
 import { Grid } from './components/Grid';
 import { Round } from './components/Round';
-import { GameManager, type Grid as IGrid } from './utils/GameManager';
+import { GameManager, type Grid as GridType } from './utils/GameManager';
 
 export const TicTacToe: FC = () => {
-  const [grid, setGrid] = useState<IGrid>();
+  const [grid, setGrid] = useState<GridType>();
   const [winnerCases, setWinnerCases] = useState<Position[] | undefined>();
 
   useEffect(() => {

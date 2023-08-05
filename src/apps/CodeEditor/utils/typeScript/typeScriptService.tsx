@@ -1,5 +1,8 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
+import { type SymbolDisplayPart } from 'typescript';
 import { createGUID } from '@/platform/utils/createGUID';
+import { type LanguageService } from '../../interfaces/LanguageService';
+import { highlightCode } from '../highlightCode/highlightCode';
 import {
   type WorkerAction,
   type WorkerActionArgs,
@@ -9,7 +12,8 @@ import {
   type WorkerResponseResult,
 } from './interfaces';
 import {
-  type CheckTypesActionHandler,
+  type GetQuickInfoActionHandler,
+  type LintActionHandler,
   type TranspileActionHandler,
   type WorkerActionHandler,
 } from './tsWorker';
@@ -50,12 +54,34 @@ worker.addEventListener(
   },
 );
 
-async function checkTypes(code: string) {
-  return exec<CheckTypesActionHandler>('checkTypes', code);
-}
+const mergeParts = (parts: SymbolDisplayPart[] | undefined) =>
+  parts?.map((part) => part.text).join('') ?? '';
 
-async function transpile(code: string) {
-  return exec<TranspileActionHandler>('transpile', code);
-}
+export const typeScriptService: LanguageService = {
+  getQuickInfo: async (code, cursorOffset) => {
+    const quickInfo = await exec<GetQuickInfoActionHandler>(
+      'getQuickInfo',
+      code,
+      cursorOffset,
+    );
 
-export const typeScriptService = { checkTypes, transpile };
+    if (quickInfo === undefined) {
+      return undefined;
+    }
+
+    const { displayParts, documentation } = quickInfo;
+
+    const body = mergeParts(documentation);
+
+    return (
+      <>
+        <section>
+          {highlightCode(mergeParts(displayParts), 'typescript', 'react')}
+        </section>
+        {body && <section style={{ marginTop: '1rem' }}>{body}</section>}
+      </>
+    );
+  },
+  lint: async (code) => exec<LintActionHandler>('lint', code),
+  transpile: async (code) => exec<TranspileActionHandler>('transpile', code),
+};

@@ -14,5 +14,5 @@ export const Loader: FC<LoaderProps> = ({ onStateChange }) => {
     };
   }, [onStateChange]);
 
-  return <Spinner color="#b8babc" />;
+  return <Spinner color="#c3c3c3" />;
 };

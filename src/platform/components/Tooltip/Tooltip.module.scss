@@ -5,6 +5,9 @@
   z-index: 900;
   align-content: center;
   user-select: none;
-  transform: translateY(-50%);
   pointer-events: none;
+}
+
+.right {
+  transform: translateY(-50%);
 }

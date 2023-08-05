@@ -8,8 +8,6 @@
 }
 
 .tab {
-  $color: #b8babc;
-
   font-family: $fontFamily;
   font-size: $fontSize;
   position: relative;
@@ -17,7 +15,7 @@
   height: 100%;
   padding: 0 $spacingM;
   user-select: none;
-  color: $color;
+  color: $textPrimaryColor;
   border: none;
   outline: none;
   background: none;

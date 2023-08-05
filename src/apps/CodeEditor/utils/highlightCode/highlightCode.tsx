@@ -113,11 +113,22 @@ function processElements(
     (token): token is ProcessedToken => typeof token !== 'string',
   );
 
-  tokens
-    .filter((token) => (token as Token).content === ';')
-    .forEach((token) => {
-      (token as Token).type = 'keyword';
-    });
+  walk(tokens, (token) => {
+    // Fixes keywords
+    if (token.content === ';') {
+      token.type = 'keyword';
+    }
+
+    // Fixes builtins
+    if (
+      token.type === 'builtin' &&
+      ['Array', 'Function', 'Promise', 'console'].includes(
+        token.content as string,
+      )
+    ) {
+      token.type = 'other';
+    }
+  });
 
   if (cursorOffset !== undefined) {
     const bracketNearCursor = tokens.find(
@@ -184,6 +195,7 @@ function reactify(
           ? offset
           : undefined
       }
+      data-type={type}
       key={`${type}-${offset}`}
     >
       {reactify(content)}
@@ -206,4 +218,21 @@ function stringify(
   return styles[type]
     ? `<span class="${styles[type]}">${stringify(content)}</span>`
     : stringify(content);
+}
+
+function walk(
+  elements: (string | Token)[],
+  callback: (token: Token) => unknown,
+): void {
+  elements
+    .filter((element): element is Token => typeof element !== 'string')
+    .forEach((token) => {
+      callback(token);
+
+      if (Array.isArray(token.content)) {
+        walk(token.content, callback);
+      } else if (typeof token.content !== 'string') {
+        callback(token.content);
+      }
+    });
 }

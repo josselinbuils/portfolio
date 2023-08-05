@@ -51,11 +51,12 @@
   font-style: italic;
 }
 
-.keyword,
-.boolean,
 .constant,
-.null,
+.boolean,
+.builtin,
+.keyword,
 .important,
+.null,
 .rule {
   color: #dd891d;
 }

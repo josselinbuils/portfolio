@@ -1,24 +1,20 @@
 import cn from 'classnames';
 import { type FC, useMemo } from 'preact/compat';
+import { type LintIssue } from '@/apps/CodeEditor/interfaces/LanguageService';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './LintIssue.module.scss';
+import styles from './LintIssueHighlight.module.scss';
 
-export type LintIssueLevel = 'error' | 'warning';
-
-export interface LintIssue {
-  length: number;
-  start: number;
-  message: string;
-  level: LintIssueLevel;
-}
-
-export interface LintIssueProps {
+export interface LintIssueHighlightProps {
   code: string;
   issue: LintIssue;
   parent: HTMLTextAreaElement;
 }
 
-export const LintIssue: FC<LintIssueProps> = ({ code, issue, parent }) => {
+export const LintIssueHighlight: FC<LintIssueHighlightProps> = ({
+  code,
+  issue,
+  parent,
+}) => {
   const { length, level, start } = issue;
   const position = useMemo(
     () => getOffsetPosition(code, parent, start),

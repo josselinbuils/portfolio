@@ -13,7 +13,7 @@
   white-space: nowrap;
   color: lighten($backgroundPrimaryColor, 10%);
   border-radius: $radiusXxs;
-  background-color: #b8babc;
+  background-color: $textPrimaryColor;
   box-shadow: 0.2rem 0.2rem black;
 }
 

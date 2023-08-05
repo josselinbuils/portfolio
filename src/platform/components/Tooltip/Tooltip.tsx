@@ -7,6 +7,7 @@ import styles from './Tooltip.module.scss';
 export interface TooltipProps {
   className?: string;
   position: Position;
+  relativePosition?: 'bottom-right' | 'right';
   style?: CSSProperties;
   title: string | JSX.Element;
 }
@@ -14,6 +15,7 @@ export interface TooltipProps {
 export const Tooltip: FC<TooltipProps> = ({
   className,
   position,
+  relativePosition = 'right',
   style,
   title,
 }) => {
@@ -21,7 +23,7 @@ export const Tooltip: FC<TooltipProps> = ({
 
   return (
     <div
-      className={cn(styles.tooltip, className)}
+      className={cn(styles.tooltip, styles[relativePosition], className)}
       style={{
         ...style,
         left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,

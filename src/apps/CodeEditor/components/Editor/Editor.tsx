@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+import { useTooltip } from '@/platform/components/Tooltip/useTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { cancelable } from '@/platform/utils/cancelable';
 import { type ClientCursor } from '../../interfaces/ClientCursor';
@@ -17,16 +18,17 @@ import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
 import { type EditableState } from '../../interfaces/EditableState';
 import { type EditorFile } from '../../interfaces/EditorFile';
+import { type LintIssue } from '../../interfaces/LanguageService';
 import { type Selection } from '../../interfaces/Selection';
 import { createSelection } from '../../utils/createSelection';
+import { getLanguageService } from '../../utils/getLanguageService';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
-import { typeScriptService } from '../../utils/typeScript/typeScriptService';
 import styles from './Editor.module.scss';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
-import { LintIssue } from './components/LintIssue/LintIssue';
+import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
 import {
   type Completion,
   useAutoCompletion,
@@ -45,6 +47,8 @@ import { indent } from './utils/indent';
 import { isCodePortionEnd } from './utils/isCodePortionEnd';
 import { moveLines } from './utils/moveLines';
 import { unindent } from './utils/unindent';
+
+const TOOLTIP_DISPLAY_DELAY_MS = 500;
 
 export interface EditorProps {
   activeFile: EditorFile;
@@ -66,7 +70,7 @@ export const Editor: FC<EditorProps> = ({
   const [cursorColor, setCursorColor] = useState('#f0f0f0');
   const [cursors, setCursors] = useState<ClientCursor[]>([]);
   const [highlightedCode, setHighlightedCode] = useState<JSX.Element>();
-  const [lintIssues, setLintIssues] = useState<any[]>([]);
+  const [lintIssues, setLintIssues] = useState<LintIssue[]>([]);
   const [selection, setSelection] = useState<Selection>(() =>
     createSelection(0),
   );
@@ -108,6 +112,11 @@ export const Editor: FC<EditorProps> = ({
     filename: activeFile.name,
     selection,
   });
+  const { hideTooltip, showTooltip, tooltipElement } = useTooltip({
+    className: styles.infoTooltip,
+    relativePosition: 'bottom-right',
+  });
+  const tooltipTimeoutRef = useRef<number>();
 
   useKeyMap(
     {
@@ -157,19 +166,14 @@ export const Editor: FC<EditorProps> = ({
   useEffect(() => {
     setLintIssues([]);
 
-    if (!['tsx', 'typescript'].includes(activeFile.language)) {
-      return;
-    }
-
+    const languageService = getLanguageService(activeFile.language);
     const [debouncePromise, cancelDebouncePromise] = cancelable(
       new Promise<void>((resolve) => {
         setTimeout(resolve, 100);
       }),
     );
 
-    debouncePromise
-      .then(() => typeScriptService.checkTypes(code))
-      .then(setLintIssues);
+    debouncePromise.then(() => languageService.lint(code)).then(setLintIssues);
 
     return cancelDebouncePromise;
   }, [activeFile.language, code]);
@@ -276,6 +280,68 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
+  function handleMouseMove(event: MouseEvent) {
+    if (tooltipTimeoutRef.current !== undefined) {
+      window.clearTimeout(tooltipTimeoutRef.current);
+    }
+
+    const highlightedElement = (
+      Array.from(
+        codeElementRef.current?.querySelectorAll('[data-offset]') ?? [],
+      ) as HTMLElement[]
+    )
+      .filter((element) => element.firstElementChild === null)
+      .find((element) => {
+        const { offsetX, offsetY } = event;
+        const { offsetHeight, offsetLeft, offsetTop, offsetWidth } = element;
+        const offsetRight = offsetLeft + offsetWidth;
+        const offsetBottom = offsetTop + offsetHeight;
+
+        return (
+          offsetX >= offsetLeft &&
+          offsetX <= offsetRight &&
+          offsetY >= offsetTop &&
+          offsetY <= offsetBottom
+        );
+      });
+
+    if (highlightedElement !== undefined) {
+      if (!tooltipElement) {
+        tooltipTimeoutRef.current = window.setTimeout(async () => {
+          const { clientX: x } = event;
+          const { bottom: y } = highlightedElement.getBoundingClientRect();
+          const languageService = getLanguageService(activeFile.language);
+          const elementCursorOffset = Number(highlightedElement.dataset.offset);
+          const quickInfo = await languageService.getQuickInfo(
+            code,
+            elementCursorOffset,
+          );
+          const elementIssues = lintIssues.filter(
+            ({ start }) => start === elementCursorOffset,
+          );
+
+          if (quickInfo !== undefined) {
+            showTooltip({
+              position: { x, y },
+              title: (
+                <>
+                  {elementIssues.map((issue) => (
+                    <section className={styles.infoTooltipIssue}>
+                      {issue.message}
+                    </section>
+                  ))}
+                  {quickInfo}
+                </>
+              ),
+            });
+          }
+        }, TOOLTIP_DISPLAY_DELAY_MS);
+      }
+    } else if (tooltipElement) {
+      hideTooltip();
+    }
+  }
+
   function handleSelect(event: TargetedEvent): void {
     if (!event.target) {
       return;
@@ -335,7 +401,7 @@ export const Editor: FC<EditorProps> = ({
         scrollTop={scrollTop}
         selection={selection}
       />
-      <div className={styles.code}>
+      <div className={styles.code} onMouseMove={handleMouseMove}>
         <div className={styles.highlightedCode} ref={codeElementRef}>
           {highlightedCode}
         </div>
@@ -353,7 +419,7 @@ export const Editor: FC<EditorProps> = ({
                   />
                 ))}
               {lintIssues.map((issue) => (
-                <LintIssue
+                <LintIssueHighlight
                   code={code}
                   issue={issue}
                   parent={textAreaElementRef.current as HTMLTextAreaElement}
@@ -396,6 +462,7 @@ export const Editor: FC<EditorProps> = ({
         />
       </div>
       {autoCompletionMenuElement}
+      {tooltipElement}
     </div>
   );
 };
