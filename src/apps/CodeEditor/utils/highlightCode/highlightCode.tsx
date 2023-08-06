@@ -208,7 +208,7 @@ function reactify(
     <span
       className={styles[type]}
       data-offset={
-        ['builtin', 'class-name', 'function', 'other'].includes(type)
+        ['builtin', 'class-name', 'function', 'keyword', 'other'].includes(type)
           ? offset
           : undefined
       }

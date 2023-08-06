@@ -315,11 +315,16 @@ export const Editor: FC<EditorProps> = ({
             code,
             elementCursorOffset,
           );
+
+          const elementCursorEndOffset =
+            elementCursorOffset + highlightedElement.innerText.length;
+
           const elementIssues = lintIssues.filter(
-            ({ start }) => start === elementCursorOffset,
+            ({ start }) =>
+              start >= elementCursorOffset && start <= elementCursorEndOffset,
           );
 
-          if (quickInfo !== undefined) {
+          if (quickInfo !== undefined || elementIssues.length > 0) {
             showTooltip({
               position: { x, y },
               title: (

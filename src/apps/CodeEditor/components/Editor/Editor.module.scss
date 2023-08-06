@@ -86,7 +86,7 @@ ul.autoCompletionMenu {
   background: $backgroundPrimaryColor;
 }
 
-.infoTooltipIssue {
+.infoTooltipIssue:not(:last-child) {
   margin-bottom: $spacingM;
 }
 
