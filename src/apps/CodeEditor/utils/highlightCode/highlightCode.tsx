@@ -212,7 +212,6 @@ function reactify(
           ? offset
           : undefined
       }
-      data-type={type}
       key={`${type}-${offset}`}
     >
       {reactify(content)}
