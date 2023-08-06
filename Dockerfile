@@ -1,6 +1,7 @@
 FROM node:18
 
 COPY . portfolio
+COPY .git portfolio/.git
 
 WORKDIR portfolio
 
