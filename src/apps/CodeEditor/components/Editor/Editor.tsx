@@ -293,8 +293,9 @@ export const Editor: FC<EditorProps> = ({
       .filter((element) => element.firstElementChild === null)
       .find((element) => {
         const { offsetX, offsetY } = event;
-        const { offsetHeight, offsetLeft, offsetTop, offsetWidth } = element;
+        const { offsetHeight, offsetLeft, offsetWidth } = element;
         const offsetRight = offsetLeft + offsetWidth;
+        const offsetTop = element.offsetTop - scrollTop;
         const offsetBottom = offsetTop + offsetHeight;
 
         return (
