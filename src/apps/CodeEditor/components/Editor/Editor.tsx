@@ -471,6 +471,12 @@ export const Editor: FC<EditorProps> = ({
             // Waits for selectionEnd and selectionStart to be updated
             setTimeout(() => handleSelect(event), 0);
           }}
+          onMouseLeave={() => {
+            if (tooltipTimeoutRef.current !== undefined) {
+              window.clearTimeout(tooltipTimeoutRef.current);
+            }
+            hideTooltip();
+          }}
           onFocus={() => setActive(true)}
           onSelect={handleSelect}
           onScroll={({ target }) =>
