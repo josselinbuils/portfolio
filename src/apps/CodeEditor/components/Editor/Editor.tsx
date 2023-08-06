@@ -112,7 +112,7 @@ export const Editor: FC<EditorProps> = ({
     filename: activeFile.name,
     selection,
   });
-  const { hideTooltip, showTooltip, tooltipElement } = useTooltip({
+  const { hideTooltip, showTooltip, tooltipElement, tooltipRef } = useTooltip({
     className: styles.infoTooltip,
     relativePosition: 'bottom-right',
   });
@@ -339,6 +339,21 @@ export const Editor: FC<EditorProps> = ({
         }, TOOLTIP_DISPLAY_DELAY_MS);
       }
     } else if (tooltipElement) {
+      const clientRect = tooltipRef.current?.getBoundingClientRect();
+
+      if (clientRect) {
+        const { clientX, clientY } = event;
+        const { left, top, right, bottom } = clientRect;
+
+        if (
+          clientX >= left &&
+          clientX <= right &&
+          clientY >= top &&
+          clientY <= bottom
+        ) {
+          return; // Cursor on the tooltip
+        }
+      }
       hideTooltip();
     }
   }

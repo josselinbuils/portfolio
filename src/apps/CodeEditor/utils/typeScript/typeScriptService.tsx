@@ -1,8 +1,6 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
-import { type SymbolDisplayPart } from 'typescript';
 import { createGUID } from '@/platform/utils/createGUID';
 import { type LanguageService } from '../../interfaces/LanguageService';
-import { highlightCode } from '../highlightCode/highlightCode';
 import {
   type WorkerAction,
   type WorkerActionArgs,
@@ -11,6 +9,7 @@ import {
   type WorkerResponse,
   type WorkerResponseResult,
 } from './interfaces';
+import { renderQuickInfo } from './renderQuickInfo';
 import {
   type GetQuickInfoActionHandler,
   type LintActionHandler,
@@ -22,6 +21,33 @@ const worker = new Worker(new URL('./tsWorker.ts', import.meta.url), {
   type: 'module',
 });
 const deferredMap = new Map<string, Deferred<any>>();
+
+worker.addEventListener(
+  'message',
+  ({ data }: MessageEvent<WorkerResponse<WorkerActionHandler>>) => {
+    const { result, uuid } = data;
+
+    if (deferredMap.has(uuid)) {
+      deferredMap.get(uuid)!.resolve(result);
+      deferredMap.delete(uuid);
+    } else {
+      console.error(`Unknown uuid ${uuid} received with result`, result);
+    }
+  },
+);
+
+export const typeScriptService: LanguageService = {
+  getQuickInfo: async (code, cursorOffset) => {
+    const quickInfo = await exec<GetQuickInfoActionHandler>(
+      'getQuickInfo',
+      code,
+      cursorOffset,
+    );
+    return quickInfo !== undefined ? renderQuickInfo(quickInfo) : undefined;
+  },
+  lint: async (code) => exec<LintActionHandler>('lint', code),
+  transpile: async (code) => exec<TranspileActionHandler>('transpile', code),
+};
 
 async function exec<Handler extends WorkerActionGenericHandler>(
   type: WorkerActionType<Handler>,
@@ -39,49 +65,3 @@ async function exec<Handler extends WorkerActionGenericHandler>(
 
   return deferred.promise;
 }
-
-worker.addEventListener(
-  'message',
-  ({ data }: MessageEvent<WorkerResponse<WorkerActionHandler>>) => {
-    const { result, uuid } = data;
-
-    if (deferredMap.has(uuid)) {
-      deferredMap.get(uuid)!.resolve(result);
-      deferredMap.delete(uuid);
-    } else {
-      console.error(`Unknown uuid ${uuid} received with result`, result);
-    }
-  },
-);
-
-const mergeParts = (parts: SymbolDisplayPart[] | undefined) =>
-  parts?.map((part) => part.text).join('') ?? '';
-
-export const typeScriptService: LanguageService = {
-  getQuickInfo: async (code, cursorOffset) => {
-    const quickInfo = await exec<GetQuickInfoActionHandler>(
-      'getQuickInfo',
-      code,
-      cursorOffset,
-    );
-
-    if (quickInfo === undefined) {
-      return undefined;
-    }
-
-    const { displayParts, documentation } = quickInfo;
-
-    const body = mergeParts(documentation);
-
-    return (
-      <>
-        <section>
-          {highlightCode(mergeParts(displayParts), 'typescript', 'react')}
-        </section>
-        {body && <section style={{ marginTop: '1rem' }}>{body}</section>}
-      </>
-    );
-  },
-  lint: async (code) => exec<LintActionHandler>('lint', code),
-  transpile: async (code) => exec<TranspileActionHandler>('transpile', code),
-};
