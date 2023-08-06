@@ -80,9 +80,9 @@ ul.autoCompletionMenu {
   overflow: auto;
   padding: $spacingS;
   color: $textPrimaryColor;
-  border: 0.1rem solid #2e2e2e;
+  border: 0.1rem solid $borderColorPrimary;
   border-radius: $radiusS;
-  background: lighten($backgroundPrimaryColor, 10%);
+  background: $backgroundPrimaryColor;
 }
 
 .infoTooltipIssue {
