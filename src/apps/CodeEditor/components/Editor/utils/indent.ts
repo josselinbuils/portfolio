@@ -1,8 +1,8 @@
+import { INDENT } from '../../../constants';
 import { type EditableState } from '../../../interfaces/EditableState';
 import { type Selection } from '../../../interfaces/Selection';
 import { createSelection } from '../../../utils/createSelection';
 import { spliceString } from '../../../utils/spliceString';
-import { INDENT } from '../constants';
 import { getCorrectedSelectionEnd } from './getCorrectedSelectionEnd';
 import { getLine } from './getLine';
 import { getLineOffset } from './getLineOffset';

@@ -13,6 +13,7 @@ import {
   type DiagnosticMessageChain,
   type LanguageService as TypeScriptLanguageService,
   type QuickInfo,
+  CompletionTriggerKind,
 } from 'typescript';
 import dom from 'typescript/lib/lib.dom.d?raw';
 import libEs2015Collection from 'typescript/lib/lib.es2015.collection.d?raw';
@@ -28,9 +29,12 @@ import libEs2015SymbolWellKnown from 'typescript/lib/lib.es2015.symbol.wellknown
 import libEs5 from 'typescript/lib/lib.es5.d?raw';
 import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
 import {
-  type LintIssueLevel,
+  type CompletionItem,
+  type Completions,
   type LintIssue,
+  type LintIssueLevel,
 } from '../../interfaces/LanguageService';
+import { decorateCompletionItem } from './decorateCompletionItem';
 import {
   type WorkerAction,
   type WorkerActionGenericHandler,
@@ -76,6 +80,12 @@ export type LintActionHandler = WorkerActionGenericHandler<
   LintIssue[]
 >;
 
+export type GetCompletionsActionHandler = WorkerActionGenericHandler<
+  'getCompletions',
+  [string, number],
+  Completions | undefined
+>;
+
 export type GetQuickInfoActionHandler = WorkerActionGenericHandler<
   'getQuickInfo',
   [string, number],
@@ -89,6 +99,7 @@ export type TranspileActionHandler = WorkerActionGenericHandler<
 >;
 
 export type WorkerActionHandler =
+  | GetCompletionsActionHandler
   | GetQuickInfoActionHandler
   | LintActionHandler
   | TranspileActionHandler;
@@ -99,6 +110,60 @@ onmessage = ({
   const { args, type, uuid } = action;
 
   switch (type) {
+    case 'getCompletions': {
+      const [code, cursorOffset] = args;
+      const tsLanguageService = getTypeScriptLanguageService(code);
+      const completionsAtPosition = tsLanguageService.getCompletionsAtPosition(
+        dummyFilename,
+        cursorOffset,
+        { triggerKind: CompletionTriggerKind.Invoked },
+      );
+      let completions: Completions | undefined;
+
+      if (completionsAtPosition !== undefined) {
+        const { entries, optionalReplacementSpan } = completionsAtPosition;
+
+        if (optionalReplacementSpan !== undefined) {
+          const { start: startOffset } = optionalReplacementSpan;
+          const query = code.slice(startOffset, cursorOffset);
+
+          if (query.length > 0) {
+            const items: CompletionItem[] = entries
+              .filter(({ name }) => name.startsWith(query) && name !== query)
+              .map(({ name }) => decorateCompletionItem({ name, value: name }));
+
+            if (items.length > 0) {
+              completions = { items, startOffset };
+            }
+          }
+        } else {
+          const exactEntry = entries.find(
+            ({ name }) =>
+              name.length > 0 &&
+              code.slice(cursorOffset - name.length, cursorOffset) === name,
+          );
+
+          if (exactEntry !== undefined) {
+            const { name } = exactEntry;
+            const item = decorateCompletionItem({
+              name,
+              value: name,
+            });
+
+            if (item.value.length > name.length) {
+              completions = {
+                items: [item],
+                startOffset: cursorOffset - name.length,
+              };
+            }
+          }
+        }
+      }
+
+      sendWorkerResponse<GetCompletionsActionHandler>(uuid, completions);
+      break;
+    }
+
     case 'getQuickInfo': {
       const [code, cursorOffset] = args;
       const tsLanguageService = getTypeScriptLanguageService(code);
@@ -215,7 +280,9 @@ function getTypeScriptLanguageService(code: string): TypeScriptLanguageService {
     getScriptFileNames: () => Object.keys(files),
     getScriptSnapshot(filename) {
       const contents = this.readFile(filename);
-      return contents ? ScriptSnapshot.fromString(contents) : undefined;
+      return contents !== undefined
+        ? ScriptSnapshot.fromString(contents)
+        : undefined;
     },
     getScriptVersion: () => '0',
     readFile: (filename) => files[filename],

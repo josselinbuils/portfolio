@@ -1,3 +1,4 @@
+import { INDENT } from '@/apps/CodeEditor/constants';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { createSelection } from '@/apps/CodeEditor/utils/createSelection';
 import {
@@ -9,7 +10,6 @@ import {
 } from '@/apps/CodeEditor/utils/diffs';
 import { isIntoBrackets } from '@/apps/CodeEditor/utils/isIntoBrackets';
 import { spliceString } from '@/apps/CodeEditor/utils/spliceString';
-import { INDENT } from '../../constants';
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';
@@ -31,6 +31,12 @@ export function autoEditChange(
   newState: EditableState,
 ): EditableState | undefined {
   const diffs = getDiffs(currentState.code, newState.code);
+  let result: EditableState | undefined = newState;
+
+  if (diffs.length === 0) {
+    return result;
+  }
+
   const [type, start, diff] = diffs.pop() as Diff;
 
   if (diffs.length > 0) {
@@ -50,7 +56,6 @@ export function autoEditChange(
     currentState.code,
     currentState.selection[0],
   );
-  let result: EditableState | undefined = newState;
 
   if (type === DiffType.Addition) {
     if (autoCloseChar !== undefined && allowAutoComplete) {

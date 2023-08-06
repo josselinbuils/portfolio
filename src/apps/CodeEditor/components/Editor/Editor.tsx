@@ -29,10 +29,7 @@ import { Cursor } from './components/Cursor/Cursor';
 import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
-import {
-  type Completion,
-  useAutoCompletion,
-} from './hooks/useAutoCompletion/useAutoCompletion';
+import { type Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
 import { autoEditChange } from './utils/autoEditChange/autoEditChange';
@@ -86,6 +83,7 @@ export const Editor: FC<EditorProps> = ({
     active: autoCompleteActive,
     code,
     cursorOffset,
+    language: activeFile.language,
     lineIndent: getLineIndent(code, cursorOffset),
     menuClassName: styles.autoCompletionMenu,
     onCompletion: applyAutoCompletion,

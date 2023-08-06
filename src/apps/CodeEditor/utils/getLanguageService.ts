@@ -9,7 +9,7 @@ export function getLanguageService(
     case 'javascript':
     case 'jsx':
       return {
-        getQuickInfo: () => undefined,
+        ...typeScriptService,
         lint: () => [],
         transpile: (c) => c,
       };
@@ -20,6 +20,7 @@ export function getLanguageService(
 
     default:
       return {
+        getCompletions: () => undefined,
         getQuickInfo: () => undefined,
         lint: () => [],
         transpile: () => '', // Not executable

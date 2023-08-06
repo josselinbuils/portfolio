@@ -2,6 +2,8 @@ import { type SupportedLanguage } from './interfaces/SupportedLanguage';
 
 export const BRACKET_GROUPS = ['{}', '()', '[]'];
 
+export const INDENT = '  ';
+
 export const SUPPORTED_LANGUAGES: {
   language: SupportedLanguage;
   label: string;

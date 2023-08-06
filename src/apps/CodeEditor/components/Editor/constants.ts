@@ -14,5 +14,3 @@ export const END_CODE_PORTION_CHARS = [
   '.',
   undefined,
 ];
-
-export const INDENT = '  ';

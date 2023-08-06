@@ -11,6 +11,7 @@ import {
 } from './interfaces';
 import { renderQuickInfo } from './renderQuickInfo';
 import {
+  type GetCompletionsActionHandler,
   type GetQuickInfoActionHandler,
   type LintActionHandler,
   type TranspileActionHandler,
@@ -37,6 +38,8 @@ worker.addEventListener(
 );
 
 export const typeScriptService: LanguageService = {
+  getCompletions: async (code, cursorOffset) =>
+    exec<GetCompletionsActionHandler>('getCompletions', code, cursorOffset),
   getQuickInfo: async (code, cursorOffset) => {
     const quickInfo = await exec<GetQuickInfoActionHandler>(
       'getQuickInfo',
