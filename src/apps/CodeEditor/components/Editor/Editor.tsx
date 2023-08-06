@@ -25,8 +25,9 @@ import { getLanguageService } from '../../utils/getLanguageService';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
 import styles from './Editor.module.scss';
+import { ActiveLineHighlight } from './components/ActiveLineHighlight/ActiveLineHighlight';
+import { CharacterLimitLine } from './components/CharacterLimitLine/CharacterLimitLine';
 import { Cursor } from './components/Cursor/Cursor';
-import { LineHighlight } from './components/LineHighlight/LineHighlight';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
 import { type Completion, useAutoCompletion } from './hooks/useAutoCompletion';
@@ -444,11 +445,12 @@ export const Editor: FC<EditorProps> = ({
                   parent={textAreaElementRef.current as HTMLTextAreaElement}
                 />
               ))}
-              <LineHighlight
+              <ActiveLineHighlight
                 code={code}
                 parent={textAreaElementRef.current as HTMLTextAreaElement}
                 selection={selection}
               />
+              <CharacterLimitLine />
             </>
           )}
         </div>

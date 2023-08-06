@@ -1,0 +1,9 @@
+@import '../../../../_constants.scss';
+
+.characterLimitLine {
+  position: absolute;
+  top: 0;
+  left: calc(0.7rem + 80ch);
+  height: 100%;
+  border-right: 0.1rem solid #484848;
+}

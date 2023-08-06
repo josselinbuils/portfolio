@@ -20,18 +20,6 @@ ul.autoCompletionMenu {
 .code {
   position: relative;
   flex: 1 1 100%;
-
-  &::before {
-    font-family: $fontFamily;
-    font-size: $fontSize;
-    line-height: $lineHeight;
-    position: absolute;
-    top: 0;
-    left: calc(0.7rem + 80ch);
-    height: 100%;
-    content: '';
-    border-right: 0.1rem solid #484848;
-  }
 }
 
 .editor {
