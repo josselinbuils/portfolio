@@ -1,11 +1,13 @@
 FROM node:18
 
 COPY . portfolio
-COPY .git portfolio/.git
 
 WORKDIR portfolio
 
-RUN yarn install --emoji --frozen-lockfile --no-progress && \
+RUN git clone --bare https://github.com/josselinbuils/portfolio.git .git && \
+    git config --local --bool core.bare false && \
+    git reset HEAD -- . && \
+    yarn install --emoji --frozen-lockfile --no-progress && \
     yarn build
 
 CMD ["yarn", "start"]
