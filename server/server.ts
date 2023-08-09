@@ -6,6 +6,7 @@ import {
   ASSETS_MAX_AGE_MS,
   DIST_ASSETS_DIR,
   DIST_DIR,
+  HTTP_NOT_FOUND,
   PUBLIC_DIR,
 } from './constants';
 import { startServer } from './startServer';
@@ -32,4 +33,8 @@ startServer(async (router) => {
   router.use(ASSETS_URL_PATH, express.static(DIST_ASSETS_PATH, options));
   router.use(express.static(DIST_PATH));
   router.use(express.static(PUBLIC_PATH, options));
+
+  router.all('*', (_, res) => {
+    res.status(HTTP_NOT_FOUND).sendFile(path.join(DIST_PATH, '404.html'));
+  });
 });
