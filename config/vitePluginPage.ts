@@ -87,24 +87,28 @@ export function vitePluginPage(): Plugin {
       if (id.startsWith(VIRTUAL_ENTRY_CLIENT_PREFIX)) {
         const pageName = id.replace(VIRTUAL_ENTRY_CLIENT_PREFIX, '');
         return `\
-import { hydrate } from 'preact';
+import { createElement, hydrate } from 'preact/compat';
 import Page from '${VIRTUAL_ENTRY_PAGE_PREFIX}${pageName}';
 
-hydrate(Page(), document.getElementById('app'));
+hydrate(createElement(Page, null), document.getElementById('app'));
 `;
       }
       if (id.startsWith(VIRTUAL_ENTRY_SERVER_PREFIX)) {
         const pageName = id.replace(VIRTUAL_ENTRY_SERVER_PREFIX, '');
         return `\
+import { createElement } from 'preact/compat';
 import { renderToString } from 'preact-render-to-string';
 import Document from '${VIRTUAL_DOCUMENT_ID}';
 import Page from '${VIRTUAL_ENTRY_PAGE_PREFIX}${pageName}';
 
 export function render() {
-  return renderToString(Document({
-    children: Page(),
-    entryScriptUrl: '${VIRTUAL_ENTRY_CLIENT_PREFIX}${pageName}'
-  }));
+  return renderToString(
+   createElement(
+     Document,
+     { entryScriptUrl: '${VIRTUAL_ENTRY_CLIENT_PREFIX}${pageName}' },
+     createElement(Page, null)
+   )
+  );
 }
 `;
       }
