@@ -1,14 +1,19 @@
+import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
+import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
+import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import shader from './shaders.wgsl?raw';
 
 export class WebGPUFrameRenderer implements Renderer {
   private context?: GPUCanvasContext;
   private device?: GPUDevice;
+  private lut?: VOILUT;
   private pipeline?: GPURenderPipeline;
   private texture?: { id: string; instance: GPUTexture };
+  private unsubscribeToViewportUpdates?: () => void;
 
   constructor(private canvas: HTMLCanvasElement) {
     if (!navigator.gpu) {
@@ -19,65 +24,141 @@ export class WebGPUFrameRenderer implements Renderer {
   destroy(): void {
     this.device?.destroy();
     this.texture?.instance.destroy();
+    this.unsubscribeToViewportUpdates?.();
     delete this.context;
     delete this.device;
     delete this.pipeline;
     delete this.texture;
   }
 
+  async init(viewport: Viewport): Promise<void> {
+    const adapter = await navigator.gpu.requestAdapter();
+
+    if (!adapter) {
+      throw new Error('No appropriate GPUAdapter found.');
+    }
+
+    this.device = await adapter.requestDevice();
+
+    const context = this.canvas.getContext('webgpu');
+
+    if (context === null) {
+      throw new Error('Unable to get WebGPU context.');
+    }
+
+    context.configure({
+      device: this.device,
+      format: 'bgra8unorm',
+    });
+
+    this.context = context;
+
+    const shaderModule = this.device.createShaderModule({
+      label: 'Shader',
+      code: shader,
+    });
+
+    const bindGroupLayout = this.device.createBindGroupLayout({
+      entries: [
+        {
+          binding: 0,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          sampler: { type: 'filtering' },
+        },
+        {
+          binding: 1,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          texture: { sampleType: 'float' },
+        },
+        {
+          binding: 2,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 3,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 4,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 5,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 6,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 7,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 8,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 9,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 10,
+          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+          buffer: { type: 'read-only-storage' },
+        },
+      ],
+    });
+
+    this.pipeline = this.device.createRenderPipeline({
+      label: 'Render pipeline',
+      layout: this.device.createPipelineLayout({
+        bindGroupLayouts: [bindGroupLayout],
+      }),
+      vertex: {
+        module: shaderModule,
+        entryPoint: 'vertex',
+      },
+      fragment: {
+        module: shaderModule,
+        entryPoint:
+          viewport.dataset.frames[0].imageFormat === 'rgb'
+            ? 'rgbFragment'
+            : 'grayscaleFragment',
+        targets: [{ format: 'bgra8unorm' }],
+      },
+    });
+
+    this.unsubscribeToViewportUpdates = viewport.onUpdate.subscribe((key) => {
+      if (key === 'lutComponents') {
+        delete this.lut;
+      }
+    });
+  }
+
   async render(viewport: Viewport): Promise<void> {
+    if (
+      this.context === undefined ||
+      this.device === undefined ||
+      this.pipeline === undefined
+    ) {
+      return;
+    }
+
     const { dataset, camera, height, width, windowCenter, windowWidth } =
       viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
-    const { id, rescaleIntercept, rescaleSlope } = frame;
+    const { id, imageFormat, rescaleIntercept, rescaleSlope } = frame;
 
     validateCamera2D(frame, camera);
-
-    if (this.device === undefined) {
-      const adapter = await navigator.gpu.requestAdapter();
-
-      if (!adapter) {
-        throw new Error('No appropriate GPUAdapter found.');
-      }
-
-      this.device = await adapter.requestDevice();
-    }
-
-    if (this.context === undefined) {
-      const context = this.canvas.getContext('webgpu');
-
-      if (context === null) {
-        throw new Error('Unable to get WebGPU context.');
-      }
-
-      context.configure({
-        device: this.device,
-        format: navigator.gpu.getPreferredCanvasFormat(),
-      });
-
-      this.context = context;
-    }
-
-    if (this.pipeline === undefined) {
-      const shaderModule = this.device.createShaderModule({
-        label: 'Shader',
-        code: shader,
-      });
-
-      this.pipeline = this.device.createRenderPipeline({
-        label: 'Render pipeline',
-        layout: 'auto',
-        vertex: {
-          module: shaderModule,
-          entryPoint: 'vertex',
-        },
-        fragment: {
-          module: shaderModule,
-          entryPoint: 'grayscaleFragment',
-          targets: [{ format: navigator.gpu.getPreferredCanvasFormat() }],
-        },
-      });
-    }
 
     if (this.texture === undefined || this.texture.id !== id) {
       this.texture?.instance.destroy();
@@ -85,6 +166,16 @@ export class WebGPUFrameRenderer implements Renderer {
         id,
         instance: this.createTexture(frame),
       };
+    }
+
+    if (
+      imageFormat !== 'rgb' &&
+      (this.lut === undefined || this.lut.windowWidth !== windowWidth)
+    ) {
+      this.lut =
+        viewport.lutComponents !== undefined
+          ? loadVOILUT(viewport.lutComponents, windowWidth)
+          : getDefaultVOILUT(windowWidth);
     }
 
     const renderingProperties = getRenderingProperties(viewport);
@@ -119,6 +210,10 @@ export class WebGPUFrameRenderer implements Renderer {
         this.createBufferResource(new Float32Array([clipY])),
         this.createBufferResource(new Float32Array([clipWidth])),
         this.createBufferResource(new Float32Array([clipHeight])),
+        this.createBufferResource(
+          new Float32Array(this.lut?.table.flat() ?? []),
+          GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        ),
       ].map((resource, binding) => ({ binding, resource })),
     });
 
@@ -140,15 +235,15 @@ export class WebGPUFrameRenderer implements Renderer {
     this.device.queue.submit([encoder.finish()]);
   }
 
-  private createBufferResource(source: BufferSource): GPUBufferBinding {
+  private createBufferResource(
+    source: BufferSource,
+    usage = GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  ): GPUBufferBinding {
     if (this.device === undefined) {
       throw new Error('No device');
     }
 
-    const buffer = this.device.createBuffer({
-      size: source.byteLength,
-      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-    });
+    const buffer = this.device.createBuffer({ size: source.byteLength, usage });
 
     this.device.queue.writeBuffer(buffer, 0, source);
 

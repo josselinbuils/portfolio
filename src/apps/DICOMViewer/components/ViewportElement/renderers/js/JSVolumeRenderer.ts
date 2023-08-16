@@ -25,11 +25,10 @@ const skinLUTComponents = [
 ] as LUTComponent[];
 
 export class JSVolumeRenderer implements Renderer {
-  private background = 0;
-  // eslint-disable-next-line react/static-property-placement
   private readonly context: CanvasRenderingContext2D;
-  private lut?: { table: number[] | number[][]; windowWidth: number };
+  private lut?: VOILUT;
   private readonly renderingContext: CanvasRenderingContext2D;
+  private unsubscribeToViewportUpdates?: () => void;
 
   private static getImageWorldBasis(viewport: Viewport): number[][] {
     const { camera, dataset } = viewport;
@@ -133,6 +132,20 @@ export class JSVolumeRenderer implements Renderer {
     this.renderingContext = renderingContext;
   }
 
+  destroy() {
+    this.unsubscribeToViewportUpdates?.();
+    delete (this as any).context;
+    delete (this as any).renderingContext;
+  }
+
+  init(viewport: Viewport) {
+    this.unsubscribeToViewportUpdates = viewport.onUpdate.subscribe((key) => {
+      if (key === 'lutComponents') {
+        delete this.lut;
+      }
+    });
+  }
+
   async render(viewport: Viewport): Promise<void> {
     const { dataset, windowWidth } = viewport;
 
@@ -176,55 +189,27 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (viewport.viewType === ViewType.Oblique) {
-      this.background = 10;
-      await displayCube(viewport, this.canvas, renderPixels as () => void);
+      displayCube(viewport, this.canvas, renderPixels as () => void);
     } else {
-      this.background = 0;
       this.context.fillStyle = 'black';
       this.context.fillRect(0, 0, viewport.width, viewport.height);
       await renderPixels();
     }
   }
 
-  private createPixelValueGetter(
-    leftLimit: number,
-    rightLimit: number,
-  ): (rawValue: number, baseAlpha?: number) => number {
-    return Array.isArray((this.lut as VOILUT).table[0])
-      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
-      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
-  }
-
-  private getColorPixelValue(
+  private getPixelValue(
     leftLimit: number,
     rightLimit: number,
     rawValue: number,
     baseAlpha = 255,
   ): number {
-    const color = (this.lut as VOILUT).table[
-      Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
-    ] as number[];
+    const color =
+      this.lut!.table[
+        Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
+      ];
 
     const alpha = rawValue < -(Number.MAX_SAFE_INTEGER - 1) ? 0 : baseAlpha;
     return color[0] | (color[1] << 8) | (color[2] << 16) | (alpha << 24);
-  }
-
-  private getMonochromePixelValue(
-    leftLimit: number,
-    rightLimit: number,
-    rawValue: number,
-    baseAlpha = 255,
-  ): number {
-    let intensity = 250;
-
-    if (rawValue < leftLimit) {
-      intensity = this.background;
-    } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILUT).table[rawValue - leftLimit] as number;
-    }
-
-    const alpha = rawValue < -(Number.MAX_SAFE_INTEGER - 1) ? 0 : baseAlpha;
-    return intensity | (intensity << 8) | (intensity << 16) | (alpha << 24);
   }
 
   private async render3DImagePixels(
@@ -256,7 +241,7 @@ export class JSVolumeRenderer implements Renderer {
       (displayWidth * displayHeight) / 4,
     );
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
-    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     const { camera, dataset } = viewport;
     const basis = camera.getWorldBasis();
@@ -380,7 +365,7 @@ export class JSVolumeRenderer implements Renderer {
     );
     const [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
-    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
     let dataIndex = 0;
 
     for (let y = displayY0; y <= displayY1; y++) {
@@ -435,7 +420,7 @@ export class JSVolumeRenderer implements Renderer {
     yAxis = V(yAxis).mul(displayHeight / imageHeight);
 
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
-    const getPixelValue = this.createPixelValueGetter(leftLimit, rightLimit);
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
     let dataIndex = 0;
 
     for (let y = imageY0; y <= imageY1; y++) {

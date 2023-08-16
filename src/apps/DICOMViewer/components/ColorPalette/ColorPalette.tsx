@@ -14,7 +14,13 @@ const baseLUTComponents = [
   { id: '2', start: 10, end: 135, color: [255, 0, 0] },
 ] as LUTComponent[];
 
-export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
+export interface ColorPaletteProps {
+  onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
+}
+
+export const ColorPalette: FC<ColorPaletteProps> = ({
+  onLUTComponentsUpdate,
+}) => {
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
   const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
     baseLUTComponents.map((component) => ({ ...component })),
@@ -137,7 +143,3 @@ export const ColorPalette: FC<Props> = ({ onLUTComponentsUpdate }) => {
     </div>
   );
 };
-
-interface Props {
-  onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
-}

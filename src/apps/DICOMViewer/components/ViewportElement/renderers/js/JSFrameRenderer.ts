@@ -17,13 +17,28 @@ import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 export class JSFrameRenderer implements Renderer {
   // eslint-disable-next-line react/static-property-placement
   private readonly context: CanvasRenderingContext2D;
-  private lut?: { table: number[] | number[][]; windowWidth: number };
+  private lut?: VOILUT;
   private readonly renderingContext: CanvasRenderingContext2D;
+  private unsubscribeToViewportUpdates?: () => void;
 
   constructor(canvas: HTMLCanvasElement) {
     const { context, renderingContext } = getCanvasRenderingContexts(canvas);
     this.context = context;
     this.renderingContext = renderingContext;
+  }
+
+  destroy() {
+    this.unsubscribeToViewportUpdates?.();
+    delete (this as any).context;
+    delete (this as any).renderingContext;
+  }
+
+  init(viewport: Viewport) {
+    this.unsubscribeToViewportUpdates = viewport.onUpdate.subscribe((key) => {
+      if (key === 'lutComponents') {
+        delete this.lut;
+      }
+    });
   }
 
   render(viewport: Viewport): void {
@@ -78,32 +93,16 @@ export class JSFrameRenderer implements Renderer {
     }
   }
 
-  private getColorPixelValue(
+  private getPixelValue(
     leftLimit: number,
     rightLimit: number,
     rawValue: number,
   ): number {
-    const color = (this.lut as VOILUT).table[
-      Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
-    ] as number[];
-
+    const color =
+      this.lut!.table[
+        Math.max(Math.min(rawValue - leftLimit, rightLimit - leftLimit - 1), 0)
+      ];
     return color[0] | (color[1] << 8) | (color[2] << 16) | (255 << 24);
-  }
-
-  private getMonochromePixelValue(
-    leftLimit: number,
-    rightLimit: number,
-    rawValue: number,
-  ): number {
-    let intensity = 255;
-
-    if (rawValue < leftLimit) {
-      intensity = 0;
-    } else if (rawValue < rightLimit) {
-      intensity = (this.lut as VOILUT).table[rawValue - leftLimit] as number;
-    }
-
-    return intensity | (intensity << 8) | (intensity << 16) | (255 << 24);
   }
 
   private renderImagePixels(
@@ -128,9 +127,7 @@ export class JSFrameRenderer implements Renderer {
     } = imageSpace as ImageSpaceCoordinates;
 
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
-    const getPixelValue = Array.isArray((this.lut as VOILUT).table[0])
-      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
-      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     let dataIndex = 0;
 
@@ -206,9 +203,7 @@ export class JSFrameRenderer implements Renderer {
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
-    const getPixelValue = Array.isArray((this.lut as VOILUT).table[0])
-      ? this.getColorPixelValue.bind(this, leftLimit, rightLimit)
-      : this.getMonochromePixelValue.bind(this, leftLimit, rightLimit);
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     let dataIndex = 0;
 

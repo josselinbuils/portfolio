@@ -8,6 +8,7 @@
 @group(0) @binding(7) var<uniform> clipY: f32;
 @group(0) @binding(8) var<uniform> clipWidth: f32;
 @group(0) @binding(9) var<uniform> clipHeight: f32;
+@group(0) @binding(10) var<storage, read> lut: array<f32>;
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
@@ -35,19 +36,14 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
 
 @fragment
 fn grayscaleFragment(input: VertexOutput) -> @location(0) vec4f {
-  let s = textureSample(texture, textureSampler, input.textCoord);
+  let texSample = textureSample(texture, textureSampler, input.textCoord);
+  let rawValue = ((texSample[1] - step(0.5, texSample[1])) * 255 + texSample[0] - step(0.5, texSample[1])) * 255 * rescaleSlope + rescaleIntercept;
+  let leftLimit = windowCenter - windowWidth / 2;
+  let lutIndex = u32(floor(clamp(rawValue - leftLimit, 0, windowWidth - 1)) * 3);
+  return vec4(lut[lutIndex] / 255, lut[lutIndex + 1] / 255, lut[lutIndex + 2] / 255, 1);
+}
 
-  // Compute pixel raw value
-  var intensity = ((s[1] - step(0.5, s[1])) * 255 + s[0] - step(0.5, s[1])) * 255;
-
-  // Apply rescale slope and intercept
-  intensity = intensity * rescaleSlope + rescaleIntercept;
-
-  // Apply windowing
-  intensity = (intensity - (windowCenter - 0.5)) / (windowWidth - 1) + 0.5;
-
-  // Clamp intensity
-  intensity = clamp(intensity, 0, 1);
-
-  return vec4(intensity, intensity, intensity, 1);
+@fragment
+fn rgbFragment(input: VertexOutput) -> @location(0) vec4f {
+  return textureSample(texture, textureSampler, input.textCoord);
 }

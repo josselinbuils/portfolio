@@ -1,4 +1,4 @@
 export interface VOILUT {
-  table: number[] | number[][];
+  table: number[][];
   windowWidth: number;
 }

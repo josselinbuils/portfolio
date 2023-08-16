@@ -47,38 +47,14 @@ export const ViewportElement: FC<ViewportElementProps> = ({
     let lastTime = 0;
     let requestID: number;
 
-    Promise.resolve()
-      .then<new (canvas: HTMLCanvasElement) => Renderer>(() => {
-        switch (viewport.rendererType) {
-          case RendererType.JavaScript:
-            if (viewport.viewType === ViewType.Native) {
-              return import('./renderers/js/JSFrameRenderer').then(
-                ({ JSFrameRenderer }) => JSFrameRenderer,
-              );
-            }
-            return import('./renderers/js/JSVolumeRenderer').then(
-              ({ JSVolumeRenderer }) => JSVolumeRenderer,
-            );
-
-          case RendererType.WebGL:
-            return import('./renderers/webgl/WebGLRenderer').then(
-              ({ WebGLRenderer }) => WebGLRenderer,
-            );
-
-          case RendererType.WebGPU:
-            return import('./renderers/webgpu/WebGPUFrameRenderer').then(
-              ({ WebGPUFrameRenderer }) => WebGPUFrameRenderer,
-            );
-
-          default:
-            throw new Error('Unknown renderer type');
-        }
-      })
-      .then((ViewportRenderer) => {
-        renderer = new ViewportRenderer(canvasElement);
+    getViewportRenderer(viewport)
+      .then(async (ViewportRenderer) => {
+        const newRenderer = new ViewportRenderer(canvasElement);
+        await newRenderer.init?.(viewport);
+        renderer = newRenderer;
       })
       .catch((error) => {
-        onError(`Unable to instantiate ${viewport.rendererType} renderer`);
+        onError(`Unable to instantiate ${viewport.rendererType} renderer.`);
         console.error(error);
       });
 
@@ -189,3 +165,25 @@ export const ViewportElement: FC<ViewportElementProps> = ({
     </div>
   );
 };
+
+async function getViewportRenderer(
+  viewport: Viewport,
+): Promise<new (canvas: HTMLCanvasElement) => Renderer> {
+  switch (viewport.rendererType) {
+    case RendererType.JavaScript:
+      if (viewport.viewType === ViewType.Native) {
+        return (await import('./renderers/js/JSFrameRenderer')).JSFrameRenderer;
+      }
+      return (await import('./renderers/js/JSVolumeRenderer')).JSVolumeRenderer;
+
+    case RendererType.WebGL:
+      return (await import('./renderers/webgl/WebGLRenderer')).WebGLRenderer;
+
+    case RendererType.WebGPU:
+      return (await import('./renderers/webgpu/WebGPUFrameRenderer'))
+        .WebGPUFrameRenderer;
+
+    default:
+      throw new Error('Unknown renderer type');
+  }
+}

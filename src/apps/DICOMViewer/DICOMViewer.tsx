@@ -5,7 +5,6 @@ import {
   useLayoutEffect,
   useState,
 } from 'preact/compat';
-import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { MouseButton } from '@/platform/constants';
@@ -17,6 +16,7 @@ import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { MouseTool, RendererType, ViewType } from './constants';
 import { type Annotations } from './interfaces/Annotations';
+import { type LUTComponent } from './interfaces/LUTComponent';
 import { type ViewportStats } from './interfaces/ViewportStats';
 import { type Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
@@ -43,7 +43,6 @@ const DICOMViewer: WindowComponent = ({
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>();
   const [rendererType, setRendererType] = useState<RendererType>(
     DEFAULT_RENDERER_TYPE,
   );
@@ -76,14 +75,6 @@ const DICOMViewer: WindowComponent = ({
       }
     }
   }, [dataset, rendererType]);
-
-  useLayoutEffect(() => {
-    setViewport((currentViewport) => {
-      if (currentViewport !== undefined) {
-        return currentViewport.clone({ lutComponents });
-      }
-    });
-  }, [lutComponents]);
 
   useLayoutEffect(() => {
     if (viewport === undefined) {
@@ -128,12 +119,20 @@ const DICOMViewer: WindowComponent = ({
     }
   }, [viewport]);
 
+  const setLutComponents = useCallback(
+    (lutComponents: LUTComponent[] | undefined) => {
+      if (viewport !== undefined) {
+        viewport.lutComponents = lutComponents;
+      }
+    },
+    [viewport],
+  );
+
   function back(): void {
     if (dataset) {
       dataset.destroy();
       setAnnotations({});
       setDataset(undefined);
-      setLUTComponents(undefined);
       setRendererType(DEFAULT_RENDERER_TYPE);
       setViewport(undefined);
       setViewportStats(undefined);
@@ -171,11 +170,14 @@ const DICOMViewer: WindowComponent = ({
             onStatsUpdate={setViewportStats}
             viewport={viewport}
           />
-          {showTools && rendererType === RendererType.JavaScript && (
-            <Suspense fallback={null}>
-              <ColorPalette onLUTComponentsUpdate={setLUTComponents} />
-            </Suspense>
-          )}
+          {showTools &&
+            [RendererType.JavaScript, RendererType.WebGPU].includes(
+              rendererType,
+            ) && (
+              <Suspense fallback={null}>
+                <ColorPalette onLUTComponentsUpdate={setLutComponents} />
+              </Suspense>
+            )}
           <AnnotationsElement
             annotations={annotations}
             availableViewTypes={getAvailableViewTypes(
@@ -276,9 +278,7 @@ const DICOMViewer: WindowComponent = ({
       }
     }
 
-    setViewport(
-      Viewport.create(dataset, viewType, rendererType, lutComponents),
-    );
+    setViewport(Viewport.create(dataset, viewType, rendererType));
   }
 
   return (
