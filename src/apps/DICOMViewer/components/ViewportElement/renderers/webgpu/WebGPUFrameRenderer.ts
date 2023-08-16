@@ -5,7 +5,7 @@ import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import shader from './frameShaders.wgsl?raw';
+import shaders from './frameShaders.wgsl?raw';
 
 export class WebGPUFrameRenderer implements Renderer {
   private context?: GPUCanvasContext;
@@ -54,8 +54,8 @@ export class WebGPUFrameRenderer implements Renderer {
     this.context = context;
 
     const shaderModule = this.device.createShaderModule({
-      label: 'Shader',
-      code: shader,
+      label: 'Shaders',
+      code: shaders,
     });
 
     const bindGroupLayout = this.device.createBindGroupLayout({
@@ -222,16 +222,14 @@ export class WebGPUFrameRenderer implements Renderer {
     const texture = this.device.createTexture({
       dimension: '2d',
       size: [columns, rows],
-      format: 'rgba8unorm',
+      format: 'rg8unorm',
       usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
     });
 
-    const int32PixelData = new Int32Array(pixelData);
-
     this.device.queue.writeTexture(
       { texture },
-      new Uint8Array(int32PixelData.buffer, int32PixelData.byteOffset),
-      { bytesPerRow: columns * Int32Array.BYTES_PER_ELEMENT },
+      pixelData,
+      { bytesPerRow: columns * Int16Array.BYTES_PER_ELEMENT },
       { width: columns, height: rows },
     );
 
