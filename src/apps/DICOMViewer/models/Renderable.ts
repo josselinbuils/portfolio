@@ -2,15 +2,14 @@ import { Subject } from '@josselinbuils/utils/Subject';
 import { Model } from './Model';
 
 export class Renderable extends Model {
-  onUpdate!: Subject<void>;
+  onUpdate!: Subject<string>;
 
   private dirty!: boolean;
 
   decorateProperties(): void {
+    const self = this;
+
     for (const [key, startValue] of Object.entries(this)) {
-      if (startValue === undefined) {
-        continue;
-      }
       let value = startValue;
 
       Object.defineProperty(this, key, {
@@ -21,25 +20,25 @@ export class Renderable extends Model {
           if (newValue !== value) {
             value = newValue;
 
-            if (value !== undefined && value.onUpdate !== undefined) {
-              value.onUpdate.subscribe(() => this.makeDirty());
+            if (isRenderable(value)) {
+              value.onUpdate.subscribe(() => self.makeDirty(key));
             }
-            this.makeDirty();
+            self.makeDirty(key);
           }
         },
       });
     }
     this.dirty = true;
-    this.onUpdate = new Subject<void>();
+    this.onUpdate = new Subject();
   }
 
-  fillProperties(config: any): void {
+  fillProperties<ChildType>(config: Partial<ChildType>): void {
     for (const [key, value] of Object.entries(config)) {
       if (value !== undefined) {
         (this as any)[key] = value;
 
-        if ((value as any).onUpdate !== undefined) {
-          (value as Renderable).onUpdate.subscribe(() => this.makeDirty());
+        if (isRenderable(value)) {
+          value.onUpdate.subscribe(() => this.makeDirty(key));
         }
       }
     }
@@ -53,17 +52,18 @@ export class Renderable extends Model {
     this.dirty = false;
 
     for (const propertyValue of Object.values(this)) {
-      if (
-        propertyValue !== undefined &&
-        typeof propertyValue.makeClean === 'function'
-      ) {
+      if (isRenderable(propertyValue)) {
         propertyValue.makeClean();
       }
     }
   }
 
-  private makeDirty(): void {
+  private makeDirty(key: string): void {
     this.dirty = true;
-    this.onUpdate.next();
+    this.onUpdate.next(key);
   }
+}
+
+function isRenderable(value: unknown): value is Renderable {
+  return (value as Renderable)?.onUpdate !== undefined;
 }

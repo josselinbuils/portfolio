@@ -7,6 +7,7 @@ module.exports = {
       { fixStyle: 'inline-type-imports' },
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       { ignoreRestSiblings: true },

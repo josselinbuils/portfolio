@@ -7,13 +7,24 @@ import { type Dataset } from './Dataset';
 import { Renderable } from './Renderable';
 import { type Volume } from './Volume';
 
-const MANDATORY_FIELDS = ['camera', 'dataset', 'viewType'];
+const MANDATORY_FIELDS: readonly (keyof Viewport)[] = [
+  'camera',
+  'dataset',
+  'viewType',
+];
+const SENSITIVE_FIELDS: readonly (keyof Viewport)[] = [
+  'camera',
+  'dataset',
+  'height',
+  'viewType',
+  'width',
+];
 
 export class Viewport extends Renderable implements CoordinateSpace {
   camera!: Camera;
   dataset!: Dataset;
   height = 0;
-  lutComponents?: LUTComponent[];
+  lutComponents?: LUTComponent[] = undefined; // Value needed to be decorated by Renderable
   rendererType!: RendererType;
   viewType!: ViewType;
   width = 0;
@@ -49,15 +60,17 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  constructor(config: { [key: string]: any }) {
+  constructor(config: Partial<Viewport>) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
     super.decorateProperties();
-    this.onUpdate.subscribe(() => {
-      delete this.basis;
-      delete this.origin;
-      delete this.imageZoom;
+    this.onUpdate.subscribe((keyChanged) => {
+      if (SENSITIVE_FIELDS.includes(keyChanged as keyof Viewport)) {
+        delete this.basis;
+        delete this.imageZoom;
+        delete this.origin;
+      }
     });
   }
 

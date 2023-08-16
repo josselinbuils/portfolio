@@ -7,7 +7,7 @@ export class Model {
     }
   }
 
-  checkMandatoryFieldsPresence(fields: string[]): void {
+  checkMandatoryFieldsPresence(fields: readonly string[]): void {
     for (const field of fields) {
       if ((this as any)[field] === undefined) {
         throw new Error(`Field ${field} is mandatory`);
