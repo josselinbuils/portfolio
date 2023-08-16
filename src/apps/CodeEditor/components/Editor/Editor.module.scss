@@ -66,6 +66,7 @@ ul.autoCompletionMenu {
   font-family: $fontFamily;
   font-size: $fontSize;
   overflow: auto;
+  min-width: 20rem;
   padding: $spacingS;
   white-space: pre-wrap;
   color: $textPrimaryColor;
