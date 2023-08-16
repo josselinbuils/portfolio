@@ -25,6 +25,7 @@ export enum PixelRepresentation {
 export enum RendererType {
   JavaScript = 'JavaScript',
   WebGL = 'WebGL',
+  WebGPU = 'WebGPU',
 }
 
 export enum ViewType {

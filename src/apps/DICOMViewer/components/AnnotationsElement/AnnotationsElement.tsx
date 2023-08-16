@@ -55,7 +55,11 @@ export const AnnotationsElement: FC<Props> = ({
   }
 
   function showRendererTypeMenu(): void {
-    const items = [RendererType.JavaScript, RendererType.WebGL].map((type) => {
+    const items = [
+      RendererType.JavaScript,
+      RendererType.WebGL,
+      RendererType.WebGPU,
+    ].map((type) => {
       const icon = getMenuItemIcon(type === rendererType);
 
       return {

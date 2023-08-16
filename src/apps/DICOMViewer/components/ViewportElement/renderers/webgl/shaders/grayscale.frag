@@ -13,10 +13,10 @@ void main() {
 
   // Compute pixel raw value
   float intensity =
-    ((texture.a - step(0.5, texture.a)) * 256.0 +
+    ((texture.a - step(0.5, texture.a)) * 255.0 +
       texture.r -
       step(0.5, texture.a)) *
-    256.0;
+    255.0;
 
   // Apply rescale slope and intercept
   intensity = intensity * rescaleSlope + rescaleIntercept;

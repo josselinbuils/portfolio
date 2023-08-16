@@ -899,6 +899,11 @@
     "@typescript-eslint/types" "6.2.1"
     eslint-visitor-keys "^3.4.1"
 
+"@webgpu/types@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.34.tgz#4537c9cae874a63ef79d7afdc2c36a792581d4ad"
+  integrity sha512-9mXtH+CC8q+Ku7Z+1XazNIte81FvfdXwR2lLRO7Ykzjd/hh1J1krJa0gtnkF1kvP11psUmKEPKo7iMTeEcUpNA==
+
 accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -3982,10 +3987,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha512-s/46sYeylUfHNjI+sA/78FAHlmIuKqI9wNnzEOGehAlUUYeObv5C2mOinXBjyUyWmJ2SfcS2/ydApH4hTF4WXQ==
 
-prettier-plugin-glsl@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-glsl/-/prettier-plugin-glsl-0.0.10.tgz#8b6d7a5c88bd7ac7f9bd0308bb9ba57c6008901d"
-  integrity sha512-9eE2GnZ+//5jwWNKtG3JBlovTez20HiTLv/caeKUP2a6WN9nWGtmMFEuZRxgwbhZCdT9JoHot22LPnnkuSyW1w==
+prettier-plugin-glsl@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-glsl/-/prettier-plugin-glsl-0.1.2.tgz#348ad1b7934c008ceb94a09ed424fbfd5d695ab2"
+  integrity sha512-2ccGKKVwZqKNv1q9T97UAiEOn/W9HATabHGI7MninqbpOFvErbSWodNEbiQIaE+JVm1MAS2G5FIydXdektu1Rw==
   dependencies:
     "@netflix/nerror" "^1.1.3"
     chevrotain "^10.5.0"

@@ -160,26 +160,30 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
         typedPixelData = new Int8Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length,
+          rawPixelData.byteLength / Int8Array.BYTES_PER_ELEMENT,
         );
         break;
+
       case DicomImageFormat.Int16:
         typedPixelData = new Int16Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length / 2,
+          rawPixelData.byteLength / Int16Array.BYTES_PER_ELEMENT,
         );
         break;
+
       case DicomImageFormat.UInt8:
         typedPixelData = rawPixelData;
         break;
+
       case DicomImageFormat.UInt16:
         typedPixelData = new Uint16Array(
           rawPixelData.buffer,
           rawPixelData.byteOffset,
-          rawPixelData.length / 2,
+          rawPixelData.byteLength / Uint16Array.BYTES_PER_ELEMENT,
         );
         break;
+
       default:
         throw new Error('Unknown dicom format');
     }

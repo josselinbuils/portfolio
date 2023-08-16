@@ -11,7 +11,16 @@ import { type Renderer } from './renderers/Renderer';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
-export const ViewportElement: FC<Props> = ({
+export interface ViewportElementProps {
+  className?: string;
+  viewport: Viewport;
+  onCanvasMouseDown?(downEvent: MouseEvent): void;
+  onError(message: string): void;
+  onResize?(size: Size): void;
+  onStatsUpdate?(stats: ViewportStats): void;
+}
+
+export const ViewportElement: FC<ViewportElementProps> = ({
   className,
   onCanvasMouseDown = () => {},
   onError,
@@ -44,16 +53,21 @@ export const ViewportElement: FC<Props> = ({
           case RendererType.JavaScript:
             if (viewport.viewType === ViewType.Native) {
               return import('./renderers/js/JSFrameRenderer').then(
-                (m) => m.JSFrameRenderer,
+                ({ JSFrameRenderer }) => JSFrameRenderer,
               );
             }
             return import('./renderers/js/JSVolumeRenderer').then(
-              (m) => m.JSVolumeRenderer,
+              ({ JSVolumeRenderer }) => JSVolumeRenderer,
             );
 
           case RendererType.WebGL:
             return import('./renderers/webgl/WebGLRenderer').then(
-              (m) => m.WebGLRenderer,
+              ({ WebGLRenderer }) => WebGLRenderer,
+            );
+
+          case RendererType.WebGPU:
+            return import('./renderers/webgpu/WebGPUFrameRenderer').then(
+              ({ WebGPUFrameRenderer }) => WebGPUFrameRenderer,
             );
 
           default:
@@ -175,12 +189,3 @@ export const ViewportElement: FC<Props> = ({
     </div>
   );
 };
-
-interface Props {
-  className?: string;
-  viewport: Viewport;
-  onCanvasMouseDown?(downEvent: MouseEvent): void;
-  onError(message: string): void;
-  onResize?(size: Size): void;
-  onStatsUpdate?(stats: ViewportStats): void;
-}
