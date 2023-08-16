@@ -1,14 +1,18 @@
 @group(0) @binding(0) var textureSampler: sampler;
 @group(0) @binding(1) var texture: texture_2d<f32>;
-@group(0) @binding(2) var<uniform> rescaleSlope: f32;
-@group(0) @binding(3) var<uniform> rescaleIntercept: f32;
-@group(0) @binding(4) var<uniform> windowWidth: f32;
-@group(0) @binding(5) var<uniform> windowCenter: f32;
-@group(0) @binding(6) var<uniform> clipX: f32;
-@group(0) @binding(7) var<uniform> clipY: f32;
-@group(0) @binding(8) var<uniform> clipWidth: f32;
-@group(0) @binding(9) var<uniform> clipHeight: f32;
-@group(0) @binding(10) var<storage, read> lut: array<f32>;
+@group(0) @binding(2) var<uniform> properties: RenderingProperties;
+@group(0) @binding(3) var<storage, read> lut: array<f32>;
+
+struct RenderingProperties {
+  clipHeight: f32,
+  clipWidth: f32,
+  clipX: f32,
+  clipY: f32,
+  rescaleIntercept: f32,
+  rescaleSlope: f32,
+  windowCenter: f32,
+  windowWidth: f32,
+}
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
@@ -26,7 +30,7 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
     vec2(1, 1),
   );
   let textCoord = pos[vertexIndex];
-  let mmat = mat3x3(clipWidth, 0, 0, 0, clipHeight, 0, clipX, clipY, 1);
+  let mmat = mat3x3(properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX, properties.clipY, 1);
 
   return VertexOutput(
     vec4<f32>(mmat * vec3<f32>(textCoord, 1), 1),
@@ -37,9 +41,9 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
 @fragment
 fn grayscaleFragment(input: VertexOutput) -> @location(0) vec4f {
   let texSample = textureSample(texture, textureSampler, input.textCoord);
-  let rawValue = ((texSample[1] - step(0.5, texSample[1])) * 255 + texSample[0] - step(0.5, texSample[1])) * 255 * rescaleSlope + rescaleIntercept;
-  let leftLimit = windowCenter - windowWidth / 2;
-  let lutIndex = u32(floor(clamp(rawValue - leftLimit, 0, windowWidth - 1)) * 3);
+  let rawValue = ((texSample[1] - step(0.5, texSample[1])) * 255 + texSample[0] - step(0.5, texSample[1])) * 255 * properties.rescaleSlope + properties.rescaleIntercept;
+  let leftLimit = properties.windowCenter - properties.windowWidth / 2;
+  let lutIndex = u32(floor(clamp(rawValue - leftLimit, 0, properties.windowWidth - 1)) * 3);
   return vec4(lut[lutIndex] / 255, lut[lutIndex + 1] / 255, lut[lutIndex + 2] / 255, 1);
 }
 

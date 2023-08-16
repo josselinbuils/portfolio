@@ -5,7 +5,7 @@ import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import shader from './shaders.wgsl?raw';
+import shader from './frameShaders.wgsl?raw';
 
 export class WebGPUFrameRenderer implements Renderer {
   private context?: GPUCanvasContext;
@@ -59,63 +59,18 @@ export class WebGPUFrameRenderer implements Renderer {
     });
 
     const bindGroupLayout = this.device.createBindGroupLayout({
-      entries: [
-        {
-          binding: 0,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          sampler: { type: 'filtering' },
-        },
-        {
-          binding: 1,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          texture: { sampleType: 'float' },
-        },
-        {
-          binding: 2,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 3,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 4,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 5,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 6,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 7,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 8,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 9,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'uniform' },
-        },
-        {
-          binding: 10,
-          visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
-          buffer: { type: 'read-only-storage' },
-        },
-      ],
+      entries: (
+        [
+          { sampler: { type: 'filtering' } },
+          { texture: { sampleType: 'float' } },
+          { buffer: { type: 'uniform' } },
+          { buffer: { type: 'read-only-storage' } },
+        ] satisfies Omit<GPUBindGroupLayoutEntry, 'binding' | 'visibility'>[]
+      ).map((props, binding) => ({
+        ...props,
+        binding,
+        visibility: GPUShaderStage.FRAGMENT | GPUShaderStage.VERTEX,
+      })),
     });
 
     this.pipeline = this.device.createRenderPipeline({
@@ -202,14 +157,18 @@ export class WebGPUFrameRenderer implements Renderer {
       entries: [
         sampler,
         this.texture.instance.createView(),
-        this.createBufferResource(new Float32Array([rescaleSlope])),
-        this.createBufferResource(new Float32Array([rescaleIntercept])),
-        this.createBufferResource(new Float32Array([windowWidth])),
-        this.createBufferResource(new Float32Array([windowCenter])),
-        this.createBufferResource(new Float32Array([clipX])),
-        this.createBufferResource(new Float32Array([clipY])),
-        this.createBufferResource(new Float32Array([clipWidth])),
-        this.createBufferResource(new Float32Array([clipHeight])),
+        this.createBufferResource(
+          new Float32Array([
+            clipHeight,
+            clipWidth,
+            clipX,
+            clipY,
+            rescaleIntercept,
+            rescaleSlope,
+            windowCenter,
+            windowWidth,
+          ]),
+        ),
         this.createBufferResource(
           new Float32Array(this.lut?.table.flat() ?? []),
           GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
