@@ -1,12 +1,12 @@
 import React, { forwardRef } from 'preact/compat';
 import styles from './ProgressBar.module.scss';
 
-interface Props {
+export interface ProgressBarProps {
   progress: number;
   onSeekStart(downEvent: MouseEvent | TouchEvent): void;
 }
 
-export const ProgressBar = forwardRef<HTMLDivElement, Props>(
+export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
   ({ onSeekStart, progress }, ref) => (
     <div
       className={styles.progressBar}

@@ -12,7 +12,18 @@ const RIGHT_OFFSET = 5;
 const TOP_OFFSET = 5;
 const GRAPH_LINE_OFFSET = 10;
 
-export const GraphPreview: FC<Props> = ({
+export interface GraphPreviewProps {
+  activeLUTComponentID: string | undefined;
+  className?: string;
+  lutComponents: LUTComponent[];
+  onLUTComponentDrag(
+    downEvent: MouseEvent,
+    previewWidth: number,
+    componentId: string,
+  ): void;
+}
+
+export const GraphPreview: FC<GraphPreviewProps> = ({
   activeLUTComponentID,
   className,
   lutComponents,
@@ -186,14 +197,3 @@ export const GraphPreview: FC<Props> = ({
     />
   );
 };
-
-interface Props {
-  activeLUTComponentID: string | undefined;
-  className?: string;
-  lutComponents: LUTComponent[];
-  onLUTComponentDrag(
-    downEvent: MouseEvent,
-    previewWidth: number,
-    componentId: string,
-  ): void;
-}

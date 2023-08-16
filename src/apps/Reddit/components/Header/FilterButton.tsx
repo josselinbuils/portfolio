@@ -13,7 +13,12 @@ const labelMap = {
   top: <FontAwesomeIcon icon={faChartBar} />,
 };
 
-export const FilterButton: FC<Props> = ({ filter, onClick }) => {
+export interface FilterButtonProps {
+  filter: RedditFilter;
+  onClick(filter: RedditFilter): void;
+}
+
+export const FilterButton: FC<FilterButtonProps> = ({ filter, onClick }) => {
   const otherFilter = filters.find((f) => f !== filter) as RedditFilter;
 
   return (
@@ -25,8 +30,3 @@ export const FilterButton: FC<Props> = ({ filter, onClick }) => {
     </ButtonLink>
   );
 };
-
-interface Props {
-  filter: RedditFilter;
-  onClick(filter: RedditFilter): void;
-}

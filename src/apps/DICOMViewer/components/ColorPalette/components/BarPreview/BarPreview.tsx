@@ -5,7 +5,15 @@ import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 import styles from './BarPreview.module.scss';
 
-export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
+export interface BarPreviewProps {
+  className?: string;
+  lutComponents: LUTComponent[];
+}
+
+export const BarPreview: FC<BarPreviewProps> = ({
+  className,
+  lutComponents,
+}) => {
   const canvasElementRef = useRef<HTMLCanvasElement>(null);
   const [canvasWidth, canvasHeight] = useElementSize(canvasElementRef);
 
@@ -43,8 +51,3 @@ export const BarPreview: FC<Props> = ({ className, lutComponents }) => {
     />
   );
 };
-
-interface Props {
-  className?: string;
-  lutComponents: LUTComponent[];
-}

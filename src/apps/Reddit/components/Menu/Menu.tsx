@@ -3,7 +3,12 @@ import { subreddits } from '../../subreddits';
 import styles from './Menu.module.scss';
 import { MenuItem } from './MenuItem';
 
-export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
+export interface MenuProps {
+  activeSubreddit: string;
+  onClickSubreddit(subreddit: string): void;
+}
+
+export const Menu: FC<MenuProps> = ({ activeSubreddit, onClickSubreddit }) => (
   <nav className={styles.menu}>
     {subreddits.map((subreddit) => (
       <MenuItem
@@ -15,8 +20,3 @@ export const Menu: FC<Props> = ({ activeSubreddit, onClickSubreddit }) => (
     ))}
   </nav>
 );
-
-interface Props {
-  activeSubreddit: string;
-  onClickSubreddit(subreddit: string): void;
-}

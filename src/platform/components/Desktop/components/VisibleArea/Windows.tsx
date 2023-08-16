@@ -3,7 +3,11 @@ import { type Size } from '@/platform/interfaces/Size';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 
-export const Windows: FC<Props> = ({ visibleAreaSize }) => {
+export interface WindowsProps {
+  visibleAreaSize: Size | undefined;
+}
+
+export const Windows: FC<WindowsProps> = ({ visibleAreaSize }) => {
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
     windowManager.getWindowInstances(),
   );
@@ -32,7 +36,3 @@ export const Windows: FC<Props> = ({ visibleAreaSize }) => {
     </>
   );
 };
-
-interface Props {
-  visibleAreaSize: Size | undefined;
-}

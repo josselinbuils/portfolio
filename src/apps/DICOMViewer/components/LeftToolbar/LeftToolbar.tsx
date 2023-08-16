@@ -37,7 +37,14 @@ const mouseTools = [
   },
 ];
 
-export const LeftToolbar: FC<Props> = ({
+export interface LeftToolbarProps {
+  activeLeftTool: MouseTool;
+  activeRightTool: MouseTool;
+  viewport: Viewport;
+  onToolSelected(tool: MouseTool, button: MouseButton): void;
+}
+
+export const LeftToolbar: FC<LeftToolbarProps> = ({
   activeLeftTool,
   activeRightTool,
   onToolSelected,
@@ -65,10 +72,3 @@ export const LeftToolbar: FC<Props> = ({
     )}
   </div>
 );
-
-interface Props {
-  activeLeftTool: MouseTool;
-  activeRightTool: MouseTool;
-  viewport: Viewport;
-  onToolSelected(tool: MouseTool, button: MouseButton): void;
-}

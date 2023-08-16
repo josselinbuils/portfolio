@@ -4,7 +4,13 @@ import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import styles from './MenuItem.module.scss';
 
-export const MenuItem: FC<Props> = ({
+export interface MenuItemProps {
+  activeMusicList: MusicList;
+  musicList: MusicList;
+  onClickPlaylist(musicList: MusicList): void;
+}
+
+export const MenuItem: FC<MenuItemProps> = ({
   activeMusicList,
   onClickPlaylist,
   musicList,
@@ -22,9 +28,3 @@ export const MenuItem: FC<Props> = ({
     </ButtonLink>
   );
 };
-
-interface Props {
-  activeMusicList: MusicList;
-  musicList: MusicList;
-  onClickPlaylist(musicList: MusicList): void;
-}

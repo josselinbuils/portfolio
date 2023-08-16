@@ -11,7 +11,7 @@ import { getLineNumber } from '../../utils/getLineNumber';
 import { getTextWidth } from '../../utils/getTextWidth';
 import styles from './LineNumbers.module.scss';
 
-interface Props {
+export interface LineNumbersProps {
   className?: string;
   code: string;
   editorWidth: number;
@@ -19,7 +19,7 @@ interface Props {
   selection: Selection;
 }
 
-export const LineNumbers: FC<Props> = ({
+export const LineNumbers: FC<LineNumbersProps> = ({
   className,
   code,
   editorWidth,

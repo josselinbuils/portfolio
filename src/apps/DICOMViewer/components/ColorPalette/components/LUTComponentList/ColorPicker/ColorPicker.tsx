@@ -4,7 +4,12 @@ import styles from './ColorPicker.module.scss';
 import { hexToRGB } from './utils/hexToRGB';
 import { rgbToHex } from './utils/rgbToHex';
 
-export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
+export interface ColorPickerProps {
+  color: number[];
+  onColorChange(color: number[]): void;
+}
+
+export const ColorPicker: FC<ColorPickerProps> = ({ color, onColorChange }) => {
   const colorChangeHandler = throttle((value) => {
     const rgbColor = hexToRGB(value);
 
@@ -27,8 +32,3 @@ export const ColorPicker: FC<Props> = ({ color, onColorChange }) => {
     </figure>
   );
 };
-
-interface Props {
-  color: number[];
-  onColorChange(color: number[]): void;
-}

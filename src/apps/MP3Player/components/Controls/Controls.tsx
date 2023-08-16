@@ -11,7 +11,12 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
 import styles from './Controls.module.scss';
 
-export const Controls: FC<Props> = ({ className, size }) => {
+export interface ControlsProps {
+  className?: string;
+  size: number;
+}
+
+export const Controls: FC<ControlsProps> = ({ className, size }) => {
   const { audioController, audioState } = useContext(AudioContext);
 
   if (audioController === undefined || audioState === undefined) {
@@ -65,8 +70,3 @@ export const Controls: FC<Props> = ({ className, size }) => {
     </div>
   );
 };
-
-interface Props {
-  className?: string;
-  size: number;
-}

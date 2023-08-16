@@ -6,7 +6,12 @@ import { cancelable } from '@/platform/utils/cancelable';
 import styles from './Icon.module.scss';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
 
-export const Icon: FC<Props> = ({ active = true, subreddit }) => {
+export interface IconProps {
+  active?: boolean;
+  subreddit: string;
+}
+
+export const Icon: FC<IconProps> = ({ active = true, subreddit }) => {
   const [src, setSrc] = useState<string>();
 
   useEffect(() => {
@@ -39,8 +44,3 @@ export const Icon: FC<Props> = ({ active = true, subreddit }) => {
     </figure>
   );
 };
-
-interface Props {
-  active?: boolean;
-  subreddit: string;
-}

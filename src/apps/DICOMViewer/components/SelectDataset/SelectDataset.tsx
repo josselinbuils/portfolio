@@ -11,7 +11,15 @@ import { loadDatasetList } from './utils/loadDatasetList';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
-export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
+export interface SelectDatasetProps {
+  onDatasetSelected(dataset: Dataset): void;
+  onError(message: string): void;
+}
+
+export const SelectDataset: FC<SelectDatasetProps> = ({
+  onDatasetSelected,
+  onError,
+}) => {
   const [datasetDescriptor, setDatasetDescriptor] =
     useState<DatasetDescriptor>();
   const [datasetDescriptors, setDatasetDescriptors] = useState<
@@ -108,8 +116,3 @@ export const SelectDataset: FC<Props> = ({ onDatasetSelected, onError }) => {
     </div>
   );
 };
-
-interface Props {
-  onDatasetSelected(dataset: Dataset): void;
-  onError(message: string): void;
-}

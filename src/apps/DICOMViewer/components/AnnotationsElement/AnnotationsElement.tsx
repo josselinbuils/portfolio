@@ -11,7 +11,14 @@ import { RendererType, type ViewType } from '../../constants';
 import { type Annotations } from '../../interfaces/Annotations';
 import styles from './AnnotationsElement.module.scss';
 
-export const AnnotationsElement: FC<Props> = ({
+export interface AnnotationsElementProps {
+  annotations: Annotations;
+  availableViewTypes: ViewType[];
+  onRendererTypeSwitch(rendererType: RendererType): void;
+  onViewTypeSwitch(viewType: ViewType): void;
+}
+
+export const AnnotationsElement: FC<AnnotationsElementProps> = ({
   annotations,
   availableViewTypes,
   onRendererTypeSwitch,
@@ -142,10 +149,3 @@ export const AnnotationsElement: FC<Props> = ({
     </>
   );
 };
-
-interface Props {
-  annotations: Annotations;
-  availableViewTypes: ViewType[];
-  onRendererTypeSwitch(rendererType: RendererType): void;
-  onViewTypeSwitch(viewType: ViewType): void;
-}

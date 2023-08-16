@@ -5,7 +5,16 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { Icon } from '../../Icon/Icon';
 import styles from './PostDetails.module.scss';
 
-export const PostDetails: FC<Props> = ({
+export interface PostDetailsProps {
+  author: string;
+  currentSubreddit: string;
+  since: string;
+  stickied: boolean;
+  subreddit: string;
+  onClickSubreddit(subreddit: string): void;
+}
+
+export const PostDetails: FC<PostDetailsProps> = ({
   author,
   currentSubreddit,
   onClickSubreddit,
@@ -29,12 +38,3 @@ export const PostDetails: FC<Props> = ({
     {stickied && <FontAwesomeIcon className={styles.anchor} icon={faAnchor} />}
   </div>
 );
-
-interface Props {
-  author: string;
-  currentSubreddit: string;
-  since: string;
-  stickied: boolean;
-  subreddit: string;
-  onClickSubreddit(subreddit: string): void;
-}

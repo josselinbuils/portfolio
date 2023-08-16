@@ -5,7 +5,12 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { LogLevel, type Log } from '../../Log';
 import styles from './Logs.module.scss';
 
-export const Logs = forwardRef<HTMLDivElement, Props>(
+export interface LogsProps {
+  className?: string;
+  logs: Log[];
+}
+
+export const Logs = forwardRef<HTMLDivElement, LogsProps>(
   ({ className, logs }, ref) => (
     <div className={cn(styles.logs, className)} ref={ref}>
       {logs.map(({ id, level, message }) => (
@@ -37,8 +42,3 @@ export const Logs = forwardRef<HTMLDivElement, Props>(
     </div>
   ),
 );
-
-interface Props {
-  className?: string;
-  logs: Log[];
-}

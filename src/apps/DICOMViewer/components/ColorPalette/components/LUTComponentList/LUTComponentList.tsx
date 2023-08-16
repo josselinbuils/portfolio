@@ -7,7 +7,14 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { ColorPicker } from './ColorPicker/ColorPicker';
 import styles from './LUTComponentList.module.scss';
 
-export const LUTComponentList: FC<Props> = ({
+export interface LUTComponentListProps {
+  lutComponents: LUTComponent[];
+  onLUTComponentAdd(): void;
+  onLUTComponentColorChange(componentId: string, color: number[]): void;
+  onLUTComponentDelete(componentId: string): void;
+}
+
+export const LUTComponentList: FC<LUTComponentListProps> = ({
   lutComponents,
   onLUTComponentAdd,
   onLUTComponentColorChange,
@@ -40,13 +47,6 @@ export const LUTComponentList: FC<Props> = ({
     </li>
   </ul>
 );
-
-interface Props {
-  lutComponents: LUTComponent[];
-  onLUTComponentAdd(): void;
-  onLUTComponentColorChange(componentId: string, color: number[]): void;
-  onLUTComponentDelete(componentId: string): void;
-}
 
 function formatNumber(num: number): string {
   return `00${num}`.slice(-3);

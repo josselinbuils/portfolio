@@ -3,7 +3,11 @@ import styles from './Spinner.module.scss';
 
 const DISPLAY_DELAY_MS = 100;
 
-export const Spinner: FC<Props> = ({ color }) => {
+export interface SpinnerProps {
+  color: string;
+}
+
+export const Spinner: FC<SpinnerProps> = ({ color }) => {
   const [isDisplayed, setIsDisplayed] = useState(false);
   const style = { backgroundColor: color };
 
@@ -22,7 +26,3 @@ export const Spinner: FC<Props> = ({ color }) => {
     </div>
   ) : null;
 };
-
-interface Props {
-  color: string;
-}

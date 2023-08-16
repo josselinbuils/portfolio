@@ -7,11 +7,11 @@ import { SeekBar } from '../SeekBar/SeekBar';
 import styles from './Footer.module.scss';
 import { MusicInfo } from './MusicInfo';
 
-interface Props {
+export interface FooterProps {
   className?: string;
 }
 
-export const Footer: FC<Props> = ({ className }) => {
+export const Footer: FC<FooterProps> = ({ className }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {

@@ -5,7 +5,12 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { type Music } from '../../interfaces/Music';
 import styles from './MusicPreview.module.scss';
 
-export const MusicPreview: FC<Props> = ({ music, size }) => {
+export interface MusicPreviewProps {
+  music: Music | undefined;
+  size: number;
+}
+
+export const MusicPreview: FC<MusicPreviewProps> = ({ music, size }) => {
   const useDefaultPreview = !music || !music.image;
 
   return (
@@ -22,8 +27,3 @@ export const MusicPreview: FC<Props> = ({ music, size }) => {
     </div>
   );
 };
-
-interface Props {
-  music: Music | undefined;
-  size: number;
-}

@@ -1,7 +1,15 @@
 import { type FC } from 'preact/compat';
 import styles from './ProgressRing.module.scss';
 
-export const ProgressRing: FC<Props> = ({
+export interface ProgressRingProps {
+  className?: string;
+  color: string;
+  progress: number;
+  radius: number;
+  thickness: number;
+}
+
+export const ProgressRing: FC<ProgressRingProps> = ({
   className,
   color,
   progress,
@@ -51,11 +59,3 @@ export const ProgressRing: FC<Props> = ({
     </svg>
   );
 };
-
-interface Props {
-  className?: string;
-  color: string;
-  progress: number;
-  radius: number;
-  thickness: number;
-}

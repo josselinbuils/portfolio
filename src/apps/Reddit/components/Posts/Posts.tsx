@@ -5,7 +5,17 @@ import { type RedditPost } from '../../interfaces/RedditPost';
 import { Post } from './Post/Post';
 import { getPosts } from './getPosts';
 
-export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
+export interface PostsProps {
+  filter: RedditFilter;
+  subreddit: string;
+  onClickSubreddit(subreddit: string): void;
+}
+
+export const Posts: FC<PostsProps> = ({
+  filter,
+  onClickSubreddit,
+  subreddit,
+}) => {
   const [currentSubreddit, setCurrentSubreddit] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<RedditPost[]>([]);
@@ -47,9 +57,3 @@ export const Posts: FC<Props> = ({ filter, onClickSubreddit, subreddit }) => {
     </>
   );
 };
-
-interface Props {
-  filter: RedditFilter;
-  subreddit: string;
-  onClickSubreddit(subreddit: string): void;
-}

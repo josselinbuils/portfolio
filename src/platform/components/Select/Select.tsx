@@ -4,7 +4,13 @@ import { type FC, type PropsWithChildren } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import styles from './Select.module.scss';
 
-export const Select: FC<PropsWithChildren<Props>> = ({
+export interface SelectProps extends PropsWithChildren {
+  className?: string;
+  value: string;
+  onChange(value: string): void;
+}
+
+export const Select: FC<SelectProps> = ({
   children,
   className,
   onChange,
@@ -21,9 +27,3 @@ export const Select: FC<PropsWithChildren<Props>> = ({
     </select>
   </div>
 );
-
-interface Props {
-  className?: string;
-  value: string;
-  onChange(value: string): void;
-}

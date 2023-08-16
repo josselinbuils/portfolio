@@ -5,14 +5,14 @@ import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './Cursor.module.scss';
 import { computeSegments, type Segment } from './utils/computeSegments';
 
-interface Props {
+export interface CursorProps {
   code: string;
   color: string;
   parent: HTMLTextAreaElement;
   selection: Selection;
 }
 
-export const Cursor: FC<Props> = ({ code, color, parent, selection }) => {
+export const Cursor: FC<CursorProps> = ({ code, color, parent, selection }) => {
   const [position, setPosition] = useState<Position<number> | undefined>();
   const [segments, setSegments] = useState<Segment[]>([]);
 

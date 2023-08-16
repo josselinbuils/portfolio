@@ -5,7 +5,13 @@ import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';
 import styles from './MenuItem.module.scss';
 
-export const MenuItem: FC<Props> = ({
+export interface MenuItemProps {
+  activeSubreddit: string;
+  subreddit: string;
+  onClickSubreddit(subreddit: string): void;
+}
+
+export const MenuItem: FC<MenuItemProps> = ({
   activeSubreddit,
   onClickSubreddit,
   subreddit,
@@ -35,9 +41,3 @@ export const MenuItem: FC<Props> = ({
     </ButtonLink>
   );
 };
-
-interface Props {
-  activeSubreddit: string;
-  subreddit: string;
-  onClickSubreddit(subreddit: string): void;
-}

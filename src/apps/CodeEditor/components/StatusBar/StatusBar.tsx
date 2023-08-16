@@ -5,7 +5,15 @@ import styles from './StatusBar.module.scss';
 
 const DEBUG = true;
 
-export const StatusBar: FC<Props> = ({ className, cursorPosition }) => {
+export interface StatusBarProps {
+  className?: string;
+  cursorPosition: CursorPosition;
+}
+
+export const StatusBar: FC<StatusBarProps> = ({
+  className,
+  cursorPosition,
+}) => {
   const { offset, x, y } = cursorPosition;
   return (
     <div className={cn(styles.statusBar, className)}>
@@ -14,8 +22,3 @@ export const StatusBar: FC<Props> = ({ className, cursorPosition }) => {
     </div>
   );
 };
-
-interface Props {
-  className?: string;
-  cursorPosition: CursorPosition;
-}

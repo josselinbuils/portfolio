@@ -1,7 +1,19 @@
 import { type FC } from 'preact/compat';
 import styles from './CommandHelp.module.scss';
 
-export const CommandHelp: FC<Props> = ({
+export interface CommandParameter {
+  name: string;
+  optional?: boolean;
+  values?: { description?: string; value: string }[];
+}
+
+export interface CommandHelpProps {
+  command: string;
+  description?: string;
+  parameters: CommandParameter[];
+}
+
+export const CommandHelp: FC<CommandHelpProps> = ({
   command,
   description,
   parameters,
@@ -43,18 +55,6 @@ export const CommandHelp: FC<Props> = ({
       ))}
   </div>
 );
-
-interface Props {
-  command: string;
-  description?: string;
-  parameters: CommandParameter[];
-}
-
-export interface CommandParameter {
-  name: string;
-  optional?: boolean;
-  values?: { description?: string; value: string }[];
-}
 
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
