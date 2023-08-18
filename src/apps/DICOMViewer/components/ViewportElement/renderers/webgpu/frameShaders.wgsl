@@ -1,4 +1,4 @@
-@group(0) @binding(0) var<storage, read> pixelData: array<i32>;
+@group(0) @binding(0) var<storage, read> pixelData: array<f32>;
 @group(0) @binding(1) var<storage, read> lut: array<f32>;
 @group(0) @binding(2) var<uniform> properties: RenderingProperties;
 
@@ -17,11 +17,11 @@ struct RenderingProperties {
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
-  @location(0) textCoord: vec2<f32>,
+  @location(0) rawPosition: vec2<f32>,
 }
 
 @vertex
-fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
+fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
   let pos = array<vec2<f32>, 6>(
     vec2(0, 0),
     vec2(1, 0),
@@ -30,18 +30,18 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
     vec2(1, 0),
     vec2(1, 1),
   );
-  let textCoord = pos[vertexIndex];
-  let mmat = mat3x3(properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX, properties.clipY, 1);
+  let rawPosition = pos[vertexIndex];
+  let imageAreaMat = mat3x3(properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX, properties.clipY, 1);
 
   return VertexOutput(
-    vec4<f32>(mmat * vec3<f32>(textCoord, 1), 1),
-    textCoord
+    vec4<f32>(imageAreaMat * vec3<f32>(rawPosition, 1), 1),
+    rawPosition
   );
 }
 
 @fragment
-fn grayscaleFragment(input: VertexOutput) -> @location(0) vec4f {
-  let rawValue = getClipPixelValue(input.textCoord) * properties.rescaleSlope + properties.rescaleIntercept;
+fn fragment(input: VertexOutput) -> @location(0) vec4f {
+  let rawValue = getClipPixelValue(input.rawPosition) * properties.rescaleSlope + properties.rescaleIntercept;
   let leftLimit = properties.windowCenter - properties.windowWidth / 2;
   let lutIndex = u32(floor(clamp(rawValue - leftLimit, 0, properties.windowWidth - 1)) * 3);
 
@@ -81,7 +81,7 @@ fn getClipPixelValue(clipPosition: vec2<f32>) -> f32 {
 }
 
 fn getPixelValue(x: f32, y: f32) -> f32 {
-  return f32(pixelData[u32(x + y * properties.columns)]);
+  return pixelData[u32(x + y * properties.columns)];
 }
 
 fn linearInterpolate(c0: f32, c1: f32, dist: f32) -> f32 {

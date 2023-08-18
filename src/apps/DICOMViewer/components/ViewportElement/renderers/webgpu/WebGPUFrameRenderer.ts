@@ -1,3 +1,4 @@
+import { NormalizedImageFormat } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
@@ -72,10 +73,7 @@ export class WebGPUFrameRenderer implements Renderer {
       label: 'Render pipeline',
       fragment: {
         module: shaderModule,
-        entryPoint:
-          viewport.dataset.frames[0].imageFormat === 'rgb'
-            ? 'rgbFragment'
-            : 'grayscaleFragment',
+        entryPoint: 'fragment',
         targets: [{ format: 'bgra8unorm' }],
       },
       layout: this.device.createPipelineLayout({
@@ -109,12 +107,13 @@ export class WebGPUFrameRenderer implements Renderer {
     const { columns, imageFormat, rescaleIntercept, rescaleSlope, rows } =
       frame;
 
+    if (imageFormat !== NormalizedImageFormat.Int16) {
+      throw new Error(`Unsupported image format: ${imageFormat}`);
+    }
+
     validateCamera2D(frame, camera);
 
-    if (
-      imageFormat !== 'rgb' &&
-      (this.lut === undefined || this.lut.windowWidth !== windowWidth)
-    ) {
+    if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
       this.lut =
         viewport.lutComponents !== undefined
           ? loadVOILUT(viewport.lutComponents, windowWidth)
@@ -140,7 +139,7 @@ export class WebGPUFrameRenderer implements Renderer {
       layout: this.pipeline.getBindGroupLayout(0),
       entries: [
         this.createBufferResource(
-          new Int32Array(frame.pixelData!),
+          new Float32Array(frame.pixelData!),
           GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         ),
         this.createBufferResource(
