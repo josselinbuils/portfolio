@@ -61,8 +61,8 @@ const DICOMViewer: WindowComponent = ({
               dataset,
               rendererType,
             );
-            const viewType = availableViewTypes.includes(ViewType.Axial)
-              ? ViewType.Axial
+            const viewType = availableViewTypes.includes(ViewType.VolumeSkin)
+              ? ViewType.VolumeSkin
               : ViewType.Native;
 
             return Viewport.create(dataset, viewType, rendererType);

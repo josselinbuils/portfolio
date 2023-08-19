@@ -247,7 +247,9 @@ function getImageDimensions(viewport: Viewport):
   const { camera, dataset } = viewport;
   const { voxelSpacing } = dataset;
   const viewportBasis = viewport.getWorldBasis();
-  const viewportOrigin = viewport.getWorldOrigin();
+  const viewportOrigin = V(viewport.getWorldOrigin()).add(
+    V(camera.getDirection()).mul(camera.depthOfField / 2),
+  );
   const plane = [
     viewportOrigin,
     V(viewportOrigin).add(viewportBasis[0]),

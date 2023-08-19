@@ -61,7 +61,7 @@ export class Volume extends Model {
    * @param plane 3 points representing the plane.
    */
   getIntersections(plane: number[][]): number[][] {
-    const lines = [
+    const lines: (keyof typeof this.corners)[][] = [
       ['x0y0z0', 'x1y0z0'],
       ['x1y0z0', 'x1y1z0'],
       ['x1y1z0', 'x0y1z0'],
@@ -78,11 +78,12 @@ export class Volume extends Model {
     const planeNormal = V(plane[1])
       .sub(plane[0])
       .cross(V(plane[2]).sub(plane[0]));
+
     const intersections: number[][] = [];
 
     for (const [keyA, keyB] of lines) {
-      const a = (this.corners as any)[keyA];
-      const b = (this.corners as any)[keyB];
+      const a = this.corners[keyA];
+      const b = this.corners[keyB];
       const viewportToADistance = V(a).sub(plane[0]).dot(planeNormal);
       const viewportToBDistance = V(b).sub(plane[0]).dot(planeNormal);
       const crossesViewport =
