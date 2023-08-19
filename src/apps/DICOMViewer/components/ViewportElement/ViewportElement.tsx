@@ -180,8 +180,12 @@ async function getViewportRenderer(
       return (await import('./renderers/webgl/WebGLRenderer')).WebGLRenderer;
 
     case RendererType.WebGPU:
-      return (await import('./renderers/webgpu/WebGPUFrameRenderer'))
-        .WebGPUFrameRenderer;
+      if (viewport.viewType === ViewType.Native) {
+        return (await import('./renderers/webgpu/WebGPUFrameRenderer'))
+          .WebGPUFrameRenderer;
+      }
+      return (await import('./renderers/webgpu/WebGPUVolumeRenderer'))
+        .WebGPUVolumeRenderer;
 
     default:
       throw new Error('Unknown renderer type');

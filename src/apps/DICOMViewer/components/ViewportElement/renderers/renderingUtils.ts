@@ -54,10 +54,12 @@ export function getRenderingProperties(
     imageHeight = rows;
     viewportSpaceImageWidth = Math.round(columns * zoom);
     viewportSpaceImageHeight = Math.round(rows * zoom);
+
     viewportSpaceImageX0 =
       (width - viewportSpaceImageWidth) / 2 +
       frameCenterViewport[0] -
       lookPointViewport[0];
+
     viewportSpaceImageY0 =
       (height - viewportSpaceImageHeight) / 2 +
       frameCenterViewport[1] -
@@ -101,6 +103,7 @@ export function getRenderingProperties(
 
   const { imageX0, imageY0, imageX1, imageY1, lastPixelX, lastPixelY } =
     viewportSpace;
+
   const isImageInViewport =
     imageY0 <= lastPixelY &&
     imageX0 <= lastPixelX &&
