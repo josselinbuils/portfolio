@@ -52,17 +52,19 @@ const DICOMViewer: WindowComponent = ({
   useLayoutEffect(() => {
     if (dataset !== undefined) {
       try {
-        const availableViewTypes = getAvailableViewTypes(dataset, rendererType);
-        const viewType = availableViewTypes.includes(ViewType.Axial)
-          ? ViewType.Axial
-          : ViewType.Native;
-
         setViewport((previousViewport) => {
           if (
             previousViewport === undefined ||
-            previousViewport.dataset !== dataset ||
-            previousViewport.viewType !== viewType
+            previousViewport.dataset !== dataset
           ) {
+            const availableViewTypes = getAvailableViewTypes(
+              dataset,
+              rendererType,
+            );
+            const viewType = availableViewTypes.includes(ViewType.Axial)
+              ? ViewType.Axial
+              : ViewType.Native;
+
             return Viewport.create(dataset, viewType, rendererType);
           }
           // Keeps the camera when only the renderer type changes
