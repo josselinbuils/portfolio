@@ -1,7 +1,7 @@
-import { RendererType, ViewType } from '@/apps/DICOMViewer/constants';
+import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type Camera } from '../../../models/Camera';
 import { type Frame } from '../../../models/Frame';
-import { Viewport } from '../../../models/Viewport';
+import { type Viewport } from '../../../models/Viewport';
 import { type Volume } from '../../../models/Volume';
 import { changePointSpace } from '../../../utils/changePointSpace';
 import { V } from '../../../utils/math/Vector';
@@ -65,19 +65,7 @@ export function getRenderingProperties(
       frameCenterViewport[1] -
       lookPointViewport[1];
   } else {
-    let viewportToUse = viewport;
-
-    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
-      const fakeViewport = Viewport.create(
-        dataset,
-        ViewType.Coronal,
-        RendererType.JavaScript,
-      );
-      fakeViewport.width = viewport.width;
-      fakeViewport.height = viewport.height;
-      viewportToUse = fakeViewport;
-    }
-    const imageDimensions = getImageDimensions(viewportToUse);
+    const imageDimensions = getImageDimensions(viewport);
 
     if (imageDimensions === undefined) {
       return undefined;
@@ -116,6 +104,7 @@ export function getRenderingProperties(
 
   const boundedViewportSpace =
     computeBoundedViewportSpaceCoordinates(viewportSpace);
+
   const imageSpace = computeImageSpace(imageWidth, imageHeight, viewportSpace);
 
   return {

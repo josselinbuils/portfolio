@@ -1,3 +1,5 @@
+import { ViewType } from '@/apps/DICOMViewer/constants';
+import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -9,6 +11,10 @@ import { type ViewportSpaceCoordinates } from '../RenderingProperties';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../renderingUtils';
 import shaders from './volumeShaders.wgsl?raw';
+
+const skinLUTComponents: LUTComponent[] = [
+  { id: '0', start: 10, end: 135, color: [235, 190, 180] },
+];
 
 export class WebGPUVolumeRenderer implements Renderer {
   private context?: GPUCanvasContext;
@@ -106,6 +112,10 @@ export class WebGPUVolumeRenderer implements Renderer {
       })),
     });
 
+    const is3D = [ViewType.VolumeBones, ViewType.VolumeSkin].includes(
+      viewport.viewType,
+    );
+
     this.pipeline = this.device.createRenderPipeline({
       label: 'Render pipeline',
       layout: this.device.createPipelineLayout({
@@ -117,7 +127,7 @@ export class WebGPUVolumeRenderer implements Renderer {
       },
       fragment: {
         module: shaderModule,
-        entryPoint: 'fragment',
+        entryPoint: is3D ? 'fragment3D' : 'fragmentMPR',
         targets: [{ format: 'bgra8unorm' }],
       },
     });
@@ -138,17 +148,20 @@ export class WebGPUVolumeRenderer implements Renderer {
       return;
     }
 
-    const { dataset, height, width, windowWidth } = viewport;
+    const { camera, dataset, height, width, windowWidth } = viewport;
 
     if (this.texture === undefined) {
       this.texture = this.createTexture(dataset);
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      this.lut =
-        viewport.lutComponents !== undefined
-          ? loadVOILUT(viewport.lutComponents, windowWidth)
-          : getDefaultVOILUT(windowWidth);
+      if (viewport.lutComponents !== undefined) {
+        this.lut = loadVOILUT(viewport.lutComponents, windowWidth);
+      } else if (viewport.viewType === ViewType.VolumeSkin) {
+        this.lut = loadVOILUT(skinLUTComponents, windowWidth);
+      } else {
+        this.lut = getDefaultVOILUT(windowWidth);
+      }
     }
 
     const renderingProperties = getRenderingProperties(viewport);
@@ -182,6 +195,12 @@ export class WebGPUVolumeRenderer implements Renderer {
 
     xAxis = V(xAxis).mul(displayWidth / imageWidth);
     yAxis = V(yAxis).mul(displayHeight / imageHeight);
+
+    // 3D rendering properties
+    const basis = camera.getWorldBasis();
+    const direction = basis[2];
+    const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
+    const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
     // Convert dst pixel coordinates to clip space coordinates
     const clipX = (imageX0 / width) * 2 - 1;
@@ -222,6 +241,7 @@ export class WebGPUVolumeRenderer implements Renderer {
               clipWidth,
               clipX,
               clipY,
+              direction,
               imageHeight,
               imageWidth,
               imageWorldOrigin,
@@ -231,6 +251,7 @@ export class WebGPUVolumeRenderer implements Renderer {
               imageY1,
               leftLimit,
               rightLimit,
+              targetValue,
               viewportSpaceImageX0,
               viewportSpaceImageY0,
               xAxis,

@@ -30,6 +30,7 @@ struct RenderingProperties {
   clipWidth: f32,
   clipX: f32,
   clipY: f32,
+  direction: vec3<f32>,
   imageHeight: f32,
   imageWidth: f32,
   imageWorldOrigin: vec3<f32>,
@@ -39,6 +40,7 @@ struct RenderingProperties {
   imageY1: f32,
   leftLimit: f32,
   rightLimit: f32,
+  targetValue: f32,
   viewportSpaceImageX0: f32,
   viewportSpaceImageY0: f32,
   xAxis: vec3<f32>,
@@ -61,7 +63,10 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
     vec2(1, 1),
   );
   let rawPosition = pos[vertexIndex];
-  let imageAreaMat = mat3x3(properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX, properties.clipY, 1);
+  let imageAreaMat = mat3x3(
+    properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX,
+    properties.clipY, 1
+  );
 
   return VertexOutput(
     vec4<f32>(imageAreaMat * vec3<f32>(rawPosition, 1), 1),
@@ -70,23 +75,9 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
 }
 
 @fragment
-fn fragment(input: VertexOutput) -> @location(0) vec4f {
-  let rawValue = getClipPixelValue(input.rawPosition);
-  let lutIndex = u32(floor(clamp(rawValue - properties.leftLimit, 0, properties.rightLimit - properties.leftLimit - 1)) * 3);
-
-  return vec4(lut[lutIndex] / 255, lut[lutIndex + 1] / 255, lut[lutIndex + 2] / 255, 1);
-}
-
-// See https://helloacm.com/cc-function-to-compute-the-bilinear-interpolation/
-fn bilinearInterpolate(c00: f32, c01: f32, c10: f32, c11: f32, x0: f32, x1: f32, y0: f32, y1: f32, x: f32, y: f32) -> f32 {
-  return 1 / ((x1 - x0) *  (y1 - y0)) * (c00 * (x1 - x) * (y1 - y) + c10 * (x - x0) * (y1 - y) + c01 * (x1 - x) * (y - y0) + c11 * (x - x0) * (y - y0));
-}
-
-// -1 < x < 1
-// -1 < y < 1
-fn getClipPixelValue(clipPosition: vec2<f32>) -> f32 {
-  let x = clipPosition[0] * properties.imageWidth;
-  let y = clipPosition[1] * properties.imageHeight;
+fn fragmentMPR(input: VertexOutput) -> @location(0) vec4f {
+  let x = input.rawPosition[0] * properties.imageWidth;
+  let y = input.rawPosition[1] * properties.imageHeight;
 
   let pointLPS = getPointLPS(
     properties.imageWorldOrigin,
@@ -96,8 +87,73 @@ fn getClipPixelValue(clipPosition: vec2<f32>) -> f32 {
     y - min(properties.viewportSpaceImageY0, 0),
   );
 
-  let frameIndexVector = (pointLPS - volume.firstVoxelCenter) / volume.voxelSpacing * volume.orientationZ;
-  let frameIndex = frameIndexVector[0] + frameIndexVector[1] + frameIndexVector[2];
+  let rawValue = getLPSPixelValue(pointLPS);
+
+  return applyLUT(rawValue, 1);
+}
+
+@fragment
+fn fragment3D(input: VertexOutput) -> @location(0) vec4f {
+  let x = input.rawPosition[0] * properties.imageWidth;
+  let y = input.rawPosition[1] * properties.imageHeight;
+
+  var pointLPS = getPointLPS(
+    properties.imageWorldOrigin,
+    properties.xAxis,
+    properties.yAxis,
+    x - min(properties.viewportSpaceImageX0, 0), // WTF min is needed?
+    y - min(properties.viewportSpaceImageY0, 0),
+  );
+
+  for (var i: f32 = 0; i < volume.dimensionsVoxels[1]; i += 1) {
+    let rawPixelValue = getLPSPixelValue(pointLPS);
+
+    if (rawPixelValue > properties.targetValue) {
+      return applyLUT(
+        rawPixelValue, 1 / max(i * i / volume.dimensionsVoxels[2] / 100, 1)
+      );
+    }
+    pointLPS += properties.direction;
+  }
+  return applyLUT(MIN_FLOAT_VALUE, 0);
+}
+
+// 0 < baseAlpha < 1
+fn applyLUT(rawValue: f32, baseAlpha: f32) -> vec4<f32> {
+  let lutIndex = u32(floor(clamp(
+    rawValue - properties.leftLimit, 0,
+    properties.rightLimit - properties.leftLimit - 1
+  )) * 3);
+
+  var alpha: f32 = 0;
+
+  if (rawValue > MIN_FLOAT_VALUE) {
+    alpha = baseAlpha;
+  }
+  return vec4(
+    lut[lutIndex] / 255 * alpha, lut[lutIndex + 1] / 255 * alpha,
+    lut[lutIndex + 2] / 255 * alpha, 1
+  );
+}
+
+// See https://helloacm.com/cc-function-to-compute-the-bilinear-interpolation/
+fn bilinearInterpolate(
+  c00: f32, c01: f32, c10: f32, c11: f32, x0: f32, x1: f32, y0: f32, y1: f32,
+  x: f32, y: f32
+) -> f32 {
+  return 1 / (
+    (x1 - x0) * (y1 - y0)) * (c00 * (x1 - x) * (y1 - y) + c10 * (x - x0) *
+      (y1 - y) + c01 * (x1 - x) * (y - y0) + c11 * (x - x0) * (y - y0)
+  );
+}
+
+fn getLPSPixelValue(pointLPS: vec3<f32>) -> f32 {
+  let frameIndexVector = (pointLPS - volume.firstVoxelCenter) /
+    volume.voxelSpacing * volume.orientationZ;
+
+  let frameIndex = frameIndexVector[0] + frameIndexVector[1] +
+    frameIndexVector[2];
+
   let frameIndex0 = floor(frameIndex);
   let frameIndex1 = ceil(frameIndex);
 
@@ -122,10 +178,7 @@ fn getPixelValue(x: f32, y: f32, z:f32) -> f32 {
 }
 
 fn getPointLPS(
-  imageWorldOrigin: vec3<f32>,
-  xAxis: vec3<f32>,
-  yAxis: vec3<f32>,
-  x: f32,
+  imageWorldOrigin: vec3<f32>, xAxis: vec3<f32>, yAxis: vec3<f32>, x: f32,
   y: f32,
 ) -> vec3<f32> {
   return imageWorldOrigin + xAxis * x + yAxis * y;
@@ -139,7 +192,9 @@ fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
   }
 
   let frame = frames[frameIndexUnsigned];
-  let imagePositionToPoint = (pointLPS - frame.imagePosition) / volume.voxelSpacing;
+
+  let imagePositionToPoint = (pointLPS - frame.imagePosition) /
+    volume.voxelSpacing;
 
   let xVector = imagePositionToPoint * frame.imageOrientationX;
   let x = xVector[0] + xVector[1] + xVector[2];
@@ -163,7 +218,8 @@ fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
       let c0 = getPixelValue(x0, y0, frameIndex);
       let c1 = getPixelValue(x1, y1, frameIndex);
 
-      return linearInterpolate(c0, c1, x % 1 + y % 1) * frame.rescaleSlope + frame.rescaleIntercept;
+      return linearInterpolate(c0, c1, x % 1 + y % 1) * frame.rescaleSlope +
+        frame.rescaleIntercept;
     }
 
     let c00 = getPixelValue(x0, y0, frameIndex);
@@ -171,7 +227,8 @@ fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
     let c01 = getPixelValue(x0, y1, frameIndex);
     let c11 = getPixelValue(x1, y1, frameIndex);
 
-    return bilinearInterpolate(c00, c01, c10, c11, x0, x1, y0, y1, x, y) * frame.rescaleSlope + frame.rescaleIntercept;
+    return bilinearInterpolate(c00, c01, c10, c11, x0, x1, y0, y1, x, y) *
+      frame.rescaleSlope + frame.rescaleIntercept;
   }
   return MIN_FLOAT_VALUE;
 }

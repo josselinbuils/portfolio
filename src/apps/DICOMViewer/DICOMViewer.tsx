@@ -28,7 +28,7 @@ const ColorPalette = lazy(
     (await import('./components/ColorPalette/ColorPalette')).ColorPalette,
 );
 
-const DEFAULT_RENDERER_TYPE = RendererType.JavaScript;
+const DEFAULT_RENDERER_TYPE = RendererType.WebGPU;
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
@@ -82,13 +82,18 @@ const DICOMViewer: WindowComponent = ({
     if (viewport === undefined) {
       return;
     }
-    setActiveLeftTool(
-      viewport.dataset.frames.length > 1
-        ? MouseTool.Paging
-        : MouseTool.Windowing,
-    );
+
     const { viewType, windowCenter, windowWidth } = viewport;
     const zoom = viewport.getImageZoom();
+
+    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
+      setActiveLeftTool(MouseTool.Rotate);
+    } else if (viewport.dataset.frames.length > 1) {
+      setActiveLeftTool(MouseTool.Paging);
+    } else {
+      setActiveLeftTool(MouseTool.Windowing);
+    }
+    setActiveRightTool(MouseTool.Zoom);
 
     setAnnotations((previousAnnotations) => ({
       ...previousAnnotations,
@@ -151,35 +156,28 @@ const DICOMViewer: WindowComponent = ({
       );
     }
     if (viewport) {
-      const showTools = ![ViewType.VolumeBones, ViewType.VolumeSkin].includes(
-        viewport.viewType,
-      );
-
       return (
         <>
-          {showTools && (
-            <LeftToolbar
-              activeLeftTool={activeLeftTool}
-              activeRightTool={activeRightTool}
-              viewport={viewport}
-              onToolSelected={selectActiveTool}
-            />
-          )}
+          <LeftToolbar
+            activeLeftTool={activeLeftTool}
+            activeRightTool={activeRightTool}
+            viewport={viewport}
+            onToolSelected={selectActiveTool}
+          />
           <ViewportElement
-            onCanvasMouseDown={showTools ? startActiveTool : undefined}
+            onCanvasMouseDown={startActiveTool}
             onError={setErrorMessage}
             onResize={handleViewportResize}
             onStatsUpdate={setViewportStats}
             viewport={viewport}
           />
-          {showTools &&
-            [RendererType.JavaScript, RendererType.WebGPU].includes(
-              rendererType,
-            ) && (
-              <Suspense fallback={null}>
-                <ColorPalette onLUTComponentsUpdate={setLutComponents} />
-              </Suspense>
-            )}
+          {[RendererType.JavaScript, RendererType.WebGPU].includes(
+            rendererType,
+          ) && (
+            <Suspense fallback={null}>
+              <ColorPalette onLUTComponentsUpdate={setLutComponents} />
+            </Suspense>
+          )}
           <AnnotationsElement
             annotations={annotations}
             availableViewTypes={getAvailableViewTypes(
@@ -221,7 +219,13 @@ const DICOMViewer: WindowComponent = ({
         }
         switch (tool) {
           case MouseTool.Rotate:
-            if (viewport.viewType !== ViewType.Oblique) {
+            if (
+              ![
+                ViewType.Oblique,
+                ViewType.VolumeBones,
+                ViewType.VolumeSkin,
+              ].includes(viewport.viewType)
+            ) {
               viewport.viewType = ViewType.Oblique;
 
               setAnnotations((previousAnnotations) => ({
@@ -270,16 +274,6 @@ const DICOMViewer: WindowComponent = ({
     if (rendererType === undefined) {
       throw new Error('Renderer type undefined');
     }
-
-    if (viewType === ViewType.Native) {
-      if (activeLeftTool === MouseTool.Rotate) {
-        setActiveLeftTool(MouseTool.Paging);
-      }
-      if (activeRightTool === MouseTool.Rotate) {
-        setActiveRightTool(MouseTool.Paging);
-      }
-    }
-
     setViewport(Viewport.create(dataset, viewType, rendererType));
   }
 

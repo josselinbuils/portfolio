@@ -18,9 +18,9 @@ import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
-const skinLUTComponents = [
+const skinLUTComponents: LUTComponent[] = [
   { id: '0', start: 10, end: 135, color: [235, 190, 180] },
-] as LUTComponent[];
+];
 
 export class JSVolumeRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
@@ -221,14 +221,19 @@ export class JSVolumeRenderer implements Renderer {
       rightLimit,
       viewportSpace,
     } = renderingProperties;
-    const {
-      displayHeight,
-      displayWidth,
-      displayX0,
-      displayX1,
-      displayY0,
-      displayY1,
-    } = imageSpace;
+
+    const displayX0 = Math.ceil(imageSpace.displayX0);
+    const displayY0 = Math.ceil(imageSpace.displayY0);
+
+    // Allow to compute pointLPS with higher precision to prevent zoom glitches
+    const xDelta = imageSpace.displayX0 - displayX0;
+    const yDelta = imageSpace.displayY0 - displayY0;
+
+    const displayWidth = Math.floor(imageSpace.displayWidth);
+    const displayHeight = Math.floor(imageSpace.displayHeight);
+
+    const displayX1 = displayX0 + displayWidth - 1;
+    const displayY1 = displayY0 + displayHeight - 1;
 
     const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
       viewport,
@@ -268,8 +273,8 @@ export class JSVolumeRenderer implements Renderer {
             imageWorldOrigin,
             xAxis,
             yAxis,
-            x,
-            y,
+            x + xDelta,
+            y + yDelta,
           );
           let pixelValue;
 
