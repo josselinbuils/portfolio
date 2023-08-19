@@ -4,6 +4,8 @@
 @group(0) @binding(3) var<uniform> properties: RenderingProperties;
 @group(0) @binding(4) var<uniform> volume: Volume;
 
+const MIN_FLOAT_VALUE = -2e31;
+
 struct Frame {
   columns: f32,
   imageOrientationX: vec3<f32>,
@@ -94,7 +96,25 @@ fn getClipPixelValue(clipPosition: vec2<f32>) -> f32 {
     y - min(properties.viewportSpaceImageY0, 0),
   );
 
-  return getRawValue(pointLPS);
+  let frameIndexVector = (pointLPS - volume.firstVoxelCenter) / volume.voxelSpacing * volume.orientationZ;
+  let frameIndex = frameIndexVector[0] + frameIndexVector[1] + frameIndexVector[2];
+  let frameIndex0 = floor(frameIndex);
+  let frameIndex1 = ceil(frameIndex);
+
+  if (frameIndex0 == frameIndex1) {
+    return getRawValue(pointLPS, frameIndex);
+  }
+
+  let rawValue1 = getRawValue(pointLPS, frameIndex0);
+  let rawValue2 = getRawValue(pointLPS, frameIndex1);
+
+  if (rawValue1 == MIN_FLOAT_VALUE) {
+    return rawValue2;
+  }
+  if (rawValue2 == MIN_FLOAT_VALUE) {
+    return rawValue1;
+  }
+  return linearInterpolate(rawValue1, rawValue2, frameIndex % 1);
 }
 
 fn getPixelValue(x: f32, y: f32, z:f32) -> f32 {
@@ -111,11 +131,14 @@ fn getPointLPS(
   return imageWorldOrigin + xAxis * x + yAxis * y;
 }
 
-fn getRawValue(pointLPS: vec3<f32>) -> f32 {
-  let frameIndexVector = (pointLPS - volume.firstVoxelCenter) / volume.voxelSpacing * volume.orientationZ;
-  let frameIndex = round(frameIndexVector[0] + frameIndexVector[1] + frameIndexVector[2]);
+fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
+  let frameIndexUnsigned = u32(frameIndex);
 
-  let frame = frames[u32(frameIndex)];
+  if (frameIndex < 0 || frameIndexUnsigned >= arrayLength(&frames)) {
+    return MIN_FLOAT_VALUE;
+  }
+
+  let frame = frames[frameIndexUnsigned];
   let imagePositionToPoint = (pointLPS - frame.imagePosition) / volume.voxelSpacing;
 
   let xVector = imagePositionToPoint * frame.imageOrientationX;
@@ -150,7 +173,7 @@ fn getRawValue(pointLPS: vec3<f32>) -> f32 {
 
     return bilinearInterpolate(c00, c01, c10, c11, x0, x1, y0, y1, x, y) * frame.rescaleSlope + frame.rescaleIntercept;
   }
-  return -2e31; // max f32 value
+  return MIN_FLOAT_VALUE;
 }
 
 fn linearInterpolate(c0: f32, c1: f32, dist: f32) -> f32 {
