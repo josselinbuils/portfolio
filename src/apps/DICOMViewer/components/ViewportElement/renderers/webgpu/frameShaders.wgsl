@@ -1,4 +1,4 @@
-@group(0) @binding(0) var<storage, read> pixelData: array<f32>;
+@group(0) @binding(0) var texture: texture_2d<i32>;
 @group(0) @binding(1) var<storage, read> lut: array<f32>;
 @group(0) @binding(2) var<uniform> properties: RenderingProperties;
 
@@ -81,7 +81,7 @@ fn getClipPixelValue(clipPosition: vec2<f32>) -> f32 {
 }
 
 fn getPixelValue(x: f32, y: f32) -> f32 {
-  return pixelData[u32(x + y * properties.columns)];
+  return f32(textureLoad(texture, vec2(u32(x), u32(y)), 0)[0]);
 }
 
 fn linearInterpolate(c0: f32, c1: f32, dist: f32) -> f32 {
