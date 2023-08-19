@@ -52,8 +52,8 @@ export function getRenderingProperties(
 
     imageWidth = columns;
     imageHeight = rows;
-    viewportSpaceImageWidth = Math.round(columns * zoom);
-    viewportSpaceImageHeight = Math.round(rows * zoom);
+    viewportSpaceImageWidth = columns * zoom;
+    viewportSpaceImageHeight = rows * zoom;
 
     viewportSpaceImageX0 =
       (width - viewportSpaceImageWidth) / 2 +
@@ -182,29 +182,21 @@ function computeImageSpace(
   const verticalZoom = viewportSpace.imageHeight / imageHeight;
 
   const displayX0 =
-    viewportSpace.imageX0 < 0
-      ? Math.round(-viewportSpace.imageX0 / horizontalZoom)
-      : 0;
+    viewportSpace.imageX0 < 0 ? -viewportSpace.imageX0 / horizontalZoom : 0;
   const displayY0 =
-    viewportSpace.imageY0 < 0
-      ? Math.round(-viewportSpace.imageY0 / verticalZoom)
-      : 0;
+    viewportSpace.imageY0 < 0 ? -viewportSpace.imageY0 / verticalZoom : 0;
 
   const displayX1 =
     viewportSpace.imageX1 > viewportSpace.lastPixelX
       ? imageWidth -
-        Math.round(
-          (viewportSpace.imageX1 - viewportSpace.lastPixelX) / horizontalZoom,
-        ) -
+        (viewportSpace.imageX1 - viewportSpace.lastPixelX) / horizontalZoom -
         1
       : imageWidth - 1;
 
   const displayY1 =
     viewportSpace.imageY1 > viewportSpace.lastPixelY
       ? imageHeight -
-        Math.round(
-          (viewportSpace.imageY1 - viewportSpace.lastPixelY) / verticalZoom,
-        ) -
+        (viewportSpace.imageY1 - viewportSpace.lastPixelY) / verticalZoom -
         1
       : imageHeight - 1;
 
@@ -230,8 +222,8 @@ function computeViewportSpaceCoordinates(
 ): ViewportSpaceCoordinates {
   const { height, width } = viewport;
 
-  const imageX0 = Math.round(viewportSpaceImageX0);
-  const imageY0 = Math.round(viewportSpaceImageY0);
+  const imageX0 = viewportSpaceImageX0;
+  const imageY0 = viewportSpaceImageY0;
 
   const imageX1 = imageX0 + imageWidth - 1;
   const imageY1 = imageY0 + imageHeight - 1;
@@ -284,28 +276,34 @@ function getImageDimensions(viewport: Viewport):
   const intersectionsCameraHorizontal = intersectionsCamera.map((i) => i[0]);
   const intersectionsCameraVertical = intersectionsCamera.map((i) => i[1]);
   const halfSpacing = V(dataset.voxelSpacing).mul(0.5);
+
   const halfHorizontalSpacing = Math.abs(
     halfSpacing.dot(V(viewportBasis[0]).normalize()),
   );
   const halfVerticalSpacing = Math.abs(
     halfSpacing.dot(V(viewportBasis[1]).normalize()),
   );
+
   const maxHorizontalMm =
     Math.max(...intersectionsCameraHorizontal) + halfHorizontalSpacing;
+
   const minHorizontalMm =
     Math.min(...intersectionsCameraHorizontal) - halfHorizontalSpacing;
+
   const maxVerticalMm =
     Math.max(...intersectionsCameraVertical) + halfVerticalSpacing;
+
   const minVerticalMm =
     Math.min(...intersectionsCameraVertical) - halfVerticalSpacing;
-  const widthMm = Math.round(maxHorizontalMm - minHorizontalMm);
-  const heightMm = Math.round(maxVerticalMm - minVerticalMm);
-  const width = Math.round(
-    widthMm / Math.abs(V(voxelSpacing).dot(V(viewportBasis[0]).normalize())),
-  );
-  const height = Math.round(
-    heightMm / Math.abs(V(voxelSpacing).dot(V(viewportBasis[1]).normalize())),
-  );
+
+  const widthMm = maxHorizontalMm - minHorizontalMm;
+  const heightMm = maxVerticalMm - minVerticalMm;
+
+  const width =
+    widthMm / Math.abs(V(voxelSpacing).dot(V(viewportBasis[0]).normalize()));
+
+  const height =
+    heightMm / Math.abs(V(voxelSpacing).dot(V(viewportBasis[1]).normalize()));
 
   if (width === 0 || height === 0) {
     return undefined;
@@ -320,12 +318,12 @@ function getImageDimensions(viewport: Viewport):
   const viewportSpaceImageY0 = Math.min(...intersectionsDisplayVertical);
   const viewportSpaceImageX1 = Math.max(...intersectionsDisplayHorizontal);
   const viewportSpaceImageY1 = Math.max(...intersectionsDisplayVertical);
-  const viewportSpaceImageWidth = Math.round(
-    viewportSpaceImageX1 - viewportSpaceImageX0 + 1,
-  );
-  const viewportSpaceImageHeight = Math.round(
-    viewportSpaceImageY1 - viewportSpaceImageY0 + 1,
-  );
+
+  const viewportSpaceImageWidth =
+    viewportSpaceImageX1 - viewportSpaceImageX0 + 1;
+
+  const viewportSpaceImageHeight =
+    viewportSpaceImageY1 - viewportSpaceImageY0 + 1;
 
   return {
     height,

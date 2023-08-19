@@ -4,11 +4,7 @@ import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
-import {
-  type BoundedViewportSpaceCoordinates,
-  type ImageSpaceCoordinates,
-  type RenderingProperties,
-} from '../RenderingProperties';
+import { type RenderingProperties } from '../RenderingProperties';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
 import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
@@ -84,10 +80,6 @@ export class JSFrameRenderer implements Renderer {
         break;
       }
 
-      case NormalizedImageFormat.RGB:
-        this.renderRGB(frame, renderingProperties);
-        break;
-
       default:
         throw new Error('Unsupported image format');
     }
@@ -117,14 +109,15 @@ export class JSFrameRenderer implements Renderer {
 
     const { boundedViewportSpace, leftLimit, rightLimit, imageSpace } =
       renderingProperties;
-    const {
-      displayHeight,
-      displayWidth,
-      displayX0,
-      displayX1,
-      displayY0,
-      displayY1,
-    } = imageSpace as ImageSpaceCoordinates;
+
+    const displayX0 = Math.ceil(imageSpace.displayX0);
+    const displayY0 = Math.ceil(imageSpace.displayY0);
+
+    const displayWidth = Math.floor(imageSpace.displayWidth);
+    const displayHeight = Math.floor(imageSpace.displayHeight);
+
+    const displayX1 = displayX0 + displayWidth - 1;
+    const displayY1 = displayY0 + displayHeight - 1;
 
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
     const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
@@ -149,41 +142,6 @@ export class JSFrameRenderer implements Renderer {
     );
   }
 
-  private renderRGB(
-    frame: Frame,
-    renderingProperties: RenderingProperties,
-  ): void {
-    const { columns, pixelData, rows } = frame;
-
-    if (pixelData === undefined) {
-      return;
-    }
-
-    const { viewportSpace } = renderingProperties;
-
-    const pixelDataLength = pixelData.length;
-    const imageData32 = new Uint32Array(columns * rows);
-
-    let dataIndex = 0;
-
-    for (let i = 0; i < pixelDataLength; i += 3) {
-      imageData32[dataIndex++] =
-        pixelData[i] |
-        (pixelData[i + 1] << 8) |
-        (pixelData[i + 2] << 16) |
-        (255 << 24);
-    }
-
-    drawImageData(
-      imageData32,
-      this.context,
-      this.renderingContext,
-      columns,
-      rows,
-      viewportSpace,
-    );
-  }
-
   private renderViewportPixels(
     frame: Frame,
     renderingProperties: RenderingProperties,
@@ -197,11 +155,19 @@ export class JSFrameRenderer implements Renderer {
 
     const { boundedViewportSpace, leftLimit, rightLimit, viewportSpace } =
       renderingProperties;
-    const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
-      boundedViewportSpace as BoundedViewportSpaceCoordinates;
+
+    const imageX0 = Math.ceil(boundedViewportSpace.imageX0);
+    const imageY0 = Math.ceil(boundedViewportSpace.imageY0);
+
+    const imageWidth = Math.floor(boundedViewportSpace.imageWidth);
+    const imageHeight = Math.floor(boundedViewportSpace.imageHeight);
+
+    const imageX1 = imageX0 + imageWidth - 1;
+    const imageY1 = imageY0 + imageHeight - 1;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
+
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
     const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 

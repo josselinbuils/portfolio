@@ -9,8 +9,6 @@ import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
 import {
-  type BoundedViewportSpaceCoordinates,
-  type ImageSpaceCoordinates,
   type RenderingProperties,
   type ViewportSpaceCoordinates,
 } from '../RenderingProperties';
@@ -230,7 +228,7 @@ export class JSVolumeRenderer implements Renderer {
       displayX1,
       displayY0,
       displayY1,
-    } = imageSpace as ImageSpaceCoordinates;
+    } = imageSpace;
 
     const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
       viewport,
@@ -350,14 +348,19 @@ export class JSVolumeRenderer implements Renderer {
       rightLimit,
       viewportSpace,
     } = renderingProperties;
-    const {
-      displayHeight,
-      displayWidth,
-      displayX0,
-      displayX1,
-      displayY0,
-      displayY1,
-    } = imageSpace as ImageSpaceCoordinates;
+
+    const displayX0 = Math.ceil(imageSpace.displayX0);
+    const displayY0 = Math.ceil(imageSpace.displayY0);
+
+    // Allow to compute pointLPS with higher precision to prevent zoom glitches
+    const xDelta = imageSpace.displayX0 - displayX0;
+    const yDelta = imageSpace.displayY0 - displayY0;
+
+    const displayWidth = Math.floor(imageSpace.displayWidth);
+    const displayHeight = Math.floor(imageSpace.displayHeight);
+
+    const displayX1 = displayX0 + displayWidth - 1;
+    const displayY1 = displayY0 + displayHeight - 1;
 
     const imageWorldOrigin = JSVolumeRenderer.getImageWorldOrigin(
       viewport,
@@ -374,8 +377,8 @@ export class JSVolumeRenderer implements Renderer {
           imageWorldOrigin,
           xAxis,
           yAxis,
-          x,
-          y,
+          x + xDelta,
+          y + yDelta,
         );
         const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
         imageData32[dataIndex++] = getPixelValue(rawValue);
@@ -404,9 +407,21 @@ export class JSVolumeRenderer implements Renderer {
       rightLimit,
       viewportSpace,
     } = renderingProperties;
-    const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
-      boundedViewportSpace as BoundedViewportSpaceCoordinates;
-    const { displayWidth, displayHeight } = imageSpace as ImageSpaceCoordinates;
+
+    const imageX0 = Math.ceil(boundedViewportSpace.imageX0);
+    const imageY0 = Math.ceil(boundedViewportSpace.imageY0);
+
+    // Allow to compute pointLPS with higher precision to prevent zoom glitches
+    const xDelta = boundedViewportSpace.imageX0 - imageX0;
+    const yDelta = boundedViewportSpace.imageY0 - imageY0;
+
+    const imageWidth = Math.floor(boundedViewportSpace.imageWidth);
+    const imageHeight = Math.floor(boundedViewportSpace.imageHeight);
+
+    const imageX1 = imageX0 + imageWidth - 1;
+    const imageY1 = imageY0 + imageHeight - 1;
+
+    const { displayWidth, displayHeight } = imageSpace;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
@@ -429,8 +444,8 @@ export class JSVolumeRenderer implements Renderer {
           imageWorldOrigin,
           xAxis,
           yAxis,
-          x - viewportSpaceImageX0,
-          y - viewportSpaceImageY0,
+          x + xDelta - viewportSpaceImageX0,
+          y + yDelta - viewportSpaceImageY0,
         );
         const rawValue = JSVolumeRenderer.getRawValue(dataset, pointLPS);
         imageData32[dataIndex++] = getPixelValue(rawValue);

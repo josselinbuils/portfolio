@@ -5,11 +5,7 @@ import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
-import {
-  type BoundedViewportSpaceCoordinates,
-  type ImageSpaceCoordinates,
-  type ViewportSpaceCoordinates,
-} from '../RenderingProperties';
+import { type ViewportSpaceCoordinates } from '../RenderingProperties';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../renderingUtils';
 import shaders from './volumeShaders.wgsl?raw';
@@ -170,9 +166,9 @@ export class WebGPUVolumeRenderer implements Renderer {
     } = renderingProperties;
 
     const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
-      boundedViewportSpace as BoundedViewportSpaceCoordinates;
+      boundedViewportSpace;
 
-    const { displayHeight, displayWidth } = imageSpace as ImageSpaceCoordinates;
+    const { displayHeight, displayWidth } = imageSpace;
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;
     const imageWorldOrigin = WebGPUVolumeRenderer.getImageWorldOrigin(

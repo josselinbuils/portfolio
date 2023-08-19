@@ -3,8 +3,8 @@ import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { type Renderer } from '../Renderer';
 import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
-import { getFragmentShaderSrc, getTextureFormat } from './fragmentShader';
-import VERTEX_SHADER_SRC from './shaders/vertexShader.vert?raw';
+import fragmentShaderSource from './grayscale.frag?raw';
+import vertexShaderSource from './vertexShader.vert?raw';
 
 export class WebGLRenderer implements Renderer {
   private readonly gl: WebGLRenderingContext;
@@ -48,10 +48,14 @@ export class WebGLRenderer implements Renderer {
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { id, imageFormat, rescaleIntercept, rescaleSlope } = frame;
 
+    if (imageFormat !== NormalizedImageFormat.Int16) {
+      throw new Error(`Unsupported image format: ${imageFormat}`);
+    }
+
     validateCamera2D(frame, camera);
 
     if (this.program === undefined) {
-      this.program = this.createProgram(imageFormat);
+      this.program = this.createProgram();
     }
 
     if (this.glViewportWidth !== width || this.glViewportHeight !== height) {
@@ -82,30 +86,28 @@ export class WebGLRenderer implements Renderer {
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-    if (imageFormat !== NormalizedImageFormat.RGB) {
-      // Look up uniform locations
-      const rescaleInterceptLocation = gl.getUniformLocation(
-        this.program,
-        'rescaleIntercept',
-      );
-      const rescaleSlopeLocation = gl.getUniformLocation(
-        this.program,
-        'rescaleSlope',
-      );
-      const windowCenterLocation = gl.getUniformLocation(
-        this.program,
-        'windowCenter',
-      );
-      const windowWidthLocation = gl.getUniformLocation(
-        this.program,
-        'windowWidth',
-      );
+    // Look up uniform locations
+    const rescaleInterceptLocation = gl.getUniformLocation(
+      this.program,
+      'rescaleIntercept',
+    );
+    const rescaleSlopeLocation = gl.getUniformLocation(
+      this.program,
+      'rescaleSlope',
+    );
+    const windowCenterLocation = gl.getUniformLocation(
+      this.program,
+      'windowCenter',
+    );
+    const windowWidthLocation = gl.getUniformLocation(
+      this.program,
+      'windowWidth',
+    );
 
-      gl.uniform1f(rescaleInterceptLocation, rescaleIntercept);
-      gl.uniform1f(rescaleSlopeLocation, rescaleSlope);
-      gl.uniform1f(windowWidthLocation, windowWidth);
-      gl.uniform1f(windowCenterLocation, windowCenter);
-    }
+    gl.uniform1f(rescaleInterceptLocation, rescaleIntercept);
+    gl.uniform1f(rescaleSlopeLocation, rescaleSlope);
+    gl.uniform1f(windowWidthLocation, windowWidth);
+    gl.uniform1f(windowCenterLocation, windowCenter);
 
     const matrixLocation = gl.getUniformLocation(this.program, 'u_matrix');
 
@@ -141,7 +143,7 @@ export class WebGLRenderer implements Renderer {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
-  private createProgram(imageFormat: NormalizedImageFormat): WebGLProgram {
+  private createProgram(): WebGLProgram {
     const { gl } = this;
     const program = gl.createProgram();
 
@@ -151,7 +153,7 @@ export class WebGLRenderer implements Renderer {
 
     this.program = program;
 
-    const { fragmentShader, vertexShader } = this.createShaders(imageFormat);
+    const { fragmentShader, vertexShader } = this.createShaders();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
 
@@ -161,12 +163,11 @@ export class WebGLRenderer implements Renderer {
     return program;
   }
 
-  private createShaders(imageFormat: NormalizedImageFormat): {
+  private createShaders(): {
     fragmentShader: WebGLShader;
     vertexShader: WebGLShader;
   } {
     const { gl } = this;
-    const fragmentShaderSrc = getFragmentShaderSrc(imageFormat);
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 
@@ -174,7 +175,7 @@ export class WebGLRenderer implements Renderer {
       throw new Error('Unable to create vertex shader');
     }
 
-    gl.shaderSource(vertexShader, VERTEX_SHADER_SRC);
+    gl.shaderSource(vertexShader, vertexShaderSource);
     gl.compileShader(vertexShader);
 
     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -183,7 +184,7 @@ export class WebGLRenderer implements Renderer {
       throw new Error('Unable to create fragment shader');
     }
 
-    gl.shaderSource(fragmentShader, fragmentShaderSrc);
+    gl.shaderSource(fragmentShader, fragmentShaderSource);
     gl.compileShader(fragmentShader);
 
     return { fragmentShader, vertexShader };
@@ -209,8 +210,8 @@ export class WebGLRenderer implements Renderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-    const { columns, imageFormat, rows } = frame;
-    const format = getTextureFormat(gl, imageFormat);
+    const { columns, rows } = frame;
+    const format = gl.LUMINANCE_ALPHA;
     const pixelData = new Uint8Array(
       frame.pixelData.buffer,
       frame.pixelData.byteOffset,
