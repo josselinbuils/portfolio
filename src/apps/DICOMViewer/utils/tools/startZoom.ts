@@ -3,8 +3,8 @@ import { isImageCentered } from './utils/isImageCentered';
 
 const ZOOM_LIMIT = 0.07;
 const ZOOM_MAX = 5;
-const ZOOM_MIN = 0.2;
-const ZOOM_SENSIBILITY = 1000;
+const ZOOM_MIN = 0.3;
+const ZOOM_SENSIBILITY = 5000;
 
 export function startZoom(
   viewport: Viewport,
@@ -19,8 +19,13 @@ export function startZoom(
   return (moveEvent: MouseEvent) => {
     const maxFOV = baseFieldOfView / ZOOM_MIN;
     const minFOV = baseFieldOfView / ZOOM_MAX;
+
+    const zoomSensibility =
+      (ZOOM_SENSIBILITY * Math.max(startFOV - minFOV, (maxFOV - minFOV) / 10)) /
+      (maxFOV - minFOV);
+
     const newFieldOfView =
-      startFOV + ((moveEvent.clientY - startY) * ZOOM_SENSIBILITY) / height;
+      startFOV + ((moveEvent.clientY - startY) * zoomSensibility) / height;
 
     camera.fieldOfView = Math.max(Math.min(newFieldOfView, maxFOV), minFOV);
 
