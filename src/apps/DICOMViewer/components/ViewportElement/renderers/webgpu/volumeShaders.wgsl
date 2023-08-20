@@ -31,6 +31,7 @@ struct RenderingProperties {
   clipX: f32,
   clipY: f32,
   direction: vec3<f32>,
+  draft: f32,
   imageHeight: f32,
   imageWidth: f32,
   imageWorldOrigin: vec3<f32>,
@@ -157,6 +158,10 @@ fn getLPSPixelValue(pointLPS: vec3<f32>) -> f32 {
   let frameIndex0 = floor(frameIndex);
   let frameIndex1 = ceil(frameIndex);
 
+  if (properties.draft == 1) {
+    return getRawValue(pointLPS, round(frameIndex));
+  }
+
   if (frameIndex0 == frameIndex1) {
     return getRawValue(pointLPS, frameIndex);
   }
@@ -214,6 +219,11 @@ fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
     y0 >= 0 && y0 < frame.rows &&
     y1 >= 0 && y1 < frame.rows
   ) {
+    if (properties.draft == 1) {
+      return getPixelValue(round(x), round(y), frameIndex) *
+        frame.rescaleSlope + frame.rescaleIntercept;
+    }
+
     if (x1 == x0 || y1 == y0) {
       let c0 = getPixelValue(x0, y0, frameIndex);
       let c1 = getPixelValue(x1, y1, frameIndex);

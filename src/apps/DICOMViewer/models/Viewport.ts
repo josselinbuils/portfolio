@@ -23,6 +23,7 @@ const SENSITIVE_FIELDS: readonly (keyof Viewport)[] = [
 export class Viewport extends Renderable implements CoordinateSpace {
   camera!: Camera;
   dataset!: Dataset;
+  draft = false;
   height = 0;
   lutComponents?: LUTComponent[] = undefined; // Value needed to be decorated by Renderable
   rendererType!: RendererType;

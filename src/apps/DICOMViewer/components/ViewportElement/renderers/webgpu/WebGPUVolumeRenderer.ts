@@ -242,6 +242,7 @@ export class WebGPUVolumeRenderer implements Renderer {
               clipX,
               clipY,
               direction,
+              viewport.draft ? 1 : 0,
               imageHeight,
               imageWidth,
               imageWorldOrigin,

@@ -229,8 +229,17 @@ export class JSVolumeRenderer implements Renderer {
     const xDelta = imageSpace.displayX0 - displayX0;
     const yDelta = imageSpace.displayY0 - displayY0;
 
-    const displayWidth = Math.floor(imageSpace.displayWidth);
-    const displayHeight = Math.floor(imageSpace.displayHeight);
+    let displayWidth = Math.floor(imageSpace.displayWidth);
+    let displayHeight = Math.floor(imageSpace.displayHeight);
+
+    // We need both displayWidth and displayHeight to be divisible by 2 so their
+    // product is divisible by 4.
+    if (displayWidth % 2 > 0) {
+      displayWidth += 1;
+    }
+    if (displayHeight % 2 > 0) {
+      displayHeight += 1;
+    }
 
     const displayX1 = displayX0 + displayWidth - 1;
     const displayY1 = displayY0 + displayHeight - 1;
@@ -319,6 +328,11 @@ export class JSVolumeRenderer implements Renderer {
           displayHeight / 2,
           boundedViewportSpace,
         );
+
+        if (viewport.draft) {
+          return;
+        }
+
         // eslint-disable-next-line no-await-in-loop
         await new Promise((resolve) => {
           setTimeout(resolve, 0);

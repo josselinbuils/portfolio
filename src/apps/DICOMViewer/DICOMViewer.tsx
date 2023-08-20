@@ -207,6 +207,9 @@ const DICOMViewer: WindowComponent = ({
   }
 
   async function startActiveTool(downEvent: MouseEvent): Promise<void> {
+    if (viewport !== undefined) {
+      viewport.draft = true;
+    }
     await startTool(
       downEvent,
       viewport as Viewport,
@@ -262,6 +265,11 @@ const DICOMViewer: WindowComponent = ({
 
           default:
             throw new Error('Unknown mouse tool');
+        }
+      },
+      () => {
+        if (viewport !== undefined) {
+          viewport.draft = false;
         }
       },
     );

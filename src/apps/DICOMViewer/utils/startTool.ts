@@ -9,6 +9,7 @@ export async function startTool(
   activeMiddleTool?: MouseTool,
   activeRightTool?: MouseTool,
   onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {},
+  onEnd: () => void = () => {},
 ): Promise<void> {
   downEvent.preventDefault();
 
@@ -38,6 +39,7 @@ export async function startTool(
 
   const handleToolUpdate = (...args: any[]) =>
     onUpdate(tool as MouseTool, ...args);
+
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
@@ -84,6 +86,7 @@ export async function startTool(
     const upListener = () => {
       window.removeEventListener('mousemove', moveListener);
       window.removeEventListener('mouseup', upListener);
+      onEnd();
     };
     window.addEventListener('mouseup', upListener);
   }
