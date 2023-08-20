@@ -208,6 +208,10 @@ export class WebGPUVolumeRenderer implements Renderer {
     const clipWidth = (imageWidth / width) * 2;
     const clipHeight = (imageHeight / height) * -2;
 
+    const draft =
+      viewport.draft &&
+      [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType);
+
     const bindGroup = this.device.createBindGroup({
       layout: this.pipeline.getBindGroupLayout(0),
       entries: [
@@ -242,7 +246,7 @@ export class WebGPUVolumeRenderer implements Renderer {
               clipX,
               clipY,
               direction,
-              viewport.draft ? 1 : 0,
+              draft ? 1 : 0,
               imageHeight,
               imageWidth,
               imageWorldOrigin,
