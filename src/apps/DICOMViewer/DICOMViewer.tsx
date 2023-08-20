@@ -177,7 +177,7 @@ const DICOMViewer: WindowComponent = ({
             <Suspense fallback={null}>
               <ColorPalette
                 onLUTComponentsUpdate={setLutComponents}
-                viewportLutComponents={viewport.lutComponents}
+                viewport={viewport}
               />
             </Suspense>
           )}

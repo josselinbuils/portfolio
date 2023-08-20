@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { type FC, useEffect, useState } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { type LUTComponent } from '../../interfaces/LUTComponent';
+import { type Viewport } from '../../models/Viewport';
 import styles from './ColorPalette.module.scss';
 import { BarPreview } from './components/BarPreview/BarPreview';
 import { GraphPreview } from './components/GraphPreview/GraphPreview';
@@ -16,12 +17,12 @@ const baseLUTComponents = [
 
 export interface ColorPaletteProps {
   onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
-  viewportLutComponents: LUTComponent[] | undefined;
+  viewport: Viewport | undefined;
 }
 
 export const ColorPalette: FC<ColorPaletteProps> = ({
   onLUTComponentsUpdate,
-  viewportLutComponents,
+  viewport,
 }) => {
   const [initialViewportLutComponents, setInitialViewportLutComponents] =
     useState<LUTComponent[] | undefined>();
@@ -34,15 +35,15 @@ export const ColorPalette: FC<ColorPaletteProps> = ({
 
     if (open) {
       onLUTComponentsUpdate(initialViewportLutComponents);
-      setInitialViewportLutComponents(undefined);
-      setLUTComponents([]);
-    } else {
-      setInitialViewportLutComponents(viewportLutComponents);
-      setLUTComponents(
-        structuredClone(viewportLutComponents ?? baseLUTComponents),
-      );
     }
   }
+
+  useEffect(() => {
+    setInitialViewportLutComponents(viewport?.lutComponents);
+    setLUTComponents(
+      structuredClone(viewport?.lutComponents ?? baseLUTComponents),
+    );
+  }, [viewport]);
 
   useEffect(() => {
     if (open) {
