@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: ['prettier-plugin-glsl'],
   overrides: [
     {
       files: ['*.frag'],
