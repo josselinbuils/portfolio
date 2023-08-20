@@ -175,7 +175,10 @@ const DICOMViewer: WindowComponent = ({
             rendererType,
           ) && (
             <Suspense fallback={null}>
-              <ColorPalette onLUTComponentsUpdate={setLutComponents} />
+              <ColorPalette
+                onLUTComponentsUpdate={setLutComponents}
+                viewportLutComponents={viewport.lutComponents}
+              />
             </Suspense>
           )}
           <AnnotationsElement

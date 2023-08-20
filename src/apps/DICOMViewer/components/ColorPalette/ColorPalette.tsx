@@ -16,19 +16,38 @@ const baseLUTComponents = [
 
 export interface ColorPaletteProps {
   onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
+  viewportLutComponents: LUTComponent[] | undefined;
 }
 
 export const ColorPalette: FC<ColorPaletteProps> = ({
   onLUTComponentsUpdate,
+  viewportLutComponents,
 }) => {
+  const [initialViewportLutComponents, setInitialViewportLutComponents] =
+    useState<LUTComponent[] | undefined>();
   const [activeLUTComponentID, setActiveLUTComponentID] = useState<string>();
-  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>(() =>
-    baseLUTComponents.map((component) => ({ ...component })),
-  );
+  const [lutComponents, setLUTComponents] = useState<LUTComponent[]>([]);
   const [open, setOpen] = useState(false);
 
+  function toggleOpen() {
+    setOpen(!open);
+
+    if (open) {
+      onLUTComponentsUpdate(initialViewportLutComponents);
+      setInitialViewportLutComponents(undefined);
+      setLUTComponents([]);
+    } else {
+      setInitialViewportLutComponents(viewportLutComponents);
+      setLUTComponents(
+        structuredClone(viewportLutComponents ?? baseLUTComponents),
+      );
+    }
+  }
+
   useEffect(() => {
-    onLUTComponentsUpdate(open ? lutComponents : undefined);
+    if (open) {
+      onLUTComponentsUpdate(lutComponents);
+    }
   }, [lutComponents, onLUTComponentsUpdate, open]);
 
   function addLUTComponent(): void {
@@ -113,11 +132,7 @@ export const ColorPalette: FC<ColorPaletteProps> = ({
 
   return (
     <div className={cn(styles.colorPalette, { [styles.open]: open })}>
-      <button
-        className={styles.button}
-        onClick={() => setOpen(!open)}
-        type="button"
-      >
+      <button className={styles.button} onClick={toggleOpen} type="button">
         <FontAwesomeIcon icon={faPalette} />
       </button>
       {open && (

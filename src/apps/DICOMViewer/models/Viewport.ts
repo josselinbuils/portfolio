@@ -49,9 +49,19 @@ export class Viewport extends Renderable implements CoordinateSpace {
         ? Camera.fromFrame(frame)
         : Camera.fromVolume(dataset.volume as Volume, viewType);
 
+    const lutComponents =
+      viewType === ViewType.VolumeSkin
+        ? [
+            { id: '0', start: -25, end: 125, color: [255, 190, 180] },
+            { id: '1', start: 100, end: 250, color: [255, 140, 130] },
+            { id: '2', start: 215, end: 300, color: [255, 255, 255] },
+          ]
+        : undefined;
+
     return new Viewport({
       camera,
       dataset,
+      lutComponents,
       rendererType,
       viewType,
       windowCenter,

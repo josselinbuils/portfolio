@@ -1,5 +1,4 @@
 import { ViewType } from '@/apps/DICOMViewer/constants';
-import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -17,10 +16,6 @@ import { displayCube } from './utils/displayCube';
 import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
-
-const skinLUTComponents: LUTComponent[] = [
-  { id: '0', start: 10, end: 135, color: [235, 190, 180] },
-];
 
 export class JSVolumeRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
@@ -158,13 +153,10 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-      if (viewport.lutComponents !== undefined) {
-        this.lut = loadVOILUT(viewport.lutComponents, windowWidth);
-      } else if (viewport.viewType === ViewType.VolumeSkin) {
-        this.lut = loadVOILUT(skinLUTComponents, windowWidth);
-      } else {
-        this.lut = getDefaultVOILUT(windowWidth);
-      }
+      this.lut =
+        viewport.lutComponents !== undefined
+          ? loadVOILUT(viewport.lutComponents, windowWidth)
+          : getDefaultVOILUT(windowWidth);
     }
 
     const { boundedViewportSpace, imageSpace } = renderingProperties;

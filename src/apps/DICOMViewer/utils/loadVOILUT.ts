@@ -7,12 +7,13 @@ export function loadVOILUT(
   lutComponents: LUTComponent[],
   windowWidth: number,
 ): VOILUT {
+  const scaledLUTComponents = scaleLUTComponents(lutComponents, windowWidth);
   const table: number[][] = [];
 
   for (let x = 0; x < windowWidth; x++) {
     const pixelValue = [0, 0, 0];
 
-    scaleLUTComponents(lutComponents, windowWidth)
+    scaledLUTComponents
       .filter(({ end, start }) => x - 1 >= start && x <= end)
       .forEach(({ color, end, start }) => {
         const colorValue = applyPolynomialInterpolation(start, end, 255, x);
