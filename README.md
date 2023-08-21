@@ -8,8 +8,9 @@ My portfolio :)
 
 ## Contributing
 
-Group DICOM files:
+Group and compress DICOM files:
 
 ```
-COPYFILE_DISABLE=true tar -cv dirname > dirname.tar
+export DIRNAME=dirname
+COPYFILE_DISABLE=1 tar --exclude='.DS_Store' -cf $DIRNAME.tar $DIRNAME && COPYFILE_DISABLE=1 tar --exclude='.DS_Store' -czf $DIRNAME.tar.gz $DIRNAME
 ```

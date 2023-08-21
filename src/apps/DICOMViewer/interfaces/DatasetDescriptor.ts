@@ -1,6 +1,6 @@
 export interface DatasetDescriptor {
   is3D: boolean;
   name: string;
-  previewURL: string;
+  previewURL: string | undefined;
   url: string;
 }

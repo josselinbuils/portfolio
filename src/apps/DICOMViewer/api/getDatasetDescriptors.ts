@@ -29,10 +29,7 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
           const preview = (await fs.readdir(PREVIEWS_PATH)).find((p) =>
             p.includes(name),
           );
-          if (preview === undefined) {
-            throw new Error(`Unable to find preview for ${name}`);
-          }
-          const previewURL = `${PREVIEWS_URL}/${preview}`;
+          const previewURL = preview ? `${PREVIEWS_URL}/${preview}` : undefined;
           const is3D = await is3DDataset(fileName);
 
           return { is3D, name, previewURL, url };

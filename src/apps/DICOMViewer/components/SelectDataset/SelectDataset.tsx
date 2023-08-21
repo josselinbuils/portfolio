@@ -35,7 +35,9 @@ export const SelectDataset: FC<SelectDatasetProps> = ({
     datasetsPromise
       .then(async (descriptors) => {
         await Promise.all(
-          descriptors.map(({ previewURL }) => preloadImage(previewURL)),
+          descriptors.map(({ previewURL }) =>
+            previewURL ? preloadImage(previewURL) : undefined,
+          ),
         );
         return descriptors;
       })
