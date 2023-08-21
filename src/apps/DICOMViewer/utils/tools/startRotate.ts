@@ -1,7 +1,5 @@
-import { ViewType } from '../../constants';
 import { type Camera } from '../../models/Camera';
 import { type Viewport } from '../../models/Viewport';
-import { type Volume } from '../../models/Volume';
 import { areFloatEquals } from '../areFloatEquals';
 import { M3 } from '../math/Matrix3';
 import { V } from '../math/Vector';
@@ -40,26 +38,22 @@ export function startRotate(
     }
 
     const { angle, axis } = computeRotation(previousVector, currentVector);
-    const { camera } = viewport;
+    const { camera, dataset } = viewport;
+    const volume = dataset.volume!;
 
-    if (
-      [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType)
-    ) {
-      const { orientedDimensionsMm } = viewport.dataset.volume!;
+    if (viewport.is3D()) {
       let direction = camera.getDirection();
-      let correctionVector = V(direction).mul(-camera.depthOfField / 2);
 
-      camera.lookPoint = V(camera.lookPoint).sub(correctionVector);
+      camera.lookPoint = volume.center.slice();
       camera.eyePoint = V(camera.lookPoint).sub(direction);
 
       rotateCamera(camera, axis, angle);
 
       direction = camera.getDirection();
 
-      camera.depthOfField =
-        V(M3(orientedDimensionsMm).mulVec(direction)).norm() * 1.2; // TODO find why we need this correction factor
-
-      correctionVector = V(direction).mul(-camera.depthOfField / 2);
+      const correctionVector = V(direction).mul(
+        -volume.getOrientedDimensionMm(direction) / 2,
+      );
 
       camera.lookPoint = V(camera.lookPoint).add(correctionVector).smooth();
       camera.eyePoint = V(camera.lookPoint).sub(direction);
@@ -67,9 +61,7 @@ export function startRotate(
       rotateCamera(camera, axis, angle);
     }
 
-    camera.baseFieldOfView = (
-      viewport.dataset.volume as Volume
-    ).getOrientedDimensionMm(camera.upVector);
+    camera.baseFieldOfView = volume.getOrientedDimensionMm(camera.upVector);
 
     previousVector = currentVector;
 

@@ -2,7 +2,6 @@ import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type Camera } from '../../../models/Camera';
 import { type Frame } from '../../../models/Frame';
 import { type Viewport } from '../../../models/Viewport';
-import { type Volume } from '../../../models/Volume';
 import { changePointSpace } from '../../../utils/changePointSpace';
 import { V } from '../../../utils/math/Vector';
 import {
@@ -247,15 +246,15 @@ function getImageDimensions(viewport: Viewport):
   const { camera, dataset } = viewport;
   const { voxelSpacing } = dataset;
   const viewportBasis = viewport.getWorldBasis();
-  const viewportOrigin = V(viewport.getWorldOrigin()).add(
-    V(camera.getDirection()).mul(camera.depthOfField / 2),
-  );
+  const viewportOrigin = viewport.getWorldOrigin();
   const plane = [
     viewportOrigin,
     V(viewportOrigin).add(viewportBasis[0]),
     V(viewportOrigin).add(viewportBasis[1]),
   ];
-  const intersections = (dataset.volume as Volume).getIntersections(plane);
+  const intersections = viewport.is3D()
+    ? dataset.volume!.getProjections(plane)
+    : dataset.volume!.getIntersections(plane);
 
   if (intersections.length === 0) {
     return undefined;

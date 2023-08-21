@@ -164,4 +164,8 @@ export class Viewport extends Renderable implements CoordinateSpace {
     }
     return this.origin;
   }
+
+  is3D() {
+    return [ViewType.VolumeBones, ViewType.VolumeSkin].includes(this.viewType);
+  }
 }

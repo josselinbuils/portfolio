@@ -14,8 +14,7 @@ import styles from './LeftToolbar.module.scss';
 const mouseTools = [
   {
     condition: (viewport: Viewport) =>
-      viewport.dataset.frames.length > 1 &&
-      ![ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType),
+      viewport.dataset.frames.length > 1 && !viewport.is3D(),
     icon: faArrowsAltV,
     tool: MouseTool.Paging,
   },
@@ -26,8 +25,7 @@ const mouseTools = [
     tool: MouseTool.Rotate,
   },
   {
-    condition: (viewport: Viewport) =>
-      ![ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType),
+    condition: (viewport: Viewport) => !viewport.is3D(),
     icon: faAdjust,
     tool: MouseTool.Windowing,
   },

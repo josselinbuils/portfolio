@@ -50,10 +50,9 @@ export class Volume extends Model {
   }
 
   getOrientedDimensionMm(axe: number[]): number {
-    return Math.max(
-      ...this.orientedDimensionsMm.map((dimensionVector) =>
-        Math.abs(V(dimensionVector).dot(axe)),
-      ),
+    return this.orientedDimensionsMm.reduce(
+      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
+      0,
     );
   }
 
@@ -94,5 +93,19 @@ export class Volume extends Model {
       }
     }
     return intersections;
+  }
+
+  /**
+   * @param plane 3 points representing the plane.
+   */
+  getProjections(plane: number[][]): number[][] {
+    const planeNormal = V(plane[1])
+      .sub(plane[0])
+      .cross(V(plane[2]).sub(plane[0]));
+
+    return Object.values(this.corners).map((corner) => {
+      const viewportToCornerDistance = V(corner).sub(plane[0]).dot(planeNormal);
+      return V(corner).add(V(planeNormal).mul(viewportToCornerDistance));
+    });
   }
 }

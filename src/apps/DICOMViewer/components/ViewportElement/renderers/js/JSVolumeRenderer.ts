@@ -166,9 +166,7 @@ export class JSVolumeRenderer implements Renderer {
       boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
     let renderPixels: () => void | Promise<void>;
 
-    if (
-      [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType)
-    ) {
+    if (viewport.is3D()) {
       renderPixels = async () =>
         this.render3DImagePixels(viewport, renderingProperties);
     } else {

@@ -86,7 +86,7 @@ const DICOMViewer: WindowComponent = ({
     const { viewType, windowCenter, windowWidth } = viewport;
     const zoom = viewport.getImageZoom();
 
-    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
+    if (viewport.is3D()) {
       setActiveLeftTool(MouseTool.Rotate);
     } else if (viewport.dataset.frames.length > 1) {
       setActiveLeftTool(MouseTool.Paging);

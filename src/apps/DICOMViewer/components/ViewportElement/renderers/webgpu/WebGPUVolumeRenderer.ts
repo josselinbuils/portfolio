@@ -107,10 +107,6 @@ export class WebGPUVolumeRenderer implements Renderer {
       })),
     });
 
-    const is3D = [ViewType.VolumeBones, ViewType.VolumeSkin].includes(
-      viewport.viewType,
-    );
-
     this.pipeline = this.device.createRenderPipeline({
       label: 'Render pipeline',
       layout: this.device.createPipelineLayout({
@@ -122,7 +118,7 @@ export class WebGPUVolumeRenderer implements Renderer {
       },
       fragment: {
         module: shaderModule,
-        entryPoint: is3D ? 'fragment3D' : 'fragmentMPR',
+        entryPoint: viewport.is3D() ? 'fragment3D' : 'fragmentMPR',
         targets: [{ format: 'bgra8unorm' }],
       },
     });
@@ -200,9 +196,7 @@ export class WebGPUVolumeRenderer implements Renderer {
     const clipWidth = (imageWidth / width) * 2;
     const clipHeight = (imageHeight / height) * -2;
 
-    const draft =
-      viewport.draft &&
-      [ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewport.viewType);
+    const draft = viewport.draft && viewport.is3D();
 
     const bindGroup = this.device.createBindGroup({
       layout: this.pipeline.getBindGroupLayout(0),

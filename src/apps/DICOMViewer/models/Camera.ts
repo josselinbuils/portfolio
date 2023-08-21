@@ -1,6 +1,5 @@
 import { ViewType } from '../constants';
 import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
-import { M3 } from '../utils/math/Matrix3';
 import { V } from '../utils/math/Vector';
 import { type Frame } from './Frame';
 import { Renderable } from './Renderable';
@@ -16,7 +15,6 @@ const MANDATORY_FIELDS = [
 
 export class Camera extends Renderable implements CoordinateSpace {
   baseFieldOfView!: number; // Volume size along the vertical axis of the camera
-  depthOfField!: number; // Depth of the scene
   eyePoint!: number[];
   fieldOfView!: number;
   lookPoint!: number[];
@@ -37,7 +35,6 @@ export class Camera extends Renderable implements CoordinateSpace {
 
     return new Camera({
       baseFieldOfView,
-      depthOfFieldVoxels: 1,
       eyePoint,
       fieldOfView,
       lookPoint,
@@ -47,7 +44,6 @@ export class Camera extends Renderable implements CoordinateSpace {
 
   static fromVolume(volume: Volume, viewType: ViewType): Camera {
     let direction: number[];
-    let depthOfField = 1;
     let upVector: number[];
 
     switch (viewType) {
@@ -57,20 +53,14 @@ export class Camera extends Renderable implements CoordinateSpace {
         break;
 
       case ViewType.Coronal:
+      case ViewType.VolumeBones:
+      case ViewType.VolumeSkin:
         direction = [0, 1, 0];
         upVector = [0, 0, 1];
         break;
 
       case ViewType.Sagittal:
         direction = [-1, 0, 0];
-        upVector = [0, 0, 1];
-        break;
-
-      case ViewType.VolumeBones:
-      case ViewType.VolumeSkin:
-        direction = [0, 1, 0];
-        depthOfField =
-          V(M3(volume.orientedDimensionsMm).mulVec(direction)).norm() * 1.2;
         upVector = [0, 0, 1];
         break;
 
@@ -83,7 +73,9 @@ export class Camera extends Renderable implements CoordinateSpace {
     let lookPoint = volume.center;
 
     if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
-      const correctionVector = V(direction).mul(-depthOfField / 2);
+      const correctionVector = V(direction).mul(
+        -volume.getOrientedDimensionMm(direction) / 2,
+      );
       lookPoint = V(lookPoint).add(correctionVector).smooth();
     }
 
@@ -91,7 +83,6 @@ export class Camera extends Renderable implements CoordinateSpace {
 
     return new Camera({
       baseFieldOfView,
-      depthOfField,
       eyePoint,
       fieldOfView,
       lookPoint,
