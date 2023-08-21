@@ -262,11 +262,9 @@ export class JSVolumeRenderer implements Renderer {
     let draftDataIndex = 0;
 
     for (const [offsetX, offsetY] of offsets) {
-      let dataIndex = 0;
+      let dataIndex = offsetY * displayWidth + offsetX;
 
       for (let y = displayY0 + offsetY; y <= displayY1; y += 2) {
-        dataIndex += (displayX1 + 1) * offsetY;
-
         for (let x = displayX0 + offsetX; x <= displayX1; x += 2) {
           const pointLPS = JSVolumeRenderer.getPointLPS(
             imageWorldOrigin,
@@ -302,11 +300,10 @@ export class JSVolumeRenderer implements Renderer {
             draftImageData32[draftDataIndex++] = pixelValue || 0 | 0;
           }
 
-          dataIndex += offsetX;
-          imageData32[dataIndex++] = pixelValue || 0 | 0;
-          dataIndex += 1 - offsetX;
+          imageData32[dataIndex] = pixelValue || 0 | 0;
+          dataIndex += 2;
         }
-        dataIndex += (displayX1 + 1) * (1 - offsetY);
+        dataIndex += displayWidth;
       }
 
       if (offsetX === 0 && offsetY === 0) {
