@@ -10,7 +10,7 @@ export async function startTool(
   activeRightTool?: MouseTool,
   onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {},
   onEnd: () => void = () => {},
-): Promise<void> {
+): Promise<boolean> {
   downEvent.preventDefault();
 
   const isMacOS = navigator.platform.indexOf('Mac') !== -1;
@@ -30,11 +30,11 @@ export async function startTool(
       break;
 
     default:
-      throw new Error('Unknown mouse button');
+    // Ignored
   }
 
   if (tool === undefined) {
-    return;
+    return false;
   }
 
   const handleToolUpdate = (...args: any[]) =>
@@ -98,4 +98,6 @@ export async function startTool(
     };
     window.addEventListener('contextmenu', contextMenuListener);
   }
+
+  return true;
 }

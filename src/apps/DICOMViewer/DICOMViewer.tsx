@@ -210,10 +210,7 @@ const DICOMViewer: WindowComponent = ({
   }
 
   async function startActiveTool(downEvent: MouseEvent): Promise<void> {
-    if (viewport !== undefined) {
-      viewport.draft = true;
-    }
-    await startTool(
+    const toolApplied = await startTool(
       downEvent,
       viewport as Viewport,
       activeLeftTool,
@@ -276,6 +273,9 @@ const DICOMViewer: WindowComponent = ({
         }
       },
     );
+    if (viewport !== undefined && toolApplied) {
+      viewport.draft = true;
+    }
   }
 
   function switchViewType(viewType: ViewType): void {
