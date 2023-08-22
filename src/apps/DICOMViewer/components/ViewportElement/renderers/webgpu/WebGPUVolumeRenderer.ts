@@ -165,7 +165,6 @@ export class WebGPUVolumeRenderer implements Renderer {
     yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const direction = camera.getDirection();
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
@@ -203,7 +202,9 @@ export class WebGPUVolumeRenderer implements Renderer {
           new Float32Array(this.lut?.table.flat() ?? []),
           GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         ),
-        this.createBufferResource(new Float32Array(align([direction]))),
+        this.createBufferResource(
+          new Float32Array(align([camera.eyePoint, camera.getDirection()])),
+        ),
         this.createBufferResource(new Float32Array(align([xAxis, yAxis]))),
         this.createBufferResource(
           new Float32Array(

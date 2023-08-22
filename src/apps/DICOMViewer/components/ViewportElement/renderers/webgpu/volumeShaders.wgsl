@@ -10,6 +10,7 @@
 const MIN_FLOAT_VALUE = -2e31;
 
 struct Camera {
+  eyePoint: vec3<f32>,
   direction: vec3<f32>,
 }
 
@@ -99,11 +100,10 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
     if (rawPixelValue > properties.targetValue) {
-      let ambientLight = 0.3;
-      let diffuseLight = min(30000 / (i * i), 0.9);
-
       return applyLUT(
-        rawPixelValue, ambientLight + diffuseLight // TODO compute distance to eye point instead of just normal distance (i)
+        rawPixelValue,
+        0.3 + min(20000 / pow(i, 2), 0.9) + 100000 /
+          pow(distance(camera.eyePoint, pointLPS), 3)
       );
     }
     pointLPS += directionScaled;
