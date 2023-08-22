@@ -265,7 +265,7 @@ function getImageDimensions(viewport: Viewport):
   );
   const intersectionsCameraHorizontal = intersectionsCamera.map((i) => i[0]);
   const intersectionsCameraVertical = intersectionsCamera.map((i) => i[1]);
-  const halfSpacing = V(dataset.voxelSpacing).mul(0.5);
+  const halfSpacing = V(dataset.voxelSpacing).scale(0.5);
 
   const halfHorizontalSpacing = Math.abs(
     halfSpacing.dot(V(viewportBasis[0]).normalize()),

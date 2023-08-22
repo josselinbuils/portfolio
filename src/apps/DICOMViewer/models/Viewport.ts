@@ -116,8 +116,8 @@ export class Viewport extends Renderable implements CoordinateSpace {
       const pixelHeightMm = this.camera.fieldOfView / this.height;
 
       this.basis = [
-        V(cameraBasis[0]).div(pixelHeightMm),
-        V(cameraBasis[1]).div(pixelHeightMm),
+        V(cameraBasis[0]).scale(1 / pixelHeightMm),
+        V(cameraBasis[1]).scale(1 / pixelHeightMm),
         cameraBasis[2],
       ];
     }
@@ -155,11 +155,11 @@ export class Viewport extends Renderable implements CoordinateSpace {
 
       this.origin = V(this.camera.getWorldOrigin())
         .add(
-          V(cameraBasis[0]).mul(
+          V(cameraBasis[0]).scale(
             ((-this.camera.fieldOfView / this.height) * this.width) / 2,
           ),
         )
-        .add(V(cameraBasis[1]).mul(-this.camera.fieldOfView / 2))
+        .add(V(cameraBasis[1]).scale(-this.camera.fieldOfView / 2))
         .add(direction);
     }
     return this.origin;

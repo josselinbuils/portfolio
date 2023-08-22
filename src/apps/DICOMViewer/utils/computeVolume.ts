@@ -21,21 +21,21 @@ export function computeVolume(
   const displayRatio = voxelSpacing.map((v) => v / voxelSpacing[1]);
   const dimensionsMm = dimensionsVoxels.map((dim, i) => dim * voxelSpacing[i]);
   const orientedDimensionsMm = orientation.map((orient, index) =>
-    V(orient).mul(dimensionsMm[index]),
+    V(orient).scale(dimensionsMm[index]),
   );
   const orientedDimensionsVoxels = orientation.map((orient, index) =>
-    V(orient).mul(dimensionsVoxels[index]),
+    V(orient).scale(dimensionsVoxels[index]),
   );
 
   const getCorner = (x: number, y: number, z: number): number[] =>
     V(firstVoxelCenter)
-      .add(V(orientedDimensionsMm[0]).mul(x))
-      .add(V(orientedDimensionsMm[1]).mul(y))
-      .add(V(orientedDimensionsMm[2]).mul(z))
+      .add(V(orientedDimensionsMm[0]).scale(x))
+      .add(V(orientedDimensionsMm[1]).scale(y))
+      .add(V(orientedDimensionsMm[2]).scale(z))
       .sub([
-        V(voxelSpacing).mul(x).dot(orientation[0]),
-        V(voxelSpacing).mul(y).dot(orientation[1]),
-        V(voxelSpacing).mul(z).dot(orientation[2]),
+        V(voxelSpacing).scale(x).dot(orientation[0]),
+        V(voxelSpacing).scale(y).dot(orientation[1]),
+        V(voxelSpacing).scale(z).dot(orientation[2]),
       ]);
 
   const corners = {
@@ -50,10 +50,10 @@ export function computeVolume(
   };
 
   const center = V(firstVoxelCenter)
-    .add(V(orientedDimensionsMm[0]).mul(0.5))
-    .add(V(orientedDimensionsMm[1]).mul(0.5))
-    .add(V(orientedDimensionsMm[2]).mul(0.5))
-    .sub(V(voxelSpacing).mul(0.5));
+    .add(V(orientedDimensionsMm[0]).scale(0.5))
+    .add(V(orientedDimensionsMm[1]).scale(0.5))
+    .add(V(orientedDimensionsMm[2]).scale(0.5))
+    .sub(V(voxelSpacing).scale(0.5));
 
   return new Volume({
     center,

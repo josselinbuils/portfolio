@@ -34,8 +34,8 @@ export class JSVolumeRenderer implements Renderer {
     );
 
     return [
-      V(cameraBasis[0]).mul(horizontalVoxelSpacing),
-      V(cameraBasis[1]).mul(verticalVoxelSpacing),
+      V(cameraBasis[0]).scale(horizontalVoxelSpacing),
+      V(cameraBasis[1]).scale(verticalVoxelSpacing),
     ];
   }
 
@@ -246,9 +246,11 @@ export class JSVolumeRenderer implements Renderer {
     const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     const { camera, dataset } = viewport;
-    const basis = camera.getWorldBasis();
-    const direction = basis[2];
-    const { dimensionsVoxels } = dataset.volume as Volume;
+    const { dimensionsVoxels, voxelSpacing } = dataset.volume!;
+    const direction = camera.getDirection();
+    const directionScaled = V(direction).scale(
+      V(voxelSpacing).mul(direction).norm(),
+    );
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
@@ -291,9 +293,9 @@ export class JSVolumeRenderer implements Renderer {
 
               break;
             }
-            pointLPS[0] += direction[0];
-            pointLPS[1] += direction[1];
-            pointLPS[2] += direction[2];
+            pointLPS[0] += directionScaled[0];
+            pointLPS[1] += directionScaled[1];
+            pointLPS[2] += directionScaled[2];
           }
 
           if (offsetX === 0 && offsetY === 0) {
@@ -437,8 +439,8 @@ export class JSVolumeRenderer implements Renderer {
     );
     let [xAxis, yAxis] = JSVolumeRenderer.getImageWorldBasis(viewport);
 
-    xAxis = V(xAxis).mul(displayWidth / imageWidth);
-    yAxis = V(yAxis).mul(displayHeight / imageHeight);
+    xAxis = V(xAxis).scale(displayWidth / imageWidth);
+    yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     const imageData32 = new Uint32Array(imageWidth * imageHeight);
     const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);

@@ -31,8 +31,8 @@ export class WebGPUVolumeRenderer implements Renderer {
     );
 
     return [
-      V(cameraBasis[0]).mul(horizontalVoxelSpacing),
-      V(cameraBasis[1]).mul(verticalVoxelSpacing),
+      V(cameraBasis[0]).scale(horizontalVoxelSpacing),
+      V(cameraBasis[1]).scale(verticalVoxelSpacing),
     ];
   }
 
@@ -178,15 +178,17 @@ export class WebGPUVolumeRenderer implements Renderer {
     );
     let [xAxis, yAxis] = WebGPUVolumeRenderer.getImageWorldBasis(viewport);
 
-    const { dimensionsVoxels, firstVoxelCenter, orientation, voxelSpacing } =
-      dataset.volume!;
+    const volume = dataset.volume!;
+    const { firstVoxelCenter, orientation, voxelSpacing } = volume;
+    const depthVoxels = volume.getOrientedDimensionVoxels(
+      camera.getDirection(),
+    );
 
-    xAxis = V(xAxis).mul(displayWidth / imageWidth);
-    yAxis = V(yAxis).mul(displayHeight / imageHeight);
+    xAxis = V(xAxis).scale(displayWidth / imageWidth);
+    yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const basis = camera.getWorldBasis();
-    const direction = basis[2];
+    const direction = camera.getDirection();
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
@@ -253,7 +255,7 @@ export class WebGPUVolumeRenderer implements Renderer {
         this.createBufferResource(
           new Float32Array(
             align([
-              dimensionsVoxels,
+              depthVoxels,
               firstVoxelCenter,
               orientation[0],
               orientation[1],

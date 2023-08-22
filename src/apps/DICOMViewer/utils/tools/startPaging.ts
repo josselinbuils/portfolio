@@ -18,7 +18,7 @@ export function startPaging(
 
   const correctLookPoint = (point: number[]) => {
     const correctionVectorNorm = V(point).sub(camera.lookPoint).dot(direction);
-    const correctionVector = V(direction).mul(correctionVectorNorm);
+    const correctionVector = V(direction).scale(correctionVectorNorm);
     return V(camera.lookPoint).add(correctionVector) as number[];
   };
 
@@ -28,7 +28,7 @@ export function startPaging(
       PAGING_SENSIBILITY;
     const deltaPosition = (startY - moveEvent.clientY) * sensitivity;
     let newLookPoint: number[] = V(startLookPoint).add(
-      V(direction).mul(deltaPosition),
+      V(direction).scale(deltaPosition),
     );
     const positionOnDirection = V(newLookPoint).dot(direction);
 

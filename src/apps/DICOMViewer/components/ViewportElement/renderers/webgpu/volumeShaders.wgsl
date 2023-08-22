@@ -17,7 +17,7 @@ struct Frame {
 }
 
 struct Volume {
-  dimensionsVoxels: vec3<f32>,
+  depthVoxels: f32,
   firstVoxelCenter: vec3<f32>,
   orientationX: vec3<f32>,
   orientationY: vec3<f32>,
@@ -106,15 +106,21 @@ fn fragment3D(input: VertexOutput) -> @location(0) vec4f {
     y - min(properties.viewportSpaceImageY0, 0),
   );
 
-  for (var i: f32 = 0; i < volume.dimensionsVoxels[1]; i += 1) {
+  let directionScaled = properties.direction *
+    length(volume.voxelSpacing * properties.direction);
+
+  for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
     if (rawPixelValue > properties.targetValue) {
+      let ambientLight = 0.3;
+      let diffuseLight = min(30000 / (i * i), 0.9);
+
       return applyLUT(
-        rawPixelValue, 1 / max(i * i / volume.dimensionsVoxels[2] / 100, 1)
+        rawPixelValue, ambientLight + diffuseLight // TODO compute distance to eye point instead of just normal distance (i)
       );
     }
-    pointLPS += properties.direction;
+    pointLPS += directionScaled;
   }
   return applyLUT(MIN_FLOAT_VALUE, 0);
 }

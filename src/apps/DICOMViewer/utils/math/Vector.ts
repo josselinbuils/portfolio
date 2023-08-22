@@ -45,10 +45,6 @@ export class Vector extends Array<number> {
     return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2);
   }
 
-  div(factor: number): Vector {
-    return this.mul(1 / factor);
-  }
-
   dot(vector: number[]): number {
     return this[0] * vector[0] + this[1] * vector[1] + this[2] * vector[2];
   }
@@ -57,15 +53,15 @@ export class Vector extends Array<number> {
     return vector.every((value, index) => areFloatEquals(value, this[index]));
   }
 
-  mul(factor: number): Vector {
-    this[0] *= factor;
-    this[1] *= factor;
-    this[2] *= factor;
+  mul(vector: number[]): Vector {
+    this[0] *= vector[0];
+    this[1] *= vector[1];
+    this[2] *= vector[2];
     return this;
   }
 
   neg(): Vector {
-    return this.mul(-1);
+    return this.scale(-1);
   }
 
   norm(): number {
@@ -73,7 +69,14 @@ export class Vector extends Array<number> {
   }
 
   normalize(): Vector {
-    return this.div(this.norm());
+    return this.scale(1 / this.norm());
+  }
+
+  scale(factor: number): Vector {
+    this[0] *= factor;
+    this[1] *= factor;
+    this[2] *= factor;
+    return this;
   }
 
   smooth(): Vector {

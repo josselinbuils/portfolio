@@ -93,8 +93,8 @@ function computeFrameGeometry(
   const dimensionsMm = [pixelSpacing[0] * columns, pixelSpacing[1] * rows];
 
   const imageCenter = V(imagePosition)
-    .add(V(imageOrientation[0]).mul((columns - 1) * pixelSpacing[0] * 0.5))
-    .add(V(imageOrientation[1]).mul((rows - 1) * pixelSpacing[1] * 0.5));
+    .add(V(imageOrientation[0]).scale((columns - 1) * pixelSpacing[0] * 0.5))
+    .add(V(imageOrientation[1]).scale((rows - 1) * pixelSpacing[1] * 0.5));
 
   const imageNormal = V(imageOrientation[0])
     .cross(imageOrientation[1])

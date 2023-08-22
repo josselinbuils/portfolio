@@ -56,6 +56,13 @@ export class Volume extends Model {
     );
   }
 
+  getOrientedDimensionVoxels(axe: number[]): number {
+    return this.orientedDimensionsVoxels.reduce(
+      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
+      0,
+    );
+  }
+
   /**
    * @param plane 3 points representing the plane.
    */
@@ -105,7 +112,7 @@ export class Volume extends Model {
 
     return Object.values(this.corners).map((corner) => {
       const viewportToCornerDistance = V(corner).sub(plane[0]).dot(planeNormal);
-      return V(corner).add(V(planeNormal).mul(viewportToCornerDistance));
+      return V(corner).add(V(planeNormal).scale(viewportToCornerDistance));
     });
   }
 }

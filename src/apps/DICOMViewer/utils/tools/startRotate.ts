@@ -51,7 +51,7 @@ export function startRotate(
 
       direction = camera.getDirection();
 
-      const correctionVector = V(direction).mul(
+      const correctionVector = V(direction).scale(
         -volume.getOrientedDimensionMm(direction) / 2,
       );
 
@@ -88,7 +88,7 @@ function computeTrackball(
 
   // fromCenter cannot be longer than the trackball radius
   if (fromCenterNorm > radius) {
-    fromCenter.mul(radius / fromCenterNorm);
+    fromCenter.scale(radius / fromCenterNorm);
   }
 
   const fromCenterNormSquared = V(fromCenter).dot(fromCenter);

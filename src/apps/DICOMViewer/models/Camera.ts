@@ -73,7 +73,7 @@ export class Camera extends Renderable implements CoordinateSpace {
     let lookPoint = volume.center;
 
     if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
-      const correctionVector = V(direction).mul(
+      const correctionVector = V(direction).scale(
         -volume.getOrientedDimensionMm(direction) / 2,
       );
       lookPoint = V(lookPoint).add(correctionVector).smooth();
