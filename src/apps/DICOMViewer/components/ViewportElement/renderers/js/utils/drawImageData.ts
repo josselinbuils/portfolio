@@ -1,7 +1,4 @@
-import {
-  type BoundedViewportSpaceCoordinates,
-  type ViewportSpaceCoordinates,
-} from '../../RenderingProperties';
+import { type BoundedViewportSpaceCoordinates } from '../../RenderingProperties';
 
 export function drawImageData(
   data: Uint32Array,
@@ -9,7 +6,7 @@ export function drawImageData(
   renderingContext: CanvasRenderingContext2D,
   width: number,
   height: number,
-  drawSpace: BoundedViewportSpaceCoordinates | ViewportSpaceCoordinates,
+  drawSpace: BoundedViewportSpaceCoordinates,
 ): void {
   const imageData = new ImageData(
     new Uint8ClampedArray(data.buffer),

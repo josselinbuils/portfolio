@@ -1,17 +1,16 @@
 @group(0) @binding(0)  var texture: texture_3d<i32>;
 @group(0) @binding(1)  var<storage, read> frames: array<Frame>;
 @group(0) @binding(2)  var<storage, read> lut: array<f32>;
-@group(0) @binding(3)  var<uniform> boundedViewportSpace: BoundedViewportSpace;
-@group(0) @binding(4)  var<uniform> imageSpace: ImageSpace;
+@group(0) @binding(3)  var<uniform> camera: Camera;
+@group(0) @binding(4)  var<uniform> image: Image;
 @group(0) @binding(5)  var<uniform> properties: RenderingProperties;
-@group(0) @binding(6)  var<uniform> viewportSpace: ViewportSpace;
+@group(0) @binding(6)  var<uniform> viewport: Viewport;
 @group(0) @binding(7)  var<uniform> volume: Volume;
 
 const MIN_FLOAT_VALUE = -2e31;
 
-struct BoundedViewportSpace {
-  imageHeight: f32,
-  imageWidth: f32,
+struct Camera {
+  direction: vec3<f32>,
 }
 
 struct Frame {
@@ -24,22 +23,18 @@ struct Frame {
   rows: f32,
 }
 
-struct ImageSpace {
-  worldOrigin: vec3<f32>,
+struct Image {
   xAxis: vec3<f32>,
   yAxis: vec3<f32>,
 }
 
-struct ViewportSpace {
-  imageX0: f32,
-  imageY0: f32,
+struct Viewport {
+  worldOrigin: vec3<f32>,
 }
 
 struct Volume {
   depthVoxels: f32,
   firstVoxelCenter: vec3<f32>,
-  orientationX: vec3<f32>,
-  orientationY: vec3<f32>,
   orientationZ: vec3<f32>,
   voxelSpacing: vec3<f32>,
 }
@@ -49,20 +44,14 @@ struct RenderingProperties {
   clipWidth: f32,
   clipX: f32,
   clipY: f32,
-  direction: vec3<f32>,
   draft: f32,
   leftLimit: f32,
   rightLimit: f32,
   targetValue: f32,
 }
 
-struct VertexOutput {
-  @builtin(position) position: vec4<f32>,
-  @location(0) rawPosition: vec2<f32>,
-}
-
 @vertex
-fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
+fn vertex(@builtin(vertex_index) vertexIndex: u32) -> @builtin(position) vec4<f32> {
   let pos = array<vec2<f32>, 6>(
     vec2(0, 0),
     vec2(1, 0),
@@ -71,51 +60,40 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
     vec2(1, 0),
     vec2(1, 1),
   );
-  let rawPosition = pos[vertexIndex];
   let imageAreaMat = mat3x3(
     properties.clipWidth, 0, 0, 0, properties.clipHeight, 0, properties.clipX,
     properties.clipY, 1
   );
 
-  return VertexOutput(
-    vec4<f32>(imageAreaMat * vec3<f32>(rawPosition, 1), 1),
-    rawPosition
-  );
+  return vec4<f32>(imageAreaMat * vec3<f32>(pos[vertexIndex], 1), 1);
 }
 
 @fragment
-fn fragmentMPR(input: VertexOutput) -> @location(0) vec4f {
-  let x = input.rawPosition[0] * boundedViewportSpace.imageWidth;
-  let y = input.rawPosition[1] * boundedViewportSpace.imageHeight;
-
+fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
   let pointLPS = getPointLPS(
-    imageSpace.worldOrigin,
-    imageSpace.xAxis,
-    imageSpace.yAxis,
-    x - min(viewportSpace.imageX0, 0), // WTF min is needed?
-    y - min(viewportSpace.imageY0, 0),
+    viewport.worldOrigin,
+    image.xAxis,
+    image.yAxis,
+    position[0],
+    position[1],
   );
-
   let rawValue = getLPSPixelValue(pointLPS);
 
   return applyLUT(rawValue, 1);
 }
 
 @fragment
-fn fragment3D(input: VertexOutput) -> @location(0) vec4f {
-  let x = input.rawPosition[0] * boundedViewportSpace.imageWidth;
-  let y = input.rawPosition[1] * boundedViewportSpace.imageHeight;
-
+fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
   var pointLPS = getPointLPS(
-    imageSpace.worldOrigin,
-    imageSpace.xAxis,
-    imageSpace.yAxis,
-    x - min(viewportSpace.imageX0, 0), // WTF min is needed?
-    y - min(viewportSpace.imageY0, 0),
+    viewport.worldOrigin,
+    image.xAxis,
+    image.yAxis,
+    position[0],
+    position[1],
   );
 
-  let directionScaled = properties.direction *
-    length(volume.voxelSpacing * properties.direction);
+  let directionScaled = camera.direction *
+    length(volume.voxelSpacing * camera.direction);
 
   for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
@@ -197,10 +175,10 @@ fn getPixelValue(x: f32, y: f32, z:f32) -> f32 {
 }
 
 fn getPointLPS(
-  imageWorldOrigin: vec3<f32>, xAxis: vec3<f32>, yAxis: vec3<f32>, x: f32,
+  worldOrigin: vec3<f32>, xAxis: vec3<f32>, yAxis: vec3<f32>, x: f32,
   y: f32,
 ) -> vec3<f32> {
-  return imageWorldOrigin + xAxis * x + yAxis * y;
+  return worldOrigin + xAxis * x + yAxis * y;
 }
 
 fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {

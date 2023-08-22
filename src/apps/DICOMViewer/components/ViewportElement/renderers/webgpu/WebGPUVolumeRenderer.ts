@@ -2,11 +2,9 @@ import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
-import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
-import { type ViewportSpaceCoordinates } from '../RenderingProperties';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../renderingUtils';
 import shaders from './volumeShaders.wgsl?raw';
@@ -34,18 +32,6 @@ export class WebGPUVolumeRenderer implements Renderer {
       V(cameraBasis[0]).scale(horizontalVoxelSpacing),
       V(cameraBasis[1]).scale(verticalVoxelSpacing),
     ];
-  }
-
-  private static getImageWorldOrigin(
-    viewport: Viewport,
-    viewportSpace: ViewportSpaceCoordinates,
-  ): number[] {
-    const { dataset } = viewport;
-    return changePointSpace(
-      [viewportSpace.imageX0, viewportSpace.imageY0, 0],
-      viewport,
-      dataset,
-    );
   }
 
   constructor(private canvas: HTMLCanvasElement) {
@@ -161,23 +147,12 @@ export class WebGPUVolumeRenderer implements Renderer {
       return;
     }
 
-    const {
-      boundedViewportSpace,
-      imageSpace,
-      leftLimit,
-      rightLimit,
-      viewportSpace,
-    } = renderingProperties;
+    const { boundedViewportSpace, imageSpace, leftLimit, rightLimit } =
+      renderingProperties;
 
     const { imageHeight, imageWidth, imageX0, imageY0 } = boundedViewportSpace;
 
     const { displayHeight, displayWidth } = imageSpace;
-    const viewportSpaceImageX0 = viewportSpace.imageX0;
-    const viewportSpaceImageY0 = viewportSpace.imageY0;
-    const imageWorldOrigin = WebGPUVolumeRenderer.getImageWorldOrigin(
-      viewport,
-      viewportSpace,
-    );
     let [xAxis, yAxis] = WebGPUVolumeRenderer.getImageWorldBasis(viewport);
 
     const volume = dataset.volume!;
@@ -228,12 +203,8 @@ export class WebGPUVolumeRenderer implements Renderer {
           new Float32Array(this.lut?.table.flat() ?? []),
           GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         ),
-        this.createBufferResource(
-          new Float32Array(align([imageHeight, imageWidth])),
-        ),
-        this.createBufferResource(
-          new Float32Array(align([imageWorldOrigin, xAxis, yAxis])),
-        ),
+        this.createBufferResource(new Float32Array(align([direction]))),
+        this.createBufferResource(new Float32Array(align([xAxis, yAxis]))),
         this.createBufferResource(
           new Float32Array(
             align([
@@ -241,7 +212,6 @@ export class WebGPUVolumeRenderer implements Renderer {
               clipWidth,
               clipX,
               clipY,
-              direction,
               draft ? 1 : 0,
               leftLimit,
               rightLimit,
@@ -250,15 +220,13 @@ export class WebGPUVolumeRenderer implements Renderer {
           ),
         ),
         this.createBufferResource(
-          new Float32Array(align([viewportSpaceImageX0, viewportSpaceImageY0])),
+          new Float32Array(align([viewport.getWorldOrigin()])),
         ),
         this.createBufferResource(
           new Float32Array(
             align([
               depthVoxels,
               firstVoxelCenter,
-              orientation[0],
-              orientation[1],
               orientation[2],
               voxelSpacing,
             ]),
