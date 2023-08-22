@@ -99,6 +99,9 @@ export class WebGPUVolumeRenderer implements Renderer {
           { buffer: { type: 'read-only-storage' } },
           { buffer: { type: 'uniform' } },
           { buffer: { type: 'uniform' } },
+          { buffer: { type: 'uniform' } },
+          { buffer: { type: 'uniform' } },
+          { buffer: { type: 'uniform' } },
         ] satisfies Omit<GPUBindGroupLayoutEntry, 'binding' | 'visibility'>[]
       ).map((props, binding) => ({
         ...props,
@@ -166,8 +169,7 @@ export class WebGPUVolumeRenderer implements Renderer {
       viewportSpace,
     } = renderingProperties;
 
-    const { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 } =
-      boundedViewportSpace;
+    const { imageHeight, imageWidth, imageX0, imageY0 } = boundedViewportSpace;
 
     const { displayHeight, displayWidth } = imageSpace;
     const viewportSpaceImageX0 = viewportSpace.imageX0;
@@ -205,10 +207,6 @@ export class WebGPUVolumeRenderer implements Renderer {
       entries: [
         this.texture.createView(),
         this.createBufferResource(
-          new Float32Array(this.lut?.table.flat() ?? []),
-          GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-        ),
-        this.createBufferResource(
           new Float32Array(
             dataset.frames
               .map((frame) =>
@@ -227,6 +225,16 @@ export class WebGPUVolumeRenderer implements Renderer {
           GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
         ),
         this.createBufferResource(
+          new Float32Array(this.lut?.table.flat() ?? []),
+          GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        ),
+        this.createBufferResource(
+          new Float32Array(align([imageHeight, imageWidth])),
+        ),
+        this.createBufferResource(
+          new Float32Array(align([imageWorldOrigin, xAxis, yAxis])),
+        ),
+        this.createBufferResource(
           new Float32Array(
             align([
               clipHeight,
@@ -235,22 +243,14 @@ export class WebGPUVolumeRenderer implements Renderer {
               clipY,
               direction,
               draft ? 1 : 0,
-              imageHeight,
-              imageWidth,
-              imageWorldOrigin,
-              imageX0,
-              imageX1,
-              imageY0,
-              imageY1,
               leftLimit,
               rightLimit,
               targetValue,
-              viewportSpaceImageX0,
-              viewportSpaceImageY0,
-              xAxis,
-              yAxis,
             ]),
           ),
+        ),
+        this.createBufferResource(
+          new Float32Array(align([viewportSpaceImageX0, viewportSpaceImageY0])),
         ),
         this.createBufferResource(
           new Float32Array(

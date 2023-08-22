@@ -1,10 +1,18 @@
-@group(0) @binding(0) var texture: texture_3d<i32>;
-@group(0) @binding(1) var<storage, read> lut: array<f32>;
-@group(0) @binding(2) var<storage, read> frames: array<Frame>;
-@group(0) @binding(3) var<uniform> properties: RenderingProperties;
-@group(0) @binding(4) var<uniform> volume: Volume;
+@group(0) @binding(0)  var texture: texture_3d<i32>;
+@group(0) @binding(1)  var<storage, read> frames: array<Frame>;
+@group(0) @binding(2)  var<storage, read> lut: array<f32>;
+@group(0) @binding(3)  var<uniform> boundedViewportSpace: BoundedViewportSpace;
+@group(0) @binding(4)  var<uniform> imageSpace: ImageSpace;
+@group(0) @binding(5)  var<uniform> properties: RenderingProperties;
+@group(0) @binding(6)  var<uniform> viewportSpace: ViewportSpace;
+@group(0) @binding(7)  var<uniform> volume: Volume;
 
 const MIN_FLOAT_VALUE = -2e31;
+
+struct BoundedViewportSpace {
+  imageHeight: f32,
+  imageWidth: f32,
+}
 
 struct Frame {
   columns: f32,
@@ -14,6 +22,17 @@ struct Frame {
   rescaleIntercept: f32,
   rescaleSlope: f32,
   rows: f32,
+}
+
+struct ImageSpace {
+  worldOrigin: vec3<f32>,
+  xAxis: vec3<f32>,
+  yAxis: vec3<f32>,
+}
+
+struct ViewportSpace {
+  imageX0: f32,
+  imageY0: f32,
 }
 
 struct Volume {
@@ -32,20 +51,9 @@ struct RenderingProperties {
   clipY: f32,
   direction: vec3<f32>,
   draft: f32,
-  imageHeight: f32,
-  imageWidth: f32,
-  imageWorldOrigin: vec3<f32>,
-  imageX0: f32,
-  imageX1: f32,
-  imageY0: f32,
-  imageY1: f32,
   leftLimit: f32,
   rightLimit: f32,
   targetValue: f32,
-  viewportSpaceImageX0: f32,
-  viewportSpaceImageY0: f32,
-  xAxis: vec3<f32>,
-  yAxis: vec3<f32>,
 }
 
 struct VertexOutput {
@@ -77,15 +85,15 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
 
 @fragment
 fn fragmentMPR(input: VertexOutput) -> @location(0) vec4f {
-  let x = input.rawPosition[0] * properties.imageWidth;
-  let y = input.rawPosition[1] * properties.imageHeight;
+  let x = input.rawPosition[0] * boundedViewportSpace.imageWidth;
+  let y = input.rawPosition[1] * boundedViewportSpace.imageHeight;
 
   let pointLPS = getPointLPS(
-    properties.imageWorldOrigin,
-    properties.xAxis,
-    properties.yAxis,
-    x - min(properties.viewportSpaceImageX0, 0), // WTF min is needed?
-    y - min(properties.viewportSpaceImageY0, 0),
+    imageSpace.worldOrigin,
+    imageSpace.xAxis,
+    imageSpace.yAxis,
+    x - min(viewportSpace.imageX0, 0), // WTF min is needed?
+    y - min(viewportSpace.imageY0, 0),
   );
 
   let rawValue = getLPSPixelValue(pointLPS);
@@ -95,15 +103,15 @@ fn fragmentMPR(input: VertexOutput) -> @location(0) vec4f {
 
 @fragment
 fn fragment3D(input: VertexOutput) -> @location(0) vec4f {
-  let x = input.rawPosition[0] * properties.imageWidth;
-  let y = input.rawPosition[1] * properties.imageHeight;
+  let x = input.rawPosition[0] * boundedViewportSpace.imageWidth;
+  let y = input.rawPosition[1] * boundedViewportSpace.imageHeight;
 
   var pointLPS = getPointLPS(
-    properties.imageWorldOrigin,
-    properties.xAxis,
-    properties.yAxis,
-    x - min(properties.viewportSpaceImageX0, 0), // WTF min is needed?
-    y - min(properties.viewportSpaceImageY0, 0),
+    imageSpace.worldOrigin,
+    imageSpace.xAxis,
+    imageSpace.yAxis,
+    x - min(viewportSpace.imageX0, 0), // WTF min is needed?
+    y - min(viewportSpace.imageY0, 0),
   );
 
   let directionScaled = properties.direction *
