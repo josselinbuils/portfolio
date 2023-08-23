@@ -166,9 +166,7 @@ export class WebGPUVolumeRenderer implements Renderer {
     // 3D rendering properties
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
-    const correctionVector = V(direction).scale(
-      -Math.max(...volume.dimensionsMm) / 2,
-    );
+    const correctionVector = V(direction).scale(-500);
     const lightPoint = V(camera.lookPoint).add(correctionVector);
 
     // Convert dst pixel coordinates to clip space coordinates
