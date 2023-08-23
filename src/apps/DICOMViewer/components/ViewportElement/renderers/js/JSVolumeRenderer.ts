@@ -23,35 +23,7 @@ export class JSVolumeRenderer implements Renderer {
   private readonly renderingContext: CanvasRenderingContext2D;
   private unsubscribeToViewportUpdates?: () => void;
 
-  private static getImageWorldBasis(viewport: Viewport): number[][] {
-    const { camera, dataset } = viewport;
-    const cameraBasis = camera.getWorldBasis();
-    const horizontalVoxelSpacing = Math.abs(
-      V(dataset.voxelSpacing).dot(cameraBasis[0]),
-    );
-    const verticalVoxelSpacing = Math.abs(
-      V(dataset.voxelSpacing).dot(cameraBasis[1]),
-    );
-
-    return [
-      V(cameraBasis[0]).scale(horizontalVoxelSpacing),
-      V(cameraBasis[1]).scale(verticalVoxelSpacing),
-    ];
-  }
-
-  private static getImageWorldOrigin(
-    viewport: Viewport,
-    viewportSpace: ViewportSpaceCoordinates,
-  ): number[] {
-    const { dataset } = viewport;
-    return changePointSpace(
-      [viewportSpace.imageX0, viewportSpace.imageY0, 0],
-      viewport,
-      dataset,
-    );
-  }
-
-  private static getRawValue(dataset: Dataset, pointLPS: number[]): number {
+  static getRawValue(dataset: Dataset, pointLPS: number[]): number {
     const { firstVoxelCenter, orientation, voxelSpacing } =
       dataset.volume as Volume;
 
@@ -103,6 +75,34 @@ export class JSVolumeRenderer implements Renderer {
     return i >= 0 && i < columns && j >= 0 && j < rows
       ? pixelData[j * columns + i] * rescaleSlope + rescaleIntercept
       : -Number.MAX_SAFE_INTEGER;
+  }
+
+  private static getImageWorldBasis(viewport: Viewport): number[][] {
+    const { camera, dataset } = viewport;
+    const cameraBasis = camera.getWorldBasis();
+    const horizontalVoxelSpacing = Math.abs(
+      V(dataset.voxelSpacing).dot(cameraBasis[0]),
+    );
+    const verticalVoxelSpacing = Math.abs(
+      V(dataset.voxelSpacing).dot(cameraBasis[1]),
+    );
+
+    return [
+      V(cameraBasis[0]).scale(horizontalVoxelSpacing),
+      V(cameraBasis[1]).scale(verticalVoxelSpacing),
+    ];
+  }
+
+  private static getImageWorldOrigin(
+    viewport: Viewport,
+    viewportSpace: ViewportSpaceCoordinates,
+  ): number[] {
+    const { dataset } = viewport;
+    return changePointSpace(
+      [viewportSpace.imageX0, viewportSpace.imageY0, 0],
+      viewport,
+      dataset,
+    );
   }
 
   private static getPointLPS(

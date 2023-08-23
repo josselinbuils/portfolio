@@ -47,6 +47,7 @@ struct RenderingProperties {
   clipY: f32,
   draft: f32,
   leftLimit: f32,
+  lightPoint: vec3<f32>,
   rightLimit: f32,
   targetValue: f32,
 }
@@ -100,10 +101,11 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
     if (rawPixelValue > properties.targetValue) {
+      let dist = distance(properties.lightPoint, pointLPS);
+
       return applyLUT(
         rawPixelValue,
-        0.3 + min(20000 / pow(i, 2), 0.9) + 100000 /
-          pow(distance(camera.eyePoint, pointLPS), 3)
+        0.2 + min(20000 / pow(i, 2), 0.5) + min(30000 / pow(dist, 2), 0.4)
       );
     }
     pointLPS += directionScaled;
