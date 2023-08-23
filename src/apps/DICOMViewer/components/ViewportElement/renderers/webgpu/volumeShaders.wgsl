@@ -105,7 +105,7 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
 
       return applyLUT(
         rawPixelValue,
-        0.2 + min(20000 / pow(i, 2), 0.5) + min(30000 / pow(dist, 2), 0.4)
+        0.2 + min(20000 / pow(i, 2), 0.5) + min(140000 / pow(dist, 2), 0.4)
       );
     }
     pointLPS += directionScaled;

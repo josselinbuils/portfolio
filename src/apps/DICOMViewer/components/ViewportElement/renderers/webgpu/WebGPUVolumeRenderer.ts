@@ -5,7 +5,6 @@ import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
-import { JSVolumeRenderer } from '../js/JSVolumeRenderer';
 import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../renderingUtils';
 import shaders from './volumeShaders.wgsl?raw';
@@ -165,24 +164,12 @@ export class WebGPUVolumeRenderer implements Renderer {
     yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const directionScaled = V(direction).scale(
-      V(voxelSpacing).mul(direction).norm(),
-    );
     const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
-    let lightPoint = camera.lookPoint.slice();
-
-    for (let i = 0; i < depthVoxels; i++) {
-      const rawPixelValue = JSVolumeRenderer.getRawValue(dataset, lightPoint);
-
-      if (rawPixelValue > targetValue) {
-        break;
-      }
-      lightPoint[0] += directionScaled[0];
-      lightPoint[1] += directionScaled[1];
-      lightPoint[2] += directionScaled[2];
-    }
-    lightPoint = V(lightPoint).sub(directionScaled);
+    const correctionVector = V(direction).scale(
+      -Math.max(...volume.dimensionsMm) / 2,
+    );
+    const lightPoint = V(camera.lookPoint).add(correctionVector);
 
     // Convert dst pixel coordinates to clip space coordinates
     const clipX = (imageX0 / width) * 2 - 1;
