@@ -16,6 +16,7 @@ const viewTypeLabels: Record<ViewType, string> = {
   axial: 'Axial',
   bones: '3D Bones',
   coronal: 'Coronal',
+  mip: 'MIP',
   native: 'Native',
   oblique: 'Oblique',
   sagittal: 'Sagittal',

@@ -3,6 +3,7 @@ export type ViewType =
   | 'bones'
   | 'coronal'
   | 'native'
+  | 'mip'
   | 'oblique'
   | 'sagittal'
   | 'skin';

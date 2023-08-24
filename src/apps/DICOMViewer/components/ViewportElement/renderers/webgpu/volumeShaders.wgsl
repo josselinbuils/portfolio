@@ -71,6 +71,28 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> @builtin(position) vec4<f3
 }
 
 @fragment
+fn fragmentMIP(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
+  var pointLPS = getPointLPS(
+    viewport.worldOrigin,
+    image.xAxis,
+    image.yAxis,
+    position[0],
+    position[1],
+  );
+
+  let directionScaled = camera.direction *
+    length(volume.voxelSpacing * camera.direction);
+
+  var maxPixelValue = MIN_FLOAT_VALUE;
+
+  for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
+    maxPixelValue = max(maxPixelValue, getLPSPixelValue(pointLPS));
+    pointLPS += directionScaled;
+  }
+  return applyLUT(maxPixelValue, 1);
+}
+
+@fragment
 fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
   let pointLPS = getPointLPS(
     viewport.worldOrigin,

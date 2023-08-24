@@ -14,6 +14,7 @@ import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsE
 import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
+import { VIEW_TYPES_WITH_ROTATION } from './constants';
 import { type Annotations } from './interfaces/Annotations';
 import { type LUTComponent } from './interfaces/LUTComponent';
 import { type MouseTool } from './interfaces/MouseTool';
@@ -55,7 +56,10 @@ const DICOMViewer: WindowComponent = ({
             previousViewport === undefined ||
             previousViewport.dataset !== dataset
           ) {
-            const availableViewTypes = getAvailableViewTypes(dataset);
+            const availableViewTypes = getAvailableViewTypes(
+              dataset,
+              rendererType,
+            );
             const viewType: ViewType = availableViewTypes.includes('skin')
               ? 'skin'
               : 'native';
@@ -178,7 +182,10 @@ const DICOMViewer: WindowComponent = ({
           )}
           <AnnotationsElement
             annotations={annotations}
-            availableViewTypes={getAvailableViewTypes(viewport.dataset)}
+            availableViewTypes={getAvailableViewTypes(
+              viewport.dataset,
+              rendererType,
+            )}
             onRendererTypeSwitch={setRendererType}
             onViewTypeSwitch={switchViewType}
           />
@@ -214,13 +221,7 @@ const DICOMViewer: WindowComponent = ({
         }
         switch (tool) {
           case 'rotate': {
-            const viewTypesWithRotation: ViewType[] = [
-              'oblique',
-              'bones',
-              'skin',
-            ];
-
-            if (!viewTypesWithRotation.includes(viewport.viewType)) {
+            if (!VIEW_TYPES_WITH_ROTATION.includes(viewport.viewType)) {
               viewport.viewType = 'oblique';
 
               setAnnotations((previousAnnotations) => ({

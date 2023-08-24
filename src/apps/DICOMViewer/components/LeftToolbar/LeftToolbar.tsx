@@ -30,7 +30,8 @@ const mouseTools: {
     tool: 'rotate',
   },
   {
-    condition: (viewport: Viewport) => !viewport.is3D(),
+    condition: (viewport: Viewport) =>
+      !viewport.is3D() || viewport.viewType === 'mip',
     icon: faAdjust,
     tool: 'windowing',
   },

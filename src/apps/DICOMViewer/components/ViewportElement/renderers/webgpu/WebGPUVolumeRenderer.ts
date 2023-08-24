@@ -95,6 +95,14 @@ export class WebGPUVolumeRenderer implements Renderer {
       })),
     });
 
+    let fragmentEntryPoint = 'fragmentMPR';
+
+    if (viewport.viewType === 'mip') {
+      fragmentEntryPoint = 'fragmentMIP';
+    } else if (viewport.is3D()) {
+      fragmentEntryPoint = 'fragment3D';
+    }
+
     this.pipeline = this.device.createRenderPipeline({
       label: 'Render pipeline',
       layout: this.device.createPipelineLayout({
@@ -106,7 +114,7 @@ export class WebGPUVolumeRenderer implements Renderer {
       },
       fragment: {
         module: shaderModule,
-        entryPoint: viewport.is3D() ? 'fragment3D' : 'fragmentMPR',
+        entryPoint: fragmentEntryPoint,
         targets: [{ format: 'bgra8unorm' }],
       },
     });
