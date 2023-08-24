@@ -5,7 +5,7 @@ import { type Frame } from './Frame';
 import { Renderable } from './Renderable';
 import { type Volume } from './Volume';
 
-const MANDATORY_FIELDS = [
+const MANDATORY_FIELDS: readonly (keyof Camera)[] = [
   'baseFieldOfView',
   'eyePoint',
   'fieldOfView',

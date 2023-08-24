@@ -5,12 +5,11 @@ import {
 } from './DicomFrame';
 import { Model } from './Model';
 
-const MANDATORY_FIELDS = [
+const MANDATORY_FIELDS: readonly (keyof Frame)[] = [
   'dicom',
   'dimensionsMm',
   'id',
   'imageCenter',
-  'imageFormat',
   'imageNormal',
   'bitsAllocated',
   'columns',

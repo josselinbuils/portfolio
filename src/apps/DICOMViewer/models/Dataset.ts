@@ -8,7 +8,7 @@ import { type Frame } from './Frame';
 import { Model } from './Model';
 import { type Volume } from './Volume';
 
-const MANDATORY_FIELDS = ['frames', 'voxelSpacing'];
+const MANDATORY_FIELDS: readonly (keyof Dataset)[] = ['frames', 'voxelSpacing'];
 
 export class Dataset extends Model implements CoordinateSpace {
   frames!: Frame[];

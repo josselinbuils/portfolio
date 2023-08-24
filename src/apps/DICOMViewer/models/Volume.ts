@@ -2,7 +2,7 @@ import { V } from '../utils/math/Vector';
 import { getLinePlaneIntersection } from '../utils/math/getLinePlaneIntersection';
 import { Model } from './Model';
 
-const MANDATORY_FIELDS = [
+const MANDATORY_FIELDS: readonly (keyof Volume)[] = [
   'center',
   'corners',
   'dimensionsMm',

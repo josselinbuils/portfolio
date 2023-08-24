@@ -129,7 +129,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   getImageZoom(): number {
     if (this.imageZoom === undefined) {
       const sliceHeight =
-        this.viewType === '3D Skin'
+        this.viewType === 'Native'
           ? this.dataset.findClosestFrame(this.camera.lookPoint).rows
           : Math.abs(
               V((this.dataset.volume as Volume).dimensionsVoxels).dot(

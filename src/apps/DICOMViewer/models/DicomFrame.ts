@@ -7,7 +7,7 @@ export enum PixelRepresentation {
   Unsigned = 0,
 }
 
-const MANDATORY_FIELDS = [
+const MANDATORY_FIELDS: readonly (keyof DicomFrame)[] = [
   'bitsAllocated',
   'columns',
   'photometricInterpretation',
