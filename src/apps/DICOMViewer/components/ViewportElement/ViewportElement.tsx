@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { type FC, useEffect, useLayoutEffect, useRef } from 'preact/compat';
-import { RendererType, ViewType } from '@/apps/DICOMViewer/constants';
 import { MouseButton } from '@/platform/constants';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 import { type Size } from '@/platform/interfaces/Size';
@@ -31,7 +30,7 @@ export const ViewportElement: FC<ViewportElementProps> = ({
   const jsCanvasElementRef = useRef<HTMLCanvasElement>(null);
   const webGLCanvasElementRef = useRef<HTMLCanvasElement>(null);
   const canvasElementRef =
-    viewport.rendererType === RendererType.JavaScript
+    viewport.rendererType === 'JavaScript'
       ? jsCanvasElementRef
       : webGLCanvasElementRef;
   const [viewportWidth, viewportHeight] = useElementSize(canvasElementRef);
@@ -170,17 +169,14 @@ async function getViewportRenderer(
   viewport: Viewport,
 ): Promise<new (canvas: HTMLCanvasElement) => Renderer> {
   switch (viewport.rendererType) {
-    case RendererType.JavaScript:
-      if (viewport.viewType === ViewType.Native) {
+    case 'JavaScript':
+      if (viewport.viewType === 'Native') {
         return (await import('./renderers/js/JSFrameRenderer')).JSFrameRenderer;
       }
       return (await import('./renderers/js/JSVolumeRenderer')).JSVolumeRenderer;
 
-    case RendererType.WebGL:
-      return (await import('./renderers/webgl/WebGLRenderer')).WebGLRenderer;
-
-    case RendererType.WebGPU:
-      if (viewport.viewType === ViewType.Native) {
+    case 'WebGPU':
+      if (viewport.viewType === 'Native') {
         return (await import('./renderers/webgpu/WebGPUFrameRenderer'))
           .WebGPUFrameRenderer;
       }

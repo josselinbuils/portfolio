@@ -1,19 +1,16 @@
-import { RendererType, ViewType } from '../constants';
+import { type ViewType } from '../interfaces/ViewType';
 import { type Dataset } from '../models/Dataset';
 
-export function getAvailableViewTypes(
-  dataset: Dataset,
-  rendererType: RendererType,
-): ViewType[] {
-  const availableViewTypes = [ViewType.Native];
+export function getAvailableViewTypes(dataset: Dataset): ViewType[] {
+  const availableViewTypes: ViewType[] = ['Native'];
 
-  if (dataset.is3D && rendererType !== RendererType.WebGL) {
+  if (dataset.is3D) {
     availableViewTypes.push(
-      ViewType.Axial,
-      ViewType.Coronal,
-      ViewType.Sagittal,
-      ViewType.VolumeBones,
-      ViewType.VolumeSkin,
+      'Axial',
+      'Coronal',
+      'Sagittal',
+      '3D Bones',
+      '3D Skin',
     );
   }
   return availableViewTypes;

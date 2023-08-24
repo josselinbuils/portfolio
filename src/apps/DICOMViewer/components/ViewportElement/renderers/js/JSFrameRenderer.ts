@@ -1,4 +1,3 @@
-import { NormalizedImageFormat } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -40,7 +39,6 @@ export class JSFrameRenderer implements Renderer {
   render(viewport: Viewport): void {
     const { camera, dataset, height, width, windowWidth } = viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
-    const { imageFormat } = frame;
 
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, width, height);
@@ -53,35 +51,27 @@ export class JSFrameRenderer implements Renderer {
 
     validateCamera2D(frame, camera);
 
-    switch (imageFormat) {
-      case NormalizedImageFormat.Int16: {
-        if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
-          this.lut =
-            viewport.lutComponents !== undefined
-              ? loadVOILUT(viewport.lutComponents, windowWidth)
-              : getDefaultVOILUT(windowWidth);
-        }
+    if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
+      this.lut =
+        viewport.lutComponents !== undefined
+          ? loadVOILUT(viewport.lutComponents, windowWidth)
+          : getDefaultVOILUT(windowWidth);
+    }
 
-        const { boundedViewportSpace, imageSpace } = renderingProperties;
-        const imagePixelsToRender =
-          imageSpace.displayWidth * imageSpace.displayHeight;
-        const viewportPixelsToRender =
-          boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
+    const { boundedViewportSpace, imageSpace } = renderingProperties;
+    const imagePixelsToRender =
+      imageSpace.displayWidth * imageSpace.displayHeight;
+    const viewportPixelsToRender =
+      boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
 
-        if (viewportPixelsToRender < imagePixelsToRender) {
-          this.renderViewportPixels(
-            frame,
-            renderingProperties,
-            viewport.getImageZoom(),
-          );
-        } else {
-          this.renderImagePixels(frame, renderingProperties);
-        }
-        break;
-      }
-
-      default:
-        throw new Error('Unsupported image format');
+    if (viewportPixelsToRender < imagePixelsToRender) {
+      this.renderViewportPixels(
+        frame,
+        renderingProperties,
+        viewport.getImageZoom(),
+      );
+    } else {
+      this.renderImagePixels(frame, renderingProperties);
     }
   }
 

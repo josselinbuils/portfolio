@@ -1,18 +1,21 @@
 import {
-  NormalizedImageFormat,
-  PhotometricInterpretation,
+  type DicomFrame,
+  type PhotometricInterpretation,
   PixelRepresentation,
-} from '../constants';
-import { type DicomFrame } from '../models/DicomFrame';
+} from '../models/DicomFrame';
 import { Frame } from '../models/Frame';
 import { V } from './math/Vector';
 
-enum DicomImageFormat {
-  Int8 = 'int8',
-  Int16 = 'int16',
-  RGB = 'rgb',
-  UInt8 = 'uint8',
-  UInt16 = 'uint16',
+type DicomImageFormat = 'int8' | 'int16' | 'rgb' | 'uint8' | 'uint16';
+
+interface FrameGeometry {
+  dimensionsMm: number[];
+  imageCenter: number[];
+  imageNormal: number[];
+  imageOrientation: number[][];
+  imagePosition: number[];
+  pixelSpacing: number[];
+  sliceLocation: number;
 }
 
 export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
@@ -31,11 +34,12 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
         )
       : 1;
   }
+  // spacingBetweenSlices *= 3;
 
   return dicomFrames.map((frame, frameIndex) => {
     const dicom = frame;
     const id = `${frame.sopInstanceUID}-${frameIndex}`;
-    const { imageFormat, pixelData } = normalizePixelData(frame);
+    const pixelData = normalizePixelData(frame);
     const {
       dimensionsMm,
       imageCenter,
@@ -55,7 +59,6 @@ export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
       dimensionsMm,
       id,
       imageCenter,
-      imageFormat,
       imageNormal,
       imageOrientation,
       imagePosition,
@@ -80,7 +83,8 @@ function computeFrameGeometry(
     ];
   }
   if (sliceLocation === undefined) {
-    sliceLocation = frameIndex + 0.5;
+    sliceLocation =
+      imagePosition !== undefined ? imagePosition[2] : frameIndex + 0.5;
   }
   if (imagePosition === undefined) {
     imagePosition = [0.5, 0.5, sliceLocation];
@@ -118,9 +122,7 @@ function getDicomImageFormat(
 ): DicomImageFormat {
   let format: string;
 
-  if (photometricInterpretation === PhotometricInterpretation.RGB) {
-    format = 'rgb';
-  } else if ((photometricInterpretation as string).includes('MONOCHROME')) {
+  if ((photometricInterpretation as string).startsWith('MONOCHROME')) {
     const isSigned = pixelRepresentation === PixelRepresentation.Signed;
     format = `${isSigned ? '' : 'u'}int${bitsAllocated <= 8 ? '8' : '16'}`;
   } else {
@@ -132,7 +134,7 @@ function getDicomImageFormat(
   return format as DicomImageFormat;
 }
 
-function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
+function normalizePixelData(frame: DicomFrame): Int16Array {
   if (frame.pixelData === undefined) {
     throw new Error('Frame does not contain pixel data');
   }
@@ -145,71 +147,43 @@ function normalizePixelData(frame: DicomFrame): NormalizedPixelData {
     pixelRepresentation,
   );
   const rawPixelData = frame.pixelData;
-  let imageFormat: NormalizedImageFormat;
-  let pixelData: Int16Array | Uint8Array;
+  let typedPixelData: ArrayBufferView;
 
-  if (dicomImageFormat === DicomImageFormat.RGB) {
-    imageFormat = NormalizedImageFormat.RGB;
-    pixelData = rawPixelData;
-  } else {
-    let typedPixelData: ArrayBufferView;
+  // Casts pixel data to the right type
+  switch (dicomImageFormat) {
+    case 'int8':
+      typedPixelData = new Int8Array(
+        rawPixelData.buffer,
+        rawPixelData.byteOffset,
+        rawPixelData.byteLength / Int8Array.BYTES_PER_ELEMENT,
+      );
+      break;
 
-    // Casts pixel data to the right type
-    switch (dicomImageFormat) {
-      case DicomImageFormat.Int8:
-        typedPixelData = new Int8Array(
-          rawPixelData.buffer,
-          rawPixelData.byteOffset,
-          rawPixelData.byteLength / Int8Array.BYTES_PER_ELEMENT,
-        );
-        break;
+    case 'int16':
+      typedPixelData = new Int16Array(
+        rawPixelData.buffer,
+        rawPixelData.byteOffset,
+        rawPixelData.byteLength / Int16Array.BYTES_PER_ELEMENT,
+      );
+      break;
 
-      case DicomImageFormat.Int16:
-        typedPixelData = new Int16Array(
-          rawPixelData.buffer,
-          rawPixelData.byteOffset,
-          rawPixelData.byteLength / Int16Array.BYTES_PER_ELEMENT,
-        );
-        break;
+    case 'uint8':
+      typedPixelData = rawPixelData;
+      break;
 
-      case DicomImageFormat.UInt8:
-        typedPixelData = rawPixelData;
-        break;
+    case 'uint16':
+      typedPixelData = new Uint16Array(
+        rawPixelData.buffer,
+        rawPixelData.byteOffset,
+        rawPixelData.byteLength / Uint16Array.BYTES_PER_ELEMENT,
+      );
+      break;
 
-      case DicomImageFormat.UInt16:
-        typedPixelData = new Uint16Array(
-          rawPixelData.buffer,
-          rawPixelData.byteOffset,
-          rawPixelData.byteLength / Uint16Array.BYTES_PER_ELEMENT,
-        );
-        break;
-
-      default:
-        throw new Error('Unknown dicom format');
-    }
-
-    // Normalizes pixel data
-    imageFormat = NormalizedImageFormat.Int16;
-    pixelData =
-      typedPixelData instanceof Int16Array
-        ? typedPixelData
-        : new Int16Array(typedPixelData as any);
+    default:
+      throw new Error('Unknown dicom format');
   }
 
-  return { imageFormat, pixelData };
-}
-
-interface FrameGeometry {
-  dimensionsMm: number[];
-  imageCenter: number[];
-  imageNormal: number[];
-  imageOrientation: number[][];
-  imagePosition: number[];
-  pixelSpacing: number[];
-  sliceLocation: number;
-}
-
-interface NormalizedPixelData {
-  imageFormat: NormalizedImageFormat;
-  pixelData: Int16Array | Uint8Array;
+  return typedPixelData instanceof Int16Array
+    ? typedPixelData
+    : new Int16Array(typedPixelData as any);
 }

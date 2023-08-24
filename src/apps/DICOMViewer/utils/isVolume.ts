@@ -1,4 +1,3 @@
-import { NormalizedImageFormat } from '../constants';
 import { type Frame } from '../models/Frame';
 
 export function isVolume(frames: Frame[]): boolean {
@@ -6,7 +5,6 @@ export function isVolume(frames: Frame[]): boolean {
     frames.length > 30 &&
     frames.every(
       (frame) =>
-        frame.imageFormat === NormalizedImageFormat.Int16 &&
         frame.dicom.imageOrientation !== undefined &&
         frame.dicom.imagePosition !== undefined &&
         frame.dicom.pixelSpacing !== undefined,

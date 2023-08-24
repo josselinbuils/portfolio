@@ -1,5 +1,5 @@
-import { ViewType } from '../constants';
 import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
+import { type ViewType } from '../interfaces/ViewType';
 import { V } from '../utils/math/Vector';
 import { type Frame } from './Frame';
 import { Renderable } from './Renderable';
@@ -47,19 +47,19 @@ export class Camera extends Renderable implements CoordinateSpace {
     let upVector: number[];
 
     switch (viewType) {
-      case ViewType.Axial:
-        direction = [0, 0, 1];
-        upVector = [0, -1, 0];
-        break;
-
-      case ViewType.Coronal:
-      case ViewType.VolumeBones:
-      case ViewType.VolumeSkin:
+      case '3D Bones':
+      case '3D Skin':
+      case 'Coronal':
         direction = [0, 1, 0];
         upVector = [0, 0, 1];
         break;
 
-      case ViewType.Sagittal:
+      case 'Axial':
+        direction = [0, 0, 1];
+        upVector = [0, -1, 0];
+        break;
+
+      case 'Sagittal':
         direction = [-1, 0, 0];
         upVector = [0, 0, 1];
         break;
@@ -72,7 +72,7 @@ export class Camera extends Renderable implements CoordinateSpace {
     const fieldOfView = baseFieldOfView;
     let lookPoint = volume.center;
 
-    if ([ViewType.VolumeBones, ViewType.VolumeSkin].includes(viewType)) {
+    if ((['3D Bones', '3D Skin'] as ViewType[]).includes(viewType)) {
       const correctionVector = V(direction).scale(
         -volume.getOrientedDimensionMm(direction) / 2,
       );

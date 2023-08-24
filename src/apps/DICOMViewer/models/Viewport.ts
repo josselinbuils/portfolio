@@ -1,6 +1,8 @@
-import { type RendererType, ViewType } from '../constants';
+import { VIEW_TYPES_3D } from '../constants';
 import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { type LUTComponent } from '../interfaces/LUTComponent';
+import { type RendererType } from '../interfaces/RendererType';
+import { type ViewType } from '../interfaces/ViewType';
 import { V } from '../utils/math/Vector';
 import { Camera } from './Camera';
 import { type Dataset } from './Dataset';
@@ -45,12 +47,12 @@ export class Viewport extends Renderable implements CoordinateSpace {
     const { windowCenter, windowWidth } = frame;
 
     const camera =
-      viewType === ViewType.Native
+      viewType === 'Native'
         ? Camera.fromFrame(frame)
         : Camera.fromVolume(dataset.volume as Volume, viewType);
 
     const lutComponents =
-      viewType === ViewType.VolumeSkin
+      viewType === '3D Skin'
         ? [
             { id: '0', start: -25, end: 125, color: [255, 190, 180] },
             { id: '1', start: 100, end: 250, color: [255, 140, 130] },
@@ -127,7 +129,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   getImageZoom(): number {
     if (this.imageZoom === undefined) {
       const sliceHeight =
-        this.viewType === ViewType.Native
+        this.viewType === '3D Skin'
           ? this.dataset.findClosestFrame(this.camera.lookPoint).rows
           : Math.abs(
               V((this.dataset.volume as Volume).dimensionsVoxels).dot(
@@ -166,6 +168,6 @@ export class Viewport extends Renderable implements CoordinateSpace {
   }
 
   is3D() {
-    return [ViewType.VolumeBones, ViewType.VolumeSkin].includes(this.viewType);
+    return VIEW_TYPES_3D.includes(this.viewType);
   }
 }

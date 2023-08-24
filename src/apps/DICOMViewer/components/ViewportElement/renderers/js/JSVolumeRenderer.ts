@@ -1,4 +1,3 @@
-import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -176,7 +175,7 @@ export class JSVolumeRenderer implements Renderer {
           : () => this.renderMPRImagePixels(viewport, renderingProperties);
     }
 
-    if (viewport.viewType === ViewType.Oblique) {
+    if (viewport.viewType === 'Oblique') {
       displayCube(viewport, this.canvas, renderPixels as () => void);
     } else {
       this.context.fillStyle = 'black';
@@ -251,7 +250,7 @@ export class JSVolumeRenderer implements Renderer {
     const directionScaled = V(direction).scale(
       V(voxelSpacing).mul(direction).norm(),
     );
-    const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
+    const targetRatio = viewport.viewType === '3D Bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
     const offsets = [

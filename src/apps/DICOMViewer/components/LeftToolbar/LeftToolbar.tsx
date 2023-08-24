@@ -1,3 +1,4 @@
+import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faAdjust } from '@fortawesome/free-solid-svg-icons/faAdjust';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons/faArrowsAlt';
 import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons/faArrowsAltV';
@@ -7,35 +8,39 @@ import cn from 'classnames';
 import { type FC } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { MouseButton } from '@/platform/constants';
-import { MouseTool, ViewType } from '../../constants';
+import { type MouseTool } from '../../interfaces/MouseTool';
 import { type Viewport } from '../../models/Viewport';
 import styles from './LeftToolbar.module.scss';
 
-const mouseTools = [
+const mouseTools: {
+  condition?: (viewport: Viewport) => boolean;
+  icon: IconDefinition;
+  tool: MouseTool;
+}[] = [
   {
     condition: (viewport: Viewport) =>
       viewport.dataset.frames.length > 1 && !viewport.is3D(),
     icon: faArrowsAltV,
-    tool: MouseTool.Paging,
+    tool: 'Paging',
   },
   {
     condition: (viewport: Viewport) =>
-      viewport.dataset.is3D && viewport.viewType !== ViewType.Native,
+      viewport.dataset.is3D && viewport.viewType !== 'Native',
     icon: faSyncAlt,
-    tool: MouseTool.Rotate,
+    tool: 'Rotate',
   },
   {
     condition: (viewport: Viewport) => !viewport.is3D(),
     icon: faAdjust,
-    tool: MouseTool.Windowing,
+    tool: 'Windowing',
   },
   {
     icon: faArrowsAlt,
-    tool: MouseTool.Pan,
+    tool: 'Pan',
   },
   {
     icon: faSearch,
-    tool: MouseTool.Zoom,
+    tool: 'Zoom',
   },
 ];
 

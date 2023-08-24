@@ -1,5 +1,5 @@
 import { MouseButton } from '@/platform/constants';
-import { MouseTool } from '../constants';
+import { type MouseTool } from '../interfaces/MouseTool';
 import { type Viewport } from '../models/Viewport';
 
 export async function startTool(
@@ -43,31 +43,31 @@ export async function startTool(
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
-    case MouseTool.Paging: {
+    case 'Paging': {
       const { startPaging } = await import('./tools/startPaging');
       moveListener = startPaging(viewport, downEvent);
       break;
     }
 
-    case MouseTool.Pan: {
+    case 'Pan': {
       const { startPan } = await import('./tools/startPan');
       moveListener = startPan(viewport, downEvent);
       break;
     }
 
-    case MouseTool.Rotate: {
+    case 'Rotate': {
       const { startRotate } = await import('./tools/startRotate');
       moveListener = startRotate(viewport, downEvent, handleToolUpdate);
       break;
     }
 
-    case MouseTool.Windowing: {
+    case 'Windowing': {
       const { startWindowing } = await import('./tools/startWindowing');
       moveListener = startWindowing(viewport, downEvent, handleToolUpdate);
       break;
     }
 
-    case MouseTool.Zoom: {
+    case 'Zoom': {
       const { startZoom } = await import('./tools/startZoom');
       moveListener = startZoom(viewport, downEvent, handleToolUpdate);
       break;

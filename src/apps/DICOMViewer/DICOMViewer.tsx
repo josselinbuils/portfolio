@@ -14,9 +14,11 @@ import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsE
 import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
-import { MouseTool, RendererType, ViewType } from './constants';
 import { type Annotations } from './interfaces/Annotations';
 import { type LUTComponent } from './interfaces/LUTComponent';
+import { type MouseTool } from './interfaces/MouseTool';
+import { type RendererType } from './interfaces/RendererType';
+import { type ViewType } from './interfaces/ViewType';
 import { type ViewportStats } from './interfaces/ViewportStats';
 import { type Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
@@ -28,18 +30,14 @@ const ColorPalette = lazy(
     (await import('./components/ColorPalette/ColorPalette')).ColorPalette,
 );
 
-const DEFAULT_RENDERER_TYPE = RendererType.WebGPU;
+const DEFAULT_RENDERER_TYPE: RendererType = 'WebGPU';
 
 const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
 }) => {
-  const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>(
-    MouseTool.Paging,
-  );
-  const [activeRightTool, setActiveRightTool] = useState<MouseTool>(
-    MouseTool.Zoom,
-  );
+  const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>('Paging');
+  const [activeRightTool, setActiveRightTool] = useState<MouseTool>('Zoom');
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -57,13 +55,10 @@ const DICOMViewer: WindowComponent = ({
             previousViewport === undefined ||
             previousViewport.dataset !== dataset
           ) {
-            const availableViewTypes = getAvailableViewTypes(
-              dataset,
-              rendererType,
-            );
-            const viewType = availableViewTypes.includes(ViewType.VolumeSkin)
-              ? ViewType.VolumeSkin
-              : ViewType.Native;
+            const availableViewTypes = getAvailableViewTypes(dataset);
+            const viewType: ViewType = availableViewTypes.includes('3D Skin')
+              ? '3D Skin'
+              : 'Native';
 
             return Viewport.create(dataset, viewType, rendererType);
           }
@@ -87,13 +82,13 @@ const DICOMViewer: WindowComponent = ({
     const zoom = viewport.getImageZoom();
 
     if (viewport.is3D()) {
-      setActiveLeftTool(MouseTool.Rotate);
+      setActiveLeftTool('Rotate');
     } else if (viewport.dataset.frames.length > 1) {
-      setActiveLeftTool(MouseTool.Paging);
+      setActiveLeftTool('Paging');
     } else {
-      setActiveLeftTool(MouseTool.Windowing);
+      setActiveLeftTool('Windowing');
     }
-    setActiveRightTool(MouseTool.Zoom);
+    setActiveRightTool('Zoom');
 
     setAnnotations((previousAnnotations) => ({
       ...previousAnnotations,
@@ -171,7 +166,7 @@ const DICOMViewer: WindowComponent = ({
             onStatsUpdate={setViewportStats}
             viewport={viewport}
           />
-          {[RendererType.JavaScript, RendererType.WebGPU].includes(
+          {(['JavaScript', 'WebGPU'] as RendererType[]).includes(
             rendererType,
           ) && (
             <Suspense fallback={null}>
@@ -183,10 +178,7 @@ const DICOMViewer: WindowComponent = ({
           )}
           <AnnotationsElement
             annotations={annotations}
-            availableViewTypes={getAvailableViewTypes(
-              viewport.dataset,
-              rendererType,
-            )}
+            availableViewTypes={getAvailableViewTypes(viewport.dataset)}
             onRendererTypeSwitch={setRendererType}
             onViewTypeSwitch={switchViewType}
           />
@@ -214,22 +206,22 @@ const DICOMViewer: WindowComponent = ({
       downEvent,
       viewport as Viewport,
       activeLeftTool,
-      MouseTool.Pan,
+      'Pan',
       activeRightTool,
       (tool: MouseTool, ...additionalArgs) => {
         if (viewport === undefined) {
           return;
         }
         switch (tool) {
-          case MouseTool.Rotate:
-            if (
-              ![
-                ViewType.Oblique,
-                ViewType.VolumeBones,
-                ViewType.VolumeSkin,
-              ].includes(viewport.viewType)
-            ) {
-              viewport.viewType = ViewType.Oblique;
+          case 'Rotate': {
+            const viewTypesWithRotation: ViewType[] = [
+              'Oblique',
+              '3D Bones',
+              '3D Skin',
+            ];
+
+            if (!viewTypesWithRotation.includes(viewport.viewType)) {
+              viewport.viewType = 'Oblique';
 
               setAnnotations((previousAnnotations) => ({
                 ...previousAnnotations,
@@ -241,8 +233,9 @@ const DICOMViewer: WindowComponent = ({
               zoom: viewport.getImageZoom(),
             }));
             break;
+          }
 
-          case MouseTool.Windowing: {
+          case 'Windowing': {
             const { windowCenter, windowWidth } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({
@@ -253,7 +246,7 @@ const DICOMViewer: WindowComponent = ({
             break;
           }
 
-          case MouseTool.Zoom: {
+          case 'Zoom': {
             const { zoom } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({

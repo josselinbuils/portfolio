@@ -1,8 +1,11 @@
-import {
-  type PhotometricInterpretation,
-  type PixelRepresentation,
-} from '../constants';
 import { Model } from './Model';
+
+export type PhotometricInterpretation = 'MONOCHROME1' | 'MONOCHROME2';
+
+export enum PixelRepresentation {
+  Signed = 1,
+  Unsigned = 0,
+}
 
 const MANDATORY_FIELDS = [
   'bitsAllocated',

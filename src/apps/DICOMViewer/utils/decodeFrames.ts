@@ -1,8 +1,10 @@
 import dicomParser, { type DataSet } from 'dicom-parser';
 import { extendError } from '@/platform/utils/extendError';
-import { type PhotometricInterpretation } from '../constants';
 import { type File } from '../interfaces/File';
-import { DicomFrame } from '../models/DicomFrame';
+import {
+  DicomFrame,
+  type PhotometricInterpretation,
+} from '../models/DicomFrame';
 
 export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
   let frames: DicomFrame[];
@@ -23,7 +25,9 @@ export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
       ? frames.sort((a, b) =>
           (a as any).sliceLocation > (b as any).sliceLocation ? 1 : -1,
         )
-      : frames.sort((a, b) => (a.sopInstanceUID > b.sopInstanceUID ? 1 : -1));
+      : frames.sort((a, b) =>
+          (a as any).imagePosition[2] > (b as any).imagePosition[2] ? 1 : -1,
+        );
   } else {
     throw new Error('No file to load');
   }

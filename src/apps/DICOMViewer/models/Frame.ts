@@ -1,9 +1,8 @@
 import {
-  type NormalizedImageFormat,
+  type DicomFrame,
   type PhotometricInterpretation,
   type PixelRepresentation,
-} from '../constants';
-import { type DicomFrame } from './DicomFrame';
+} from './DicomFrame';
 import { Model } from './Model';
 
 const MANDATORY_FIELDS = [
@@ -35,7 +34,6 @@ export class Frame extends Model {
   dimensionsMm!: number[];
   id!: string;
   imageCenter!: number[];
-  imageFormat!: NormalizedImageFormat;
   imageNormal!: number[];
 
   /**

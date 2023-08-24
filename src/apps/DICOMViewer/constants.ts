@@ -1,39 +1,9 @@
-export enum MouseTool {
-  Paging = 'Paging',
-  Pan = 'Pan',
-  Rotate = 'Rotate',
-  Windowing = 'Windowing',
-  Zoom = 'Zoom',
-}
+import { type ViewType } from './interfaces/ViewType';
 
-export enum NormalizedImageFormat {
-  Int16 = 'int16',
-  RGB = 'rgb',
-}
+export const VIEW_TYPES_3D: readonly ViewType[] = ['3D Bones', '3D Skin'];
 
-export enum PhotometricInterpretation {
-  Monochrome1 = 'MONOCHROME1',
-  Monochrome2 = 'MONOCHROME2',
-  RGB = 'RGB',
-}
-
-export enum PixelRepresentation {
-  Signed = 1,
-  Unsigned = 0,
-}
-
-export enum RendererType {
-  JavaScript = 'JavaScript',
-  WebGL = 'WebGL',
-  WebGPU = 'WebGPU',
-}
-
-export enum ViewType {
-  Axial = 'Axial',
-  Coronal = 'Coronal',
-  Native = 'Native',
-  Oblique = 'Oblique',
-  Sagittal = 'Sagittal',
-  VolumeBones = '3D Bones',
-  VolumeSkin = '3D Skin',
-}
+export const VIEW_TYPES_WITH_ROTATION: readonly ViewType[] = [
+  'Oblique',
+  '3D Bones',
+  '3D Skin',
+];

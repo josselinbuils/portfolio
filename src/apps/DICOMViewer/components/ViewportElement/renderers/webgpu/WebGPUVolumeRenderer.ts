@@ -1,4 +1,3 @@
-import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -164,7 +163,7 @@ export class WebGPUVolumeRenderer implements Renderer {
     yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const targetRatio = viewport.viewType === ViewType.VolumeBones ? 1.1 : 100;
+    const targetRatio = viewport.viewType === '3D Bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
     const correctionVector = V(direction).scale(-500);
     const lightPoint = V(camera.lookPoint).add(correctionVector);

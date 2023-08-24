@@ -7,8 +7,9 @@ import {
   type MenuItemDescriptor,
   useMenu,
 } from '@/platform/components/Menu/useMenu';
-import { RendererType, type ViewType } from '../../constants';
 import { type Annotations } from '../../interfaces/Annotations';
+import { type RendererType } from '../../interfaces/RendererType';
+import { type ViewType } from '../../interfaces/ViewType';
 import styles from './AnnotationsElement.module.scss';
 
 export interface AnnotationsElementProps {
@@ -62,25 +63,23 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
   }
 
   function showRendererTypeMenu(): void {
-    const items = [
-      RendererType.JavaScript,
-      RendererType.WebGL,
-      RendererType.WebGPU,
-    ].map((type) => {
-      const icon = getMenuItemIcon(type === rendererType);
+    const items = (['JavaScript', 'WebGPU'] satisfies RendererType[]).map(
+      (type) => {
+        const icon = getMenuItemIcon(type === rendererType);
 
-      return {
-        title: (
-          <>
-            <div className={styles.contextMenuIcon}>
-              {icon && <FontAwesomeIcon icon={icon} />}
-            </div>
-            {type}
-          </>
-        ),
-        onClick: () => onRendererTypeSwitch(type),
-      };
-    });
+        return {
+          title: (
+            <>
+              <div className={styles.contextMenuIcon}>
+                {icon && <FontAwesomeIcon icon={icon} />}
+              </div>
+              {type}
+            </>
+          ),
+          onClick: () => onRendererTypeSwitch(type),
+        };
+      },
+    );
     showContextMenu(rendererElementRef, items);
   }
 

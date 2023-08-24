@@ -1,4 +1,3 @@
-import { ViewType } from '@/apps/DICOMViewer/constants';
 import { type Camera } from '../../../models/Camera';
 import { type Frame } from '../../../models/Frame';
 import { type Viewport } from '../../../models/Viewport';
@@ -34,7 +33,7 @@ export function getRenderingProperties(
   let viewportSpaceImageX0: number;
   let viewportSpaceImageY0: number;
 
-  if (viewType === ViewType.Native) {
+  if (viewType === 'Native') {
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { columns, imageCenter, rows } = frame;
     const lookPointViewport = changePointSpace(

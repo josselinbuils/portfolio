@@ -1,4 +1,3 @@
-import { NormalizedImageFormat } from '@/apps/DICOMViewer/constants';
 import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
@@ -108,12 +107,7 @@ export class WebGPUFrameRenderer implements Renderer {
     const { dataset, camera, height, width, windowCenter, windowWidth } =
       viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
-    const { columns, id, imageFormat, rescaleIntercept, rescaleSlope, rows } =
-      frame;
-
-    if (imageFormat !== NormalizedImageFormat.Int16) {
-      throw new Error(`Unsupported image format: ${imageFormat}`);
-    }
+    const { columns, id, rescaleIntercept, rescaleSlope, rows } = frame;
 
     validateCamera2D(frame, camera);
 
