@@ -12,6 +12,16 @@ import { type RendererType } from '../../interfaces/RendererType';
 import { type ViewType } from '../../interfaces/ViewType';
 import styles from './AnnotationsElement.module.scss';
 
+const viewTypeLabels: Record<ViewType, string> = {
+  axial: 'Axial',
+  bones: '3D Bones',
+  coronal: 'Coronal',
+  native: 'Native',
+  oblique: 'Oblique',
+  sagittal: 'Sagittal',
+  skin: '3D Skin',
+};
+
 export interface AnnotationsElementProps {
   annotations: Annotations;
   availableViewTypes: ViewType[];
@@ -93,7 +103,7 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
             <div className={styles.contextMenuIcon}>
               {icon && <FontAwesomeIcon icon={icon} />}
             </div>
-            {type}
+            {viewTypeLabels[type]}
           </>
         ),
         onClick: () => onViewTypeSwitch(type),
@@ -112,7 +122,8 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
           ref={viewTypeElementRef}
           type="button"
         >
-          {viewType} <FontAwesomeIcon icon={faSquareCaretDown} />
+          {viewType ? viewTypeLabels[viewType] : 'None'}{' '}
+          <FontAwesomeIcon icon={faSquareCaretDown} />
         </button>
       </div>
       <div className={styles.overlayTopRight}>

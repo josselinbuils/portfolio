@@ -1,1 +1,1 @@
-export type MouseTool = 'Paging' | 'Pan' | 'Rotate' | 'Windowing' | 'Zoom';
+export type MouseTool = 'paging' | 'pan' | 'rotate' | 'windowing' | 'zoom';

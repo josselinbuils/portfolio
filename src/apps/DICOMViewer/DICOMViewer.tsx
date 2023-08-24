@@ -36,8 +36,8 @@ const DICOMViewer: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
 }) => {
-  const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>('Paging');
-  const [activeRightTool, setActiveRightTool] = useState<MouseTool>('Zoom');
+  const [activeLeftTool, setActiveLeftTool] = useState<MouseTool>('paging');
+  const [activeRightTool, setActiveRightTool] = useState<MouseTool>('zoom');
   const [annotations, setAnnotations] = useState<Annotations>({});
   const [dataset, setDataset] = useState<Dataset>();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -56,9 +56,9 @@ const DICOMViewer: WindowComponent = ({
             previousViewport.dataset !== dataset
           ) {
             const availableViewTypes = getAvailableViewTypes(dataset);
-            const viewType: ViewType = availableViewTypes.includes('3D Skin')
-              ? '3D Skin'
-              : 'Native';
+            const viewType: ViewType = availableViewTypes.includes('skin')
+              ? 'skin'
+              : 'native';
 
             return Viewport.create(dataset, viewType, rendererType);
           }
@@ -82,13 +82,13 @@ const DICOMViewer: WindowComponent = ({
     const zoom = viewport.getImageZoom();
 
     if (viewport.is3D()) {
-      setActiveLeftTool('Rotate');
+      setActiveLeftTool('rotate');
     } else if (viewport.dataset.frames.length > 1) {
-      setActiveLeftTool('Paging');
+      setActiveLeftTool('paging');
     } else {
-      setActiveLeftTool('Windowing');
+      setActiveLeftTool('windowing');
     }
-    setActiveRightTool('Zoom');
+    setActiveRightTool('zoom');
 
     setAnnotations((previousAnnotations) => ({
       ...previousAnnotations,
@@ -206,22 +206,22 @@ const DICOMViewer: WindowComponent = ({
       downEvent,
       viewport as Viewport,
       activeLeftTool,
-      'Pan',
+      'pan',
       activeRightTool,
       (tool: MouseTool, ...additionalArgs) => {
         if (viewport === undefined) {
           return;
         }
         switch (tool) {
-          case 'Rotate': {
+          case 'rotate': {
             const viewTypesWithRotation: ViewType[] = [
-              'Oblique',
-              '3D Bones',
-              '3D Skin',
+              'oblique',
+              'bones',
+              'skin',
             ];
 
             if (!viewTypesWithRotation.includes(viewport.viewType)) {
-              viewport.viewType = 'Oblique';
+              viewport.viewType = 'oblique';
 
               setAnnotations((previousAnnotations) => ({
                 ...previousAnnotations,
@@ -235,7 +235,7 @@ const DICOMViewer: WindowComponent = ({
             break;
           }
 
-          case 'Windowing': {
+          case 'windowing': {
             const { windowCenter, windowWidth } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({
@@ -246,7 +246,7 @@ const DICOMViewer: WindowComponent = ({
             break;
           }
 
-          case 'Zoom': {
+          case 'zoom': {
             const { zoom } = additionalArgs[0];
 
             setAnnotations((previousAnnotations) => ({

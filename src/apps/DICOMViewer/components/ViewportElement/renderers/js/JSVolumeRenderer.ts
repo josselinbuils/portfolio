@@ -175,7 +175,7 @@ export class JSVolumeRenderer implements Renderer {
           : () => this.renderMPRImagePixels(viewport, renderingProperties);
     }
 
-    if (viewport.viewType === 'Oblique') {
+    if (viewport.viewType === 'oblique') {
       displayCube(viewport, this.canvas, renderPixels as () => void);
     } else {
       this.context.fillStyle = 'black';
@@ -250,7 +250,7 @@ export class JSVolumeRenderer implements Renderer {
     const directionScaled = V(direction).scale(
       V(voxelSpacing).mul(direction).norm(),
     );
-    const targetRatio = viewport.viewType === '3D Bones' ? 1.1 : 100;
+    const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
 
     const offsets = [

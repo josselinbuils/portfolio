@@ -2,16 +2,10 @@ import { type ViewType } from '../interfaces/ViewType';
 import { type Dataset } from '../models/Dataset';
 
 export function getAvailableViewTypes(dataset: Dataset): ViewType[] {
-  const availableViewTypes: ViewType[] = ['Native'];
+  const availableViewTypes: ViewType[] = ['native'];
 
   if (dataset.is3D) {
-    availableViewTypes.push(
-      'Axial',
-      'Coronal',
-      'Sagittal',
-      '3D Bones',
-      '3D Skin',
-    );
+    availableViewTypes.push('axial', 'coronal', 'sagittal', 'bones', 'skin');
   }
   return availableViewTypes;
 }

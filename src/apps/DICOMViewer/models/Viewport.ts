@@ -47,12 +47,12 @@ export class Viewport extends Renderable implements CoordinateSpace {
     const { windowCenter, windowWidth } = frame;
 
     const camera =
-      viewType === 'Native'
+      viewType === 'native'
         ? Camera.fromFrame(frame)
         : Camera.fromVolume(dataset.volume as Volume, viewType);
 
     const lutComponents =
-      viewType === '3D Skin'
+      viewType === 'skin'
         ? [
             { id: '0', start: -25, end: 125, color: [255, 190, 180] },
             { id: '1', start: 100, end: 250, color: [255, 140, 130] },
@@ -129,7 +129,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
   getImageZoom(): number {
     if (this.imageZoom === undefined) {
       const sliceHeight =
-        this.viewType === 'Native'
+        this.viewType === 'native'
           ? this.dataset.findClosestFrame(this.camera.lookPoint).rows
           : Math.abs(
               V((this.dataset.volume as Volume).dimensionsVoxels).dot(

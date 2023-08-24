@@ -21,26 +21,26 @@ const mouseTools: {
     condition: (viewport: Viewport) =>
       viewport.dataset.frames.length > 1 && !viewport.is3D(),
     icon: faArrowsAltV,
-    tool: 'Paging',
+    tool: 'paging',
   },
   {
     condition: (viewport: Viewport) =>
-      viewport.dataset.is3D && viewport.viewType !== 'Native',
+      viewport.dataset.is3D && viewport.viewType !== 'native',
     icon: faSyncAlt,
-    tool: 'Rotate',
+    tool: 'rotate',
   },
   {
     condition: (viewport: Viewport) => !viewport.is3D(),
     icon: faAdjust,
-    tool: 'Windowing',
+    tool: 'windowing',
   },
   {
     icon: faArrowsAlt,
-    tool: 'Pan',
+    tool: 'pan',
   },
   {
     icon: faSearch,
-    tool: 'Zoom',
+    tool: 'zoom',
   },
 ];
 

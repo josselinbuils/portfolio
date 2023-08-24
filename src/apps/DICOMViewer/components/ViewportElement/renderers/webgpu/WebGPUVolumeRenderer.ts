@@ -163,7 +163,7 @@ export class WebGPUVolumeRenderer implements Renderer {
     yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const targetRatio = viewport.viewType === '3D Bones' ? 1.1 : 100;
+    const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
     const correctionVector = V(direction).scale(-500);
     const lightPoint = V(camera.lookPoint).add(correctionVector);

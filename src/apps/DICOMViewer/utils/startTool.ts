@@ -43,31 +43,31 @@ export async function startTool(
   let moveListener: (moveEvent: MouseEvent) => void;
 
   switch (tool) {
-    case 'Paging': {
+    case 'paging': {
       const { startPaging } = await import('./tools/startPaging');
       moveListener = startPaging(viewport, downEvent);
       break;
     }
 
-    case 'Pan': {
+    case 'pan': {
       const { startPan } = await import('./tools/startPan');
       moveListener = startPan(viewport, downEvent);
       break;
     }
 
-    case 'Rotate': {
+    case 'rotate': {
       const { startRotate } = await import('./tools/startRotate');
       moveListener = startRotate(viewport, downEvent, handleToolUpdate);
       break;
     }
 
-    case 'Windowing': {
+    case 'windowing': {
       const { startWindowing } = await import('./tools/startWindowing');
       moveListener = startWindowing(viewport, downEvent, handleToolUpdate);
       break;
     }
 
-    case 'Zoom': {
+    case 'zoom': {
       const { startZoom } = await import('./tools/startZoom');
       moveListener = startZoom(viewport, downEvent, handleToolUpdate);
       break;

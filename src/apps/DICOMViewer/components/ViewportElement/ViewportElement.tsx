@@ -170,13 +170,13 @@ async function getViewportRenderer(
 ): Promise<new (canvas: HTMLCanvasElement) => Renderer> {
   switch (viewport.rendererType) {
     case 'JavaScript':
-      if (viewport.viewType === 'Native') {
+      if (viewport.viewType === 'native') {
         return (await import('./renderers/js/JSFrameRenderer')).JSFrameRenderer;
       }
       return (await import('./renderers/js/JSVolumeRenderer')).JSVolumeRenderer;
 
     case 'WebGPU':
-      if (viewport.viewType === 'Native') {
+      if (viewport.viewType === 'native') {
         return (await import('./renderers/webgpu/WebGPUFrameRenderer'))
           .WebGPUFrameRenderer;
       }
