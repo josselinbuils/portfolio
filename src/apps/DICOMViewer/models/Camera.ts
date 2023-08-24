@@ -13,6 +13,8 @@ const MANDATORY_FIELDS: readonly (keyof Camera)[] = [
   'upVector',
 ];
 
+const DEFAULT_VIEWPORT_FIELD_OF_VIEW_FACTOR = 1.2;
+
 export class Camera extends Renderable implements CoordinateSpace {
   baseFieldOfView!: number; // Volume size along the vertical axis of the camera
   eyePoint!: number[];
@@ -27,7 +29,7 @@ export class Camera extends Renderable implements CoordinateSpace {
     const { dimensionsMm, imageCenter, imageNormal, imageOrientation } = frame;
 
     const baseFieldOfView = dimensionsMm[1];
-    const fieldOfView = baseFieldOfView;
+    const fieldOfView = baseFieldOfView * DEFAULT_VIEWPORT_FIELD_OF_VIEW_FACTOR;
     const lookPoint = imageCenter.slice();
     const eyePoint = V(lookPoint).sub(imageNormal);
     // Frame vertical axis is inverted compared to axial view
@@ -69,7 +71,7 @@ export class Camera extends Renderable implements CoordinateSpace {
     }
 
     const baseFieldOfView = volume.getOrientedDimensionMm(upVector);
-    const fieldOfView = baseFieldOfView;
+    const fieldOfView = baseFieldOfView * DEFAULT_VIEWPORT_FIELD_OF_VIEW_FACTOR;
     let lookPoint = volume.center;
 
     if ((['3D Bones', '3D Skin'] as ViewType[]).includes(viewType)) {
