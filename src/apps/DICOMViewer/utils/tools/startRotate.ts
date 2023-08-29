@@ -1,6 +1,7 @@
 import { type Camera } from '../../models/Camera';
 import { type Viewport } from '../../models/Viewport';
 import { areFloatEquals } from '../areFloatEquals';
+import { changePointSpace } from '../changePointSpace';
 import { M3 } from '../math/Matrix3';
 import { V } from '../math/Vector';
 
@@ -14,13 +15,21 @@ export function startRotate(
   }
 
   const { height, width } = viewport;
-  const trackballCenter = [width / 2, height / 2];
+  const imageCenter = [
+    ...changePointSpace(
+      viewport.dataset.volume!.center,
+      viewport.dataset,
+      viewport,
+    ).slice(0, 2),
+    0,
+  ];
+  // const trackballCenter = [width / 2, height / 2, 0];
   const trackballRadius = Math.min(width, height) / 2;
   const cursorStartPosition = [downEvent.offsetX, downEvent.offsetY];
   const left = downEvent.clientX - downEvent.offsetX;
   const top = downEvent.clientY - downEvent.offsetY;
   let previousVector = computeTrackball(
-    trackballCenter,
+    imageCenter,
     trackballRadius,
     cursorStartPosition,
   );
@@ -28,7 +37,7 @@ export function startRotate(
   return (moveEvent: MouseEvent) => {
     const cursorOffset = [moveEvent.clientX - left, moveEvent.clientY - top];
     const currentVector = computeTrackball(
-      trackballCenter,
+      imageCenter,
       trackballRadius,
       cursorOffset,
     );
@@ -41,26 +50,37 @@ export function startRotate(
     const { camera, dataset } = viewport;
     const volume = dataset.volume!;
 
-    if (viewport.is3D()) {
-      let direction = camera.getDirection();
+    let direction = camera.getDirection();
 
+    // Center the volume on the viewport
+    if (viewport.is3D()) {
       camera.lookPoint = volume.center.slice();
       camera.eyePoint = V(camera.lookPoint).sub(direction);
+    } else {
+      camera.lookPoint = changePointSpace(imageCenter, viewport, dataset);
+      camera.eyePoint = V(camera.lookPoint).sub(direction);
+    }
 
-      rotateCamera(camera, axis, angle);
+    rotateCamera(camera, axis, angle);
 
-      direction = camera.getDirection();
+    direction = camera.getDirection();
 
+    // Apply the initial pan again
+    camera.lookPoint = changePointSpace(
+      [viewport.width - imageCenter[0], viewport.height - imageCenter[1], 0],
+      viewport,
+      dataset,
+    );
+
+    if (viewport.is3D()) {
+      // Put the look point on the periphery of the volume
       const correctionVector = V(direction).scale(
         -volume.getOrientedDimensionMm(direction) / 2,
       );
-
       camera.lookPoint = V(camera.lookPoint).add(correctionVector).smooth();
-      camera.eyePoint = V(camera.lookPoint).sub(direction);
-    } else {
-      rotateCamera(camera, axis, angle);
     }
 
+    camera.eyePoint = V(camera.lookPoint).sub(direction);
     camera.baseFieldOfView = volume.getOrientedDimensionMm(camera.upVector);
 
     previousVector = currentVector;
@@ -83,7 +103,7 @@ function computeTrackball(
   radius: number,
   cursorOffset: number[],
 ): number[] {
-  const fromCenter = V([...cursorOffset, 0]).sub([...center, 0]);
+  const fromCenter = V([...cursorOffset, 0]).sub(center);
   const fromCenterNorm = V(fromCenter).norm();
 
   // fromCenter cannot be longer than the trackball radius

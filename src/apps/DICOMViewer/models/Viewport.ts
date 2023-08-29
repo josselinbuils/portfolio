@@ -112,20 +112,6 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  getWorldBasis(): number[][] {
-    if (this.basis === undefined) {
-      const cameraBasis = this.camera.getWorldBasis();
-      const pixelHeightMm = this.camera.fieldOfView / this.height;
-
-      this.basis = [
-        V(cameraBasis[0]).scale(1 / pixelHeightMm),
-        V(cameraBasis[1]).scale(1 / pixelHeightMm),
-        cameraBasis[2],
-      ];
-    }
-    return this.basis;
-  }
-
   getImageZoom(): number {
     if (this.imageZoom === undefined) {
       const sliceHeight =
@@ -142,6 +128,20 @@ export class Viewport extends Renderable implements CoordinateSpace {
         this.camera.fieldOfView;
     }
     return this.imageZoom;
+  }
+
+  getWorldBasis(): number[][] {
+    if (this.basis === undefined) {
+      const cameraBasis = this.camera.getWorldBasis();
+      const pixelHeightMm = this.camera.fieldOfView / this.height;
+
+      this.basis = [
+        V(cameraBasis[0]).scale(1 / pixelHeightMm),
+        V(cameraBasis[1]).scale(1 / pixelHeightMm),
+        cameraBasis[2],
+      ];
+    }
+    return this.basis;
   }
 
   getWorldOrigin(): number[] {

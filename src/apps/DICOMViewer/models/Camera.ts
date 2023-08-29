@@ -105,6 +105,13 @@ export class Camera extends Renderable implements CoordinateSpace {
     });
   }
 
+  getDirection(): number[] {
+    if (this.direction === undefined) {
+      this.direction = V(this.lookPoint).sub(this.eyePoint).normalize();
+    }
+    return this.direction;
+  }
+
   /*
    * LPS
    *    ------> x
@@ -120,13 +127,6 @@ export class Camera extends Renderable implements CoordinateSpace {
       this.basis = [x, y, z];
     }
     return this.basis;
-  }
-
-  getDirection(): number[] {
-    if (this.direction === undefined) {
-      this.direction = V(this.lookPoint).sub(this.eyePoint).normalize();
-    }
-    return this.direction;
   }
 
   getWorldOrigin(): number[] {
