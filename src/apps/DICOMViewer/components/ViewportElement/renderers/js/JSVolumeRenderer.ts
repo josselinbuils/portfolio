@@ -12,7 +12,7 @@ import {
   type RenderingProperties,
   type ViewportSpaceCoordinates,
 } from '../utils/getRenderingProperties';
-import { displayCube } from './utils/displayCube';
+import { displayVolumeBox } from './utils/displayVolumeBox';
 import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 
@@ -179,7 +179,7 @@ export class JSVolumeRenderer implements Renderer {
     }
 
     if (viewport.viewType === 'oblique') {
-      displayCube(viewport, this.canvas, renderPixels as () => void);
+      displayVolumeBox(viewport, this.canvas, renderPixels as () => void);
     } else {
       this.context.fillStyle = 'black';
       this.context.fillRect(0, 0, viewport.width, viewport.height);

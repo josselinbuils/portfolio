@@ -4,16 +4,15 @@ import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { getLinePlaneIntersection } from '@/apps/DICOMViewer/utils/math/getLinePlaneIntersection';
 
-const STYLE_FRONT = 'rgba(255, 255, 255, .7)';
-const STYLE_BEHIND = 'rgba(255, 255, 255, .2)';
+export type Point = number[];
+export type Line = Point[];
 
-export function displayCube(
-  viewport: Viewport,
-  canvas: HTMLCanvasElement,
-  render: () => void,
-): void {
+export function computeVolumeBox(viewport: Viewport): {
+  linesBehindImage: Line[];
+  linesInFrontOfImage: Line[];
+  points: Point[];
+} {
   const volume = viewport.dataset.volume as Volume;
-  const context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   const lines = [
     ['x0y0z0', 'x1y0z0'],
@@ -36,11 +35,9 @@ export function displayCube(
     cornersDisplay[name] = changePointSpace(corner, viewport.dataset, viewport);
   }
 
-  const front: any[] = [];
-  const cross: any[] = [];
-
-  context.fillStyle = 'black';
-  context.fillRect(0, 0, viewport.width, viewport.height);
+  const linesBehindImage: Line[] = [];
+  const linesInFrontOfImage: Line[] = [];
+  const points: Point[] = [];
 
   for (const [keyA, keyB] of lines) {
     const corners = volume.corners as { [key: string]: number[] };
@@ -67,79 +64,32 @@ export function displayCube(
         viewport,
       );
 
-      cross.push({
-        pointInFrontOfViewportDisplay,
+      linesBehindImage.push([
+        pointBehindViewportDisplay,
         pointInViewportDisplay,
-        pointInViewport: info.pointInViewport,
-        pointInFrontOfViewport: info.pointInFrontOfViewport,
-      });
-
-      context.beginPath();
-      context.moveTo(
-        pointBehindViewportDisplay[0],
-        pointBehindViewportDisplay[1],
-      );
-      context.lineTo(pointInViewportDisplay[0], pointInViewportDisplay[1]);
-      context.strokeStyle = STYLE_BEHIND;
-      context.stroke();
+      ]);
+      linesInFrontOfImage.push([
+        pointInViewportDisplay,
+        pointInFrontOfViewportDisplay,
+      ]);
+      points.push(pointInViewportDisplay);
     } else if (info.isInFrontOfViewport) {
-      front.push({ aDisplay, bDisplay });
+      linesInFrontOfImage.push([aDisplay, bDisplay]);
     } else if (info.isBehindViewport) {
-      context.beginPath();
-      context.moveTo(aDisplay[0], aDisplay[1]);
-      context.lineTo(bDisplay[0], bDisplay[1]);
-      context.strokeStyle = STYLE_BEHIND;
-      context.stroke();
+      linesBehindImage.push([aDisplay, bDisplay]);
     }
   }
 
-  render();
+  return { linesBehindImage, linesInFrontOfImage, points };
+}
 
-  for (const {
-    pointInFrontOfViewportDisplay,
-    pointInViewportDisplay,
-  } of cross) {
-    context.beginPath();
-    context.moveTo(pointInViewportDisplay[0], pointInViewportDisplay[1]);
-    context.lineTo(
-      pointInFrontOfViewportDisplay[0],
-      pointInFrontOfViewportDisplay[1],
-    );
-    context.strokeStyle = STYLE_FRONT;
-    context.stroke();
-  }
-
-  for (const { aDisplay, bDisplay } of front) {
-    context.beginPath();
-    context.moveTo(aDisplay[0], aDisplay[1]);
-    context.lineTo(bDisplay[0], bDisplay[1]);
-    context.strokeStyle = STYLE_FRONT;
-    context.stroke();
-  }
-
-  context.beginPath();
-  context.arc(
-    cornersDisplay.x0y0z0[0],
-    cornersDisplay.x0y0z0[1],
-    3,
-    0,
-    Math.PI * 2,
-  );
-  context.fillStyle = STYLE_FRONT;
-  context.fill();
-
-  for (const { pointInViewportDisplay } of cross) {
-    context.beginPath();
-    context.arc(
-      pointInViewportDisplay[0],
-      pointInViewportDisplay[1],
-      3,
-      0,
-      Math.PI * 2,
-    );
-    context.fillStyle = 'red';
-    context.fill();
-  }
+interface LineInfo {
+  crossesViewport: boolean;
+  isBehindViewport: boolean;
+  isInFrontOfViewport: boolean;
+  pointBehindViewport?: number[];
+  pointInFrontOfViewport?: number[];
+  pointInViewport?: number[];
 }
 
 function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
@@ -170,13 +120,4 @@ function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
   }
 
   return lineInfo;
-}
-
-interface LineInfo {
-  crossesViewport: boolean;
-  isBehindViewport: boolean;
-  isInFrontOfViewport: boolean;
-  pointBehindViewport?: number[];
-  pointInFrontOfViewport?: number[];
-  pointInViewport?: number[];
 }
