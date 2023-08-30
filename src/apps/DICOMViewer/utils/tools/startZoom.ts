@@ -1,4 +1,6 @@
 import { type Viewport } from '../../models/Viewport';
+import { changePointSpace } from '../changePointSpace';
+import { V } from '../math/Vector';
 import { isImageCentered } from './utils/isImageCentered';
 
 const ZOOM_LIMIT = 0.07;
@@ -11,10 +13,16 @@ export function startZoom(
   downEvent: MouseEvent,
   onZoom: (values: { zoom: number }) => void,
 ): (moveEvent: MouseEvent) => void {
-  const { camera, height } = viewport;
+  const { camera, dataset, height } = viewport;
   const { baseFieldOfView } = camera;
   const startY = downEvent.clientY;
   const startFOV = camera.fieldOfView;
+  const direction = camera.getDirection();
+  const imageCenter = changePointSpace(
+    viewport.dataset.volume!.center,
+    viewport.dataset,
+    viewport,
+  );
 
   return (moveEvent: MouseEvent) => {
     const maxFOV = baseFieldOfView / ZOOM_MIN;
@@ -43,6 +51,24 @@ export function startZoom(
     ) {
       camera.fieldOfView = baseFieldOfView;
     }
+
+    // Keeps image center at the same position on the viewport
+    const newImageCenter = changePointSpace(
+      viewport.dataset.volume!.center,
+      viewport.dataset,
+      viewport,
+    );
+    const newLookPointViewport = [
+      newImageCenter[0] + viewport.width / 2 - imageCenter[0],
+      newImageCenter[1] + viewport.height / 2 - imageCenter[1],
+      0,
+    ];
+    camera.lookPoint = changePointSpace(
+      newLookPointViewport,
+      viewport,
+      dataset,
+    );
+    camera.eyePoint = V(camera.lookPoint).sub(direction);
 
     onZoom({ zoom: viewport.getImageZoom() });
   };

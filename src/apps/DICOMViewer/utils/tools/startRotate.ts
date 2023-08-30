@@ -15,17 +15,16 @@ export function startRotate(
   }
 
   const { height, width } = viewport;
-  const imageCenter = [
-    ...changePointSpace(
-      viewport.dataset.volume!.center,
-      viewport.dataset,
-      viewport,
-    ).slice(0, 2),
-    0,
-  ];
-  // const trackballCenter = [width / 2, height / 2, 0];
+  const imageCenter = changePointSpace(
+    viewport.dataset.volume!.center,
+    viewport.dataset,
+    viewport,
+  );
+
+  imageCenter[2] = 0; // We want the point to be on the viewport
+
   const trackballRadius = Math.min(width, height) / 2;
-  const cursorStartPosition = [downEvent.offsetX, downEvent.offsetY];
+  const cursorStartPosition = [downEvent.offsetX, downEvent.offsetY, 0];
   const left = downEvent.clientX - downEvent.offsetX;
   const top = downEvent.clientY - downEvent.offsetY;
   let previousVector = computeTrackball(
@@ -35,7 +34,7 @@ export function startRotate(
   );
 
   return (moveEvent: MouseEvent) => {
-    const cursorOffset = [moveEvent.clientX - left, moveEvent.clientY - top];
+    const cursorOffset = [moveEvent.clientX - left, moveEvent.clientY - top, 0];
     const currentVector = computeTrackball(
       imageCenter,
       trackballRadius,
@@ -52,7 +51,7 @@ export function startRotate(
 
     let direction = camera.getDirection();
 
-    // Center the volume on the viewport
+    // Centers the volume on the viewport
     if (viewport.is3D()) {
       camera.lookPoint = volume.center.slice();
       camera.eyePoint = V(camera.lookPoint).sub(direction);
@@ -65,7 +64,7 @@ export function startRotate(
 
     direction = camera.getDirection();
 
-    // Apply the initial pan again
+    // Applies the initial pan again
     camera.lookPoint = changePointSpace(
       [viewport.width - imageCenter[0], viewport.height - imageCenter[1], 0],
       viewport,
@@ -73,7 +72,7 @@ export function startRotate(
     );
 
     if (viewport.is3D()) {
-      // Put the look point on the periphery of the volume
+      // Puts the look point on the periphery of the volume
       const correctionVector = V(direction).scale(
         -volume.getOrientedDimensionMm(direction) / 2,
       );
@@ -103,7 +102,7 @@ function computeTrackball(
   radius: number,
   cursorOffset: number[],
 ): number[] {
-  const fromCenter = V([...cursorOffset, 0]).sub(center);
+  const fromCenter = V(cursorOffset).sub(center);
   const fromCenterNorm = V(fromCenter).norm();
 
   // fromCenter cannot be longer than the trackball radius
