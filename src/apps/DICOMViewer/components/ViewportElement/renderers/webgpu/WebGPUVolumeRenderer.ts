@@ -173,8 +173,10 @@ export class WebGPUVolumeRenderer implements Renderer {
     // 3D rendering properties
     const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
-    const correctionVector = V(direction).scale(-500);
-    const lightPoint = V(camera.lookPoint).add(correctionVector);
+    const correctionVector = V(direction).scale(
+      -volume.getOrientedDimensionMm(direction) / 2 - 500,
+    );
+    const lightPoint = V(volume.center).add(correctionVector);
 
     // Convert dst pixel coordinates to clip space coordinates
     const clipX = (imageX0 / width) * 2 - 1;
