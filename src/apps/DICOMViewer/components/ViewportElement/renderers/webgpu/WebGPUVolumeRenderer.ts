@@ -4,8 +4,8 @@ import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
-import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
-import { getRenderingProperties } from '../renderingUtils';
+import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
+import { getRenderingProperties } from '../utils/getRenderingProperties';
 import shaders from './volumeShaders.wgsl?raw';
 
 export class WebGPUVolumeRenderer implements Renderer {

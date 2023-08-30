@@ -1,14 +1,76 @@
-import { type Camera } from '../../../models/Camera';
-import { type Frame } from '../../../models/Frame';
-import { type Viewport } from '../../../models/Viewport';
-import { changePointSpace } from '../../../utils/changePointSpace';
-import { V } from '../../../utils/math/Vector';
-import {
-  type BoundedViewportSpaceCoordinates,
-  type ImageSpaceCoordinates,
-  type RenderingProperties,
-  type ViewportSpaceCoordinates,
-} from './RenderingProperties';
+import { type Viewport } from '../../../../models/Viewport';
+import { changePointSpace } from '../../../../utils/changePointSpace';
+import { V } from '../../../../utils/math/Vector';
+
+export interface RenderingProperties {
+  boundedViewportSpace: BoundedViewportSpaceCoordinates;
+  imageSpace: ImageSpaceCoordinates;
+  leftLimit: number;
+  rightLimit: number;
+  viewportSpace: ViewportSpaceCoordinates;
+}
+
+/**
+ * Origin: top left corner of the image
+ * Unit: image pixel
+ *
+ * Coordinates cannot be outside the viewport.
+ */
+export interface ImageSpaceCoordinates {
+  // Position of the first displayed pixel in the image space
+  displayX0: number;
+  displayY0: number;
+
+  // Position of the last displayed pixel in the image space
+  displayX1: number;
+  displayY1: number;
+
+  // Dimensions of the image in the image space
+  displayWidth: number;
+  displayHeight: number;
+}
+
+/**
+ * Origin: top left corner of the viewport
+ * Unit: viewport pixel
+ *
+ * Coordinates cannot be outside the viewport.
+ */
+export interface BoundedViewportSpaceCoordinates {
+  // Position of the first image pixel in the viewport
+  imageX0: number;
+  imageY0: number;
+
+  // Position of the last image pixel in the viewport
+  imageX1: number;
+  imageY1: number;
+
+  // Dimensions of the image in the viewport space
+  imageWidth: number;
+  imageHeight: number;
+}
+
+/**
+ * Origin: top left corner of the viewport
+ * Unit: viewport pixel
+ */
+export interface ViewportSpaceCoordinates {
+  // Position of the first image pixel in the viewport space (can be outside the viewport)
+  imageX0: number;
+  imageY0: number;
+
+  // Position of the last image pixel in the viewport space (can be outside the viewport)
+  imageX1: number;
+  imageY1: number;
+
+  // Dimensions of the image in the viewport
+  imageWidth: number;
+  imageHeight: number;
+
+  // Position of the last pixel in the viewport
+  lastPixelX: number;
+  lastPixelY: number;
+}
 
 export function getRenderingProperties(
   viewport: Viewport,
@@ -112,37 +174,6 @@ export function getRenderingProperties(
     rightLimit,
     viewportSpace,
   };
-}
-
-export function validateCamera2D(frame: Frame, camera: Camera): void {
-  const isDirectionValid =
-    Math.abs(V(camera.getDirection()).angle(frame.imageNormal)) <
-    Number.EPSILON;
-
-  if (!isDirectionValid) {
-    throw new Error('Camera direction is not collinear with the frame normal');
-  }
-
-  // Frame vertical axis is inverted compared to axial view
-  const angle =
-    Math.abs(V(camera.upVector).angle(frame.imageOrientation[1])) - Math.PI;
-  const isUpVectorValid = angle < Number.EPSILON;
-
-  if (!isUpVectorValid) {
-    throw new Error(
-      `Up vector is not collinear to the frame orientation (${angle} should be < ${Number.EPSILON})`,
-    );
-  }
-
-  const cameraFrameDistance = Math.abs(
-    V(camera.lookPoint).sub(frame.imagePosition).dot(camera.getDirection()),
-  );
-
-  if (cameraFrameDistance > frame.spacingBetweenSlices) {
-    throw new Error(
-      `lookPoint shall be on the frame (${cameraFrameDistance}mm)`,
-    );
-  }
 }
 
 function computeBoundedViewportSpaceCoordinates(

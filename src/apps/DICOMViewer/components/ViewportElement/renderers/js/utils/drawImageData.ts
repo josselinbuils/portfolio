@@ -1,4 +1,4 @@
-import { type BoundedViewportSpaceCoordinates } from '../../RenderingProperties';
+import { type BoundedViewportSpaceCoordinates } from '../../utils/getRenderingProperties';
 
 export function drawImageData(
   data: Uint32Array,

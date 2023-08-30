@@ -3,11 +3,14 @@ import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
-import { type RenderingProperties } from '../RenderingProperties';
-import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
+import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
+import {
+  getRenderingProperties,
+  type RenderingProperties,
+} from '../utils/getRenderingProperties';
+import { validateCamera2D } from '../utils/validateCamera2D';
 import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
-import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
 export class JSFrameRenderer implements Renderer {
   // eslint-disable-next-line react/static-property-placement

@@ -3,8 +3,9 @@ import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { type Renderer } from '../Renderer';
-import { getDefaultVOILUT } from '../js/utils/getDefaultVOILUT';
-import { getRenderingProperties, validateCamera2D } from '../renderingUtils';
+import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
+import { getRenderingProperties } from '../utils/getRenderingProperties';
+import { validateCamera2D } from '../utils/validateCamera2D';
 import shaders from './frameShaders.wgsl?raw';
 
 export class WebGPUFrameRenderer implements Renderer {

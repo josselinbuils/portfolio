@@ -6,15 +6,15 @@ import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
+import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import {
+  getRenderingProperties,
   type RenderingProperties,
   type ViewportSpaceCoordinates,
-} from '../RenderingProperties';
-import { getRenderingProperties } from '../renderingUtils';
+} from '../utils/getRenderingProperties';
 import { displayCube } from './utils/displayCube';
 import { drawImageData } from './utils/drawImageData';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
-import { getDefaultVOILUT } from './utils/getDefaultVOILUT';
 
 export class JSVolumeRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
@@ -132,7 +132,7 @@ export class JSVolumeRenderer implements Renderer {
 
   init(viewport: Viewport) {
     this.unsubscribeToViewportUpdates = viewport.onUpdate.subscribe((key) => {
-      if (key === 'lutComponents') {
+      if (['lutComponents', 'viewType'].includes(key)) {
         delete this.lut;
       }
     });
@@ -155,7 +155,10 @@ export class JSVolumeRenderer implements Renderer {
       this.lut =
         viewport.lutComponents !== undefined
           ? loadVOILUT(viewport.lutComponents, windowWidth)
-          : getDefaultVOILUT(windowWidth);
+          : getDefaultVOILUT(
+              windowWidth,
+              viewport.viewType === 'oblique' ? 10 : 0,
+            );
     }
 
     const { boundedViewportSpace, imageSpace } = renderingProperties;
