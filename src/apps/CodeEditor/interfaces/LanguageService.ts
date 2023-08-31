@@ -1,4 +1,5 @@
 import { type JSX } from 'preact/compat';
+import { type Awaitable } from '@/platform/interfaces/Awaitable';
 
 export interface CompletionItem {
   cursorOffsetInValue?: number; // value.length by default
@@ -24,15 +25,11 @@ export interface LanguageService {
   getCompletions(
     code: string,
     cursorOffset: number,
-  ): Completions | undefined | Promise<Completions | undefined>;
+  ): Awaitable<Completions | undefined>;
   getQuickInfo(
     code: string,
     cursorOffset: number,
-  ):
-    | string
-    | JSX.Element
-    | undefined
-    | Promise<string | JSX.Element | undefined>;
-  lint(code: string): LintIssue[] | Promise<LintIssue[]>;
-  transpile(code: string): string | Promise<string>;
+  ): Awaitable<string | JSX.Element | undefined>;
+  lint(code: string): Awaitable<LintIssue[]>;
+  transpile(code: string): Awaitable<string>;
 }

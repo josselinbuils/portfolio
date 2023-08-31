@@ -9,7 +9,7 @@ import {
   type RenderingProperties,
 } from '../utils/getRenderingProperties';
 import { validateCamera2D } from '../utils/validateCamera2D';
-import { drawImageData } from './utils/drawImageData';
+import { drawImageData } from './utils/draw';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 
 export class JSFrameRenderer implements Renderer {

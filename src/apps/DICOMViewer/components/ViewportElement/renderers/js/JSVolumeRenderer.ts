@@ -6,15 +6,19 @@ import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
+import { computeVolumeBox } from '../utils/computeVolumeBox';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import {
   getRenderingProperties,
   type RenderingProperties,
   type ViewportSpaceCoordinates,
 } from '../utils/getRenderingProperties';
-import { displayVolumeBox } from './utils/displayVolumeBox';
-import { drawImageData } from './utils/drawImageData';
+import { drawImageData, drawLine, drawPoint } from './utils/draw';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
+
+const BOX_STYLE_LINES_BEHIND = 'rgba(255, 255, 255, 0.2)';
+const BOX_STYLE_LINES_FRONT = 'rgba(255, 255, 255, 0.4)';
+const BOX_STYLE_POINTS = 'red';
 
 export class JSVolumeRenderer implements Renderer {
   private readonly context: CanvasRenderingContext2D;
@@ -166,24 +170,23 @@ export class JSVolumeRenderer implements Renderer {
       imageSpace.displayWidth * imageSpace.displayHeight;
     const viewportPixelsToRender =
       boundedViewportSpace.imageWidth * boundedViewportSpace.imageHeight;
-    let renderPixels: () => void | Promise<void>;
+
+    this.context.fillStyle = 'black';
+    this.context.fillRect(0, 0, viewport.width, viewport.height);
 
     if (viewport.is3D()) {
-      renderPixels = async () =>
-        this.render3DImagePixels(viewport, renderingProperties);
+      await this.render3DImagePixels(viewport, renderingProperties);
     } else {
-      renderPixels =
+      const renderMPRPixels =
         viewportPixelsToRender < imagePixelsToRender
           ? () => this.renderMPRViewportPixels(viewport, renderingProperties)
           : () => this.renderMPRImagePixels(viewport, renderingProperties);
-    }
 
-    if (viewport.viewType === 'oblique') {
-      displayVolumeBox(viewport, this.canvas, renderPixels as () => void);
-    } else {
-      this.context.fillStyle = 'black';
-      this.context.fillRect(0, 0, viewport.width, viewport.height);
-      await renderPixels();
+      if (viewport.viewType === 'oblique') {
+        this.renderVolumeBox(viewport, renderMPRPixels);
+      } else {
+        renderMPRPixels();
+      }
     }
   }
 
@@ -470,5 +473,24 @@ export class JSVolumeRenderer implements Renderer {
       imageHeight,
       boundedViewportSpace,
     );
+  }
+
+  private renderVolumeBox(viewport: Viewport, render: () => unknown): void {
+    const { linesBehindImage, linesInFrontOfImage, points } =
+      computeVolumeBox(viewport);
+
+    for (const line of linesBehindImage) {
+      drawLine(this.context, line, BOX_STYLE_LINES_BEHIND);
+    }
+
+    render();
+
+    for (const line of linesInFrontOfImage) {
+      drawLine(this.context, line, BOX_STYLE_LINES_FRONT);
+    }
+
+    for (const point of points) {
+      drawPoint(this.context, point, BOX_STYLE_POINTS);
+    }
   }
 }
