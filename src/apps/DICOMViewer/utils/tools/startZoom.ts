@@ -14,15 +14,19 @@ export function startZoom(
   onZoom: (values: { zoom: number }) => void,
 ): (moveEvent: MouseEvent) => void {
   const { camera, dataset, height } = viewport;
+  const { volume } = dataset;
   const { baseFieldOfView } = camera;
   const startY = downEvent.clientY;
   const startFOV = camera.fieldOfView;
   const direction = camera.getDirection();
-  const imageCenter = changePointSpace(
-    viewport.dataset.volume!.center,
-    viewport.dataset,
-    viewport,
-  );
+  let imageCenter: number[];
+
+  if (volume !== undefined) {
+    imageCenter = changePointSpace(volume.center, dataset, viewport);
+  } else {
+    const frame = dataset.findClosestFrame(camera.lookPoint);
+    imageCenter = changePointSpace(frame.imageCenter, dataset, viewport);
+  }
 
   return (moveEvent: MouseEvent) => {
     const maxFOV = baseFieldOfView / ZOOM_MIN;
@@ -52,12 +56,16 @@ export function startZoom(
       camera.fieldOfView = baseFieldOfView;
     }
 
+    let newImageCenter: number[];
+
+    if (volume !== undefined) {
+      newImageCenter = changePointSpace(volume.center, dataset, viewport);
+    } else {
+      const frame = dataset.findClosestFrame(camera.lookPoint);
+      newImageCenter = changePointSpace(frame.imageCenter, dataset, viewport);
+    }
+
     // Keeps image center at the same position on the viewport
-    const newImageCenter = changePointSpace(
-      viewport.dataset.volume!.center,
-      viewport.dataset,
-      viewport,
-    );
     const newLookPointViewport = [
       newImageCenter[0] + viewport.width / 2 - imageCenter[0],
       newImageCenter[1] + viewport.height / 2 - imageCenter[1],
