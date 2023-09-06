@@ -170,16 +170,16 @@ const DICOMViewer: WindowComponent = ({
             onStatsUpdate={setViewportStats}
             viewport={viewport}
           />
-          {(['JavaScript', 'WebGPU'] as RendererType[]).includes(
-            rendererType,
-          ) && (
+          {rendererType === 'JavaScript' ||
+          (rendererType === 'WebGPU' &&
+            !['bones', 'skin'].includes(viewport.viewType)) ? (
             <Suspense fallback={null}>
               <ColorPalette
                 onLUTComponentsUpdate={setLutComponents}
                 viewport={viewport}
               />
             </Suspense>
-          )}
+          ) : null}
           <AnnotationsElement
             annotations={annotations}
             availableViewTypes={getAvailableViewTypes(

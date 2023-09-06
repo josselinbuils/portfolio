@@ -6,6 +6,8 @@ import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../utils/getRenderingProperties';
+import boneTextureUrl from './textures/bone.jpg';
+import skinTextureUrl from './textures/skin.jpg';
 import shaders from './volumeShaders.wgsl?raw';
 
 export class WebGPUVolumeRenderer implements Renderer {
@@ -13,7 +15,11 @@ export class WebGPUVolumeRenderer implements Renderer {
   private device?: GPUDevice;
   private lut?: VOILUT;
   private pipeline?: GPURenderPipeline;
-  private texture?: GPUTexture;
+  private pixelDataTexture?: GPUTexture;
+  private renderingTexture?: {
+    name: string;
+    texture: GPUTexture;
+  };
   private unsubscribeToViewportUpdates?: () => void;
 
   // TODO create Image CoordinateSpace class
@@ -41,12 +47,14 @@ export class WebGPUVolumeRenderer implements Renderer {
 
   destroy(): void {
     this.device?.destroy();
-    this.texture?.destroy();
+    this.pixelDataTexture?.destroy();
+    this.renderingTexture?.texture.destroy();
     this.unsubscribeToViewportUpdates?.();
     delete this.context;
     delete this.device;
     delete this.pipeline;
-    delete this.texture;
+    delete this.pixelDataTexture;
+    delete this.renderingTexture;
   }
 
   async init(viewport: Viewport): Promise<void> {
@@ -80,6 +88,7 @@ export class WebGPUVolumeRenderer implements Renderer {
       entries: (
         [
           { texture: { sampleType: 'sint', viewDimension: '3d' } },
+          { texture: { sampleType: 'float', viewDimension: '2d' } },
           { buffer: { type: 'read-only-storage' } },
           { buffer: { type: 'read-only-storage' } },
           { buffer: { type: 'uniform' } },
@@ -137,8 +146,31 @@ export class WebGPUVolumeRenderer implements Renderer {
 
     const { camera, dataset, height, width, windowWidth } = viewport;
 
-    if (this.texture === undefined) {
-      this.texture = this.createTexture(dataset);
+    if (this.pixelDataTexture === undefined) {
+      this.pixelDataTexture = this.createTexture(dataset);
+    }
+
+    if (viewport.viewType === 'skin') {
+      if (this.renderingTexture?.name !== 'skin') {
+        this.renderingTexture = {
+          name: 'skin',
+          texture: await this.createTextureFromImage(skinTextureUrl),
+        };
+      }
+    } else if (viewport.viewType === 'bones') {
+      if (this.renderingTexture?.name !== 'bone') {
+        this.renderingTexture = {
+          name: 'bone',
+          texture: await this.createTextureFromImage(boneTextureUrl),
+        };
+      }
+    } else if (this.renderingTexture?.name !== 'empty') {
+      this.renderingTexture = {
+        name: 'empty',
+        texture: await this.createTextureFromImage(
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        ),
+      };
     }
 
     if (this.lut === undefined || this.lut.windowWidth !== windowWidth) {
@@ -172,7 +204,6 @@ export class WebGPUVolumeRenderer implements Renderer {
 
     // 3D rendering properties
     const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
-    const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
     const correctionVector = V(direction).scale(
       -volume.getOrientedDimensionMm(direction) / 2 - 500,
     );
@@ -189,7 +220,8 @@ export class WebGPUVolumeRenderer implements Renderer {
     const bindGroup = this.device.createBindGroup({
       layout: this.pipeline.getBindGroupLayout(0),
       entries: [
-        this.texture.createView(),
+        this.pixelDataTexture.createView(),
+        this.renderingTexture.texture.createView(),
         this.createBufferResource(
           new Float32Array(
             dataset.frames
@@ -227,7 +259,7 @@ export class WebGPUVolumeRenderer implements Renderer {
               leftLimit,
               lightPoint,
               rightLimit,
-              targetValue,
+              targetRatio,
             ]),
           ),
         ),
@@ -317,6 +349,34 @@ export class WebGPUVolumeRenderer implements Renderer {
         height: dimensionsVoxels[1],
         width: dimensionsVoxels[0],
       },
+    );
+
+    return texture;
+  }
+
+  private async createTextureFromImage(url: string): Promise<GPUTexture> {
+    if (this.device === undefined) {
+      throw new Error('No device');
+    }
+
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const source = await createImageBitmap(blob);
+    const textureDescriptor: GPUTextureDescriptor = {
+      dimension: '2d',
+      format: 'rgba8unorm',
+      size: { width: source.width, height: source.height },
+      usage:
+        GPUTextureUsage.RENDER_ATTACHMENT |
+        GPUTextureUsage.TEXTURE_BINDING |
+        GPUTextureUsage.COPY_DST,
+    };
+    const texture = this.device.createTexture(textureDescriptor);
+
+    this.device.queue.copyExternalImageToTexture(
+      { source },
+      { texture },
+      textureDescriptor.size,
     );
 
     return texture;

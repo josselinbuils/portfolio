@@ -1,11 +1,12 @@
-@group(0) @binding(0)  var texture: texture_3d<i32>;
-@group(0) @binding(1)  var<storage, read> frames: array<Frame>;
-@group(0) @binding(2)  var<storage, read> lut: array<f32>;
-@group(0) @binding(3)  var<uniform> camera: Camera;
-@group(0) @binding(4)  var<uniform> image: Image;
-@group(0) @binding(5)  var<uniform> properties: RenderingProperties;
-@group(0) @binding(6)  var<uniform> viewport: Viewport;
-@group(0) @binding(7)  var<uniform> volume: Volume;
+@group(0) @binding(0)  var pixelDataTexture: texture_3d<i32>;
+@group(0) @binding(1)  var renderingTexture: texture_2d<f32>;
+@group(0) @binding(2)  var<storage, read> frames: array<Frame>;
+@group(0) @binding(3)  var<storage, read> lut: array<f32>;
+@group(0) @binding(4)  var<uniform> camera: Camera;
+@group(0) @binding(5)  var<uniform> image: Image;
+@group(0) @binding(6)  var<uniform> properties: RenderingProperties;
+@group(0) @binding(7)  var<uniform> viewport: Viewport;
+@group(0) @binding(8)  var<uniform> volume: Volume;
 
 const MIN_FLOAT_VALUE = -2e31;
 
@@ -49,7 +50,7 @@ struct RenderingProperties {
   leftLimit: f32,
   lightPoint: vec3<f32>,
   rightLimit: f32,
-  targetValue: f32,
+  targetRatio: f32,
 }
 
 @vertex
@@ -71,7 +72,7 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> @builtin(position) vec4<f3
 }
 
 @fragment
-fn fragmentMIP(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
+fn fragmentMIP(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
   var pointLPS = getPointLPS(
     viewport.worldOrigin,
     image.xAxis,
@@ -93,7 +94,7 @@ fn fragmentMIP(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
 }
 
 @fragment
-fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
+fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
   let pointLPS = getPointLPS(
     viewport.worldOrigin,
     image.xAxis,
@@ -107,7 +108,7 @@ fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
 }
 
 @fragment
-fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
+fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
   var pointLPS = getPointLPS(
     viewport.worldOrigin,
     image.xAxis,
@@ -119,15 +120,34 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4f {
   let directionScaled = camera.direction *
     length(volume.voxelSpacing * camera.direction);
 
+    let targetValue = properties.leftLimit +
+      (properties.rightLimit - properties.leftLimit) / properties.targetRatio;
+
   for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
-    if (rawPixelValue > properties.targetValue) {
+    if (rawPixelValue > targetValue) {
+      let textureSize = textureDimensions(renderingTexture);
+      let textureValue = textureLoad(
+        renderingTexture, vec2<u32>(u32(position[0]) % (textureSize[0] - 1),
+        u32(position[1]) % (textureSize[1] - 1)), 0
+      );
       let dist = distance(properties.lightPoint, pointLPS);
+      let maxValue = properties.rightLimit - properties.leftLimit - 1;
+      let value = floor(clamp(
+        rawPixelValue - properties.leftLimit, 0, maxValue
+      ));
+      var alpha = value / maxValue * 0.8 + min(20000 / pow(i, 2), 0.5) +
+        min(140000 / pow(dist, 2), 0.4);
 
-      return applyLUT(
-        rawPixelValue,
-        0.2 + min(20000 / pow(i, 2), 0.5) + min(140000 / pow(dist, 2), 0.4)
+      // Bones
+      if (properties.targetRatio < 2) {
+        alpha -= 0.5;
+      }
+
+      return vec4<f32>(
+        textureValue[0] * alpha, textureValue[1] * alpha,
+        textureValue[2] * alpha, 1
       );
     }
     pointLPS += directionScaled;
@@ -195,7 +215,7 @@ fn getLPSPixelValue(pointLPS: vec3<f32>) -> f32 {
 }
 
 fn getPixelValue(x: f32, y: f32, z:f32) -> f32 {
-  return f32(textureLoad(texture, vec3(u32(x), u32(y), u32(z)), 0)[0]);
+  return f32(textureLoad(pixelDataTexture, vec3(u32(x), u32(y), u32(z)), 0)[0]);
 }
 
 fn getPointLPS(
