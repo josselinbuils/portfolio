@@ -175,13 +175,15 @@ fn applyLUT(rawValue: f32, baseAlpha: f32) -> vec4<f32> {
 
 // See https://helloacm.com/cc-function-to-compute-the-bilinear-interpolation/
 fn bilinearInterpolate(
-  c00: f32, c01: f32, c10: f32, c11: f32, x0: f32, x1: f32, y0: f32, y1: f32,
+  c00: f32, c01: f32, c10: f32, c11: f32,x0: f32, x1: f32, y0: f32, y1: f32,
   x: f32, y: f32
 ) -> f32 {
-  return 1 / (
-    (x1 - x0) * (y1 - y0)) * (c00 * (x1 - x) * (y1 - y) + c10 * (x - x0) *
-      (y1 - y) + c01 * (x1 - x) * (y - y0) + c11 * (x - x0) * (y - y0)
-  );
+  return (
+    c00 * (x1 - x) * (y1 - y) +
+    c10 * (x - x0) * (y1 - y) +
+    c01 * (x1 - x) * (y - y0) +
+    c11 * (x - x0) * (y - y0)
+  ) / ((x1 - x0) * (y1 - y0));
 }
 
 fn getLPSPixelValue(pointLPS: vec3<f32>) -> f32 {
