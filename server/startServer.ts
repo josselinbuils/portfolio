@@ -52,7 +52,9 @@ export async function startServer(
     next();
   });
 
-  const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`);
+  const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`, {
+    cwd: path.resolve('..'),
+  });
 
   await Promise.all(
     apiFiles.map(async (apiFile) => {

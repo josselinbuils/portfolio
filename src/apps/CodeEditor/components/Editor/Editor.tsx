@@ -490,7 +490,8 @@ export const Editor: FC<EditorProps> = ({
           }
           onSelect={handleSelect}
           ref={setTextAreaElement}
-          spellCheck={'false' as any}
+          /* eslint-disable-next-line react/no-unknown-property */
+          spellcheck={false}
           style={activeFile.shared ? { caretColor: cursorColor } : undefined}
           value={code}
         />

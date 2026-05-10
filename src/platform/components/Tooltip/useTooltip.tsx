@@ -1,7 +1,7 @@
 import {
   createPortal,
   type JSX,
-  type Ref,
+  type RefObject,
   useCallback,
   useLayoutEffect,
   useRef,
@@ -16,7 +16,7 @@ export function useTooltip(initialTooltipProps: Partial<TooltipProps>): {
   hideTooltip(): unknown;
   showTooltip(props: Partial<TooltipProps>): unknown;
   tooltipElement: JSX.Element | null;
-  tooltipRef: Ref<HTMLDivElement>;
+  tooltipRef: RefObject<HTMLDivElement>;
 } {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const initialTooltipPropsRef = useDynamicRef(initialTooltipProps);

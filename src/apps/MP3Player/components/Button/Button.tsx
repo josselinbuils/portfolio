@@ -1,17 +1,13 @@
 import cn from 'classnames';
-import {
-  type DetailedHTMLProps,
-  type FC,
-  type HTMLAttributes,
-} from 'preact/compat';
+import { type ButtonHTMLAttributes, type DetailedHTMLProps } from 'preact';
+import { type FC } from 'preact/compat';
 
 import styles from './Button.module.scss';
 
-export interface ButtonProps
-  extends DetailedHTMLProps<
-    HTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+export interface ButtonProps extends DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> {
   checked?: boolean;
   className?: string;
 }

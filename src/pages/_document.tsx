@@ -15,9 +15,7 @@ const Document: FunctionComponent<DocumentProps> = ({
       <meta content="width=device-width, initial-scale=1.0" name="viewport" />
       <link
         as="image"
-        // @ts-expect-error existing property
-        // eslint-disable-next-line react/no-unknown-property
-        fetchpriority="high"
+        fetchPriority="high"
         href="/assets/me.webp"
         rel="preload"
         type="image/webp"

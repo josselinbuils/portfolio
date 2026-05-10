@@ -7,8 +7,10 @@ import { useMenu } from '@/platform/components/Menu/useMenu';
 import styles from './PopoverToolButton.module.scss';
 import { ToolButton, type ToolButtonProps } from './ToolButton';
 
-export interface PopoverToolButtonProps
-  extends Omit<ToolButtonProps, 'onClick'> {
+export interface PopoverToolButtonProps extends Omit<
+  ToolButtonProps,
+  'onClick'
+> {
   menu: MenuDescriptor;
 }
 
@@ -41,7 +43,6 @@ export const PopoverToolButton: FC<PopoverToolButtonProps> = ({
             });
           }
         }}
-        type="button"
         {...forwardedProps}
         ref={buttonRef}
       />

@@ -1,5 +1,5 @@
 import { lazy as reactLazy } from 'preact/compat';
 
 export function lazy<T>(factory: () => Promise<T>): T {
-  return reactLazy(async () => ({ default: await factory() }));
+  return reactLazy(async () => ({ default: await factory() })) as unknown as T;
 }

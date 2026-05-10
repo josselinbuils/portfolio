@@ -1,17 +1,12 @@
-import {
-  type StateUpdater,
-  useCallback,
-  useRef,
-  useState,
-} from 'preact/compat';
+import { useCallback, useRef, useState } from 'preact/compat';
 
 export function useMemState<S>(
   initialValue: (() => S) | S,
-): [S, S | undefined, StateUpdater<S>] {
+): [S, S | undefined, (newValue: ((prevState: S) => S) | S) => void] {
   const [value, setValue] = useState<S>(initialValue);
   const previousValueRef = useRef<S>();
 
-  const setValues = useCallback((newValue: ((prevState: S) => S) | S): void => {
+  const setValues = useCallback((newValue: ((prevState: S) => S) | S) => {
     setValue((previousValue) => {
       previousValueRef.current = previousValue;
 
