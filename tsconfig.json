@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -13,14 +12,14 @@
     "moduleResolution": "bundler",
     "noEmit": true,
     "paths": {
-      "@/root": ["*"],
-      "@/*": ["src/*"]
+      "@/root": ["./*"],
+      "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
-    "typeRoots": ["./node_modules/@webgpu/types", "./node_modules/@types"]
+    "types": ["@webgpu/types"]
   },
   "exclude": ["**/node_modules"],
   "include": ["node_modules/vite/client.d.ts", "**/*.ts", "**/*.tsx"]
