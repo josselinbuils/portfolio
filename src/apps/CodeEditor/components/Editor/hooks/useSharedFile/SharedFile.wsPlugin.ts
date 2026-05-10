@@ -2,13 +2,14 @@ import { type WSClient } from '@/apps/CodeEditor/api/WSClient';
 import { type WSPlugin, type WSServer } from '@/apps/CodeEditor/api/WSServer';
 import { type ClientCursor } from '@/apps/CodeEditor/interfaces/ClientCursor';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
-import { History, type HistoryState } from '@/apps/CodeEditor/utils/History';
 import { createSelection } from '@/apps/CodeEditor/utils/createSelection';
 import { applyDiff } from '@/apps/CodeEditor/utils/diffs';
+import { History, type HistoryState } from '@/apps/CodeEditor/utils/History';
 import { minifySelection } from '@/apps/CodeEditor/utils/minifySelection';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type PayloadFromFactory } from '@/platform/state/interfaces/ActionFactory';
 import { computeHash } from '@/platform/utils/computeHash';
+
 import { fileSaver } from '../../../../utils/fileSaver';
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
@@ -98,12 +99,6 @@ export default class SharedFileWsPlugin implements WSPlugin {
     }
 
     switch (type) {
-      case serverActions.subscribe.type: {
-        const filename = payload.f;
-        this.subscribe(filename, wsClient);
-        break;
-      }
-
       case serverActions.redo.type:
       case serverActions.undo.type: {
         const filename = payload.f;
@@ -124,6 +119,12 @@ export default class SharedFileWsPlugin implements WSPlugin {
         );
         this.updateClientSelection(wsClient, selection, true);
         this.updateCode(filename, code);
+        break;
+      }
+
+      case serverActions.subscribe.type: {
+        const filename = payload.f;
+        this.subscribe(filename, wsClient);
         break;
       }
 
@@ -186,7 +187,7 @@ export default class SharedFileWsPlugin implements WSPlugin {
 
   private dispatchAll(
     filename: string,
-    action: Action<any> | ((client: WSClient) => Action<any> | undefined),
+    action: ((client: WSClient) => Action<any> | undefined) | Action<any>,
   ): void {
     const actionCreator = typeof action === 'function' ? action : () => action;
 
@@ -277,16 +278,6 @@ export default class SharedFileWsPlugin implements WSPlugin {
     this.sendCursors(filename);
   }
 
-  private updateCode(filename: string, code: string): void {
-    const fileState = this.state[filename];
-
-    fileState.code = code;
-    fileState.codeHash = computeHash(code);
-
-    this.fixCursorOffsets(filename);
-    this.savePersistentState();
-  }
-
   private updateClientSelection(
     client: WSClient,
     selection: Selection,
@@ -311,5 +302,15 @@ export default class SharedFileWsPlugin implements WSPlugin {
         return clientActions.applySelection.create({ s: minifiedSelection });
       }
     });
+  }
+
+  private updateCode(filename: string, code: string): void {
+    const fileState = this.state[filename];
+
+    fileState.code = code;
+    fileState.codeHash = computeHash(code);
+
+    this.fixCursorOffsets(filename);
+    this.savePersistentState();
   }
 }

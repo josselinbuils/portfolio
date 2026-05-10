@@ -14,8 +14,8 @@ export function getLanguageService(
         transpile: (c) => c,
       };
 
-    case 'typescript':
     case 'tsx':
+    case 'typescript':
       return typeScriptService;
 
     default:

@@ -1,5 +1,5 @@
-import path from 'node:path';
 import { glob } from 'glob';
+import path from 'node:path';
 import { createServer, type Plugin, type ViteDevServer } from 'vite';
 
 export const VIRTUAL_DOCUMENT_ID = 'virtual:page:document';
@@ -15,8 +15,11 @@ export function vitePluginPage(): Plugin {
   let pageNames: string[];
 
   return {
-    name: 'vite-plugin-page',
-    enforce: 'pre',
+    async buildEnd() {
+      if (viteDevServerPromise) {
+        await (await viteDevServerPromise).close();
+      }
+    },
     async config(userConfig) {
       if (userConfig.build?.rollupOptions?.input !== undefined) {
         throw new Error(
@@ -67,22 +70,7 @@ export function vitePluginPage(): Plugin {
         }
       });
     },
-    resolveId(source) {
-      if (source === VIRTUAL_DOCUMENT_ID) {
-        return documentPath;
-      }
-      if (source.startsWith(VIRTUAL_ENTRY_PAGE_PREFIX)) {
-        const pageName = source.replace(VIRTUAL_ENTRY_PAGE_PREFIX, '');
-        return path.join(pagesDirPath, `${pageName}.tsx`);
-      }
-      if (
-        source.startsWith(VIRTUAL_ENTRY_CLIENT_PREFIX) ||
-        source.startsWith(VIRTUAL_ENTRY_SERVER_PREFIX) ||
-        source.endsWith('.html')
-      ) {
-        return source;
-      }
-    },
+    enforce: 'pre',
     async load(id) {
       if (id.startsWith(VIRTUAL_ENTRY_CLIENT_PREFIX)) {
         const pageName = id.replace(VIRTUAL_ENTRY_CLIENT_PREFIX, '');
@@ -128,9 +116,21 @@ export function render() {
         return withDocType(render());
       }
     },
-    async buildEnd() {
-      if (viteDevServerPromise) {
-        await (await viteDevServerPromise).close();
+    name: 'vite-plugin-page',
+    resolveId(source) {
+      if (source === VIRTUAL_DOCUMENT_ID) {
+        return documentPath;
+      }
+      if (source.startsWith(VIRTUAL_ENTRY_PAGE_PREFIX)) {
+        const pageName = source.replace(VIRTUAL_ENTRY_PAGE_PREFIX, '');
+        return path.join(pagesDirPath, `${pageName}.tsx`);
+      }
+      if (
+        source.startsWith(VIRTUAL_ENTRY_CLIENT_PREFIX) ||
+        source.startsWith(VIRTUAL_ENTRY_SERVER_PREFIX) ||
+        source.endsWith('.html')
+      ) {
+        return source;
       }
     },
   };

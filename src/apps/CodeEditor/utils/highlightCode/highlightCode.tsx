@@ -11,6 +11,7 @@ import 'prismjs/components/prism-scss.min';
 import 'prismjs/components/prism-tsx.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-yaml.min';
+
 import styles from './manomano.module.scss';
 
 const CLOSING_BRACKETS = [')', ']', '}'];
@@ -18,7 +19,7 @@ const OPENING_BRACKETS = ['(', '[', '{'];
 const BRACKETS = [...OPENING_BRACKETS, ...CLOSING_BRACKETS];
 
 interface ProcessedToken extends Token {
-  content: string | ProcessedToken | (string | ProcessedToken)[];
+  content: (ProcessedToken | string)[] | ProcessedToken | string;
   offset: number;
 }
 
@@ -28,20 +29,18 @@ export function highlightCode(
   outputFormat: 'html',
   cursorOffset?: number,
 ): string;
-
 export function highlightCode(
   code: string,
   language: string,
   outputFormat: 'react',
   cursorOffset?: number,
 ): JSX.Element;
-
 export function highlightCode(
   code: string,
   language: string,
   outputFormat: 'html' | 'react',
   cursorOffset?: number,
-): string | JSX.Element {
+): JSX.Element | string {
   if (Prism.languages[language] === undefined) {
     return outputFormat === 'html' ? escapeHtml(code) : <>{escapeHtml(code)}</>;
   }
@@ -97,7 +96,7 @@ function getTokenLength(token: string | Token): number {
 function processElements(
   rawElements: (string | Token)[],
   cursorOffset: number | undefined,
-): (string | ProcessedToken)[] {
+): (ProcessedToken | string)[] {
   // Converts missing tokens
   const elements = rawElements
     .map((token) =>
@@ -139,7 +138,7 @@ function processElements(
     // Fixes builtins
     if (
       token.type === 'builtin' &&
-      ['Array', 'Function', 'Promise', 'console'].includes(
+      ['Array', 'console', 'Function', 'Promise'].includes(
         token.content as string,
       )
     ) {
@@ -189,12 +188,12 @@ function processElements(
     }
   }
 
-  return elements as (string | ProcessedToken)[];
+  return elements as (ProcessedToken | string)[];
 }
 
 function reactify(
-  input: string | ProcessedToken | (string | ProcessedToken)[],
-): string | JSX.Element {
+  input: (ProcessedToken | string)[] | ProcessedToken | string,
+): JSX.Element | string {
   if (typeof input === 'string') {
     return input;
   }
@@ -220,7 +219,7 @@ function reactify(
 }
 
 function stringify(
-  input: string | ProcessedToken | (string | ProcessedToken)[],
+  input: (ProcessedToken | string)[] | ProcessedToken | string,
 ): string {
   if (typeof input === 'string') {
     return Prism.util.encode(input) as string;

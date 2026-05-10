@@ -1,16 +1,17 @@
 import { type FC } from 'preact/compat';
-import styles from './CommandHelp.module.scss';
 
-export interface CommandParameter {
-  name: string;
-  optional?: boolean;
-  values?: { description?: string; value: string }[];
-}
+import styles from './CommandHelp.module.scss';
 
 export interface CommandHelpProps {
   command: string;
   description?: string;
   parameters: CommandParameter[];
+}
+
+export interface CommandParameter {
+  name: string;
+  optional?: boolean;
+  values?: { description?: string; value: string }[];
 }
 
 export const CommandHelp: FC<CommandHelpProps> = ({

@@ -1,5 +1,6 @@
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { type Position } from '@/platform/interfaces/Position';
+
 import { getOffsetPosition } from '../../../utils/getOffsetPosition';
 
 const END_LINE_SPACE_PX = 7;

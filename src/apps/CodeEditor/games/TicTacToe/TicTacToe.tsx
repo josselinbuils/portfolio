@@ -1,9 +1,11 @@
 import { type FC, useEffect, useState } from 'preact/compat';
+
 import { type Position } from '@/platform/interfaces/Position';
-import styles from './TicTacToe.module.scss';
+
 import { Cross } from './components/Cross';
 import { Grid } from './components/Grid';
 import { Round } from './components/Round';
+import styles from './TicTacToe.module.scss';
 import { GameManager, type Grid as GridType } from './utils/GameManager';
 
 export const TicTacToe: FC = () => {
@@ -35,20 +37,18 @@ export const TicTacToe: FC = () => {
         {grid?.map((row, y) =>
           row.map((mark, x) => {
             switch (mark) {
-              case 'x':
-                return (
-                  <Cross
-                    highlighted={isCaseHighlighted(winnerCases, { x, y })}
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={`${x}${y}`}
-                    position={{ x, y }}
-                  />
-                );
               case 'o':
                 return (
                   <Round
                     highlighted={isCaseHighlighted(winnerCases, { x, y })}
-                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${x}${y}`}
+                    position={{ x, y }}
+                  />
+                );
+              case 'x':
+                return (
+                  <Cross
+                    highlighted={isCaseHighlighted(winnerCases, { x, y })}
                     key={`${x}${y}`}
                     position={{ x, y }}
                   />

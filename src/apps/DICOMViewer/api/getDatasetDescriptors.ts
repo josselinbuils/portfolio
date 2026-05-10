@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
 import { Logger } from '@/platform/api/Logger';
 import { extendError } from '@/platform/utils/extendError';
+
 import { type DatasetDescriptor } from '../interfaces/DatasetDescriptor';
 import { computeFrames } from '../utils/computeFrames';
 import { decodeFrames } from '../utils/decodeFrames';
@@ -43,12 +45,11 @@ export async function getDatasetDescriptors(): Promise<DatasetDescriptor[]> {
 
 async function is3DDataset(fileName: string): Promise<boolean> {
   try {
-    const { buffer: content } = await fs.readFile(
-      path.join(DATASETS_PATH, fileName),
-    );
+    const { buffer } = await fs.readFile(path.join(DATASETS_PATH, fileName));
+    const content = buffer as ArrayBuffer;
     const files = /\.tar$/.test(fileName)
       ? untar(content)
-      : [{ name: fileName, content }];
+      : [{ content, name: fileName }];
     const frames = computeFrames(await decodeFrames(files));
     return isVolume(frames);
   } catch (error) {

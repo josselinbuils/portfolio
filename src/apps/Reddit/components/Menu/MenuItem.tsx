@@ -1,14 +1,16 @@
 import cn from 'classnames';
 import { type FC, useLayoutEffect, useState } from 'preact/compat';
+
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
+
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';
 import styles from './MenuItem.module.scss';
 
 export interface MenuItemProps {
   activeSubreddit: string;
-  subreddit: string;
   onClickSubreddit(subreddit: string): void;
+  subreddit: string;
 }
 
 export const MenuItem: FC<MenuItemProps> = ({

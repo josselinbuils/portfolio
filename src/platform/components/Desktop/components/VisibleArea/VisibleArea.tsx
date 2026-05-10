@@ -1,10 +1,12 @@
-import { Suspense, type FC, useEffect, useRef, useState } from 'preact/compat';
+import { type FC, Suspense, useEffect, useRef, useState } from 'preact/compat';
+
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
 import { type Size } from '@/platform/interfaces/Size';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { getRefElementSize } from '@/platform/utils/getRefElementSize';
 import { lazy } from '@/platform/utils/lazy';
+
 import { CursorDelayedLoader } from '../../../CursorDelayedLoader/CursorDelayedLoader';
 import styles from './VisibleArea.module.scss';
 import { Windows } from './Windows';

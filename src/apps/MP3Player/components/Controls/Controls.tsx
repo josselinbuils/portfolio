@@ -6,7 +6,9 @@ import { faStepBackward } from '@fortawesome/free-solid-svg-icons/faStepBackward
 import { faStepForward } from '@fortawesome/free-solid-svg-icons/faStepForward';
 import cn from 'classnames';
 import { type FC, useContext } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
+
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
 import styles from './Controls.module.scss';

@@ -1,4 +1,5 @@
 import { useEffect } from 'preact/compat';
+
 import { getKeyFromEvent, normaliseKeys } from '../utils/keys';
 import { useEventListener } from './useEventListener';
 
@@ -8,9 +9,7 @@ const priorities = [] as number[];
  * Allows listening keyboard events.
  */
 export function useKeyMap(
-  keyMap: {
-    [keyStr: string]: (event: KeyboardEvent) => false | any;
-  },
+  keyMap: Record<string, (event: KeyboardEvent) => any | false>,
   active = true,
   priority = 1,
 ): void {

@@ -2,6 +2,7 @@ import {
   type Image,
   type ImageResolution,
 } from '@/apps/Reddit/interfaces/RedditPost';
+
 import { PREVIEW_MAX_HEIGHT, PREVIEW_MAX_WIDTH } from '../constants';
 
 export function getPreviewResolution(preview: Image): ImageResolution {

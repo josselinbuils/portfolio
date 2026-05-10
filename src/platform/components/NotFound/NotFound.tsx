@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { type FC, useEffect, useState } from 'preact/compat';
+
 import '../../global.scss';
 import styles from './NotFound.module.scss';
 

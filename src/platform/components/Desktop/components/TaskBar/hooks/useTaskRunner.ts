@@ -1,4 +1,5 @@
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 

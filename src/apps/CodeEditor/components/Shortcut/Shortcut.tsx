@@ -1,5 +1,7 @@
 import { type FC, type JSX } from 'preact/compat';
+
 import { makeKeysHumanReadable, normaliseKeys } from '@/platform/utils/keys';
+
 import styles from './Shortcut.module.scss';
 
 export interface ShortcutProps {
@@ -18,7 +20,7 @@ export const Shortcut: FC<ShortcutProps> = ({ keys }) => (
         (prev, curr, index) =>
           [
             prev,
-            // eslint-disable-next-line react/no-array-index-key
+
             <span className={styles.plus} key={`plus-${index}`}>
               +
             </span>,

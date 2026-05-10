@@ -19,13 +19,6 @@ export class Dataset extends Model implements CoordinateSpace {
   // Shared properties (needed in both 2D/3D)
   voxelSpacing!: number[];
 
-  static create(name: string, dicomFrames: DicomFrame[]): Dataset {
-    const frames = computeFrames(dicomFrames);
-    const sharedProperties = computeSharedProperties(frames);
-    const volume = computeVolume(frames, sharedProperties);
-    return new Dataset({ frames, name, ...sharedProperties, volume });
-  }
-
   constructor(config: any) {
     super();
     super.fillProperties(config);
@@ -33,12 +26,19 @@ export class Dataset extends Model implements CoordinateSpace {
     this.is3D = this.volume !== undefined;
   }
 
+  static create(name: string, dicomFrames: DicomFrame[]): Dataset {
+    const frames = computeFrames(dicomFrames);
+    const sharedProperties = computeSharedProperties(frames);
+    const volume = computeVolume(frames, sharedProperties);
+    return new Dataset({ frames, name, ...sharedProperties, volume });
+  }
+
   destroy(): void {
     this.frames.forEach((frame) => delete frame.pixelData);
   }
 
   findClosestFrame(point: number[]): Frame {
-    const { imagePosition, imageNormal, spacingBetweenSlices } = this.frames[0];
+    const { imageNormal, imagePosition, spacingBetweenSlices } = this.frames[0];
     const index = Math.round(
       V(point).sub(imagePosition).dot(imageNormal) / spacingBetweenSlices,
     );
@@ -53,15 +53,6 @@ export class Dataset extends Model implements CoordinateSpace {
     }
 
     return this.frames[index];
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  getWorldBasis(): number[][] {
-    return [
-      [1, 0, 0],
-      [0, 1, 0],
-      [0, 0, 1],
-    ];
   }
 
   getLimitsAlongAxe(axe: number[]): {
@@ -116,7 +107,14 @@ export class Dataset extends Model implements CoordinateSpace {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  getWorldBasis(): number[][] {
+    return [
+      [1, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1],
+    ];
+  }
+
   getWorldOrigin(): number[] {
     return [0, 0, 0];
   }

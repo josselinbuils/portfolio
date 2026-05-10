@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type HTMLAttributes, type FC } from 'preact/compat';
+import { type FC, type HTMLAttributes } from 'preact/compat';
+
 import styles from './ButtonLink.module.scss';
 
 export interface ButtonLinkProps extends HTMLAttributes<HTMLButtonElement> {

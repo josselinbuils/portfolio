@@ -1,7 +1,9 @@
 import cn from 'classnames';
-import { forwardRef, type CSSProperties, type JSX } from 'preact/compat';
+import { type CSSProperties, forwardRef, type JSX } from 'preact/compat';
+
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
-import type { Position } from '@/platform/interfaces/Position';
+import { type Position } from '@/platform/interfaces/Position';
+
 import styles from './Tooltip.module.scss';
 
 export interface TooltipProps {
@@ -9,7 +11,7 @@ export interface TooltipProps {
   position: Position<number>;
   relativePosition?: 'bottom-right' | 'right';
   style?: CSSProperties;
-  title: string | JSX.Element;
+  title: JSX.Element | string;
 }
 
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
@@ -19,12 +21,12 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     return (
       <div
         className={cn(styles.tooltip, styles[relativePosition], className)}
+        ref={ref}
         style={{
           ...style,
           left: `${x / ROOT_FONT_SIZE_PX}rem`,
           top: `${y / ROOT_FONT_SIZE_PX}rem`,
         }}
-        ref={ref}
       >
         {title}
       </div>

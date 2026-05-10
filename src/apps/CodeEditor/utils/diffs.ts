@@ -1,23 +1,27 @@
 import { diff_match_patch as DiffMatchPatch } from 'diff-match-patch';
+
 import { spliceString } from './spliceString';
 
 const MAX_DIFFS = 10000;
 
 export enum DiffType {
-  Addition = 1,
   Deletion = -1,
   NoDiff = 0,
+  Addition = 1,
 }
+
+/** [type, start, diff] */
+export type Diff = [number, number, string];
+
+// Provide cursorBeforeDiff and cursorOffsetAfterDiff is necessary as diff
+// offset may not match real cursor offset if multiple identical characters
+// follow each other
 
 export function applyDiff(code: string, [type, start, diff]: Diff): string {
   return type === DiffType.Addition
     ? spliceString(code, start, 0, diff)
     : spliceString(code, start, diff.length);
 }
-
-// Provide cursorBeforeDiff and cursorOffsetAfterDiff is necessary as diff
-// offset may not match real cursor offset if multiple identical characters
-// follow each other
 
 export function getCursorOffsetAfterDiff(
   diff: Diff,
@@ -74,6 +78,3 @@ function getFirstDiff(a: string, b: string): Diff {
   }
   return [0, 0, ''];
 }
-
-/** [type, start, diff] */
-export type Diff = [number, number, string];

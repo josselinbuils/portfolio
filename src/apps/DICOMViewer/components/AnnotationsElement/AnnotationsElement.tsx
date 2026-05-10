@@ -2,11 +2,13 @@ import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
 import { type FC, type RefObject, useRef } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import {
   type MenuItemDescriptor,
   useMenu,
 } from '@/platform/components/Menu/useMenu';
+
 import { type Annotations } from '../../interfaces/Annotations';
 import { type RendererType } from '../../interfaces/RendererType';
 import { type ViewType } from '../../interfaces/ViewType';
@@ -79,6 +81,7 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
         const icon = getMenuItemIcon(type === rendererType);
 
         return {
+          onClick: () => onRendererTypeSwitch(type),
           title: (
             <>
               <div className={styles.contextMenuIcon}>
@@ -87,7 +90,6 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
               {type}
             </>
           ),
-          onClick: () => onRendererTypeSwitch(type),
         };
       },
     );
@@ -99,6 +101,7 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
       const icon = getMenuItemIcon(type === annotations.viewType);
 
       return {
+        onClick: () => onViewTypeSwitch(type),
         title: (
           <>
             <div className={styles.contextMenuIcon}>
@@ -107,7 +110,6 @@ export const AnnotationsElement: FC<AnnotationsElementProps> = ({
             {viewTypeLabels[type]}
           </>
         ),
-        onClick: () => onViewTypeSwitch(type),
       };
     });
     showContextMenu(viewTypeElementRef, items);

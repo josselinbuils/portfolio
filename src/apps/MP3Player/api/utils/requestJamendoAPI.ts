@@ -1,4 +1,5 @@
 import { Logger } from '@/platform/api/Logger';
+
 import { type JamendoResponse } from '../interfaces/JamendoResponse';
 import { type JamendoTrackParameters } from '../interfaces/JamendoTrackParameters';
 import { httpClient } from './httpClient';

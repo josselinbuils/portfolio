@@ -1,3 +1,3 @@
-export type PartialRecord<Keys extends keyof any, Type> = {
-  [Key in Keys]?: Type;
-};
+export type PartialRecord<Keys extends keyof any, Type> = Partial<
+  Record<Keys, Type>
+>;

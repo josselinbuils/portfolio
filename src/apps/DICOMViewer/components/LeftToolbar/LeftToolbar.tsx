@@ -6,8 +6,10 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { MouseButton } from '@/platform/constants';
+
 import { type MouseTool } from '../../interfaces/MouseTool';
 import { type Viewport } from '../../models/Viewport';
 import styles from './LeftToolbar.module.scss';
@@ -48,8 +50,8 @@ const mouseTools: {
 export interface LeftToolbarProps {
   activeLeftTool: MouseTool;
   activeRightTool: MouseTool;
-  viewport: Viewport;
   onToolSelected(tool: MouseTool, button: MouseButton): void;
+  viewport: Viewport;
 }
 
 export const LeftToolbar: FC<LeftToolbarProps> = ({

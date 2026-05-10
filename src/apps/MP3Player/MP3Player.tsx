@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'preact/compat';
+
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
-import styles from './MP3Player.module.scss';
+
 import { AudioProvider } from './components/AudioProvider/AudioProvider';
 import { Footer } from './components/Footer/Footer';
 import { Musics } from './components/Musics/Musics';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { type MusicList } from './interfaces/MusicList';
+import styles from './MP3Player.module.scss';
 import { musicLists } from './musicLists';
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {

@@ -1,4 +1,5 @@
 import { type FC } from 'preact/compat';
+
 import styles from './JamendoLink.module.scss';
 
 export const JamendoLink: FC = () => (

@@ -1,9 +1,10 @@
-import path from 'node:path';
 import express from 'express';
 import { glob } from 'glob';
+import path from 'node:path';
+
 import {
-  ASSETS_URL_PATH,
   ASSETS_MAX_AGE_MS,
+  ASSETS_URL_PATH,
   DIST_ASSETS_DIR,
   DIST_DIR,
   HTTP_NOT_FOUND,

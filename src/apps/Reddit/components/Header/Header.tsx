@@ -1,4 +1,5 @@
 import { type FC } from 'preact/compat';
+
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
@@ -6,8 +7,8 @@ import styles from './Header.module.scss';
 
 export interface HeaderProps {
   filter: RedditFilter;
-  subreddit: string;
   onClickFilter(filter: RedditFilter): void;
+  subreddit: string;
 }
 
 export const Header: FC<HeaderProps> = ({

@@ -1,11 +1,11 @@
 import { Model } from './Model';
 
-export type PhotometricInterpretation = 'MONOCHROME1' | 'MONOCHROME2';
-
 export enum PixelRepresentation {
-  Signed = 1,
   Unsigned = 0,
+  Signed = 1,
 }
+
+export type PhotometricInterpretation = 'MONOCHROME1' | 'MONOCHROME2';
 
 const MANDATORY_FIELDS: readonly (keyof DicomFrame)[] = [
   'bitsAllocated',
@@ -36,7 +36,7 @@ export class DicomFrame extends Model {
   windowCenter?: number;
   windowWidth?: number;
 
-  constructor(config: { [key: string]: any }) {
+  constructor(config: Record<string, any>) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);

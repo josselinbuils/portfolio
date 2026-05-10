@@ -1,5 +1,7 @@
 import { type FC } from 'preact/compat';
+
 import { throttle } from '@/platform/utils/throttle';
+
 import styles from './ColorPicker.module.scss';
 import { hexToRGB } from './utils/hexToRGB';
 import { rgbToHex } from './utils/rgbToHex';

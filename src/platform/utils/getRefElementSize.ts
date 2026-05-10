@@ -1,4 +1,5 @@
 import { type RefObject } from 'preact/compat';
+
 import { type Size } from '../interfaces/Size';
 
 export function getRefElementSize(elementRef: RefObject<HTMLElement>): Size {
@@ -6,5 +7,5 @@ export function getRefElementSize(elementRef: RefObject<HTMLElement>): Size {
     throw new Error('Unable to retrieve desktop element');
   }
   const { clientHeight, clientWidth } = elementRef.current;
-  return { width: clientWidth, height: clientHeight };
+  return { height: clientHeight, width: clientWidth };
 }

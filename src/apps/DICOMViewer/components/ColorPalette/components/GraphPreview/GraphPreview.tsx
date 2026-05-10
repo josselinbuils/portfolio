@@ -1,9 +1,11 @@
 import cn from 'classnames';
 import { type FC, useLayoutEffect, useRef, useState } from 'preact/compat';
+
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { applyPolynomialInterpolation } from '@/apps/DICOMViewer/utils/math/applyPolynomialInterpolation';
 import { scaleLUTComponents } from '@/apps/DICOMViewer/utils/scaleLUTComponents';
 import { useElementSize } from '@/platform/hooks/useElementSize';
+
 import styles from './GraphPreview.module.scss';
 
 const BOTTOM_OFFSET = 5;

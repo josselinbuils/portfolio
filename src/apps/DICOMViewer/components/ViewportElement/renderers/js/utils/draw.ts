@@ -9,7 +9,7 @@ export function drawImageData(
   drawSpace: BoundedViewportSpaceCoordinates,
 ): void {
   const imageData = new ImageData(
-    new Uint8ClampedArray(data.buffer),
+    new Uint8ClampedArray(data.buffer) as ImageDataArray,
     width,
     height,
   );
@@ -18,7 +18,7 @@ export function drawImageData(
   renderingContext.canvas.height = height;
   renderingContext.putImageData(imageData, 0, 0);
 
-  const { imageX0, imageY0, imageWidth, imageHeight } = drawSpace;
+  const { imageHeight, imageWidth, imageX0, imageY0 } = drawSpace;
   context.drawImage(
     renderingContext.canvas,
     imageX0,

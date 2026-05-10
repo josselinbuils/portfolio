@@ -1,8 +1,19 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
+
 import { PROD_HOSTNAME } from '@/platform/constants';
 import { noop } from '@/platform/utils/noop';
 
 const RETRY_DELAY_MS = 2000;
+
+export interface BMError {
+  code: number;
+  message: string;
+}
+
+export interface BMMessage {
+  type: MessageType;
+  value: any;
+}
 
 export type MessageType =
   | 'authToken'
@@ -16,8 +27,8 @@ export class BuildManagerClient {
   private errorHandler = noop as (error?: BMError) => void;
   private messageHandler = noop as (message: BMMessage) => void;
   private readonly readyDeferred = new Deferred<BuildManagerClient>();
-  private readonly ws: WebSocket;
   private retryTimeout?: number;
+  private readonly ws: WebSocket;
 
   constructor() {
     const ws = new WebSocket(`wss://${PROD_HOSTNAME}/build-manager`);
@@ -100,14 +111,4 @@ export class BuildManagerClient {
       delete this.retryTimeout;
     }
   }
-}
-
-export interface BMError {
-  code: number;
-  message: string;
-}
-
-export interface BMMessage {
-  type: MessageType;
-  value: any;
 }

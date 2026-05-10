@@ -5,6 +5,7 @@ import { type Volume } from '@/apps/DICOMViewer/models/Volume';
 import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
+
 import { type Renderer } from '../Renderer';
 import { computeVolumeBox } from '../utils/computeVolumeBox';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
@@ -25,6 +26,12 @@ export class JSVolumeRenderer implements Renderer {
   private lut?: VOILUT;
   private readonly renderingContext: CanvasRenderingContext2D;
   private unsubscribeToViewportUpdates?: () => void;
+
+  constructor(private readonly canvas: HTMLCanvasElement) {
+    const { context, renderingContext } = getCanvasRenderingContexts(canvas);
+    this.context = context;
+    this.renderingContext = renderingContext;
+  }
 
   static getRawValue(dataset: Dataset, pointLPS: number[]): number {
     const { firstVoxelCenter, orientation, voxelSpacing } =
@@ -49,8 +56,8 @@ export class JSVolumeRenderer implements Renderer {
 
     const {
       columns,
-      imagePosition,
       imageOrientation,
+      imagePosition,
       pixelData,
       rescaleIntercept,
       rescaleSlope,
@@ -120,12 +127,6 @@ export class JSVolumeRenderer implements Renderer {
       imageWorldOrigin[1] + xAxis[1] * x + yAxis[1] * y,
       imageWorldOrigin[2] + xAxis[2] * x + yAxis[2] * y,
     ];
-  }
-
-  constructor(private readonly canvas: HTMLCanvasElement) {
-    const { context, renderingContext } = getCanvasRenderingContexts(canvas);
-    this.context = context;
-    this.renderingContext = renderingContext;
   }
 
   destroy() {
@@ -327,7 +328,6 @@ export class JSVolumeRenderer implements Renderer {
           return;
         }
 
-        // eslint-disable-next-line no-await-in-loop
         await new Promise((resolve) => {
           setTimeout(resolve, 0);
         }); // Empty the event queue to force drawing
@@ -434,7 +434,7 @@ export class JSVolumeRenderer implements Renderer {
     const imageX1 = imageX0 + imageWidth - 1;
     const imageY1 = imageY0 + imageHeight - 1;
 
-    const { displayWidth, displayHeight } = imageSpace;
+    const { displayHeight, displayWidth } = imageSpace;
 
     const viewportSpaceImageX0 = viewportSpace.imageX0;
     const viewportSpaceImageY0 = viewportSpace.imageY0;

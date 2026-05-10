@@ -1,4 +1,5 @@
 import { MouseButton } from '@/platform/constants';
+
 import { type MouseTool } from '../interfaces/MouseTool';
 import { type Viewport } from '../models/Viewport';
 
@@ -8,8 +9,8 @@ export async function startTool(
   activeLeftTool: MouseTool,
   activeMiddleTool?: MouseTool,
   activeRightTool?: MouseTool,
-  onUpdate: (tool: MouseTool, ...additionalArgs: any[]) => void = () => {},
-  onEnd: () => void = () => {},
+  onUpdate?: (tool: MouseTool, ...additionalArgs: any[]) => void,
+  onEnd?: () => void,
 ): Promise<boolean> {
   downEvent.preventDefault();
 
@@ -38,7 +39,7 @@ export async function startTool(
   }
 
   const handleToolUpdate = (...args: any[]) =>
-    onUpdate(tool as MouseTool, ...args);
+    onUpdate?.(tool as MouseTool, ...args);
 
   let moveListener: (moveEvent: MouseEvent) => void;
 
@@ -86,7 +87,7 @@ export async function startTool(
     const upListener = () => {
       window.removeEventListener('mousemove', moveListener);
       window.removeEventListener('mouseup', upListener);
-      onEnd();
+      onEnd?.();
     };
     window.addEventListener('mouseup', upListener);
   }

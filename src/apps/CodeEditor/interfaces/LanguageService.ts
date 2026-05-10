@@ -1,4 +1,5 @@
 import { type JSX } from 'preact/compat';
+
 import { type Awaitable } from '@/platform/interfaces/Awaitable';
 
 export interface CompletionItem {
@@ -12,15 +13,6 @@ export interface Completions {
   startOffset: number;
 }
 
-export type LintIssueLevel = 'error' | 'warning';
-
-export interface LintIssue {
-  length: number;
-  start: number;
-  message: string;
-  level: LintIssueLevel;
-}
-
 export interface LanguageService {
   getCompletions(
     code: string,
@@ -29,7 +21,16 @@ export interface LanguageService {
   getQuickInfo(
     code: string,
     cursorOffset: number,
-  ): Awaitable<string | JSX.Element | undefined>;
+  ): Awaitable<JSX.Element | string | undefined>;
   lint(code: string): Awaitable<LintIssue[]>;
   transpile(code: string): Awaitable<string>;
 }
+
+export interface LintIssue {
+  length: number;
+  level: LintIssueLevel;
+  message: string;
+  start: number;
+}
+
+export type LintIssueLevel = 'error' | 'warning';

@@ -2,12 +2,24 @@ import { type Viewport } from '../../../../models/Viewport';
 import { changePointSpace } from '../../../../utils/changePointSpace';
 import { V } from '../../../../utils/math/Vector';
 
-export interface RenderingProperties {
-  boundedViewportSpace: BoundedViewportSpaceCoordinates;
-  imageSpace: ImageSpaceCoordinates;
-  leftLimit: number;
-  rightLimit: number;
-  viewportSpace: ViewportSpaceCoordinates;
+/**
+ * Origin: top left corner of the viewport
+ * Unit: viewport pixel
+ *
+ * Coordinates cannot be outside the viewport.
+ */
+export interface BoundedViewportSpaceCoordinates {
+  imageHeight: number;
+  // Dimensions of the image in the viewport space
+  imageWidth: number;
+
+  // Position of the first image pixel in the viewport
+  imageX0: number;
+  // Position of the last image pixel in the viewport
+  imageX1: number;
+
+  imageY0: number;
+  imageY1: number;
 }
 
 /**
@@ -17,37 +29,25 @@ export interface RenderingProperties {
  * Coordinates cannot be outside the viewport.
  */
 export interface ImageSpaceCoordinates {
-  // Position of the first displayed pixel in the image space
-  displayX0: number;
-  displayY0: number;
-
-  // Position of the last displayed pixel in the image space
-  displayX1: number;
-  displayY1: number;
-
+  displayHeight: number;
   // Dimensions of the image in the image space
   displayWidth: number;
-  displayHeight: number;
+
+  // Position of the first displayed pixel in the image space
+  displayX0: number;
+  // Position of the last displayed pixel in the image space
+  displayX1: number;
+
+  displayY0: number;
+  displayY1: number;
 }
 
-/**
- * Origin: top left corner of the viewport
- * Unit: viewport pixel
- *
- * Coordinates cannot be outside the viewport.
- */
-export interface BoundedViewportSpaceCoordinates {
-  // Position of the first image pixel in the viewport
-  imageX0: number;
-  imageY0: number;
-
-  // Position of the last image pixel in the viewport
-  imageX1: number;
-  imageY1: number;
-
-  // Dimensions of the image in the viewport space
-  imageWidth: number;
-  imageHeight: number;
+export interface RenderingProperties {
+  boundedViewportSpace: BoundedViewportSpaceCoordinates;
+  imageSpace: ImageSpaceCoordinates;
+  leftLimit: number;
+  rightLimit: number;
+  viewportSpace: ViewportSpaceCoordinates;
 }
 
 /**
@@ -55,17 +55,17 @@ export interface BoundedViewportSpaceCoordinates {
  * Unit: viewport pixel
  */
 export interface ViewportSpaceCoordinates {
-  // Position of the first image pixel in the viewport space (can be outside the viewport)
-  imageX0: number;
-  imageY0: number;
-
-  // Position of the last image pixel in the viewport space (can be outside the viewport)
-  imageX1: number;
-  imageY1: number;
-
+  imageHeight: number;
   // Dimensions of the image in the viewport
   imageWidth: number;
-  imageHeight: number;
+
+  // Position of the first image pixel in the viewport space (can be outside the viewport)
+  imageX0: number;
+  // Position of the last image pixel in the viewport space (can be outside the viewport)
+  imageX1: number;
+
+  imageY0: number;
+  imageY1: number;
 
   // Position of the last pixel in the viewport
   lastPixelX: number;
@@ -79,8 +79,8 @@ export function getRenderingProperties(
     camera,
     dataset,
     height,
-    width,
     viewType,
+    width,
     windowCenter,
     windowWidth,
   } = viewport;
@@ -149,7 +149,7 @@ export function getRenderingProperties(
     viewportSpaceImageY0,
   );
 
-  const { imageX0, imageY0, imageX1, imageY1, lastPixelX, lastPixelY } =
+  const { imageX0, imageX1, imageY0, imageY1, lastPixelX, lastPixelY } =
     viewportSpace;
 
   const isImageInViewport =
@@ -188,7 +188,7 @@ function computeBoundedViewportSpaceCoordinates(
   const imageWidth = imageX1 - imageX0 + 1;
   const imageHeight = imageY1 - imageY0 + 1;
 
-  return { imageX0, imageY0, imageX1, imageY1, imageWidth, imageHeight };
+  return { imageHeight, imageWidth, imageX0, imageX1, imageY0, imageY1 };
 }
 
 function computeImageSpace(
@@ -222,12 +222,12 @@ function computeImageSpace(
   const displayHeight = displayY1 - displayY0 + 1;
 
   return {
-    displayX0,
-    displayY0,
-    displayX1,
-    displayY1,
-    displayWidth,
     displayHeight,
+    displayWidth,
+    displayX0,
+    displayX1,
+    displayY0,
+    displayY1,
   };
 }
 
@@ -250,18 +250,19 @@ function computeViewportSpaceCoordinates(
   const lastPixelY = height - 1;
 
   return {
-    imageX0,
-    imageY0,
-    imageX1,
-    imageY1,
-    imageWidth,
     imageHeight,
+    imageWidth,
+    imageX0,
+    imageX1,
+    imageY0,
+    imageY1,
     lastPixelX,
     lastPixelY,
   };
 }
 
 function getImageDimensions(viewport: Viewport):
+  | undefined
   | {
       height: number;
       heightMm: number;
@@ -270,8 +271,7 @@ function getImageDimensions(viewport: Viewport):
       viewportSpaceImageX0: number;
       viewportSpaceImageY0: number;
       width: number;
-    }
-  | undefined {
+    } {
   // Compute volume limits in computer service
   const { camera, dataset } = viewport;
   const { voxelSpacing } = dataset;

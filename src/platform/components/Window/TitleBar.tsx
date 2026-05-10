@@ -3,20 +3,22 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
+
 import styles from './TitleBar.module.scss';
 
 export interface TitleBarProps {
   className: string | undefined;
   frozen: boolean;
   maximized: boolean;
-  showMaximizeButton: boolean;
-  title: string;
   onClose(): void;
   onMinimise(): void;
   onMoveStart(downEvent: MouseEvent): void;
   onToggleMaximize(): void;
+  showMaximizeButton: boolean;
+  title: string;
 }
 
 export const TitleBar: FC<TitleBarProps> = ({
@@ -79,9 +81,9 @@ export const TitleBar: FC<TitleBarProps> = ({
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <h2
         className={styles.title}
-        onMouseDown={onMoveStart}
         // eslint-disable-next-line react/no-unknown-property
         onDblClick={onToggleMaximize}
+        onMouseDown={onMoveStart}
       >
         {title}
       </h2>

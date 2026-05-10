@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { type FC, useContext } from 'preact/compat';
+
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Controls } from '../Controls/Controls';
 import { MusicPreview } from '../MusicPreview/MusicPreview';

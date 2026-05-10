@@ -1,7 +1,9 @@
 import { Subject } from '@josselinbuils/utils/Subject';
+
 import { type Position } from '@/platform/interfaces/Position';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type ActionFromFactory } from '@/platform/state/interfaces/ActionFactory';
+
 import {
   dispatchToServer,
   registerClient,
@@ -9,9 +11,9 @@ import {
 import * as clientActions from './clientActions';
 import * as serverActions from './serverActions';
 
-export type Mark = 'x' | 'o' | '';
-
 export type Grid = [[Mark, Mark, Mark], [Mark, Mark, Mark], [Mark, Mark, Mark]];
+
+export type Mark = '' | 'o' | 'x';
 
 export const getInitialGrid = (): Grid => [
   ['', '', ''],
@@ -28,13 +30,13 @@ export interface Winner {
 
 export class GameManager {
   readonly subject: Subject<Grid>;
-  private endCallback?: (winner: Winner | undefined) => unknown;
+  private endCallback?: (winner: undefined | Winner) => unknown;
   private grid: Grid;
   private startCallback?: () => unknown;
-  private turnCallback?: (grid: Grid) => unknown;
-  private readonly unregisterWSClient: () => void;
   private timer?: number;
   private turn?: Mark;
+  private turnCallback?: (grid: Grid) => unknown;
+  private readonly unregisterWSClient: () => void;
 
   constructor() {
     this.grid = getInitialGrid();
@@ -43,7 +45,12 @@ export class GameManager {
     dispatchToServer(serverActions.subscribe.create());
   }
 
-  onEnd = (callback: (winner: Winner | undefined) => unknown): void => {
+  clean = () => {
+    window.clearTimeout(this.timer);
+    this.unregisterWSClient();
+  };
+
+  onEnd = (callback: (winner: undefined | Winner) => unknown): void => {
     this.endCallback = callback;
   };
 
@@ -64,11 +71,6 @@ export class GameManager {
     }
   };
 
-  clean = () => {
-    window.clearTimeout(this.timer);
-    this.unregisterWSClient();
-  };
-
   start = (): void => {
     window.clearTimeout(this.timer);
     this.grid = getInitialGrid();
@@ -86,6 +88,64 @@ export class GameManager {
     } else {
       this.endCallback?.(winner);
     }
+  }
+
+  private getWinner(): undefined | Winner {
+    for (const row of this.grid) {
+      if (isRowFilledWithSameMark(row)) {
+        const y = this.grid.indexOf(row);
+
+        return {
+          cases: row.map((_, x) => ({ x, y })),
+          mark: row[0],
+        };
+      }
+    }
+
+    const columns: Grid = getInitialGrid();
+
+    for (let y = 0; y < 3; y++) {
+      for (let x = 0; x < 3; x++) {
+        columns[y][x] = this.grid[x][y];
+      }
+    }
+
+    for (const column of columns) {
+      if (isRowFilledWithSameMark(column)) {
+        const x = columns.indexOf(column);
+
+        return {
+          cases: column.map((_, y) => ({ x, y })),
+          mark: column[0],
+        };
+      }
+    }
+
+    const firstDiagonal: Mark[] = ['', '', ''];
+    const secondDiagonal: Mark[] = ['', '', ''];
+
+    for (let i = 0; i < 3; i++) {
+      firstDiagonal[i] = this.grid[i][i];
+      secondDiagonal[i] = this.grid[i][2 - i];
+    }
+
+    if (isRowFilledWithSameMark(firstDiagonal)) {
+      return {
+        cases: firstDiagonal.map((_, i) => ({ x: i, y: i })),
+        mark: firstDiagonal[0],
+      };
+    }
+
+    if (isRowFilledWithSameMark(secondDiagonal)) {
+      return {
+        cases: secondDiagonal.map((_, i) => ({ x: 2 - i, y: i })),
+        mark: secondDiagonal[0],
+      };
+    }
+  }
+
+  private isFinished(): boolean {
+    return this.grid.flat().every((mark) => mark !== '');
   }
 
   private next = (): void => {
@@ -205,64 +265,6 @@ export class GameManager {
     } while (this.grid[y][x] !== '');
 
     this.play('x', y, x);
-  }
-
-  private isFinished(): boolean {
-    return this.grid.flat().every((mark) => mark !== '');
-  }
-
-  private getWinner(): Winner | undefined {
-    for (const row of this.grid) {
-      if (isRowFilledWithSameMark(row)) {
-        const y = this.grid.indexOf(row);
-
-        return {
-          mark: row[0],
-          cases: row.map((_, x) => ({ x, y })),
-        };
-      }
-    }
-
-    const columns: Grid = getInitialGrid();
-
-    for (let y = 0; y < 3; y++) {
-      for (let x = 0; x < 3; x++) {
-        columns[y][x] = this.grid[x][y];
-      }
-    }
-
-    for (const column of columns) {
-      if (isRowFilledWithSameMark(column)) {
-        const x = columns.indexOf(column);
-
-        return {
-          mark: column[0],
-          cases: column.map((_, y) => ({ x, y })),
-        };
-      }
-    }
-
-    const firstDiagonal: Mark[] = ['', '', ''];
-    const secondDiagonal: Mark[] = ['', '', ''];
-
-    for (let i = 0; i < 3; i++) {
-      firstDiagonal[i] = this.grid[i][i];
-      secondDiagonal[i] = this.grid[i][2 - i];
-    }
-
-    if (isRowFilledWithSameMark(firstDiagonal)) {
-      return {
-        mark: firstDiagonal[0],
-        cases: firstDiagonal.map((_, i) => ({ x: i, y: i })),
-      };
-    }
-
-    if (isRowFilledWithSameMark(secondDiagonal)) {
-      return {
-        mark: secondDiagonal[0],
-        cases: secondDiagonal.map((_, i) => ({ x: 2 - i, y: i })),
-      };
-    }
   }
 
   private reduce = (action: Action<any>): void => {

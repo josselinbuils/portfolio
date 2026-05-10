@@ -1,8 +1,10 @@
 import cn from 'classnames';
 import { type FC, useEffect, useLayoutEffect, useState } from 'preact/compat';
+
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
 import { preloadImage } from '@/platform/utils/preloadImage';
+
 import { type DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';

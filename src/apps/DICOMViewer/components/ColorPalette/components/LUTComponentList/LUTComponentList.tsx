@@ -2,8 +2,10 @@ import { faPlusSquare } from '@fortawesome/free-regular-svg-icons/faPlusSquare';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { type FC } from 'preact/compat';
+
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
+
 import { ColorPicker } from './ColorPicker/ColorPicker';
 import styles from './LUTComponentList.module.scss';
 
@@ -21,7 +23,7 @@ export const LUTComponentList: FC<LUTComponentListProps> = ({
   onLUTComponentDelete,
 }) => (
   <ul className={styles.container}>
-    {lutComponents.map(({ color, id, end, start }) => (
+    {lutComponents.map(({ color, end, id, start }) => (
       <li key={id}>
         <ColorPicker
           color={color}

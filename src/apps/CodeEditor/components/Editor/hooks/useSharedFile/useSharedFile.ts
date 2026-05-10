@@ -1,19 +1,21 @@
 import { useCallback, useEffect, useReducer, useRef } from 'preact/compat';
+
 import { type ClientState } from '@/apps/CodeEditor/interfaces/ClientState';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { createSelection } from '@/apps/CodeEditor/utils/createSelection';
 import {
   applyDiff,
+  type Diff,
   getCursorOffsetAfterDiff,
   getDiffs,
-  type Diff,
 } from '@/apps/CodeEditor/utils/diffs';
 import { minifySelection } from '@/apps/CodeEditor/utils/minifySelection';
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { createReducer } from '@/platform/state/utils/createReducer';
 import { computeHash } from '@/platform/utils/computeHash';
+
 import { dispatchToServer, registerClient } from '../../utils/shareState';
 import * as actions from './clientActions';
 import * as serverActions from './serverActions';
@@ -21,10 +23,10 @@ import * as serverActions from './serverActions';
 const DEBUG = false;
 
 const initialState: ClientState = {
-  id: -1,
   code: '',
   cursorColor: 'transparent',
   cursors: [],
+  id: -1,
   selection: createSelection(0),
 };
 
@@ -38,10 +40,10 @@ export function useSharedFile({
   selection,
 }: {
   active: boolean;
+  applyClientState(clientState: ClientState): any;
   code: string;
   filename: string;
   selection: Selection;
-  applyClientState(clientState: ClientState): any;
 }): {
   updateClientState(newState: EditableState): void;
   updateSelection(selection: Selection): void;
@@ -57,10 +59,10 @@ export function useSharedFile({
 
   useKeyMap(
     {
-      'CtrlCmd+Z': () =>
-        dispatchToServer(serverActions.undo.create({ f: filename })),
       'CtrlCmd+Shift+Z': () =>
         dispatchToServer(serverActions.redo.create({ f: filename })),
+      'CtrlCmd+Z': () =>
+        dispatchToServer(serverActions.undo.create({ f: filename })),
     },
     active,
   );

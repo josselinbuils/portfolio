@@ -1,5 +1,7 @@
 import { type Request } from 'express';
+
 import { config } from '@/platform/api/config';
+
 import { type Music } from '../interfaces/Music';
 import { type JamendoBoost } from './interfaces/JamendoBoost';
 import { type JamendoOrder } from './interfaces/JamendoOrder';

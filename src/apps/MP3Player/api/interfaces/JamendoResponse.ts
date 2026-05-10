@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 export interface JamendoResponse<T> {
   headers: {
     code: number;

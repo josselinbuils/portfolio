@@ -1,9 +1,11 @@
 import { type JSX } from 'preact/compat';
+
 import { type ListManager } from '@/platform/hooks/useList';
 import { createGUID } from '@/platform/utils/createGUID';
+
 import { highlightCode } from '../../../utils/highlightCode/highlightCode';
 import { Shortcut } from '../../Shortcut/Shortcut';
-import { LogLevel, type Log } from '../Log';
+import { type Log, LogLevel } from '../Log';
 
 export function decorateConsole(logManager: ListManager<Log>): () => void {
   const originalConsoleError = console.error.bind(console.error);
@@ -52,8 +54,8 @@ export function decorateConsole(logManager: ListManager<Log>): () => void {
   };
 }
 
-function prettify(value: any, id: string): string | JSX.Element {
-  let prettified: string | JSX.Element = `${value}`;
+function prettify(value: any, id: string): JSX.Element | string {
+  let prettified: JSX.Element | string = `${value}`;
 
   const replaceLineBreaks = (str: string) => str.replace(/\n|\\n/g, '↵');
   const isPrimitive = value !== Object(value);
@@ -61,15 +63,15 @@ function prettify(value: any, id: string): string | JSX.Element {
   if (typeof value === 'string') {
     prettified = (
       <>
-        {value.split(/\[\[([^\]]+)]]/).map((part, index) =>
-          index % 2 === 0 ? (
-            // eslint-disable-next-line react/no-array-index-key
-            <span key={`${id}-${index}`}>{part}</span>
-          ) : (
-            // eslint-disable-next-line react/no-array-index-key
-            <Shortcut key={`${id}-${index}`} keys={part.split('+')} />
-          ),
-        )}
+        {value
+          .split(/\[\[([^\]]+)]]/)
+          .map((part, index) =>
+            index % 2 === 0 ? (
+              <span key={`${id}-${index}`}>{part}</span>
+            ) : (
+              <Shortcut key={`${id}-${index}`} keys={part.split('+')} />
+            ),
+          )}
       </>
     );
   } else if (isPrimitive) {

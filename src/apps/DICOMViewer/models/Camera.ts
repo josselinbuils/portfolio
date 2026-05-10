@@ -26,6 +26,17 @@ export class Camera extends Renderable implements CoordinateSpace {
   private basis?: number[][];
   private direction?: number[];
 
+  constructor(config: any) {
+    super();
+    super.fillProperties(config);
+    super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
+    super.decorateProperties();
+    this.onUpdate.subscribe(() => {
+      delete this.basis;
+      delete this.direction;
+    });
+  }
+
   static fromFrame(frame: Frame): Camera {
     const { dimensionsMm, imageCenter, imageNormal, imageOrientation } = frame;
 
@@ -91,17 +102,6 @@ export class Camera extends Renderable implements CoordinateSpace {
       fieldOfView,
       lookPoint,
       upVector,
-    });
-  }
-
-  constructor(config: any) {
-    super();
-    super.fillProperties(config);
-    super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
-    super.decorateProperties();
-    this.onUpdate.subscribe(() => {
-      delete this.basis;
-      delete this.direction;
     });
   }
 

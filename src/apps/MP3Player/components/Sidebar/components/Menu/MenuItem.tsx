@@ -1,7 +1,9 @@
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
+
 import styles from './MenuItem.module.scss';
 
 export interface MenuItemProps {
@@ -12,8 +14,8 @@ export interface MenuItemProps {
 
 export const MenuItem: FC<MenuItemProps> = ({
   activeMusicList,
-  onClickPlaylist,
   musicList,
+  onClickPlaylist,
 }) => {
   const isActiveMusicList = musicList === activeMusicList;
 

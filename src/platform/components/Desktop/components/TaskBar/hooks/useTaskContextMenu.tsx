@@ -1,11 +1,13 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { type RefObject } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import {
   type MenuDescriptor,
   type MenuItemDescriptor,
 } from '@/platform/components/Menu/Menu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+
 import styles from '../Task.module.scss';
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
@@ -29,6 +31,7 @@ export function useTaskContextMenu(
     const { right: x, y } = taskRef.current.getBoundingClientRect();
     const items: MenuItemDescriptor[] = [
       {
+        onClick: () => windowManager.openApp(taskDescriptor),
         title: (
           <>
             <div className={styles.contextMenuIcon}>
@@ -37,12 +40,12 @@ export function useTaskContextMenu(
             {name}
           </>
         ),
-        onClick: () => windowManager.openApp(taskDescriptor),
       },
     ];
 
     if (windowInstance !== undefined) {
       items.push({
+        onClick: () => windowManager.closeWindow(windowInstance.id),
         title: (
           <>
             <div className={styles.contextMenuIcon}>
@@ -51,7 +54,6 @@ export function useTaskContextMenu(
             Close
           </>
         ),
-        onClick: () => windowManager.closeWindow(windowInstance.id),
       });
     }
 
@@ -60,8 +62,8 @@ export function useTaskContextMenu(
       items,
       position: { x, y },
       style: {
-        borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
+        borderTopLeftRadius: 0,
         marginLeft: -BORDER_RADIUS_MARGIN_PX,
         minHeight: taskRef.current.clientHeight,
         paddingLeft: BORDER_RADIUS_MARGIN_PX,

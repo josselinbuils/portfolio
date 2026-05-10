@@ -1,12 +1,14 @@
 import { useLayoutEffect, useRef, useState } from 'preact/compat';
+
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
-import styles from './Reddit.module.scss';
+
 import { Header } from './components/Header/Header';
 import { Logo } from './components/Logo/Logo';
 import { Menu } from './components/Menu/Menu';
 import { Posts } from './components/Posts/Posts';
 import { type RedditFilter } from './interfaces/RedditFilter';
+import styles from './Reddit.module.scss';
 
 const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
@@ -46,8 +48,8 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
             subreddit={subreddit}
           />
           <Posts
-            onClickSubreddit={goTo}
             filter={filter}
+            onClickSubreddit={goTo}
             subreddit={subreddit}
           />
         </main>

@@ -1,13 +1,15 @@
 import cn from 'classnames';
-import React, {
+import {
   Component,
   createRef,
   type JSX,
   type MutableRefObject,
   type PropsWithChildren,
 } from 'preact/compat';
+
 import { MouseButton } from '@/platform/constants';
 import { type Size } from '@/platform/interfaces/Size';
+
 import { TitleBar } from './TitleBar';
 import styles from './Window.module.scss';
 
@@ -18,36 +20,24 @@ const TOOLBAR_HEIGHT = 22;
 export interface WindowProps extends PropsWithChildren {
   active: boolean;
   className?: string;
-  keepContentRatio?: boolean;
   id: number;
+  keepContentRatio?: boolean;
   maxHeight?: number;
   maxWidth?: number;
   minHeight: number;
   minimizedTopPosition?: number;
   minWidth: number;
+  onClose(id: number): void;
+  onMinimise(id: number): void;
+  onResize?(size: Size): void;
+  onSelect(id: number): void;
+  onUnselect(id: number): void;
   resizable?: boolean;
   startMaximized?: boolean;
   title: string;
   titleClassName?: string;
   visibleAreaSize: Size | undefined;
   zIndex: number;
-  onClose(id: number): void;
-  onMinimise(id: number): void;
-  onResize?(size: Size): void;
-  onSelect(id: number): void;
-  onUnselect(id: number): void;
-}
-
-interface WindowState {
-  animated: boolean;
-  height: string;
-  left: string;
-  maximized: boolean;
-  moving: boolean;
-  minimized: boolean;
-  resizing: boolean;
-  top: string;
-  width: string;
 }
 
 interface WindowAnimation {
@@ -56,6 +46,18 @@ interface WindowAnimation {
   ready(readyCallback: () => void): WindowAnimation;
 
   start(): void;
+}
+
+interface WindowState {
+  animated: boolean;
+  height: string;
+  left: string;
+  maximized: boolean;
+  minimized: boolean;
+  moving: boolean;
+  resizing: boolean;
+  top: string;
+  width: string;
 }
 
 export class Window extends Component<WindowProps, WindowState> {
@@ -79,8 +81,8 @@ export class Window extends Component<WindowProps, WindowState> {
       height: `min(${minHeight / 10}rem, 100%)`,
       left: `max((100% - ${minWidth / 10}rem) * 0.5, 0rem)`,
       maximized: false,
-      moving: false,
       minimized: false,
+      moving: false,
       resizing: false,
       top: `max((100% - ${minHeight / 10}rem) * 0.2, 0rem)`,
       width: `min(${minWidth / 10}rem, 100%)`,
@@ -114,7 +116,6 @@ export class Window extends Component<WindowProps, WindowState> {
 
     if (state.maximized) {
       if (!props.resizable && prevProps.resizable) {
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ maximized: false });
         delete this.lastDisplayProperties.maximize;
       }
@@ -167,8 +168,8 @@ export class Window extends Component<WindowProps, WindowState> {
   render(): JSX.Element {
     const {
       contentRef,
-      props,
       isFrozen,
+      props,
       startMove,
       startResize,
       state,
@@ -218,14 +219,14 @@ export class Window extends Component<WindowProps, WindowState> {
         <TitleBar
           className={titleClassName}
           frozen={frozen}
-          showMaximizeButton={resizable}
-          title={title}
           maximized={maximized}
           onClose={() => onClose(id)}
           onMinimise={() => onMinimise(id)}
           onMoveStart={startMove}
           // Don't know why but cannot remove the arrow function there
           onToggleMaximize={() => toggleMaximize()}
+          showMaximizeButton={resizable}
+          title={title}
         />
         <main
           className={cn(styles.content, { [styles.frozen]: frozen })}
@@ -252,7 +253,7 @@ export class Window extends Component<WindowProps, WindowState> {
       this.createAnimation()
         .ready(() => {
           if (this.lastDisplayProperties.minimize !== undefined) {
-            const { left, top, width, height } =
+            const { height, left, top, width } =
               this.lastDisplayProperties.minimize;
 
             this.setState({ minimized: false });
@@ -501,12 +502,7 @@ export class Window extends Component<WindowProps, WindowState> {
     return { left, top };
   }
 
-  private isFrozen = (): boolean => {
-    const { animated, moving, resizing } = this.state;
-    return animated || moving || resizing;
-  };
-
-  private getSize(): { width: number; height: number } {
+  private getSize(): { height: number; width: number } {
     const windowElement = this.windowRef.current;
     let width = 0;
     let height = 0;
@@ -517,6 +513,11 @@ export class Window extends Component<WindowProps, WindowState> {
     }
     return { height, width };
   }
+
+  private isFrozen = (): boolean => {
+    const { animated, moving, resizing } = this.state;
+    return animated || moving || resizing;
+  };
 
   private setMaxSize(): void {
     const { visibleAreaSize } = this.props;
@@ -599,13 +600,13 @@ export class Window extends Component<WindowProps, WindowState> {
       this.setStyle('height', `${height / 10}rem`);
     } else {
       this.setState({
-        width: `${width / 10}rem`,
         height: `${height / 10}rem`,
+        width: `${width / 10}rem`,
       });
     }
 
     if (onResize !== undefined) {
-      onResize({ width, height });
+      onResize({ height, width });
     }
   }
 

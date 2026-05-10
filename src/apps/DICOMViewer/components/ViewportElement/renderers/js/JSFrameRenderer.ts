@@ -2,6 +2,7 @@ import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
+
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import {
@@ -13,7 +14,6 @@ import { drawImageData } from './utils/draw';
 import { getCanvasRenderingContexts } from './utils/getCanvasRenderingContexts';
 
 export class JSFrameRenderer implements Renderer {
-  // eslint-disable-next-line react/static-property-placement
   private readonly context: CanvasRenderingContext2D;
   private lut?: VOILUT;
   private readonly renderingContext: CanvasRenderingContext2D;
@@ -100,7 +100,7 @@ export class JSFrameRenderer implements Renderer {
       return;
     }
 
-    const { boundedViewportSpace, leftLimit, rightLimit, imageSpace } =
+    const { boundedViewportSpace, imageSpace, leftLimit, rightLimit } =
       renderingProperties;
 
     const displayX0 = Math.ceil(imageSpace.displayX0);

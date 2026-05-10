@@ -1,7 +1,3 @@
-function isMacOs() {
-  return navigator.platform.startsWith('Mac');
-}
-
 export function getKeyFromEvent({
   altKey,
   ctrlKey,
@@ -30,4 +26,8 @@ export function makeKeysHumanReadable(input: string): string {
 
 export function normaliseKeys(input: string): string {
   return input.replace(/CtrlCmd/g, isMacOs() ? 'Meta' : 'Control');
+}
+
+function isMacOs() {
+  return navigator.platform.startsWith('Mac');
 }

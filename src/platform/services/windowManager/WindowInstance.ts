@@ -1,4 +1,5 @@
 import { type RefObject } from 'preact/compat';
+
 import { type Window } from '@/platform/components/Window/Window';
 import {
   type InjectedWindowProps,
@@ -11,7 +12,7 @@ export interface WindowInstance extends Partial<InjectedWindowProps> {
   appDescriptor: AppDescriptor;
   id: number;
   minimizedTopPosition?: number;
-  windowRef: RefObject<Window>;
   windowComponent: WindowComponent;
+  windowRef: RefObject<Window>;
   zIndex: number;
 }

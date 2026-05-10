@@ -1,4 +1,4 @@
-export interface Position<T = string | number> {
+export interface Position<T = number | string> {
   x: T;
   y: T;
 }

@@ -1,24 +1,24 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
 import { useEffect, useRef, useState } from 'preact/compat';
+
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
-import styles from './Terminal.module.scss';
+
 import { About } from './executors/About/About';
-import { isAsyncExecutor, type AsyncExecutor } from './executors/AsyncExecutor';
+import { type AsyncExecutor, isAsyncExecutor } from './executors/AsyncExecutor';
 import { BashError } from './executors/BashError/BashError';
 import { Command, PREFIX_SIZE_CH } from './executors/Command/Command';
 import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
+import styles from './Terminal.module.scss';
 
-const executors: { [name: string]: () => Promise<Executor | AsyncExecutor> } = {
+const executors: Record<string, () => Promise<AsyncExecutor | Executor>> = {
   about: async () => About,
   bm: async () =>
     (await import('./executors/BuildManager/BuildManager')).BuildManager,
   help: async () => (await import('./executors/Help/Help')).Help,
-  // Factory with dynamic import so no cycle
-  // eslint-disable-next-line import/no-cycle
   open: async () => (await import('./executors/Open')).Open,
 };
 
@@ -56,13 +56,6 @@ const Terminal: WindowComponent = ({
 
   useKeyMap(
     {
-      'Control+C': cancel,
-      'CtrlCmd+K': () => {
-        if (waiting && !query) {
-          return false;
-        }
-        executionManager.clear();
-      },
       '*': (event) => {
         if (waiting && !query) {
           return false;
@@ -82,6 +75,13 @@ const Terminal: WindowComponent = ({
         } else {
           return false;
         }
+      },
+      'Control+C': cancel,
+      'CtrlCmd+K': () => {
+        if (waiting && !query) {
+          return false;
+        }
+        executionManager.clear();
       },
     },
     active,
@@ -104,6 +104,7 @@ const Terminal: WindowComponent = ({
 
   async function cancel(): Promise<void> {
     if (waiting) {
+      // eslint-disable-next-line react-hooks/immutability
       lastExec.inProgress = false;
 
       if (query) {
@@ -137,6 +138,7 @@ const Terminal: WindowComponent = ({
         query.str,
         formatAnswer(str, query.hideAnswer),
       ]);
+      // eslint-disable-next-line react-hooks/immutability
       delete lastExec.query;
 
       executionManager.set((execs) => {
@@ -153,7 +155,7 @@ const Terminal: WindowComponent = ({
     const command = args[0];
 
     if (command.length > 0) {
-      let executor: Executor | AsyncExecutor | undefined;
+      let executor: AsyncExecutor | Executor | undefined;
 
       if (executors[command] !== undefined) {
         executor = await executors[command](); // Has to be done before any state change
@@ -202,7 +204,7 @@ const Terminal: WindowComponent = ({
   }
 
   async function loadExecutor(
-    executor: Executor | AsyncExecutor,
+    executor: AsyncExecutor | Executor,
     args: string[],
   ): Promise<void> {
     const execution: Execution = {
@@ -231,7 +233,6 @@ const Terminal: WindowComponent = ({
   }
 
   function navigate(event: KeyboardEvent): false | void {
-    // eslint-disable-next-line default-case
     switch (event.key) {
       case 'ArrowDown':
       case 'Down':
@@ -388,13 +389,13 @@ export default Terminal;
 
 interface Execution {
   args: string[];
-  executor: Executor | AsyncExecutor;
+  executor: AsyncExecutor | Executor;
   id: number;
   inProgress?: boolean;
   query?: {
+    callback(userInput: string): void;
     hideAnswer: boolean;
     str: string;
-    callback(userInput: string): void;
   };
   queryUserHandler?(
     query: string,

@@ -1,11 +1,12 @@
 import WebSocket from 'ws';
+
 import { type Action } from '@/platform/state/interfaces/Action';
 
 export class WSClient {
   private static clientID = -1;
   id: number;
   ws: WebSocket;
-  private readonly state: { [pluginName: string]: unknown } = {};
+  private readonly state: Record<string, unknown> = {};
 
   constructor(ws: WebSocket) {
     this.id = ++WSClient.clientID;

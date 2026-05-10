@@ -1,16 +1,16 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import { createRef } from 'preact/compat';
+
 import { type WindowProps } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
+
 import { type WindowInstance } from './WindowInstance';
 
 const windowInstances: WindowInstance[] = [];
 let nextInstanceId = 0;
 
 export const windowManager = {
-  windowInstancesSubject: new Subject<WindowInstance[]>([]),
-
   closeWindow(id: number): void {
     const index = windowInstances.findIndex(
       (windowInstance) => windowInstance.id === id,
@@ -23,6 +23,10 @@ export const windowManager = {
     publishWindowInstances();
   },
 
+  getWindowInstances(): WindowInstance[] {
+    return windowInstances;
+  },
+
   hideWindow(id: number): void {
     const componentInstance = getWindowInstance(id).windowRef.current;
 
@@ -30,10 +34,6 @@ export const windowManager = {
       componentInstance.hide();
       this.unselectWindow(id);
     }
-  },
-
-  getWindowInstances(): WindowInstance[] {
-    return windowInstances;
   },
 
   isWindowSelected(id: number): boolean {
@@ -69,20 +69,6 @@ export const windowManager = {
     this.selectWindow(windowInstance.id);
   },
 
-  setMinimizedTopPosition(id: number, topPosition: number): void {
-    getWindowInstance(id).minimizedTopPosition = topPosition;
-    publishWindowInstances();
-  },
-
-  showWindow(id: number): void {
-    const componentInstance = getWindowInstance(id).windowRef.current;
-
-    if (componentInstance !== null) {
-      componentInstance.show();
-      this.selectWindow(id);
-    }
-  },
-
   selectWindow(id: number): void {
     const windowInstance = getWindowInstance(id);
 
@@ -105,6 +91,20 @@ export const windowManager = {
     }
   },
 
+  setMinimizedTopPosition(id: number, topPosition: number): void {
+    getWindowInstance(id).minimizedTopPosition = topPosition;
+    publishWindowInstances();
+  },
+
+  showWindow(id: number): void {
+    const componentInstance = getWindowInstance(id).windowRef.current;
+
+    if (componentInstance !== null) {
+      componentInstance.show();
+      this.selectWindow(id);
+    }
+  },
+
   unselectAllWindows(): void {
     const isThereWindowSelected = windowInstances.some(({ active }) => active);
 
@@ -124,6 +124,8 @@ export const windowManager = {
       publishWindowInstances();
     }
   },
+
+  windowInstancesSubject: new Subject<WindowInstance[]>([]),
 };
 
 function getWindowInstance(id: number): WindowInstance {

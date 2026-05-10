@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import { Children, cloneElement, type FC, type JSX } from 'preact/compat';
+
 import styles from './Tabs.module.scss';
 
 export interface TabsProps {

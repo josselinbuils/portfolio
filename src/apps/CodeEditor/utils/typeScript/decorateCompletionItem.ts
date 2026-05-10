@@ -5,13 +5,13 @@ export const CURSOR = '[CURSOR]';
 
 const completionTemplateMap: Record<string, string> = {
   break: 'break;',
-  catch: `catch (${CURSOR})`,
   case: `case ${CURSOR}:`,
-  continue: 'continue;',
+  catch: `catch (${CURSOR})`,
   const: 'const ',
+  continue: 'continue;',
   debugger: 'debugger;',
-  delete: 'delete ',
   default: `default:\n${INDENT}`,
+  delete: 'delete ',
   do: `do {\n${INDENT}${CURSOR}\n}`,
   else: `else `,
   finally: `finally {\n${INDENT}${CURSOR}\n}`,

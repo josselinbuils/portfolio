@@ -1,4 +1,5 @@
 import { faBlog } from '@fortawesome/free-solid-svg-icons/faBlog';
+
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 
 export const BlogDescriptor: AppDescriptor = {

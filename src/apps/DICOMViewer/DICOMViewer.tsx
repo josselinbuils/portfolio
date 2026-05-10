@@ -5,22 +5,24 @@ import {
   useLayoutEffect,
   useState,
 } from 'preact/compat';
+
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { MouseButton } from '@/platform/constants';
 import { lazy } from '@/platform/utils/lazy';
-import styles from './DICOMViewer.module.scss';
+
 import { AnnotationsElement } from './components/AnnotationsElement/AnnotationsElement';
 import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { VIEW_TYPES_WITH_ROTATION } from './constants';
+import styles from './DICOMViewer.module.scss';
 import { type Annotations } from './interfaces/Annotations';
 import { type LUTComponent } from './interfaces/LUTComponent';
 import { type MouseTool } from './interfaces/MouseTool';
 import { type RendererType } from './interfaces/RendererType';
-import { type ViewType } from './interfaces/ViewType';
 import { type ViewportStats } from './interfaces/ViewportStats';
+import { type ViewType } from './interfaces/ViewType';
 import { type Dataset } from './models/Dataset';
 import { Viewport } from './models/Viewport';
 import { getAvailableViewTypes } from './utils/getAvailableViewTypes';
@@ -128,6 +130,7 @@ const DICOMViewer: WindowComponent = ({
   const setLutComponents = useCallback(
     (lutComponents: LUTComponent[] | undefined) => {
       if (viewport !== undefined) {
+        // eslint-disable-next-line react-hooks/immutability
         viewport.lutComponents = lutComponents;
       }
     },
@@ -160,8 +163,8 @@ const DICOMViewer: WindowComponent = ({
           <LeftToolbar
             activeLeftTool={activeLeftTool}
             activeRightTool={activeRightTool}
-            viewport={viewport}
             onToolSelected={selectActiveTool}
+            viewport={viewport}
           />
           <ViewportElement
             onCanvasMouseDown={startActiveTool}
@@ -268,6 +271,7 @@ const DICOMViewer: WindowComponent = ({
       },
     );
     if (viewport !== undefined && toolApplied) {
+      // eslint-disable-next-line react-hooks/immutability
       viewport.draft = true;
     }
   }

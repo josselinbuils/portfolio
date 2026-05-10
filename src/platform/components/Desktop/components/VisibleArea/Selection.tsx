@@ -1,6 +1,8 @@
 import { type FC, useState } from 'preact/compat';
+
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
+
 import styles from './Selection.module.scss';
 
 export interface SelectionProps {

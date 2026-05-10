@@ -5,7 +5,9 @@ import {
   type JSX,
   type PropsWithChildren,
 } from 'preact/compat';
+
 import { type TooltipProps } from '@/platform/components/Tooltip/Tooltip';
+
 import { useTooltip } from './useTooltip';
 
 export type WithTooltipProps = PropsWithChildren<
@@ -16,7 +18,7 @@ export const WithTooltip: FC<WithTooltipProps> = ({
   children,
   ...tooltipProps
 }) => {
-  const { hideTooltip, tooltipElement, showTooltip } = useTooltip(tooltipProps);
+  const { hideTooltip, showTooltip, tooltipElement } = useTooltip(tooltipProps);
   const child = Children.only(children) as JSX.Element;
 
   if (tooltipElement && child.props.disabled) {
@@ -32,7 +34,7 @@ export const WithTooltip: FC<WithTooltipProps> = ({
     ),
     onMouseEnter: (event: MouseEvent) => {
       const target = event.currentTarget as HTMLElement;
-      const { right: x, y, height } = target.getBoundingClientRect();
+      const { height, right: x, y } = target.getBoundingClientRect();
       showTooltip({ position: { x, y: Math.round(y + height / 2) } });
       child.props.onMouseEnter?.(event);
     },

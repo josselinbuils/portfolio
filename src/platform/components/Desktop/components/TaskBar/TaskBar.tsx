@@ -1,11 +1,13 @@
 import { faExpand } from '@fortawesome/free-solid-svg-icons/faExpand';
 import cn from 'classnames';
 import { type FC } from 'preact/compat';
+
 import { APP_DESCRIPTORS } from '@/platform/appDescriptors';
 import { useToolbar } from '@/platform/hooks/useToolbar';
+
+import { useAppTaskDescriptors } from './hooks/useAppTaskDescriptors';
 import { Task } from './Task';
 import styles from './TaskBar.module.scss';
-import { useAppTaskDescriptors } from './hooks/useAppTaskDescriptors';
 import { getTaskId } from './utils/getTaskId';
 
 const PINNED_ACTION_TASK_DESCRIPTORS = [

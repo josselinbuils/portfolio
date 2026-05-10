@@ -1,4 +1,5 @@
 import { type FC, useEffect } from 'preact/compat';
+
 import '../global.scss';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { windowManager } from '../services/windowManager/windowManager';
@@ -25,6 +26,7 @@ export const OperatingSystem: FC<OperatingSystemProps> = ({
   if (defaultApp !== undefined && !initialised) {
     const { appDescriptor, windowComponent } = defaultApp;
     windowManager.openApp(appDescriptor, undefined, windowComponent);
+    // eslint-disable-next-line react-hooks/globals
     initialised = true;
   }
 

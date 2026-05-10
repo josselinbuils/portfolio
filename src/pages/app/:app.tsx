@@ -1,4 +1,5 @@
 import { type FC } from 'preact/compat';
+
 import { OperatingSystem } from '@/platform/components/OperatingSystem';
 
 const AppPage: FC = () => {

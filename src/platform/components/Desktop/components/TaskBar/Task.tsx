@@ -1,21 +1,23 @@
 import cn from 'classnames';
 import {
+  forwardRef,
   type HTMLAttributes,
   type RefObject,
-  forwardRef,
   useEffect,
   useState,
 } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { noop } from '@/platform/utils/noop';
-import styles from './Task.module.scss';
-import { type TaskDescriptor } from './TaskDescriptor';
+
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
+import styles from './Task.module.scss';
+import { type TaskDescriptor } from './TaskDescriptor';
 import { isAppTaskDescriptor } from './utils/isAppTaskDescriptor';
 
 const LOADER_APPARITION_DELAY_MS = 200;

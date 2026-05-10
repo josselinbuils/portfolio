@@ -27,19 +27,19 @@ const MANDATORY_FIELDS: readonly (keyof Frame)[] = [
 
 export class Frame extends Model {
   /**
+   * DICOM (filled with computed/default values if necessary)
+   */
+  bitsAllocated!: number;
+  columns!: number;
+  /**
    * Computed
    */
   dicom!: DicomFrame;
   dimensionsMm!: number[];
   id!: string;
+
   imageCenter!: number[];
   imageNormal!: number[];
-
-  /**
-   * DICOM (filled with computed/default values if necessary)
-   */
-  bitsAllocated!: number;
-  columns!: number;
   imageOrientation!: number[][];
   imagePosition!: number[];
   patientName?: string;
@@ -56,7 +56,7 @@ export class Frame extends Model {
   windowCenter = 30;
   windowWidth = 400;
 
-  constructor(config: { [key: string]: any }) {
+  constructor(config: Record<string, any>) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);

@@ -1,6 +1,17 @@
 import { Subject } from '@josselinbuils/utils/Subject';
 import dayjs from 'dayjs';
+
 import { type Music } from '../../interfaces/Music';
+
+export interface AudioState {
+  currentMusic?: Music;
+  currentTime: string;
+  paused: boolean;
+  playlist: Music[];
+  progress: number;
+  random: boolean;
+  repeat: boolean;
+}
 
 export class AudioController {
   audioStateSubject: Subject<AudioState>;
@@ -8,13 +19,13 @@ export class AudioController {
   private readonly audioElement = new Audio();
   private currentMusic?: Music;
   private currentTime = '00:00';
-  private get paused(): boolean {
-    return this.audioElement.paused;
-  }
   private playlist: Music[] = [];
   private progress = 0;
   private random = false;
   private repeat = false;
+  private get paused(): boolean {
+    return this.audioElement.paused;
+  }
 
   constructor() {
     this.audioElement.addEventListener('ended', this.musicEndListener);
@@ -119,13 +130,13 @@ export class AudioController {
     this.publishState();
   };
 
-  toggleRepeat = (): void => {
-    this.repeat = !this.repeat;
+  toggleRandom = (): void => {
+    this.random = !this.random;
     this.publishState();
   };
 
-  toggleRandom = (): void => {
-    this.random = !this.random;
+  toggleRepeat = (): void => {
+    this.repeat = !this.repeat;
     this.publishState();
   };
 
@@ -184,14 +195,4 @@ export class AudioController {
       ) / 100;
     this.publishState();
   };
-}
-
-export interface AudioState {
-  currentMusic?: Music;
-  currentTime: string;
-  paused: boolean;
-  playlist: Music[];
-  progress: number;
-  random: boolean;
-  repeat: boolean;
 }

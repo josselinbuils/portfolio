@@ -2,12 +2,16 @@ import http, { type ClientRequest, type IncomingMessage } from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';
 
-const protocolClientMap: { [protocol: string]: HTTPClient } = {
+const protocolClientMap: Record<string, HTTPClient> = {
   'http:': http,
   'https:': https,
 };
 
 export const httpClient = { get };
+
+interface HTTPClient {
+  get(url: string, callback: (res: IncomingMessage) => void): ClientRequest;
+}
 
 async function get(url: string): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -37,8 +41,4 @@ async function get(url: string): Promise<any> {
       })
       .on('error', reject);
   });
-}
-
-interface HTTPClient {
-  get(url: string, callback: (res: IncomingMessage) => void): ClientRequest;
 }

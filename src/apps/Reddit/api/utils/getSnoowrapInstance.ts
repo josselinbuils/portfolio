@@ -1,4 +1,5 @@
 import Snoowrap from 'snoowrap';
+
 import { config } from '@/platform/api/config';
 
 const USER_AGENT = 'Portfolio by Josselin Buils';
@@ -9,11 +10,11 @@ export function getSnoowrapInstance(): Snoowrap {
     const { clientId, clientSecret, password, username } = config.reddit;
 
     snoowrap = new Snoowrap({
-      userAgent: USER_AGENT,
       clientId,
       clientSecret,
-      username,
       password,
+      userAgent: USER_AGENT,
+      username,
     });
   }
   return snoowrap;

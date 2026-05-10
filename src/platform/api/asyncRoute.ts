@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
-import { Logger } from './Logger';
+
 import { HTTP_INTERNAL_ERROR } from './constants';
+import { Logger } from './Logger';
 
 type AsyncRequestHandler = (req: Request) => Promise<any>;
 type RequestHandler = (req: Request, res: Response) => void;

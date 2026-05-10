@@ -1,4 +1,5 @@
 import { type FunctionComponent } from 'preact/compat';
+
 import styles from './MenuOverlay.module.scss';
 
 export interface MenuOverlayProps {

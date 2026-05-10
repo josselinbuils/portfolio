@@ -6,7 +6,9 @@ import {
   useMemo,
   useRef,
 } from 'preact/compat';
+
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
+
 import { getLineNumber } from '../../utils/getLineNumber';
 import { getTextWidth } from '../../utils/getTextWidth';
 import styles from './LineNumbers.module.scss';

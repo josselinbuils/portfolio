@@ -5,6 +5,7 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 import { Window } from '@/platform/components/Window/Window';
@@ -14,6 +15,7 @@ import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
 import { cancelable } from '@/platform/utils/cancelable';
+
 import styles from './CodeEditor.module.scss';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
@@ -21,9 +23,9 @@ import { Shortcut } from './components/Shortcut/Shortcut';
 import { StatusBar } from './components/StatusBar/StatusBar';
 import { Tab } from './components/Tab/Tab';
 import { Tabs } from './components/Tabs/Tabs';
+import { Toolbar } from './components/Toolbar/Toolbar';
 import { PopoverToolButton } from './components/ToolButton/PopoverToolButton';
 import { ToolButton } from './components/ToolButton/ToolButton';
-import { Toolbar } from './components/Toolbar/Toolbar';
 import { SUPPORTED_LANGUAGES } from './constants';
 import { type EditorFile } from './interfaces/EditorFile';
 import { type SupportedLanguage } from './interfaces/SupportedLanguage';
@@ -49,7 +51,7 @@ const CodeEditor: WindowComponent = ({
     y: 0,
   });
   const [consoleHeight, setConsoleHeight] = useState('35%');
-  const { showMenu, menuElement } = useMenu();
+  const { menuElement, showMenu } = useMenu();
   const consoleElementRef = useRef<HTMLDivElement>(null);
   const resizeStartHandler = useDragAndDrop(onResizeStart);
 
@@ -57,11 +59,12 @@ const CodeEditor: WindowComponent = ({
     ({ name }) => name === activeFilename,
   ) as EditorFile;
 
-  const newFileMenuItems = SUPPORTED_LANGUAGES.map(({ language, label }) => ({
+  const newFileMenuItems = SUPPORTED_LANGUAGES.map(({ label, language }) => ({
     onClick: () => createFile(language),
     title: label,
   }));
 
+  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
     activeFile.content = code;
     fileSaver.saveFiles(files);

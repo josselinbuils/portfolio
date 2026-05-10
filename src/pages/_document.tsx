@@ -12,34 +12,33 @@ const Document: FunctionComponent<DocumentProps> = ({
     <head>
       <meta charSet="UTF-8" />
       <title>Josselin BUILS</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta content="width=device-width, initial-scale=1.0" name="viewport" />
       <link
-        rel="preload"
-        // @ts-ignore
+        as="image"
+        // @ts-expect-error existing property
         // eslint-disable-next-line react/no-unknown-property
         fetchpriority="high"
-        as="image"
         href="/assets/me.webp"
+        rel="preload"
         type="image/webp"
       />
       <meta
-        name="description"
         content="Hey, I'm Josselin, a full-stack JavaScript developer :)"
+        name="description"
       />
       <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
         href="/assets/favicon16.png"
+        rel="icon"
+        sizes="16x16"
+        type="image/png"
       />
       <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
         href="/assets/favicon32.png"
+        rel="icon"
+        sizes="32x32"
+        type="image/png"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'http://schema.org/',
@@ -49,6 +48,7 @@ const Document: FunctionComponent<DocumentProps> = ({
             nationality: 'French',
           }),
         }}
+        type="application/ld+json"
       />
       <script
         defer
@@ -57,7 +57,7 @@ const Document: FunctionComponent<DocumentProps> = ({
     </head>
     <body>
       <div id="app">{children}</div>
-      {entryScriptUrl && <script type="module" src={entryScriptUrl} />}
+      {entryScriptUrl && <script src={entryScriptUrl} type="module" />}
     </body>
   </html>
 );

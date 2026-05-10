@@ -1,7 +1,3 @@
-export function M3(...args: number[][][]): Matrix3 {
-  return new Matrix3(...args);
-}
-
 export class Matrix3 extends Array<number[]> {
   constructor(...args: number[][][]) {
     super(...args[0]);
@@ -62,4 +58,8 @@ export class Matrix3 extends Array<number[]> {
 
     return this;
   }
+}
+
+export function M3(...args: number[][][]): Matrix3 {
+  return new Matrix3(...args);
 }

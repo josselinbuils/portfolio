@@ -1,10 +1,20 @@
 import { useMemo, useState } from 'preact/compat';
 
 /**
+ * Manager provided by useList.
+ */
+export interface ListManager<T> {
+  clear(): void;
+  push(...items: T[]): void;
+  set(items: ((currentItems: T[]) => T[]) | T[]): void;
+  update(): void;
+}
+
+/**
  * Allows managing lists easily.
  */
 export function useList<T>(
-  initialValues: T[] | (() => T[]) = [],
+  initialValues: (() => T[]) | T[] = [],
 ): [T[], ListManager<T>] {
   const [list, setList] = useState<T[]>(initialValues);
   const manager = useMemo(
@@ -17,14 +27,4 @@ export function useList<T>(
     [],
   );
   return [list, manager];
-}
-
-/**
- * Manager provided by useList.
- */
-export interface ListManager<T> {
-  clear(): void;
-  push(...items: T[]): void;
-  set(items: T[] | ((currentItems: T[]) => T[])): void;
-  update(): void;
 }

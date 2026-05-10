@@ -1,4 +1,5 @@
 import { useEffect } from 'preact/compat';
+
 import { useDynamicRef } from './useDynamicRef';
 
 /**

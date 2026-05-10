@@ -7,7 +7,9 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
+
 import { Tooltip, type TooltipProps } from './Tooltip';
 
 export function useTooltip(initialTooltipProps: Partial<TooltipProps>): {

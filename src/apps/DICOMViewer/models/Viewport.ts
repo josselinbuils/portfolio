@@ -38,6 +38,20 @@ export class Viewport extends Renderable implements CoordinateSpace {
   private imageZoom?: number;
   private origin?: number[];
 
+  constructor(config: Partial<Viewport>) {
+    super();
+    super.fillProperties(config);
+    super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
+    super.decorateProperties();
+    this.onUpdate.subscribe((keyChanged) => {
+      if (SENSITIVE_FIELDS.includes(keyChanged as keyof Viewport)) {
+        delete this.basis;
+        delete this.imageZoom;
+        delete this.origin;
+      }
+    });
+  }
+
   static create(
     dataset: Dataset,
     viewType: ViewType,
@@ -54,9 +68,9 @@ export class Viewport extends Renderable implements CoordinateSpace {
     const lutComponents =
       viewType === 'skin'
         ? [
-            { id: '0', start: -25, end: 125, color: [255, 190, 180] },
-            { id: '1', start: 100, end: 250, color: [255, 140, 130] },
-            { id: '2', start: 215, end: 300, color: [255, 255, 255] },
+            { color: [255, 190, 180], end: 125, id: '0', start: -25 },
+            { color: [255, 140, 130], end: 250, id: '1', start: 100 },
+            { color: [255, 255, 255], end: 300, id: '2', start: 215 },
           ]
         : undefined;
 
@@ -71,21 +85,7 @@ export class Viewport extends Renderable implements CoordinateSpace {
     });
   }
 
-  constructor(config: Partial<Viewport>) {
-    super();
-    super.fillProperties(config);
-    super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
-    super.decorateProperties();
-    this.onUpdate.subscribe((keyChanged) => {
-      if (SENSITIVE_FIELDS.includes(keyChanged as keyof Viewport)) {
-        delete this.basis;
-        delete this.imageZoom;
-        delete this.origin;
-      }
-    });
-  }
-
-  clone(properties: { [key: string]: any }): Viewport {
+  clone(properties: Record<string, any>): Viewport {
     const {
       camera,
       dataset,

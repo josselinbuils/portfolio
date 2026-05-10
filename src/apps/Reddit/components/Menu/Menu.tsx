@@ -1,4 +1,5 @@
 import { type FC } from 'preact/compat';
+
 import { subreddits } from '../../subreddits';
 import styles from './Menu.module.scss';
 import { MenuItem } from './MenuItem';

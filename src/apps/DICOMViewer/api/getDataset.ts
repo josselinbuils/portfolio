@@ -1,7 +1,9 @@
+import { type Request, type Response } from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
-import { type Request, type Response } from 'express';
+
 import { HTTP_NOT_FOUND } from '@/platform/api/constants';
+
 import { DATASETS_PATH, MAX_AGE } from './constants';
 
 export async function getDataset(req: Request, res: Response): Promise<void> {

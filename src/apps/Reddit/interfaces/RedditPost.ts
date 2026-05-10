@@ -1,3 +1,14 @@
+export interface Image {
+  resolutions?: ImageResolution[];
+  source: ImageResolution;
+}
+
+export interface ImageResolution {
+  height: number;
+  url: string;
+  width: number;
+}
+
 export interface RedditPost {
   author: string;
   numComments: number;
@@ -10,15 +21,4 @@ export interface RedditPost {
   stickied: boolean;
   subreddit: string;
   title: string;
-}
-
-export interface Image {
-  resolutions?: ImageResolution[];
-  source: ImageResolution;
-}
-
-export interface ImageResolution {
-  height: number;
-  url: string;
-  width: number;
 }

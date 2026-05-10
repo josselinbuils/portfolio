@@ -1,14 +1,16 @@
 import { type FC, useEffect, useRef, useState } from 'preact/compat';
+
 import { Spinner } from '@/platform/components/Spinner/Spinner';
+
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { type RedditPost } from '../../interfaces/RedditPost';
-import { Post } from './Post/Post';
 import { getPosts } from './getPosts';
+import { Post } from './Post/Post';
 
 export interface PostsProps {
   filter: RedditFilter;
-  subreddit: string;
   onClickSubreddit(subreddit: string): void;
+  subreddit: string;
 }
 
 export const Posts: FC<PostsProps> = ({

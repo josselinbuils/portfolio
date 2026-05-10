@@ -1,7 +1,8 @@
 import { type FC } from 'preact/compat';
-import styles from './Desktop.module.scss';
+
 import { TaskBar } from './components/TaskBar/TaskBar';
 import { VisibleArea } from './components/VisibleArea/VisibleArea';
+import styles from './Desktop.module.scss';
 
 export const Desktop: FC = () => (
   <div className={styles.desktop}>

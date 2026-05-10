@@ -7,16 +7,18 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+
+import type { Position } from '../../interfaces/Position';
+
 import { ROOT_FONT_SIZE_PX } from '../../constants';
 import { useKeyMap } from '../../hooks/useKeyMap';
-import type { Position } from '../../interfaces/Position';
 import { createGUID } from '../../utils/createGUID';
-import styles from './Menu.module.scss';
 import {
   MenuItem,
   type MenuItemDescriptor,
 } from './components/MenuItem/MenuItem';
 import { MenuOverlay } from './components/MenuOverlay/MenuOverlay';
+import styles from './Menu.module.scss';
 
 export { type MenuItemDescriptor };
 
@@ -38,9 +40,9 @@ export const Menu: FC<MenuProps> = ({
   className,
   enterWithTab,
   items: itemsWithoutID,
-  onHide,
   makeFirstItemActive = false,
   onActivate = () => {},
+  onHide,
   position,
   style,
 }) => {
@@ -122,26 +124,26 @@ export const Menu: FC<MenuProps> = ({
       <ul
         className={cn(styles.contextMenu, className)}
         onMouseLeave={() => setActiveIndex(items.length === 1 ? 0 : -1)}
+        ref={listElementRef}
+        role="menu"
         style={{
           ...style,
           left: typeof x === 'string' ? x : `${x / ROOT_FONT_SIZE_PX}rem`,
           top: typeof y === 'string' ? y : `${y / ROOT_FONT_SIZE_PX}rem`,
         }}
-        ref={listElementRef}
-        role="menu"
       >
         {items.map(({ id, onClick, title }, index) => (
           <MenuItem
             active={index === activeIndex}
             key={id}
+            onClick={() => {
+              onClick();
+              onHide();
+            }}
             onMouseMove={() => {
               if (activeIndex !== index) {
                 setActiveIndex(index);
               }
-            }}
-            onClick={() => {
-              onClick();
-              onHide();
             }}
             title={title}
           />

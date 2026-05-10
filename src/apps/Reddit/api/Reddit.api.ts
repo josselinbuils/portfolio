@@ -1,5 +1,7 @@
 import { type Router } from 'express';
+
 import { asyncRoute } from '@/platform/api/asyncRoute';
+
 import { getHot } from './getHot';
 import { getSubreddit } from './getSubreddit';
 import { getTop } from './getTop';

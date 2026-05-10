@@ -6,12 +6,12 @@ import {
 } from 'preact/compat';
 
 export function useMemState<S>(
-  initialValue: S | (() => S),
+  initialValue: (() => S) | S,
 ): [S, S | undefined, StateUpdater<S>] {
   const [value, setValue] = useState<S>(initialValue);
   const previousValueRef = useRef<S>();
 
-  const setValues = useCallback((newValue: S | ((prevState: S) => S)): void => {
+  const setValues = useCallback((newValue: ((prevState: S) => S) | S): void => {
     setValue((previousValue) => {
       previousValueRef.current = previousValue;
 
@@ -21,5 +21,6 @@ export function useMemState<S>(
     });
   }, []);
 
+  // eslint-disable-next-line react-hooks/refs
   return [value, previousValueRef.current, setValues];
 }

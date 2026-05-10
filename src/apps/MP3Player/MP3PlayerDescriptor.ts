@@ -1,4 +1,5 @@
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons/faHeadphones';
+
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 
 export const MP3PlayerDescriptor: AppDescriptor = {

@@ -1,15 +1,15 @@
 import { type MusicList } from './interfaces/MusicList';
 
 export const musicLists = [
-  { name: 'Top 50', jamendoTag: '' },
-  { name: 'Classical', jamendoTag: 'classical' },
-  { name: 'Dance', jamendoTag: 'dance' },
-  { name: 'Electronic', jamendoTag: 'electronic' },
-  { name: 'Folk', jamendoTag: 'folk' },
-  { name: 'House', jamendoTag: 'house' },
-  { name: 'Metal', jamendoTag: 'metal' },
-  { name: 'Pop', jamendoTag: 'pop' },
-  { name: 'Reggae', jamendoTag: 'reggae' },
-  { name: 'Rock', jamendoTag: 'rock' },
-  { name: 'Soundtrack', jamendoTag: 'soundtrack' },
+  { jamendoTag: '', name: 'Top 50' },
+  { jamendoTag: 'classical', name: 'Classical' },
+  { jamendoTag: 'dance', name: 'Dance' },
+  { jamendoTag: 'electronic', name: 'Electronic' },
+  { jamendoTag: 'folk', name: 'Folk' },
+  { jamendoTag: 'house', name: 'House' },
+  { jamendoTag: 'metal', name: 'Metal' },
+  { jamendoTag: 'pop', name: 'Pop' },
+  { jamendoTag: 'reggae', name: 'Reggae' },
+  { jamendoTag: 'rock', name: 'Rock' },
+  { jamendoTag: 'soundtrack', name: 'Soundtrack' },
 ] as MusicList[];

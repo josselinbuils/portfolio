@@ -1,21 +1,22 @@
 import {
+  type CompilerOptions,
+  CompletionTriggerKind,
+  createLanguageService as createTypeScriptLanguageService,
+  type Diagnostic,
   DiagnosticCategory,
+  type DiagnosticMessageChain,
+  getDefaultCompilerOptions,
   JsxEmit,
   ModuleKind,
   ModuleResolutionKind,
+  type QuickInfo,
   ScriptSnapshot,
   ScriptTarget,
-  createLanguageService as createTypeScriptLanguageService,
-  getDefaultCompilerOptions,
   transpile,
-  type CompilerOptions,
-  type Diagnostic,
-  type DiagnosticMessageChain,
   type LanguageService as TypeScriptLanguageService,
-  type QuickInfo,
-  CompletionTriggerKind,
 } from 'typescript';
 import dom from 'typescript/lib/lib.dom.d?raw';
+import libEs5 from 'typescript/lib/lib.es5.d?raw';
 import libEs2015Collection from 'typescript/lib/lib.es2015.collection.d?raw';
 import libEs2015Core from 'typescript/lib/lib.es2015.core.d?raw';
 import libEs2015 from 'typescript/lib/lib.es2015.d?raw';
@@ -26,8 +27,9 @@ import libEs2015Proxy from 'typescript/lib/lib.es2015.proxy.d?raw';
 import libEs2015Reflect from 'typescript/lib/lib.es2015.reflect.d?raw';
 import libEs2015Symbol from 'typescript/lib/lib.es2015.symbol.d?raw';
 import libEs2015SymbolWellKnown from 'typescript/lib/lib.es2015.symbol.wellknown.d?raw';
-import libEs5 from 'typescript/lib/lib.es5.d?raw';
+
 import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
+
 import {
   type CompletionItem,
   type Completions,
@@ -48,12 +50,12 @@ const libs = {
   '/dom.d.ts': dom,
   '/es2015.d.ts': libEs2015,
   '/lib.es5.d.ts': libEs5,
-  '/lib.es2015.d.ts': libEs2015,
-  '/lib.es2015.core.d.ts': libEs2015Core,
   '/lib.es2015.collection.d.ts': libEs2015Collection,
+  '/lib.es2015.core.d.ts': libEs2015Core,
+  '/lib.es2015.d.ts': libEs2015,
   '/lib.es2015.generator.d.ts': libEs2015Generator,
-  '/lib.es2015.promise.d.ts': libEs2015Promise,
   '/lib.es2015.iterable.d.ts': libEs2015Iterable,
+  '/lib.es2015.promise.d.ts': libEs2015Promise,
   '/lib.es2015.proxy.d.ts': libEs2015Proxy,
   '/lib.es2015.reflect.d.ts': libEs2015Reflect,
   '/lib.es2015.symbol.d.ts': libEs2015Symbol,
@@ -74,12 +76,6 @@ const compilerOptions: CompilerOptions = {
   target: ScriptTarget.Latest,
 };
 
-export type LintActionHandler = WorkerActionGenericHandler<
-  'lint',
-  [string],
-  LintIssue[]
->;
-
 export type GetCompletionsActionHandler = WorkerActionGenericHandler<
   'getCompletions',
   [string, number],
@@ -90,6 +86,12 @@ export type GetQuickInfoActionHandler = WorkerActionGenericHandler<
   'getQuickInfo',
   [string, number],
   QuickInfo | undefined
+>;
+
+export type LintActionHandler = WorkerActionGenericHandler<
+  'lint',
+  [string],
+  LintIssue[]
 >;
 
 export type TranspileActionHandler = WorkerActionGenericHandler<
@@ -201,13 +203,6 @@ onmessage = ({
   }
 };
 
-function sendWorkerResponse<Handler extends WorkerActionGenericHandler>(
-  uuid: string,
-  result: WorkerResponseResult<Handler>,
-) {
-  postMessage({ result, uuid } satisfies WorkerResponse<Handler>);
-}
-
 function convertDiagnosticsToLintIssues(
   diagnostics: Diagnostic[],
 ): LintIssue[] {
@@ -288,4 +283,11 @@ function getTypeScriptLanguageService(code: string): TypeScriptLanguageService {
     readFile: (filename) => files[filename],
     useCaseSensitiveFileNames: () => true,
   });
+}
+
+function sendWorkerResponse<Handler extends WorkerActionGenericHandler>(
+  uuid: string,
+  result: WorkerResponseResult<Handler>,
+) {
+  postMessage({ result, uuid } satisfies WorkerResponse<Handler>);
 }

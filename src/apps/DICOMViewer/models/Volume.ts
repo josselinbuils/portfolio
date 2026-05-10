@@ -1,5 +1,5 @@
-import { V } from '../utils/math/Vector';
 import { getLinePlaneIntersection } from '../utils/math/getLinePlaneIntersection';
+import { V } from '../utils/math/Vector';
 import { Model } from './Model';
 
 const MANDATORY_FIELDS: readonly (keyof Volume)[] = [
@@ -20,13 +20,13 @@ export class Volume extends Model {
   center!: number[];
   corners!: {
     x0y0z0: number[];
-    x1y0z0: number[];
-    x1y1z0: number[];
-    x0y1z0: number[];
     x0y0z1: number[];
-    x1y0z1: number[];
-    x1y1z1: number[];
+    x0y1z0: number[];
     x0y1z1: number[];
+    x1y0z0: number[];
+    x1y0z1: number[];
+    x1y1z0: number[];
+    x1y1z1: number[];
   };
   // mm
   dimensionsMm!: number[];
@@ -43,24 +43,10 @@ export class Volume extends Model {
   // mm
   voxelSpacing!: number[];
 
-  constructor(config: { [key: string]: any }) {
+  constructor(config: Record<string, any>) {
     super();
     super.fillProperties(config);
     super.checkMandatoryFieldsPresence(MANDATORY_FIELDS);
-  }
-
-  getOrientedDimensionMm(axe: number[]): number {
-    return this.orientedDimensionsMm.reduce(
-      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
-      0,
-    );
-  }
-
-  getOrientedDimensionVoxels(axe: number[]): number {
-    return this.orientedDimensionsVoxels.reduce(
-      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
-      0,
-    );
   }
 
   /**
@@ -100,6 +86,20 @@ export class Volume extends Model {
       }
     }
     return intersections;
+  }
+
+  getOrientedDimensionMm(axe: number[]): number {
+    return this.orientedDimensionsMm.reduce(
+      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
+      0,
+    );
+  }
+
+  getOrientedDimensionVoxels(axe: number[]): number {
+    return this.orientedDimensionsVoxels.reduce(
+      (sum, dimensionVector) => sum + Math.abs(V(dimensionVector).dot(axe)),
+      0,
+    );
   }
 
   /**

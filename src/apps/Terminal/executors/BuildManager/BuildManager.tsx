@@ -1,10 +1,12 @@
 import cn from 'classnames';
 import { type MutableRefObject, useEffect, useState } from 'preact/compat';
+
 import { useList } from '@/platform/hooks/useList';
+
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { type AsyncExecutor } from '../AsyncExecutor';
 import styles from './BuildManager.module.scss';
-import { BuildManagerClient, type BMError } from './BuildManagerClient';
+import { type BMError, BuildManagerClient } from './BuildManagerClient';
 import { type Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
 import { hasOption } from './utils/hasOption';
@@ -70,8 +72,8 @@ export const BuildManager: AsyncExecutor = ({
           .waitUntilReady()
           .then(() =>
             client.send('command', {
-              authToken: authTokenRef.current,
               args: args.slice(1),
+              authToken: authTokenRef.current,
               command: 'build' satisfies Command,
             }),
           );
@@ -100,8 +102,8 @@ export const BuildManager: AsyncExecutor = ({
               .waitUntilReady()
               .then(() =>
                 client.send('command', {
-                  command: 'login' satisfies Command,
                   args: [password],
+                  command: 'login' satisfies Command,
                 }),
               );
 
@@ -170,8 +172,8 @@ export const BuildManager: AsyncExecutor = ({
                 optional: true,
                 values: [
                   {
-                    value: '-c, --clean',
                     description: 'recreate the docker image',
+                    value: '-c, --clean',
                   },
                 ],
               },
@@ -191,8 +193,8 @@ export const BuildManager: AsyncExecutor = ({
                 optional: true,
                 values: [
                   {
-                    value: '-f, --follow',
                     description: 'follow the output',
+                    value: '-f, --follow',
                   },
                 ],
               },
@@ -210,12 +212,12 @@ export const BuildManager: AsyncExecutor = ({
               {
                 name: 'command',
                 values: [
-                  { value: 'build', description: 'build an application' },
+                  { description: 'build an application', value: 'build' },
                   {
-                    value: 'login',
                     description: 'gain access to restricted commands',
+                    value: 'login',
                   },
-                  { value: 'logs', description: 'display build logs' },
+                  { description: 'display build logs', value: 'logs' },
                 ],
               },
             ]}

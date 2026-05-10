@@ -10,9 +10,11 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+
 import { useTooltip } from '@/platform/components/Tooltip/useTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { cancelable } from '@/platform/utils/cancelable';
+
 import { type ClientCursor } from '../../interfaces/ClientCursor';
 import { type ClientState } from '../../interfaces/ClientState';
 import { type CursorPosition } from '../../interfaces/CursorPosition';
@@ -24,12 +26,12 @@ import { createSelection } from '../../utils/createSelection';
 import { getLanguageService } from '../../utils/getLanguageService';
 import { highlightCode } from '../../utils/highlightCode/highlightCode';
 import { spliceString } from '../../utils/spliceString';
-import styles from './Editor.module.scss';
 import { ActiveLineHighlight } from './components/ActiveLineHighlight/ActiveLineHighlight';
 import { CharacterLimitLine } from './components/CharacterLimitLine/CharacterLimitLine';
 import { Cursor } from './components/Cursor/Cursor';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
+import styles from './Editor.module.scss';
 import { type Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
@@ -74,7 +76,8 @@ export const Editor: FC<EditorProps> = ({
   );
   const [scrollTop, setScrollTop] = useState(0);
   const codeElementRef = useRef<HTMLDivElement>(null);
-  const textAreaElementRef = useRef<HTMLTextAreaElement>(null);
+  const [textAreaElement, setTextAreaElement] =
+    useState<HTMLTextAreaElement | null>(null);
   const cursorOffset = selection[0];
   const {
     complete,
@@ -88,7 +91,7 @@ export const Editor: FC<EditorProps> = ({
     lineIndent: getLineIndent(code, cursorOffset),
     menuClassName: styles.autoCompletionMenu,
     onCompletion: applyAutoCompletion,
-    textAreaElement: textAreaElementRef.current as HTMLTextAreaElement,
+    textAreaElement,
   });
   const applyState = useCallback(
     (state: EditableState): void => {
@@ -99,10 +102,10 @@ export const Editor: FC<EditorProps> = ({
   );
   const { pushState } = useHistory({
     active: !activeFile.shared,
+    applyState,
     code,
     fileName: activeFile.name,
     selection,
-    applyState,
   });
   const { updateClientState, updateSelection } = useSharedFile({
     active: activeFile.shared,
@@ -146,10 +149,10 @@ export const Editor: FC<EditorProps> = ({
       code: activeFile.content,
       selection: createSelection(0),
     });
-    if (textAreaElementRef.current !== null) {
-      textAreaElementRef.current.focus();
+    if (textAreaElement !== null) {
+      textAreaElement.focus();
     }
-  }, [activeFile, applyState]);
+  }, [activeFile, applyState, textAreaElement]);
 
   useLayoutEffect(() => {
     setHighlightedCode(
@@ -184,8 +187,6 @@ export const Editor: FC<EditorProps> = ({
   }, [code, cursorOffset, onCursorPositionUpdate]);
 
   useLayoutEffect(() => {
-    const textAreaElement = textAreaElementRef.current;
-
     if (textAreaElement !== null) {
       const { selectionEnd, selectionStart } = textAreaElement;
 
@@ -193,7 +194,7 @@ export const Editor: FC<EditorProps> = ({
         textAreaElement.setSelectionRange(selection[0], selection[1]);
       }
     }
-  }, [code, selection, textAreaElementRef]);
+  }, [code, selection, textAreaElement]);
 
   useLayoutEffect(() => {
     if (codeElementRef.current !== null) {
@@ -331,7 +332,10 @@ export const Editor: FC<EditorProps> = ({
               title: (
                 <>
                   {elementIssues.map((issue) => (
-                    <section className={styles.infoTooltipIssue}>
+                    <section
+                      className={styles.infoTooltipIssue}
+                      key={issue.message}
+                    >
                       {issue.message}
                     </section>
                   ))}
@@ -347,7 +351,7 @@ export const Editor: FC<EditorProps> = ({
 
       if (clientRect) {
         const { clientX, clientY } = event;
-        const { left, top, right, bottom } = clientRect;
+        const { bottom, left, right, top } = clientRect;
 
         if (
           clientX >= left &&
@@ -362,7 +366,7 @@ export const Editor: FC<EditorProps> = ({
     }
   }
 
-  function handleSelect(event: TargetedEvent): void {
+  function handleSelect(event: TargetedEvent<HTMLTextAreaElement>): void {
     if (!event.target) {
       return;
     }
@@ -417,7 +421,7 @@ export const Editor: FC<EditorProps> = ({
       <LineNumbers
         className={styles.lineNumbers}
         code={code}
-        editorWidth={getWidthWithoutPadding(textAreaElementRef.current)}
+        editorWidth={getWidthWithoutPadding(textAreaElement)}
         scrollTop={scrollTop}
         selection={selection}
       />
@@ -426,7 +430,7 @@ export const Editor: FC<EditorProps> = ({
           {highlightedCode}
         </div>
         <div className={styles.graphicalObjects}>
-          {textAreaElementRef.current && (
+          {textAreaElement && (
             <>
               {activeFile.shared &&
                 cursors.map((cursor) => (
@@ -434,20 +438,21 @@ export const Editor: FC<EditorProps> = ({
                     code={code}
                     color={cursor.color}
                     key={cursor.clientID}
+                    parent={textAreaElement}
                     selection={cursor.selection}
-                    parent={textAreaElementRef.current as HTMLTextAreaElement}
                   />
                 ))}
               {lintIssues.map((issue) => (
                 <LintIssueHighlight
                   code={code}
                   issue={issue}
-                  parent={textAreaElementRef.current as HTMLTextAreaElement}
+                  key={`${issue.start}_${issue.message}`}
+                  parent={textAreaElement}
                 />
               ))}
               <ActiveLineHighlight
                 code={code}
-                parent={textAreaElementRef.current as HTMLTextAreaElement}
+                parent={textAreaElement}
                 selection={selection}
               />
               <CharacterLimitLine />
@@ -462,6 +467,7 @@ export const Editor: FC<EditorProps> = ({
             // Waits for selectionEnd and selectionStart to be updated
             setTimeout(() => handleSelect(event), 0);
           }}
+          onFocus={() => setActive(true)}
           onKeyDown={(event) => {
             // Waits for selectionEnd and selectionStart to be updated
             setTimeout(() => handleSelect(event), 0);
@@ -479,12 +485,11 @@ export const Editor: FC<EditorProps> = ({
               hideTooltip();
             }
           }}
-          onFocus={() => setActive(true)}
-          onSelect={handleSelect}
           onScroll={({ target }) =>
             setScrollTop((target as HTMLTextAreaElement).scrollTop)
           }
-          ref={textAreaElementRef}
+          onSelect={handleSelect}
+          ref={setTextAreaElement}
           spellCheck={'false' as any}
           style={activeFile.shared ? { caretColor: cursorColor } : undefined}
           value={code}

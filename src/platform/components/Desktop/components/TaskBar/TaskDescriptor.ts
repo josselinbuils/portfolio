@@ -1,4 +1,5 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
+
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 

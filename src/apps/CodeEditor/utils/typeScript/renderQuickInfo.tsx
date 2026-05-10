@@ -1,5 +1,6 @@
 import { type JSX } from 'preact/compat';
 import { type QuickInfo, type SymbolDisplayPart } from 'typescript';
+
 import { highlightCode } from '@/apps/CodeEditor/utils/highlightCode/highlightCode';
 
 export function renderQuickInfo(quickInfo: QuickInfo): JSX.Element {

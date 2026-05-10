@@ -1,7 +1,9 @@
 import cn from 'classnames';
 import { createPortal, type FC, useRef } from 'preact/compat';
+
 import { type MenuDescriptor } from '@/platform/components/Menu/Menu';
 import { useMenu } from '@/platform/components/Menu/useMenu';
+
 import styles from './PopoverToolButton.module.scss';
 import { ToolButton, type ToolButtonProps } from './ToolButton';
 

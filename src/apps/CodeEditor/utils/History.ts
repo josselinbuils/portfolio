@@ -1,7 +1,7 @@
 import { type EditableState } from '../interfaces/EditableState';
 import { type Selection } from '../interfaces/Selection';
 import { createSelection } from './createSelection';
-import { applyDiff, getDiffs, revertDiff, type Diff } from './diffs';
+import { applyDiff, type Diff, getDiffs, revertDiff } from './diffs';
 import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;
@@ -12,15 +12,15 @@ export interface HistoryEntry {
 }
 
 export interface HistoryState {
-  index: number;
   entries: HistoryEntry[];
+  index: number;
 }
 
 export class History {
   constructor(
     public state: HistoryState = {
-      index: -1,
       entries: [],
+      index: -1,
     },
   ) {}
 

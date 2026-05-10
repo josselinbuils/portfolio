@@ -1,6 +1,8 @@
 import { type FC, useEffect, useState } from 'preact/compat';
+
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { type Position } from '@/platform/interfaces/Position';
+
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './Cursor.module.scss';
 import { computeSegments, type Segment } from './utils/computeSegments';

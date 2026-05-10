@@ -2,8 +2,8 @@ export type ViewType =
   | 'axial'
   | 'bones'
   | 'coronal'
-  | 'native'
   | 'mip'
+  | 'native'
   | 'oblique'
   | 'sagittal'
   | 'skin';

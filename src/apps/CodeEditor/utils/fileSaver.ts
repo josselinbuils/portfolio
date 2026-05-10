@@ -1,4 +1,5 @@
 import { lazy } from '@/platform/utils/lazy';
+
 import { type EditorFile } from '../interfaces/EditorFile';
 
 const STORAGE_KEY = 'codeEditor';
@@ -103,6 +104,10 @@ export const fileSaver = {
   saveFiles,
 };
 
+interface SaveState {
+  files: Omit<EditorFile, 'sideComponent'>[];
+}
+
 function loadFiles(): EditorFile[] {
   const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -141,8 +146,4 @@ function saveFiles(files: EditorFile[]): void {
   } else {
     localStorage.removeItem(STORAGE_KEY);
   }
-}
-
-interface SaveState {
-  files: Omit<EditorFile, 'sideComponent'>[];
 }

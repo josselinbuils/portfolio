@@ -1,9 +1,5 @@
 import { areFloatEquals } from '../areFloatEquals';
 
-export function V(...args: number[] | number[][]): Vector {
-  return new Vector(...args);
-}
-
 export class Vector extends Array<number> {
   constructor(...args: number[] | number[][]) {
     if (Array.isArray(args[0])) {
@@ -92,4 +88,8 @@ export class Vector extends Array<number> {
     this[2] -= vector[2];
     return this;
   }
+}
+
+export function V(...args: number[] | number[][]): Vector {
+  return new Vector(...args);
 }

@@ -2,8 +2,9 @@ import { type WSClient } from '@/apps/CodeEditor/api/WSClient';
 import { type WSPlugin, type WSServer } from '@/apps/CodeEditor/api/WSServer';
 import { type Action } from '@/platform/state/interfaces/Action';
 import { type ActionFromFactory } from '@/platform/state/interfaces/ActionFactory';
-import { getInitialGrid, type Grid } from './utils/GameManager';
+
 import * as clientActions from './utils/clientActions';
+import { getInitialGrid, type Grid } from './utils/GameManager';
 import * as serverActions from './utils/serverActions';
 
 export default class TicTacToeWsPlugin implements WSPlugin {

@@ -1,10 +1,11 @@
 import { M3 } from './Matrix3';
 
-export function M4(...args: number[][][]): Matrix4 {
-  return new Matrix4(...args);
-}
-
 export class Matrix4 extends Array<number[]> {
+  constructor(...args: number[][][]) {
+    super(...args[0]);
+    Object.setPrototypeOf(this, Matrix4.prototype);
+  }
+
   private static getSubMatrix(matrix: number[][], index: number): number[][] {
     const m: number[][] = [[], [], []];
     let mc = -1;
@@ -19,11 +20,6 @@ export class Matrix4 extends Array<number[]> {
     }
 
     return m;
-  }
-
-  constructor(...args: number[][][]) {
-    super(...args[0]);
-    Object.setPrototypeOf(this, Matrix4.prototype);
   }
 
   det(): number {
@@ -114,4 +110,8 @@ export class Matrix4 extends Array<number[]> {
       m * q + n * r + o * s + p * t,
     ];
   }
+}
+
+export function M4(...args: number[][][]): Matrix4 {
+  return new Matrix4(...args);
 }

@@ -2,6 +2,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 type LogLevel = 'error' | 'info';
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Logger {
   static error(str: string): void {
     log('error', str);

@@ -1,4 +1,5 @@
 import { onFetchProgress } from '@/platform/utils/onFetchProgress';
+
 import { type DatasetDescriptor } from '../../../interfaces/DatasetDescriptor';
 import { type DicomFrame } from '../../../models/DicomFrame';
 import { decodeFrames } from '../../../utils/decodeFrames';
@@ -10,7 +11,7 @@ export async function loadFrames(
 ): Promise<DicomFrame[]> {
   const { name, url } = descriptor;
   const content = await getDICOMFile(url, onProgress);
-  const fileBuffers = /\.tar$/.test(url) ? untar(content) : [{ name, content }];
+  const fileBuffers = /\.tar$/.test(url) ? untar(content) : [{ content, name }];
 
   return decodeFrames(fileBuffers);
 }
@@ -23,6 +24,8 @@ async function getDICOMFile(
     const response = await fetch(url).then(onFetchProgress(onProgress));
     return response.arrayBuffer();
   } catch (error: any) {
-    throw new Error(`Unable to retrieve DICOM file: ${error.stack}`);
+    throw new Error(`Unable to retrieve DICOM file: ${error.stack}`, {
+      cause: error,
+    });
   }
 }

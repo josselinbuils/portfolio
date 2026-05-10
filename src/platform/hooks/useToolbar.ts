@@ -6,35 +6,37 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
+
+export interface ToolbarProps {
+  className: string | undefined;
+  onBlur(): void;
+  onFocus(): void;
+  role: JSX.AriaRole;
+}
 
 export interface ToolProps<T extends HTMLElement> {
   ref: RefObject<T>;
   tabIndex: number;
 }
 
-export interface ToolbarProps {
-  className: string | undefined;
-  role: JSX.AriaRole;
-  onBlur(): void;
-  onFocus(): void;
-}
-
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal',
 ): {
-  toolbarProps: ToolbarProps;
   getToolProps<T extends HTMLElement>(toolId: string): ToolProps<T>;
   isToolActive(toolId: string): boolean;
+  toolbarProps: ToolbarProps;
 } {
   const [focused, setFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [toolIds] = useState<string[]>([]);
-  const [toolRefs] = useState<{ [id: string]: RefObject<HTMLElement> }>({});
+  const [toolRefs] = useState<Record<string, RefObject<HTMLElement>>>({});
   const isKeyboardFocusRef = useRef(false);
   const isHorizontal = orientation === 'horizontal';
 
+  // eslint-disable-next-line react-hooks/immutability
   toolIds.length = 0;
 
   useEffect(() => {
@@ -72,6 +74,7 @@ export function useToolbar(
 
   function addToolId(toolId: string): void {
     if (toolRefs[toolId] === undefined) {
+      // eslint-disable-next-line react-hooks/immutability
       toolRefs[toolId] = createRef();
     }
     if (!toolIds.includes(toolId)) {

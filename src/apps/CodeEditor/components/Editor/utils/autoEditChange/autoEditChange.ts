@@ -3,13 +3,14 @@ import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { createSelection } from '@/apps/CodeEditor/utils/createSelection';
 import {
   applyDiff,
+  type Diff,
   DiffType,
   getCursorOffsetBeforeDiff,
   getDiffs,
-  type Diff,
 } from '@/apps/CodeEditor/utils/diffs';
 import { isIntoBrackets } from '@/apps/CodeEditor/utils/isIntoBrackets';
 import { spliceString } from '@/apps/CodeEditor/utils/spliceString';
+
 import { getLine } from '../getLine';
 import { getLineBeforeCursor } from '../getLineBeforeCursor';
 import { getLineIndent } from '../getLineIndent';

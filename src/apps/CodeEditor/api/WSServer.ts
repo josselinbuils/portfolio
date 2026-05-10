@@ -1,10 +1,12 @@
+import { glob } from 'glob';
 import fs from 'node:fs/promises';
 import { type IncomingMessage } from 'node:http';
 import path from 'node:path';
-import { glob } from 'glob';
 import { type WebSocket, WebSocketServer } from 'ws';
+
 import { Logger } from '@/platform/api/Logger';
 import { type Action } from '@/platform/state/interfaces/Action';
+
 import { ExecQueue } from './ExecQueue';
 import { WSClient } from './WSClient';
 
@@ -14,8 +16,8 @@ const PERSISTENT_STATE_FILE_PATH = path.join(
 );
 
 export interface WSPlugin {
-  name: string;
   loadPersistentState?(state: any): unknown;
+  name: string;
   onWSClientClose?(wsClient: WSClient): unknown;
   onWSClientOpen?(wsClient: WSClient): unknown;
   reduce(wsClient: WSClient, action: Action<any>): unknown;
@@ -27,17 +29,11 @@ export class WSServer {
   private plugins: WSPlugin[] = [];
   private readonly requestQueue = new ExecQueue();
   private readonly server: WebSocketServer;
-  private state: { [pluginName: string]: unknown } = {};
+  private state: Record<string, unknown> = {};
 
   constructor() {
     this.server = new WebSocketServer({ noServer: true });
     this.server.on('connection', this.handleConnection.bind(this));
-  }
-
-  handleUpgrade(req: IncomingMessage): void {
-    this.server.handleUpgrade(req, req.socket, Buffer.from([]), (ws) =>
-      this.server.emit('connection', ws, req),
-    );
   }
 
   getClientFromWS(ws: WebSocket): WSClient {
@@ -47,6 +43,12 @@ export class WSServer {
       throw new Error('Unable to find client');
     }
     return client;
+  }
+
+  handleUpgrade(req: IncomingMessage): void {
+    this.server.handleUpgrade(req, req.socket, Buffer.from([]), (ws) =>
+      this.server.emit('connection', ws, req),
+    );
   }
 
   async init() {

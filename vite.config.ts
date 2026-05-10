@@ -1,9 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
+import preact from '@preact/preset-vite';
 import crypto from 'node:crypto';
 import path from 'node:path';
-import preact from '@preact/preset-vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
+
 import { vitePluginPage } from './config/vitePluginPage';
 
 const cssHashMap = new Map<string, string>();
@@ -51,8 +51,8 @@ export default defineConfig(({ ssrBuild }) => ({
   publicDir: false,
   resolve: {
     alias: {
-      '@/root': __dirname,
       '@': path.resolve(__dirname, 'src'),
+      '@/root': __dirname,
     },
   },
   server: { port: 3000 },

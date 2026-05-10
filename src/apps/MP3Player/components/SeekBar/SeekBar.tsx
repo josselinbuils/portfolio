@@ -1,5 +1,7 @@
-import { type FC, createRef, useContext } from 'preact/compat';
+import { createRef, type FC, useContext } from 'preact/compat';
+
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
+
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
 import styles from './SeekBar.module.scss';
@@ -36,8 +38,8 @@ export const SeekBar: FC = () => {
     <div className={styles.seekBar}>
       <time className={styles.currentTime}>{currentTime}</time>
       <ProgressBar
-        progress={progress}
         onSeekStart={seekStartHandler}
+        progress={progress}
         ref={progressBarRef}
       />
       <time className={styles.duration}>

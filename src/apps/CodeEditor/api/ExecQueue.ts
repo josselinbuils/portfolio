@@ -1,5 +1,7 @@
 import { type Awaitable } from '@/platform/interfaces/Awaitable';
 
+type Task = () => Awaitable<void>;
+
 export class ExecQueue {
   private busy!: boolean;
   private readonly tasks: Task[] = [];
@@ -23,5 +25,3 @@ export class ExecQueue {
     }
   }
 }
-
-type Task = () => Awaitable<void>;

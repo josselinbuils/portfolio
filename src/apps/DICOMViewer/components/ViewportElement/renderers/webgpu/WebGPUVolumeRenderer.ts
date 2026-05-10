@@ -3,6 +3,7 @@ import { type Dataset } from '@/apps/DICOMViewer/models/Dataset';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { V } from '@/apps/DICOMViewer/utils/math/Vector';
+
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../utils/getRenderingProperties';
@@ -22,6 +23,12 @@ export class WebGPUVolumeRenderer implements Renderer {
   };
   private unsubscribeToViewportUpdates?: () => void;
 
+  constructor(private canvas: HTMLCanvasElement) {
+    if (!navigator.gpu) {
+      throw new Error('WebGPU not supported on this browser.');
+    }
+  }
+
   // TODO create Image CoordinateSpace class
   private static getImageWorldBasis(viewport: Viewport): number[][] {
     const { camera, dataset } = viewport;
@@ -37,12 +44,6 @@ export class WebGPUVolumeRenderer implements Renderer {
       V(cameraBasis[0]).scale(horizontalVoxelSpacing),
       V(cameraBasis[1]).scale(verticalVoxelSpacing),
     ];
-  }
-
-  constructor(private canvas: HTMLCanvasElement) {
-    if (!navigator.gpu) {
-      throw new Error('WebGPU not supported on this browser.');
-    }
   }
 
   destroy(): void {
@@ -80,8 +81,8 @@ export class WebGPUVolumeRenderer implements Renderer {
     this.context = context;
 
     const shaderModule = this.device.createShaderModule({
-      label: 'Shaders',
       code: shaders,
+      label: 'Shaders',
     });
 
     const bindGroupLayout = this.device.createBindGroupLayout({
@@ -113,18 +114,18 @@ export class WebGPUVolumeRenderer implements Renderer {
     }
 
     this.pipeline = this.device.createRenderPipeline({
+      fragment: {
+        entryPoint: fragmentEntryPoint,
+        module: shaderModule,
+        targets: [{ format: 'bgra8unorm' }],
+      },
       label: 'Render pipeline',
       layout: this.device.createPipelineLayout({
         bindGroupLayouts: [bindGroupLayout],
       }),
       vertex: {
-        module: shaderModule,
         entryPoint: 'vertex',
-      },
-      fragment: {
         module: shaderModule,
-        entryPoint: fragmentEntryPoint,
-        targets: [{ format: 'bgra8unorm' }],
       },
     });
 
@@ -218,7 +219,6 @@ export class WebGPUVolumeRenderer implements Renderer {
     const draft = viewport.draft && viewport.is3D();
 
     const bindGroup = this.device.createBindGroup({
-      layout: this.pipeline.getBindGroupLayout(0),
       entries: [
         this.pixelDataTexture.createView(),
         this.renderingTexture.texture.createView(),
@@ -277,16 +277,17 @@ export class WebGPUVolumeRenderer implements Renderer {
           ),
         ),
       ].map((resource, binding) => ({ binding, resource })),
+      layout: this.pipeline.getBindGroupLayout(0),
     });
 
     const encoder = this.device.createCommandEncoder();
     const pass = encoder.beginRenderPass({
       colorAttachments: [
         {
-          view: this.context.getCurrentTexture().createView(),
+          clearValue: { a: 1, b: 0, g: 0, r: 0 },
           loadOp: 'clear',
-          clearValue: { r: 0, g: 0, b: 0, a: 1 },
           storeOp: 'store',
+          view: this.context.getCurrentTexture().createView(),
         },
       ],
     });
@@ -332,8 +333,8 @@ export class WebGPUVolumeRenderer implements Renderer {
 
     const texture = this.device.createTexture({
       dimension: '3d',
-      size: dimensionsVoxels,
       format: 'r16sint',
+      size: dimensionsVoxels,
       usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
     });
 
@@ -365,7 +366,7 @@ export class WebGPUVolumeRenderer implements Renderer {
     const textureDescriptor: GPUTextureDescriptor = {
       dimension: '2d',
       format: 'rgba8unorm',
-      size: { width: source.width, height: source.height },
+      size: { height: source.height, width: source.width },
       usage:
         GPUTextureUsage.RENDER_ATTACHMENT |
         GPUTextureUsage.TEXTURE_BINDING |

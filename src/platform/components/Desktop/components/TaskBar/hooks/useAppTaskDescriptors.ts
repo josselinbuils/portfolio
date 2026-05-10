@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'preact/compat';
+
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
+
 import { type AppTaskDescriptor } from '../TaskDescriptor';
 
 export function useAppTaskDescriptors(

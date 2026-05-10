@@ -1,11 +1,20 @@
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { type Volume } from '@/apps/DICOMViewer/models/Volume';
 import { changePointSpace } from '@/apps/DICOMViewer/utils/changePointSpace';
-import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 import { getLinePlaneIntersection } from '@/apps/DICOMViewer/utils/math/getLinePlaneIntersection';
+import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 
-export type Point = number[];
 export type Line = Point[];
+export type Point = number[];
+
+interface LineInfo {
+  crossesViewport: boolean;
+  isBehindViewport: boolean;
+  isInFrontOfViewport: boolean;
+  pointBehindViewport?: number[];
+  pointInFrontOfViewport?: number[];
+  pointInViewport?: number[];
+}
 
 export function computeVolumeBox(viewport: Viewport): {
   linesBehindImage: Line[];
@@ -29,7 +38,7 @@ export function computeVolumeBox(viewport: Viewport): {
     ['x0y1z0', 'x0y1z1'],
   ];
 
-  const cornersDisplay: { [key: string]: number[] } = { ...volume.corners };
+  const cornersDisplay: Record<string, number[]> = { ...volume.corners };
 
   for (const [name, corner] of Object.entries<number[]>(volume.corners)) {
     cornersDisplay[name] = changePointSpace(corner, viewport.dataset, viewport);
@@ -40,7 +49,7 @@ export function computeVolumeBox(viewport: Viewport): {
   const points: Point[] = [];
 
   for (const [keyA, keyB] of lines) {
-    const corners = volume.corners as { [key: string]: number[] };
+    const corners = volume.corners as Record<string, number[]>;
     const aLPS = corners[keyA];
     const bLPS = corners[keyB];
     const aDisplay = cornersDisplay[keyA];
@@ -83,15 +92,6 @@ export function computeVolumeBox(viewport: Viewport): {
   return { linesBehindImage, linesInFrontOfImage, points };
 }
 
-interface LineInfo {
-  crossesViewport: boolean;
-  isBehindViewport: boolean;
-  isInFrontOfViewport: boolean;
-  pointBehindViewport?: number[];
-  pointInFrontOfViewport?: number[];
-  pointInViewport?: number[];
-}
-
 function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
   const viewportOrigin = viewport.getWorldOrigin();
   const viewportBasis = viewport.getWorldBasis();
@@ -103,8 +103,8 @@ function getLineInfo(a: number[], b: number[], viewport: Viewport): LineInfo {
   const isBehindViewport = !crossesViewport && viewportToADistance > 0;
   const lineInfo: LineInfo = {
     crossesViewport,
-    isInFrontOfViewport,
     isBehindViewport,
+    isInFrontOfViewport,
   };
 
   if (crossesViewport) {

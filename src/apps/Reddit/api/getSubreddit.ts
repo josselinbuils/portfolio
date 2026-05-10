@@ -1,5 +1,6 @@
 import { type Request } from 'express';
 import { type Subreddit as SnoowrapSubreddit } from 'snoowrap';
+
 import { type Subreddit } from '../interfaces/Subreddit';
 import { getSnoowrapInstance } from './utils/getSnoowrapInstance';
 

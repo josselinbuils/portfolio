@@ -7,13 +7,13 @@ import { V } from './math/Vector';
 export function computeVolume(
   frames: Frame[],
   sharedProperties: SharedProperties,
-): Volume | undefined {
+): undefined | Volume {
   if (!isVolume(frames)) {
     return undefined;
   }
 
   const { voxelSpacing } = sharedProperties;
-  const { columns, imageOrientation, imageNormal, rows } = frames[0];
+  const { columns, imageNormal, imageOrientation, rows } = frames[0];
 
   const dimensionsVoxels = [columns, rows, frames.length];
   const firstVoxelCenter = frames[0].imagePosition;
@@ -40,13 +40,13 @@ export function computeVolume(
 
   const corners = {
     x0y0z0: getCorner(0, 0, 0),
-    x1y0z0: getCorner(1, 0, 0),
-    x1y1z0: getCorner(1, 1, 0),
-    x0y1z0: getCorner(0, 1, 0),
     x0y0z1: getCorner(0, 0, 1),
-    x1y0z1: getCorner(1, 0, 1),
-    x1y1z1: getCorner(1, 1, 1),
+    x0y1z0: getCorner(0, 1, 0),
     x0y1z1: getCorner(0, 1, 1),
+    x1y0z0: getCorner(1, 0, 0),
+    x1y0z1: getCorner(1, 0, 1),
+    x1y1z0: getCorner(1, 1, 0),
+    x1y1z1: getCorner(1, 1, 1),
   };
 
   const center = V(firstVoxelCenter)
@@ -57,10 +57,10 @@ export function computeVolume(
 
   return new Volume({
     center,
+    corners,
     dimensionsMm,
     dimensionsVoxels,
     displayRatio,
-    corners,
     firstVoxelCenter,
     orientation,
     orientedDimensionsMm,

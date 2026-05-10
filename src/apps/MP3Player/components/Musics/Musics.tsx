@@ -2,6 +2,7 @@ import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import cn from 'classnames';
 import { type FC, useContext, useEffect, useState } from 'preact/compat';
+
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { loadMusics } from '@/apps/MP3Player/utils/loadMusics';
@@ -9,6 +10,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { Select } from '@/platform/components/Select/Select';
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
+
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import styles from './Musics.module.scss';
 
@@ -74,7 +76,7 @@ export const Musics: FC<MusicsProps> = ({ className, musicList }) => {
         <table className={styles.tableHeader}>
           <thead>
             <tr>
-              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+              {}
               <th className={styles.colPreview} scope="col" />
               <th scope="col">Title</th>
               <th scope="col">Album</th>

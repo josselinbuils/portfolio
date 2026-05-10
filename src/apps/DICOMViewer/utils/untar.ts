@@ -38,7 +38,7 @@ export function untar(buffer: ArrayBuffer): File[] {
         offset + HEADER_LENGTH + size,
       );
 
-      files.push({ name, content });
+      files.push({ content, name });
     }
 
     offset += HEADER_LENGTH + BLOCK_LENGTH * Math.ceil(size / BLOCK_LENGTH);

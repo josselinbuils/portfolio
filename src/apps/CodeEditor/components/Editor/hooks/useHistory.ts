@@ -1,4 +1,5 @@
-import { useCallback, useRef } from 'preact/compat';
+import { useCallback, useMemo } from 'preact/compat';
+
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { History } from '@/apps/CodeEditor/utils/History';
@@ -13,43 +14,37 @@ export function useHistory({
   selection,
 }: {
   active: boolean;
+  applyState(state: EditableState): any;
   code: string;
   fileName: string;
   selection: Selection;
-  applyState(state: EditableState): any;
 }): {
   pushState(state: EditableState): void;
 } {
-  const historyRef = useRef<{
-    [fileName: string]: History;
-  }>({});
+  const historyByFile = useMemo(() => new Map<string, History>(), []);
   const applyStateRef = useDynamicRef(applyState);
   const currentStateRef = useDynamicRef({ code, selection });
 
-  if (historyRef.current[fileName] === undefined) {
-    historyRef.current[fileName] = new History();
+  if (!historyByFile.has(fileName)) {
+    historyByFile.set(fileName, new History());
   }
 
-  const fileHistoryRef = useDynamicRef(historyRef.current[fileName]);
+  const fileHistory = historyByFile.get(fileName);
 
   useKeyMap(
     {
-      'CtrlCmd+Z': () => {
-        const previousState = fileHistoryRef.current.undo(
-          currentStateRef.current.code,
-        );
-
-        if (previousState !== undefined) {
-          applyStateRef.current(previousState);
-        }
-      },
       'CtrlCmd+Shift+Z': () => {
-        const newState = fileHistoryRef.current.redo(
-          currentStateRef.current.code,
-        );
+        const newState = fileHistory?.redo(currentStateRef.current.code);
 
         if (newState !== undefined) {
           applyStateRef.current(newState);
+        }
+      },
+      'CtrlCmd+Z': () => {
+        const previousState = fileHistory?.undo(currentStateRef.current.code);
+
+        if (previousState !== undefined) {
+          applyStateRef.current(previousState);
         }
       },
     },
@@ -58,9 +53,9 @@ export function useHistory({
 
   const pushState = useCallback(
     (newState: EditableState): void => {
-      fileHistoryRef.current.pushState(currentStateRef.current, newState);
+      fileHistory?.pushState(currentStateRef.current, newState);
     },
-    [currentStateRef, fileHistoryRef],
+    [currentStateRef, fileHistory],
   );
 
   return { pushState };

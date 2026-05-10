@@ -1,9 +1,10 @@
 import { type Request, type Response } from 'express';
-import { Logger } from './Logger';
-import { HTTP_INTERNAL_ERROR } from './constants';
 
-type SyncRequestHandler = (req: Request) => any;
+import { HTTP_INTERNAL_ERROR } from './constants';
+import { Logger } from './Logger';
+
 type RequestHandler = (req: Request, res: Response) => void;
+type SyncRequestHandler = (req: Request) => any;
 
 export function syncRoute(handler: SyncRequestHandler): RequestHandler {
   return (req: Request, res: Response) => {

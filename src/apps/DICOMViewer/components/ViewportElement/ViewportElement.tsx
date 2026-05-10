@@ -1,30 +1,32 @@
 import cn from 'classnames';
 import { type FC, useEffect, useLayoutEffect, useRef } from 'preact/compat';
+
 import { MouseButton } from '@/platform/constants';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 import { type Size } from '@/platform/interfaces/Size';
+
 import { type ViewportStats } from '../../interfaces/ViewportStats';
 import { type Viewport } from '../../models/Viewport';
-import styles from './ViewportElement.module.scss';
 import { type Renderer } from './renderers/Renderer';
+import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
 export interface ViewportElementProps {
   className?: string;
-  viewport: Viewport;
   onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;
   onResize?(size: Size): void;
   onStatsUpdate?(stats: ViewportStats): void;
+  viewport: Viewport;
 }
 
 export const ViewportElement: FC<ViewportElementProps> = ({
   className,
-  onCanvasMouseDown = () => {},
+  onCanvasMouseDown,
   onError,
-  onResize = () => {},
-  onStatsUpdate = () => {},
+  onResize,
+  onStatsUpdate,
   viewport,
 }) => {
   const jsCanvasElementRef = useRef<HTMLCanvasElement>(null);
@@ -118,7 +120,7 @@ export const ViewportElement: FC<ViewportElementProps> = ({
         stats.meanRenderDuration = meanRenderDuration;
       }
 
-      onStatsUpdate(stats);
+      onStatsUpdate?.(stats);
     }, ANNOTATIONS_REFRESH_DELAY);
 
     render();
@@ -134,9 +136,10 @@ export const ViewportElement: FC<ViewportElementProps> = ({
   }, [canvasElementRef, onError, onStatsUpdate, viewport]);
 
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     viewport.height = viewportHeight;
     viewport.width = viewportWidth;
-    onResize({ height: viewportHeight, width: viewportWidth });
+    onResize?.({ height: viewportHeight, width: viewportWidth });
   }, [onResize, viewport, viewportHeight, viewportWidth]);
 
   const mouseDownListener = (downEvent: MouseEvent) => {
@@ -148,7 +151,7 @@ export const ViewportElement: FC<ViewportElementProps> = ({
       window.addEventListener('contextmenu', contextMenuListener);
     }
 
-    onCanvasMouseDown(downEvent);
+    onCanvasMouseDown?.(downEvent);
   };
 
   return (

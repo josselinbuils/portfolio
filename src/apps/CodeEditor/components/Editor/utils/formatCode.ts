@@ -1,5 +1,7 @@
 import { type BuiltInParserName, type Plugin } from 'prettier';
+
 import { type PartialRecord } from '@/platform/interfaces/PartialRecord';
+
 import { type EditableState } from '../../../interfaces/EditableState';
 import { type SupportedLanguage } from '../../../interfaces/SupportedLanguage';
 import { createSelection } from '../../../utils/createSelection';

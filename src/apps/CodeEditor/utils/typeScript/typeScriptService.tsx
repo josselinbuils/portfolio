@@ -1,5 +1,7 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
+
 import { createGUID } from '@/platform/utils/createGUID';
+
 import { type LanguageService } from '../../interfaces/LanguageService';
 import {
   type WorkerAction,

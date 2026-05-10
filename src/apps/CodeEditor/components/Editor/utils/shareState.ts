@@ -1,4 +1,5 @@
 import { Deferred } from '@josselinbuils/utils/Deferred';
+
 import { type Action } from '@/platform/state/interfaces/Action';
 
 const REOPEN_DELAY_MS = 1000;
@@ -8,7 +9,7 @@ const clients: { dispatch(action: Action<any>): void; id: number }[] = [];
 let wsConnectedDeferred = new Deferred<void>();
 let clientId = -1;
 let reopenTimeoutID: number | undefined;
-let ws: WebSocket | undefined;
+let ws: undefined | WebSocket;
 let wsReadyPromise: Promise<unknown>;
 
 export async function dispatchToServer(action: Action<any>) {

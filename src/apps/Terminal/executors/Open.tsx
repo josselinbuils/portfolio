@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from 'preact/compat';
+
 import { windowManager } from '@/platform/services/windowManager/windowManager';
-// Open executor dynamically imported in Terminal so no cycle
-// eslint-disable-next-line import/no-cycle
 import { getAppDescriptors } from '@/platform/utils/getAppDescriptors';
+
 import { CommandHelp } from '../components/CommandHelp/CommandHelp';
 import { type Executor } from './Executor';
 

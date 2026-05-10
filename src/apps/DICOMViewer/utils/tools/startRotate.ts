@@ -94,7 +94,19 @@ function computeRotation(
 ): { angle: number; axis: number[] } {
   const axis = V(current).cross(previous).normalize();
   const angle = V(previous).angle(current);
-  return { axis, angle };
+  return { angle, axis };
+}
+
+function computeRotationMatrix(axis: number[], angle: number): number[][] {
+  const [x, y, z] = axis;
+  const cos = Math.cos(angle);
+  const invCos = 1 - cos;
+  const sin = Math.sin(angle);
+  return [
+    [cos + x * x * invCos, x * y * invCos - z * sin, x * z * invCos + y * sin],
+    [y * x * invCos + z * sin, cos + y * y * invCos, y * z * invCos - x * sin],
+    [z * x * invCos - y * sin, z * y * invCos + x * sin, cos + z * z * invCos],
+  ];
 }
 
 function computeTrackball(
@@ -128,16 +140,4 @@ function rotateCamera(camera: Camera, axis: number[], angle: number): void {
 
   camera.eyePoint = V(camera.lookPoint).sub(V(newCameraBasis[2]).normalize());
   camera.upVector = V(newCameraBasis[1]).neg().normalize();
-}
-
-function computeRotationMatrix(axis: number[], angle: number): number[][] {
-  const [x, y, z] = axis;
-  const cos = Math.cos(angle);
-  const invCos = 1 - cos;
-  const sin = Math.sin(angle);
-  return [
-    [cos + x * x * invCos, x * y * invCos - z * sin, x * z * invCos + y * sin],
-    [y * x * invCos + z * sin, cos + y * y * invCos, y * z * invCos - x * sin],
-    [z * x * invCos - y * sin, z * y * invCos + x * sin, cos + z * z * invCos],
-  ];
 }

@@ -1,4 +1,5 @@
 import { getBaseURL } from '@/platform/utils/getBaseURL';
+
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { type RedditPost } from '../../interfaces/RedditPost';
 

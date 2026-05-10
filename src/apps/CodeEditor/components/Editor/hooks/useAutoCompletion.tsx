@@ -1,9 +1,11 @@
 import { type JSX, useCallback, useEffect, useRef } from 'preact/compat';
+
 import { type SupportedLanguage } from '@/apps/CodeEditor/interfaces/SupportedLanguage';
 import { getLanguageService } from '@/apps/CodeEditor/utils/getLanguageService';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
 import { cancelable } from '@/platform/utils/cancelable';
+
 import { getOffsetPosition } from '../utils/getOffsetPosition';
 
 export interface Completion {
@@ -27,8 +29,8 @@ export function useAutoCompletion({
   language: SupportedLanguage;
   lineIndent: number;
   menuClassName: string;
-  textAreaElement: HTMLTextAreaElement | null;
   onCompletion(completion: Completion): void;
+  textAreaElement: HTMLTextAreaElement | null;
 }): {
   complete(): void;
   hasCompletionItems: boolean;

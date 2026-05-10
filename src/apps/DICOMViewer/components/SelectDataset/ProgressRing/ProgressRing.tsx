@@ -1,4 +1,5 @@
 import { type FC } from 'preact/compat';
+
 import styles from './ProgressRing.module.scss';
 
 export interface ProgressRingProps {
@@ -22,7 +23,7 @@ export const ProgressRing: FC<ProgressRingProps> = ({
   const offset = circumference * (1 - progress);
 
   return (
-    <svg className={className} width={diameter} height={diameter}>
+    <svg className={className} height={diameter} width={diameter}>
       <circle
         className={styles.progressRing}
         cx={radius}

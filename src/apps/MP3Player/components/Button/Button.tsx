@@ -4,6 +4,7 @@ import {
   type FC,
   type HTMLAttributes,
 } from 'preact/compat';
+
 import styles from './Button.module.scss';
 
 export interface ButtonProps

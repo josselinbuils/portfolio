@@ -2,6 +2,7 @@ import { type VOILUT } from '@/apps/DICOMViewer/interfaces/VOILUT';
 import { type Frame } from '@/apps/DICOMViewer/models/Frame';
 import { type Viewport } from '@/apps/DICOMViewer/models/Viewport';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
+
 import { type Renderer } from '../Renderer';
 import { getDefaultVOILUT } from '../utils/getDefaultVOILUT';
 import { getRenderingProperties } from '../utils/getRenderingProperties';
@@ -55,8 +56,8 @@ export class WebGPUFrameRenderer implements Renderer {
     this.context = context;
 
     const shaderModule = this.device.createShaderModule({
-      label: 'Shaders',
       code: shaders,
+      label: 'Shaders',
     });
 
     const bindGroupLayout = this.device.createBindGroupLayout({
@@ -74,18 +75,18 @@ export class WebGPUFrameRenderer implements Renderer {
     });
 
     this.pipeline = this.device.createRenderPipeline({
-      label: 'Render pipeline',
       fragment: {
-        module: shaderModule,
         entryPoint: 'fragment',
+        module: shaderModule,
         targets: [{ format: 'bgra8unorm' }],
       },
+      label: 'Render pipeline',
       layout: this.device.createPipelineLayout({
         bindGroupLayouts: [bindGroupLayout],
       }),
       vertex: {
-        module: shaderModule,
         entryPoint: 'vertex',
+        module: shaderModule,
       },
     });
 
@@ -105,7 +106,7 @@ export class WebGPUFrameRenderer implements Renderer {
       return;
     }
 
-    const { dataset, camera, height, width, windowCenter, windowWidth } =
+    const { camera, dataset, height, width, windowCenter, windowWidth } =
       viewport;
     const frame = dataset.findClosestFrame(camera.lookPoint);
     const { columns, id, rescaleIntercept, rescaleSlope, rows } = frame;
@@ -143,7 +144,6 @@ export class WebGPUFrameRenderer implements Renderer {
     const clipHeight = (imageHeight / height) * -2;
 
     const bindGroup = this.device.createBindGroup({
-      layout: this.pipeline.getBindGroupLayout(0),
       entries: [
         this.texture.instance.createView(),
         this.createBufferResource(
@@ -165,16 +165,17 @@ export class WebGPUFrameRenderer implements Renderer {
           ]),
         ),
       ].map((resource, binding) => ({ binding, resource })),
+      layout: this.pipeline.getBindGroupLayout(0),
     });
 
     const encoder = this.device.createCommandEncoder();
     const pass = encoder.beginRenderPass({
       colorAttachments: [
         {
-          view: this.context.getCurrentTexture().createView(),
+          clearValue: { a: 1, b: 0, g: 0, r: 0 },
           loadOp: 'clear',
-          clearValue: { r: 0, g: 0, b: 0, a: 1 },
           storeOp: 'store',
+          view: this.context.getCurrentTexture().createView(),
         },
       ],
     });
@@ -212,16 +213,16 @@ export class WebGPUFrameRenderer implements Renderer {
 
     const texture = this.device.createTexture({
       dimension: '2d',
-      size: [columns, rows],
       format: 'r16sint',
+      size: [columns, rows],
       usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
     });
 
     this.device.queue.writeTexture(
       { texture },
-      pixelData,
+      pixelData as BufferSource,
       { bytesPerRow: columns * Int16Array.BYTES_PER_ELEMENT },
-      { width: columns, height: rows },
+      { height: rows, width: columns },
     );
 
     return texture;

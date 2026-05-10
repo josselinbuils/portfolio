@@ -1,5 +1,3 @@
-import http from 'node:http';
-import path from 'node:path';
 import express, {
   type NextFunction,
   type Request,
@@ -7,8 +5,12 @@ import express, {
   type Router,
 } from 'express';
 import { glob } from 'glob';
+import http from 'node:http';
+import path from 'node:path';
 import SourceMapSupport from 'source-map-support';
+
 import { Logger } from '@/platform/api/Logger';
+
 import {
   API_EXTENSION,
   API_URL_PATH,
@@ -68,7 +70,6 @@ export async function startServer(
 
   mainRouter.use(
     // next is required even if not used
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (error: Error, req: Request, res: Response, next: NextFunction) => {
       Logger.error(error.stack as string);

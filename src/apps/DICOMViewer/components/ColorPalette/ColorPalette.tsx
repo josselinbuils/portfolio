@@ -1,7 +1,9 @@
 import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
 import cn from 'classnames';
 import { type FC, useEffect, useState } from 'preact/compat';
+
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
+
 import { type LUTComponent } from '../../interfaces/LUTComponent';
 import { type Viewport } from '../../models/Viewport';
 import styles from './ColorPalette.module.scss';
@@ -10,14 +12,14 @@ import { GraphPreview } from './components/GraphPreview/GraphPreview';
 import { LUTComponentList } from './components/LUTComponentList/LUTComponentList';
 
 const baseLUTComponents = [
-  { id: '0', start: 0, end: 65, color: [0, 0, 255] },
-  { id: '1', start: 45, end: 150, color: [0, 255, 0] },
-  { id: '2', start: 10, end: 135, color: [255, 0, 0] },
+  { color: [0, 0, 255], end: 65, id: '0', start: 0 },
+  { color: [0, 255, 0], end: 150, id: '1', start: 45 },
+  { color: [255, 0, 0], end: 135, id: '2', start: 10 },
 ] as LUTComponent[];
 
 export interface ColorPaletteProps {
   onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
-  viewport: Viewport | undefined;
+  viewport: undefined | Viewport;
 }
 
 export const ColorPalette: FC<ColorPaletteProps> = ({
@@ -55,10 +57,10 @@ export const ColorPalette: FC<ColorPaletteProps> = ({
     setLUTComponents([
       ...lutComponents,
       {
-        id: Date.now().toString(),
         color: [255, 255, 255],
-        start: 0,
         end: 85,
+        id: Date.now().toString(),
+        start: 0,
       },
     ]);
   }
@@ -149,8 +151,8 @@ export const ColorPalette: FC<ColorPaletteProps> = ({
             lutComponents={lutComponents}
           />
           <LUTComponentList
-            onLUTComponentAdd={addLUTComponent}
             lutComponents={lutComponents}
+            onLUTComponentAdd={addLUTComponent}
             onLUTComponentColorChange={setLUTComponentColor}
             onLUTComponentDelete={deleteLUTComponent}
           />

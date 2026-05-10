@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import { ASSETS_DIR, ASSETS_URL, BASE_URL } from '@/platform/api/constants';
 
 const DICOM_PATH = path.join(process.cwd(), ASSETS_DIR, '/dicom');

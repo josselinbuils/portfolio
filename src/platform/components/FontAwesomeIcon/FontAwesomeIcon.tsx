@@ -1,6 +1,7 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import cn from 'classnames';
 import { forwardRef, type HTMLAttributes } from 'preact/compat';
+
 import styles from './FontAwesomeIcon.module.scss';
 
 export interface FontAwesomeIconProps
@@ -15,15 +16,15 @@ export const FontAwesomeIcon = forwardRef<SVGSVGElement, FontAwesomeIconProps>(
     return (
       <svg
         aria-hidden="true"
-        focusable="false"
-        role="img"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${width} ${height}`}
         className={cn(styles.icon, className)}
+        focusable="false"
         ref={ref}
+        role="img"
+        viewBox={`0 0 ${width} ${height}`}
+        xmlns="http://www.w3.org/2000/svg"
         {...forwardedProps}
       >
-        <path fill="currentColor" d={svgPathData as string} />
+        <path d={svgPathData as string} fill="currentColor" />
       </svg>
     );
   },

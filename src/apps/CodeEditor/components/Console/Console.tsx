@@ -10,15 +10,17 @@ import {
   useRef,
   useState,
 } from 'preact/compat';
+
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 import { useList } from '@/platform/hooks/useList';
+
 import { Shortcut } from '../Shortcut/Shortcut';
-import { ToolButton } from '../ToolButton/ToolButton';
 import { Toolbar } from '../Toolbar/Toolbar';
-import styles from './Console.module.scss';
-import { type Log } from './Log';
+import { ToolButton } from '../ToolButton/ToolButton';
 import { Loader } from './components/Loader';
 import { Logs } from './components/Logs/Logs';
+import styles from './Console.module.scss';
+import { type Log } from './Log';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
 import { observeMutations } from './utils/observeMutations';
@@ -60,8 +62,8 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
     return (
       <div
         className={cn(styles.console, className)}
-        style={{ flexBasis: height }}
         ref={ref}
+        style={{ flexBasis: height }}
       >
         <Toolbar className={styles.toolbar}>
           <ToolButton
