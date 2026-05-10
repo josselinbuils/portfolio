@@ -9,9 +9,9 @@ import { vitePluginPage } from './config/vitePluginPage';
 const cssHashMap = new Map<string, string>();
 
 // https://vitejs.dev/config/
-export default defineConfig(({ ssrBuild }) => ({
+export default defineConfig(({ isSsrBuild }) => ({
   build: {
-    outDir: ssrBuild ? 'build/server' : 'build',
+    outDir: isSsrBuild ? 'build/server' : 'build',
     rollupOptions: {
       onwarn: (log, warn) => {
         if (
@@ -23,9 +23,9 @@ export default defineConfig(({ ssrBuild }) => ({
         }
       },
       output: {
-        assetFileNames: 'assets/[name]-[hash:6].[ext]',
-        chunkFileNames: 'assets/[name]-[hash:6].js',
-        entryFileNames: 'assets/[name]-[hash:6].js',
+        assetFileNames: 'assets/[name]-[hash:7].[ext]',
+        chunkFileNames: 'assets/[name]-[hash:7].js',
+        entryFileNames: 'assets/[name]-[hash:7].js',
       },
     },
     sourcemap: true,
@@ -40,6 +40,12 @@ export default defineConfig(({ ssrBuild }) => ({
           );
         }
         return `${name}_${cssHashMap.get(css)}`;
+      },
+    },
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ['color-functions', 'global-builtin', 'import'],
       },
     },
   },

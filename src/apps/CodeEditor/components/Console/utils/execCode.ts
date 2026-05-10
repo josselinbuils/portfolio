@@ -1,7 +1,7 @@
 export function execCode(code: string): void {
   if (code.length > 0) {
     try {
-      console.log(eval(code));
+      console.log(window.eval(code));
     } catch (error) {
       console.error(error);
     }
