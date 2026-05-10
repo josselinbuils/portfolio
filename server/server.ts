@@ -35,7 +35,7 @@ startServer(async (router) => {
   router.use(express.static(DIST_PATH));
   router.use(express.static(PUBLIC_PATH, options));
 
-  router.all('*', (_, res) => {
+  router.use((_, res) => {
     res.status(HTTP_NOT_FOUND).sendFile(path.join(DIST_PATH, '404.html'));
   });
 });

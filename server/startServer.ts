@@ -68,7 +68,7 @@ export async function startServer(
 
   await registerMiddlewares(mainRouter);
 
-  mainRouter.all('*', (_, res) => res.status(HTTP_NOT_FOUND).end());
+  mainRouter.use((_, res) => res.status(HTTP_NOT_FOUND).end());
 
   mainRouter.use(
     // next is required even if not used
