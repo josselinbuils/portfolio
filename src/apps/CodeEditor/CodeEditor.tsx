@@ -127,16 +127,14 @@ const CodeEditor: WindowComponent = ({
   }
 
   async function downloadCodeSnippetAsPng(): Promise<void> {
-    const { downloadAsPng } = await import(
-      './utils/exportAsImage/exportAsImage'
-    );
+    const { downloadAsPng } =
+      await import('./utils/exportAsImage/exportAsImage');
     await downloadAsPng(code, highlightCode(code, activeFile.language, 'html'));
   }
 
   async function downloadCodeSnippetAsSvg(): Promise<void> {
-    const { downloadAsSvg } = await import(
-      './utils/exportAsImage/exportAsImage'
-    );
+    const { downloadAsSvg } =
+      await import('./utils/exportAsImage/exportAsImage');
     await downloadAsSvg(code, highlightCode(code, activeFile.language, 'html'));
   }
 

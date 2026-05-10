@@ -31,9 +31,8 @@ export const SelectDataset: FC<SelectDatasetProps> = ({
   const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
-    const [datasetsPromise, cancelDatasetsPromise] = cancelable(
-      loadDatasetList(),
-    );
+    const [datasetsPromise, cancelDatasetsPromise] =
+      cancelable(loadDatasetList());
     datasetsPromise
       .then(async (descriptors) => {
         await Promise.all(

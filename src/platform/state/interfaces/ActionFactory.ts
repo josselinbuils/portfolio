@@ -9,14 +9,8 @@ export interface ActionFactory<Payload> {
   type: string;
 }
 
-export type ActionFromFactory<Factory> = Factory extends ActionFactory<
-  infer Payload
->
-  ? Action<Payload>
-  : Action;
+export type ActionFromFactory<Factory> =
+  Factory extends ActionFactory<infer Payload> ? Action<Payload> : Action;
 
-export type PayloadFromFactory<Factory> = Factory extends ActionFactory<
-  infer Payload
->
-  ? Payload
-  : void;
+export type PayloadFromFactory<Factory> =
+  Factory extends ActionFactory<infer Payload> ? Payload : void;
