@@ -1,6 +1,5 @@
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
@@ -31,14 +30,6 @@ export const About: Executor = () => (
           target="_blank"
         >
           <FontAwesomeIcon icon={faGithub} />
-        </a>
-        <a
-          aria-label="Twitter account"
-          href="https://twitter.com/josselinbuils"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <FontAwesomeIcon icon={faTwitter} />
         </a>
         <a aria-label="Curriculum Vitae" href="/assets/cv.pdf" target="_blank">
           <FontAwesomeIcon icon={faAddressCard} />
