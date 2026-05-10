@@ -50,13 +50,13 @@ export async function startServer(
     next();
   });
 
-  const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`, {
-    cwd: path.resolve('..'),
-  });
+  const apiFiles = await glob(`${SOURCE_DIR}/**/*${API_EXTENSION}`);
 
   await Promise.all(
     apiFiles.map(async (apiFile) => {
-      const { default: registerAPI } = await import(apiFile);
+      const { default: registerAPI } = await import(
+        path.join(process.cwd(), apiFile)
+      );
       const apiRouter = express.Router();
       const apiName = path.basename(apiFile, API_EXTENSION);
       registerAPI(apiRouter, httpServer);
