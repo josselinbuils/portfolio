@@ -7,7 +7,6 @@ import express, {
 import { glob } from 'glob';
 import http from 'node:http';
 import path from 'node:path';
-import SourceMapSupport from 'source-map-support';
 
 import { Logger } from '@/platform/api/Logger';
 
@@ -31,9 +30,8 @@ export async function startServer(
 ): Promise<void> {
   Logger.info(`Starting portfolio server in ${ENV} mode...`);
 
-  SourceMapSupport.install();
-
   const app = express();
+
   const httpServer = http.createServer(app);
 
   await new Promise<void>((resolve) => {
