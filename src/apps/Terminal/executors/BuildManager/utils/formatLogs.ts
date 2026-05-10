@@ -6,7 +6,7 @@ export async function formatLogs(
   logs: Log[],
   stepClass: string,
 ): Promise<Log[]> {
-  const AnsiUp = (await import('ansi_up')).default;
+  const { AnsiUp } = await import('ansi_up');
   const ansiUp = new AnsiUp();
 
   return logs.map(({ data, level, time }) => ({
