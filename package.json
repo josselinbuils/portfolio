@@ -16,11 +16,11 @@
     "start": "NODE_ENV=production ts-node -r tsconfig-paths/register --project ./server/tsconfig.json ./server/server.ts"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "6.4.2",
-    "@fortawesome/free-brands-svg-icons": "6.4.2",
-    "@fortawesome/free-regular-svg-icons": "6.4.2",
-    "@fortawesome/free-solid-svg-icons": "6.4.2",
-    "@fortawesome/react-fontawesome": "0.2.0",
+    "@fortawesome/fontawesome-svg-core": "7.2.0",
+    "@fortawesome/free-brands-svg-icons": "7.2.0",
+    "@fortawesome/free-regular-svg-icons": "7.2.0",
+    "@fortawesome/free-solid-svg-icons": "7.2.0",
+    "@fortawesome/react-fontawesome": "^3.3.1",
     "@josselinbuils/utils": "0.4.2",
     "ansi_up": "6.0.6",
     "classnames": "2.5.1",
