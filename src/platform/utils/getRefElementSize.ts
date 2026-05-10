@@ -1,4 +1,4 @@
-import { type RefObject } from 'preact/compat';
+import { type RefObject } from 'preact';
 
 import { type Size } from '../interfaces/Size';
 

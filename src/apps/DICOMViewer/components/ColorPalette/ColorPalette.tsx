@@ -1,6 +1,7 @@
 import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
 import cn from 'classnames';
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -22,7 +23,7 @@ export interface ColorPaletteProps {
   viewport: undefined | Viewport;
 }
 
-export const ColorPalette: FC<ColorPaletteProps> = ({
+export const ColorPalette: FunctionComponent<ColorPaletteProps> = ({
   onLUTComponentsUpdate,
   viewport,
 }) => {

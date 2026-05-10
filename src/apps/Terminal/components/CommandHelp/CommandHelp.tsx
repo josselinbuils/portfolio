@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import styles from './CommandHelp.module.scss';
 
@@ -14,7 +14,7 @@ export interface CommandParameter {
   values?: { description?: string; value: string }[];
 }
 
-export const CommandHelp: FC<CommandHelpProps> = ({
+export const CommandHelp: FunctionComponent<CommandHelpProps> = ({
   command,
   description,
   parameters,

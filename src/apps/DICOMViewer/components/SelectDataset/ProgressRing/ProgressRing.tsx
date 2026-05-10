@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import styles from './ProgressRing.module.scss';
 
@@ -10,7 +10,7 @@ export interface ProgressRingProps {
   thickness: number;
 }
 
-export const ProgressRing: FC<ProgressRingProps> = ({
+export const ProgressRing: FunctionComponent<ProgressRingProps> = ({
   className,
   color,
   progress,

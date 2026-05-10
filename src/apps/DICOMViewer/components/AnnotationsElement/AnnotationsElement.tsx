@@ -1,7 +1,8 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
-import { type FC, type RefObject, useRef } from 'preact/compat';
+import { type FunctionComponent, type RefObject } from 'preact';
+import { useRef } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import {
@@ -32,7 +33,7 @@ export interface AnnotationsElementProps {
   onViewTypeSwitch(viewType: ViewType): void;
 }
 
-export const AnnotationsElement: FC<AnnotationsElementProps> = ({
+export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
   annotations,
   availableViewTypes,
   onRendererTypeSwitch,

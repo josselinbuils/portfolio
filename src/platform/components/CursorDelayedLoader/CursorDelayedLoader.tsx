@@ -1,4 +1,5 @@
-import { type FunctionComponent, useLayoutEffect } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useLayoutEffect } from 'preact/hooks';
 
 import styles from './CursorDelayedLoader.module.scss';
 

@@ -1,11 +1,5 @@
-import {
-  createRef,
-  type JSX,
-  type RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'preact/compat';
+import { createRef, type JSX, type RefObject } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';

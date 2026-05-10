@@ -1,10 +1,6 @@
-import {
-  type JSX,
-  Suspense,
-  useCallback,
-  useLayoutEffect,
-  useState,
-} from 'preact/compat';
+import { type JSX } from 'preact';
+import { Suspense } from 'preact/compat';
+import { useCallback, useLayoutEffect, useState } from 'preact/hooks';
 
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';

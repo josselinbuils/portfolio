@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'preact/compat';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';

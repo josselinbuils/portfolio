@@ -1,4 +1,5 @@
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { type Position } from '@/platform/interfaces/Position';
@@ -14,7 +15,12 @@ export interface CursorProps {
   selection: Selection;
 }
 
-export const Cursor: FC<CursorProps> = ({ code, color, parent, selection }) => {
+export const Cursor: FunctionComponent<CursorProps> = ({
+  code,
+  color,
+  parent,
+  selection,
+}) => {
   const [position, setPosition] = useState<Position<number> | undefined>();
   const [segments, setSegments] = useState<Segment[]>([]);
 

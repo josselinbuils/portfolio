@@ -1,7 +1,7 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import cn from 'classnames';
-import { type ButtonHTMLAttributes } from 'preact';
-import { forwardRef, type JSX } from 'preact/compat';
+import { type ButtonHTMLAttributes, type JSX } from 'preact';
+import { forwardRef } from 'preact/compat';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';

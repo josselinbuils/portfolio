@@ -1,12 +1,6 @@
 import cn from 'classnames';
-import {
-  type CSSProperties,
-  type FC,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'preact/compat';
+import { type CSSProperties, type FunctionComponent } from 'preact';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import type { Position } from '../../interfaces/Position';
 
@@ -36,7 +30,7 @@ export interface MenuProps extends MenuDescriptor {
   onHide(): void;
 }
 
-export const Menu: FC<MenuProps> = ({
+export const Menu: FunctionComponent<MenuProps> = ({
   className,
   enterWithTab,
   items: itemsWithoutID,

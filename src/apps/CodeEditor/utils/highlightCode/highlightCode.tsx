@@ -1,4 +1,4 @@
-import { type JSX } from 'preact/compat';
+import { type JSX } from 'preact';
 import Prism, { Token } from 'prismjs';
 import 'prismjs/components/prism-css.min';
 import 'prismjs/components/prism-javascript.min';

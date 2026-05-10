@@ -1,5 +1,5 @@
 import { Subject } from '@josselinbuils/utils/Subject';
-import { createRef } from 'preact/compat';
+import { createRef } from 'preact';
 
 import { type WindowProps } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';

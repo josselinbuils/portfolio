@@ -1,4 +1,5 @@
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { type Size } from '@/platform/interfaces/Size';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
@@ -8,7 +9,9 @@ export interface WindowsProps {
   visibleAreaSize: Size | undefined;
 }
 
-export const Windows: FC<WindowsProps> = ({ visibleAreaSize }) => {
+export const Windows: FunctionComponent<WindowsProps> = ({
+  visibleAreaSize,
+}) => {
   const [windowInstances, setWindowInstances] = useState<WindowInstance[]>(() =>
     windowManager.getWindowInstances(),
   );

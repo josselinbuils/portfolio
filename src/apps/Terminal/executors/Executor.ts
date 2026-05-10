@@ -1,6 +1,6 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
-export interface Executor extends FC<ExecutorProps> {
+export interface Executor extends FunctionComponent<ExecutorProps> {
   suggest?(arg: string): string | undefined;
 }
 

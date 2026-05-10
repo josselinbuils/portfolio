@@ -1,6 +1,6 @@
 import { faComment } from '@fortawesome/free-regular-svg-icons/faComment';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -19,7 +19,7 @@ export interface PostProps extends RedditPost {
   outdated: boolean;
 }
 
-export const Post: FC<PostProps> = ({
+export const Post: FunctionComponent<PostProps> = ({
   numComments,
   outdated,
   permalink,

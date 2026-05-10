@@ -1,4 +1,4 @@
-import { type RefObject } from 'preact/compat';
+import { type RefObject } from 'preact';
 
 import { type Window } from '@/platform/components/Window/Window';
 import {

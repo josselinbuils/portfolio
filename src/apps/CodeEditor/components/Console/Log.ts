@@ -1,4 +1,4 @@
-import { type JSX } from 'preact/compat';
+import { type JSX } from 'preact';
 
 export enum LogLevel {
   Error = 'error',

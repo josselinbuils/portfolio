@@ -1,6 +1,6 @@
 import { faMusic } from '@fortawesome/free-solid-svg-icons/faMusic';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -12,7 +12,10 @@ export interface MusicPreviewProps {
   size: number;
 }
 
-export const MusicPreview: FC<MusicPreviewProps> = ({ music, size }) => {
+export const MusicPreview: FunctionComponent<MusicPreviewProps> = ({
+  music,
+  size,
+}) => {
   const useDefaultPreview = !music || !music.image;
 
   return (

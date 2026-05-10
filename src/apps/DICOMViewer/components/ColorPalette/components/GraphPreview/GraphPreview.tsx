@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useLayoutEffect, useRef, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { applyPolynomialInterpolation } from '@/apps/DICOMViewer/utils/math/applyPolynomialInterpolation';
@@ -25,7 +26,7 @@ export interface GraphPreviewProps {
   ): void;
 }
 
-export const GraphPreview: FC<GraphPreviewProps> = ({
+export const GraphPreview: FunctionComponent<GraphPreviewProps> = ({
   activeLUTComponentID,
   className,
   lutComponents,

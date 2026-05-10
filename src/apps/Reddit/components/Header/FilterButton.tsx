@@ -1,6 +1,6 @@
 import { faChartBar } from '@fortawesome/free-solid-svg-icons/faChartBar';
 import { faFireAlt } from '@fortawesome/free-solid-svg-icons/faFireAlt';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
@@ -20,7 +20,10 @@ export interface FilterButtonProps {
   onClick(filter: RedditFilter): void;
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ filter, onClick }) => {
+export const FilterButton: FunctionComponent<FilterButtonProps> = ({
+  filter,
+  onClick,
+}) => {
   const otherFilter = filters.find((f) => f !== filter) as RedditFilter;
 
   return (

@@ -1,4 +1,5 @@
-import { type FC, useEffect, useRef, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 
@@ -13,7 +14,7 @@ export interface PostsProps {
   subreddit: string;
 }
 
-export const Posts: FC<PostsProps> = ({
+export const Posts: FunctionComponent<PostsProps> = ({
   filter,
   onClickSubreddit,
   subreddit,

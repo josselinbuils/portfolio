@@ -1,7 +1,7 @@
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons/faPlusSquare';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
@@ -16,7 +16,7 @@ export interface LUTComponentListProps {
   onLUTComponentDelete(componentId: string): void;
 }
 
-export const LUTComponentList: FC<LUTComponentListProps> = ({
+export const LUTComponentList: FunctionComponent<LUTComponentListProps> = ({
   lutComponents,
   onLUTComponentAdd,
   onLUTComponentColorChange,

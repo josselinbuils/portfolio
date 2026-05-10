@@ -1,4 +1,4 @@
-import { type FC, type JSX } from 'preact/compat';
+import { type FunctionComponent, type JSX } from 'preact';
 
 import { makeKeysHumanReadable, normaliseKeys } from '@/platform/utils/keys';
 
@@ -8,7 +8,7 @@ export interface ShortcutProps {
   keys: string[];
 }
 
-export const Shortcut: FC<ShortcutProps> = ({ keys }) => (
+export const Shortcut: FunctionComponent<ShortcutProps> = ({ keys }) => (
   <>
     {keys
       .map<JSX.Element>((key) => (

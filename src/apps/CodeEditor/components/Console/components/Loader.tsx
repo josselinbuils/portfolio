@@ -1,4 +1,5 @@
-import { type FC, useEffect } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 
@@ -6,7 +7,7 @@ export interface LoaderProps {
   onStateChange(loading: boolean): unknown;
 }
 
-export const Loader: FC<LoaderProps> = ({ onStateChange }) => {
+export const Loader: FunctionComponent<LoaderProps> = ({ onStateChange }) => {
   useEffect(() => {
     onStateChange(true);
 

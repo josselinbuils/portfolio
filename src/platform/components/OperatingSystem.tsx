@@ -1,4 +1,5 @@
-import { type FC, useEffect } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 
 import '../global.scss';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
@@ -19,7 +20,7 @@ export interface OperatingSystemProps {
 
 let initialised = false;
 
-export const OperatingSystem: FC<OperatingSystemProps> = ({
+export const OperatingSystem: FunctionComponent<OperatingSystemProps> = ({
   defaultApp,
   lazyApp,
 }) => {

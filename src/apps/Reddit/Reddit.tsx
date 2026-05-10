@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'preact/compat';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';

@@ -2,7 +2,7 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
@@ -21,7 +21,7 @@ export interface TitleBarProps {
   title: string;
 }
 
-export const TitleBar: FC<TitleBarProps> = ({
+export const TitleBar: FunctionComponent<TitleBarProps> = ({
   className,
   frozen,
   maximized,

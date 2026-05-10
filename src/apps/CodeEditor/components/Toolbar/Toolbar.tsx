@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { Children, cloneElement, type FC, type JSX } from 'preact/compat';
+import { cloneElement, type FunctionComponent, type JSX } from 'preact';
+import { Children } from 'preact/compat';
 
 import styles from './Toolbar.module.scss';
 
@@ -8,7 +9,10 @@ export interface ToolbarProps {
   className?: string;
 }
 
-export const Toolbar: FC<ToolbarProps> = ({ children, className }) => (
+export const Toolbar: FunctionComponent<ToolbarProps> = ({
+  children,
+  className,
+}) => (
   <div className={cn(styles.toolbar, className)}>
     {Children.map(children, (child: JSX.Element) =>
       cloneElement(child, {

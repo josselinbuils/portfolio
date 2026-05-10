@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
@@ -12,7 +12,7 @@ export interface MenuItemProps {
   onClickPlaylist(musicList: MusicList): void;
 }
 
-export const MenuItem: FC<MenuItemProps> = ({
+export const MenuItem: FunctionComponent<MenuItemProps> = ({
   activeMusicList,
   musicList,
   onClickPlaylist,

@@ -1,12 +1,6 @@
-import {
-  createPortal,
-  type JSX,
-  type RefObject,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'preact/compat';
+import { type JSX, type RefObject } from 'preact';
+import { createPortal } from 'preact/compat';
+import { useCallback, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { useDynamicRef } from '@/platform/hooks/useDynamicRef';
 

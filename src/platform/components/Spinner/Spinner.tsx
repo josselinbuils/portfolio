@@ -1,4 +1,5 @@
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import styles from './Spinner.module.scss';
 
@@ -8,7 +9,7 @@ export interface SpinnerProps {
   color: string;
 }
 
-export const Spinner: FC<SpinnerProps> = ({ color }) => {
+export const Spinner: FunctionComponent<SpinnerProps> = ({ color }) => {
   const [isDisplayed, setIsDisplayed] = useState(false);
   const style = { backgroundColor: color };
 

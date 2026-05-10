@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { JamendoLink } from './components/JamendoLink/JamendoLink';
 import { Logo } from './components/Logo/Logo';
@@ -10,7 +10,7 @@ export interface SidebarProps extends MenuProps {
   className?: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({
+export const Sidebar: FunctionComponent<SidebarProps> = ({
   activeMusicList,
   className,
   onClickMusicList,

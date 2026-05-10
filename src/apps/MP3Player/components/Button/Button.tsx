@@ -1,6 +1,9 @@
 import cn from 'classnames';
-import { type ButtonHTMLAttributes, type DetailedHTMLProps } from 'preact';
-import { type FC } from 'preact/compat';
+import {
+  type ButtonHTMLAttributes,
+  type DetailedHTMLProps,
+  type FunctionComponent,
+} from 'preact';
 
 import styles from './Button.module.scss';
 
@@ -12,7 +15,7 @@ export interface ButtonProps extends DetailedHTMLProps<
   className?: string;
 }
 
-export const Button: FC<ButtonProps> = ({
+export const Button: FunctionComponent<ButtonProps> = ({
   checked = false,
   children,
   className,

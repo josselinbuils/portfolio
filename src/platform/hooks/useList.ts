@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'preact/compat';
+import { useMemo, useState } from 'preact/hooks';
 
 /**
  * Manager provided by useList.

@@ -1,5 +1,5 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
-import { type RefObject } from 'preact/compat';
+import { type RefObject } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import {

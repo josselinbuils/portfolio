@@ -1,6 +1,7 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import cn from 'classnames';
-import { forwardRef, type HTMLAttributes } from 'preact/compat';
+import { type HTMLAttributes } from 'preact';
+import { forwardRef } from 'preact/compat';
 
 import styles from './FontAwesomeIcon.module.scss';
 

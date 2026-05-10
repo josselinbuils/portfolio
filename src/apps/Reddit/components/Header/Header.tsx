@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { Icon } from '../Icon/Icon';
@@ -11,7 +11,7 @@ export interface HeaderProps {
   subreddit: string;
 }
 
-export const Header: FC<HeaderProps> = ({
+export const Header: FunctionComponent<HeaderProps> = ({
   filter,
   onClickFilter,
   subreddit,

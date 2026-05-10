@@ -1,4 +1,5 @@
-import { type MutableRefObject, useRef } from 'preact/compat';
+import { type MutableRefObject } from 'preact/compat';
+import { useRef } from 'preact/hooks';
 
 export function useDynamicRef<T>(value: T): MutableRefObject<T> {
   const ref = useRef<T>(value);

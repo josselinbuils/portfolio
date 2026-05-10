@@ -1,7 +1,7 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import styles from './CharacterLimitLine.module.scss';
 
-export const CharacterLimitLine: FC = () => (
+export const CharacterLimitLine: FunctionComponent = () => (
   <div className={styles.characterLimitLine} />
 );

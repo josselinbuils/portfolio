@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 
@@ -10,7 +10,10 @@ export interface MusicInfoProps {
   music: Music | undefined;
 }
 
-export const MusicInfo: FC<MusicInfoProps> = ({ className, music }) => (
+export const MusicInfo: FunctionComponent<MusicInfoProps> = ({
+  className,
+  music,
+}) => (
   <div className={cn(styles.musicInfo, className)}>
     <div className={styles.name}>{music?.name}</div>
     <div className={styles.artist}>{music?.artistName}</div>

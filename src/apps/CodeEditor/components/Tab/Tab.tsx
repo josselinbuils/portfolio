@@ -1,6 +1,6 @@
 import { faFileCode } from '@fortawesome/free-solid-svg-icons/faFileCode';
 import cn from 'classnames';
-import { type FC, type JSX } from 'preact/compat';
+import { type FunctionComponent, type JSX } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -11,7 +11,7 @@ export interface TabProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   selected: boolean;
 }
 
-export const Tab: FC<TabProps> = ({
+export const Tab: FunctionComponent<TabProps> = ({
   children,
   className,
   selected,

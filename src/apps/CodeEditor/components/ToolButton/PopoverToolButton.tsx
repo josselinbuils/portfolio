@@ -1,5 +1,7 @@
 import cn from 'classnames';
-import { createPortal, type FC, useRef } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { createPortal } from 'preact/compat';
+import { useRef } from 'preact/hooks';
 
 import { type MenuDescriptor } from '@/platform/components/Menu/Menu';
 import { useMenu } from '@/platform/components/Menu/useMenu';
@@ -14,7 +16,7 @@ export interface PopoverToolButtonProps extends Omit<
   menu: MenuDescriptor;
 }
 
-export const PopoverToolButton: FC<PopoverToolButtonProps> = ({
+export const PopoverToolButton: FunctionComponent<PopoverToolButtonProps> = ({
   className,
   menu,
   ...forwardedProps

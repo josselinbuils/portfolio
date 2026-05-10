@@ -1,4 +1,5 @@
-import { type RefObject, useLayoutEffect, useState } from 'preact/compat';
+import { type RefObject } from 'preact';
+import { useLayoutEffect, useState } from 'preact/hooks';
 
 export function useElementSize(elementRef: RefObject<HTMLElement>): number[] {
   const [size, setSize] = useState([0, 0]);

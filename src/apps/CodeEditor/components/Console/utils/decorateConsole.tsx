@@ -1,4 +1,4 @@
-import { type JSX } from 'preact/compat';
+import { type JSX } from 'preact';
 
 import { type ListManager } from '@/platform/hooks/useList';
 import { createGUID } from '@/platform/utils/createGUID';

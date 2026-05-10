@@ -1,6 +1,6 @@
 import { faExpand } from '@fortawesome/free-solid-svg-icons/faExpand';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { APP_DESCRIPTORS } from '@/platform/appDescriptors';
 import { useToolbar } from '@/platform/hooks/useToolbar';
@@ -29,7 +29,7 @@ export interface TaskBarProps {
   className?: string;
 }
 
-export const TaskBar: FC<TaskBarProps> = ({ className }) => {
+export const TaskBar: FunctionComponent<TaskBarProps> = ({ className }) => {
   const { getToolProps, isToolActive, toolbarProps } = useToolbar('vertical');
   const taskDescriptors = useAppTaskDescriptors(APP_DESCRIPTORS);
   const { className: toolbarClassName, ...otherToolbarProps } = toolbarProps;

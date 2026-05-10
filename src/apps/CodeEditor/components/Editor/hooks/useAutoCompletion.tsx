@@ -1,4 +1,5 @@
-import { type JSX, useCallback, useEffect, useRef } from 'preact/compat';
+import { type JSX } from 'preact';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 
 import { type SupportedLanguage } from '@/apps/CodeEditor/interfaces/SupportedLanguage';
 import { getLanguageService } from '@/apps/CodeEditor/utils/getLanguageService';

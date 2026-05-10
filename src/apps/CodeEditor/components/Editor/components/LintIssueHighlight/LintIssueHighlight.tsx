@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useMemo } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import { type LintIssue } from '@/apps/CodeEditor/interfaces/LanguageService';
 
@@ -12,7 +13,7 @@ export interface LintIssueHighlightProps {
   parent: HTMLTextAreaElement;
 }
 
-export const LintIssueHighlight: FC<LintIssueHighlightProps> = ({
+export const LintIssueHighlight: FunctionComponent<LintIssueHighlightProps> = ({
   code,
   issue,
   parent,

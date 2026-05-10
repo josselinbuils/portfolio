@@ -1,10 +1,6 @@
-import {
-  createPortal,
-  type JSX,
-  Suspense,
-  useCallback,
-  useState,
-} from 'preact/compat';
+import { type JSX } from 'preact';
+import { createPortal, Suspense } from 'preact/compat';
+import { useCallback, useState } from 'preact/hooks';
 
 import { lazy } from '@/platform/utils/lazy';
 

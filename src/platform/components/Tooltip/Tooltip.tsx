@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type CSSProperties, forwardRef, type JSX } from 'preact/compat';
+import { type CSSProperties, type JSX } from 'preact';
+import { forwardRef } from 'preact/compat';
 
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
 import { type Position } from '@/platform/interfaces/Position';

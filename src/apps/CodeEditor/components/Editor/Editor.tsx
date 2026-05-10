@@ -1,15 +1,13 @@
 import cn from 'classnames';
+import { type FunctionComponent, type JSX } from 'preact';
+import { type ChangeEvent, type TargetedEvent } from 'preact/compat';
 import {
-  type ChangeEvent,
-  type FC,
-  type JSX,
-  type TargetedEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-} from 'preact/compat';
+} from 'preact/hooks';
 
 import { useTooltip } from '@/platform/components/Tooltip/useTooltip';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
@@ -58,7 +56,7 @@ export interface EditorProps {
   onCursorPositionUpdate(cursorPosition: CursorPosition): void;
 }
 
-export const Editor: FC<EditorProps> = ({
+export const Editor: FunctionComponent<EditorProps> = ({
   activeFile,
   className,
   code,

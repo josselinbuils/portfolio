@@ -1,11 +1,7 @@
 import cn from 'classnames';
-import {
-  forwardRef,
-  type HTMLAttributes,
-  type RefObject,
-  useEffect,
-  useState,
-} from 'preact/compat';
+import { type HTMLAttributes, type RefObject } from 'preact';
+import { forwardRef } from 'preact/compat';
+import { useEffect, useState } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useMenu } from '@/platform/components/Menu/useMenu';

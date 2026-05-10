@@ -4,7 +4,7 @@ import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons/faFileCircle
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'preact/compat';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useMenu } from '@/platform/components/Menu/useMenu';

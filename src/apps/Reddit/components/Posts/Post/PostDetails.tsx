@@ -1,5 +1,5 @@
 import { faAnchor } from '@fortawesome/free-solid-svg-icons/faAnchor';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
@@ -16,7 +16,7 @@ export interface PostDetailsProps {
   subreddit: string;
 }
 
-export const PostDetails: FC<PostDetailsProps> = ({
+export const PostDetails: FunctionComponent<PostDetailsProps> = ({
   author,
   currentSubreddit,
   onClickSubreddit,

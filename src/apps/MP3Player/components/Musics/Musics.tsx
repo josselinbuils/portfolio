@@ -1,7 +1,8 @@
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
 import cn from 'classnames';
-import { type FC, useContext, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useContext, useEffect, useState } from 'preact/hooks';
 
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
@@ -25,7 +26,10 @@ export interface MusicsProps {
   musicList: MusicList;
 }
 
-export const Musics: FC<MusicsProps> = ({ className, musicList }) => {
+export const Musics: FunctionComponent<MusicsProps> = ({
+  className,
+  musicList,
+}) => {
   const { audioController, audioState } = useContext(AudioContext);
   const [musics, setMusics] = useState<Music[]>([]);
   const [jamendoOrder, setJamendoOrder] = useState<string>('popularity_total');

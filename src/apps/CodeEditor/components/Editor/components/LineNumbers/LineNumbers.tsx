@@ -1,11 +1,6 @@
 import cn from 'classnames';
-import {
-  type FC,
-  type JSX,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from 'preact/compat';
+import { type FunctionComponent, type JSX } from 'preact';
+import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 
@@ -21,7 +16,7 @@ export interface LineNumbersProps {
   selection: Selection;
 }
 
-export const LineNumbers: FC<LineNumbersProps> = ({
+export const LineNumbers: FunctionComponent<LineNumbersProps> = ({
   className,
   code,
   editorWidth,

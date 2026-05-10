@@ -1,4 +1,4 @@
-import { type Reducer } from 'preact/compat';
+import { type Reducer } from 'preact/hooks';
 
 import { type Action } from '../interfaces/Action';
 import { type ActionManager } from '../interfaces/ActionManager';

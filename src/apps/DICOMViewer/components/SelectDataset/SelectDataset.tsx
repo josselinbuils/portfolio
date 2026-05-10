@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useEffect, useLayoutEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useLayoutEffect, useState } from 'preact/hooks';
 
 import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
@@ -18,7 +19,7 @@ export interface SelectDatasetProps {
   onError(message: string): void;
 }
 
-export const SelectDataset: FC<SelectDatasetProps> = ({
+export const SelectDataset: FunctionComponent<SelectDatasetProps> = ({
   onDatasetSelected,
   onError,
 }) => {

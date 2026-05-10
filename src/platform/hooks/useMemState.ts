@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'preact/compat';
+import { useCallback, useRef, useState } from 'preact/hooks';
 
 export function useMemState<S>(
   initialValue: (() => S) | S,

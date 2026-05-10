@@ -1,6 +1,7 @@
 import { faReddit } from '@fortawesome/free-brands-svg-icons/faReddit';
 import cn from 'classnames';
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { cancelable } from '@/platform/utils/cancelable';
@@ -13,7 +14,10 @@ export interface IconProps {
   subreddit: string;
 }
 
-export const Icon: FC<IconProps> = ({ active = true, subreddit }) => {
+export const Icon: FunctionComponent<IconProps> = ({
+  active = true,
+  subreddit,
+}) => {
   const [src, setSrc] = useState<string>();
 
   useEffect(() => {

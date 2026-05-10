@@ -1,6 +1,5 @@
 import cn from 'classnames';
-import { type ButtonHTMLAttributes } from 'preact';
-import { type FC } from 'preact/compat';
+import { type ButtonHTMLAttributes, type FunctionComponent } from 'preact';
 
 import styles from './ButtonLink.module.scss';
 
@@ -8,7 +7,7 @@ export interface ButtonLinkProps extends ButtonHTMLAttributes<HTMLButtonElement>
   className?: string;
 }
 
-export const ButtonLink: FC<ButtonLinkProps> = ({
+export const ButtonLink: FunctionComponent<ButtonLinkProps> = ({
   children,
   className,
   ...forwardedProps

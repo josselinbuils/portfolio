@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from 'preact/compat';
+import { useCallback, useEffect, useReducer, useRef } from 'preact/hooks';
 
 import { type ClientState } from '@/apps/CodeEditor/interfaces/ClientState';
 import { type EditableState } from '@/apps/CodeEditor/interfaces/EditableState';

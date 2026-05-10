@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useLayoutEffect, useRef } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useLayoutEffect, useRef } from 'preact/hooks';
 
 import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
@@ -12,7 +13,7 @@ export interface BarPreviewProps {
   lutComponents: LUTComponent[];
 }
 
-export const BarPreview: FC<BarPreviewProps> = ({
+export const BarPreview: FunctionComponent<BarPreviewProps> = ({
   className,
   lutComponents,
 }) => {

@@ -1,4 +1,5 @@
-import { type FC, useMemo } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 
@@ -11,11 +12,9 @@ export interface ActiveLineHighlightProps {
   selection: Selection;
 }
 
-export const ActiveLineHighlight: FC<ActiveLineHighlightProps> = ({
-  code,
-  parent,
-  selection,
-}) => {
+export const ActiveLineHighlight: FunctionComponent<
+  ActiveLineHighlightProps
+> = ({ code, parent, selection }) => {
   const position = useMemo(
     () => getOffsetPosition(code, parent, selection[0]),
     [code, parent, selection],

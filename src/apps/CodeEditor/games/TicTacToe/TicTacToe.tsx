@@ -1,4 +1,5 @@
-import { type FC, useEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { type Position } from '@/platform/interfaces/Position';
 
@@ -8,7 +9,7 @@ import { Round } from './components/Round';
 import styles from './TicTacToe.module.scss';
 import { GameManager, type Grid as GridType } from './utils/GameManager';
 
-export const TicTacToe: FC = () => {
+export const TicTacToe: FunctionComponent = () => {
   const [grid, setGrid] = useState<GridType>();
   const [winnerCases, setWinnerCases] = useState<Position[] | undefined>();
 

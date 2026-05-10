@@ -1,6 +1,7 @@
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown';
 import cn from 'classnames';
-import { type FC, type PropsWithChildren } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { type PropsWithChildren } from 'preact/compat';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -12,7 +13,7 @@ export interface SelectProps extends PropsWithChildren {
   value: string;
 }
 
-export const Select: FC<SelectProps> = ({
+export const Select: FunctionComponent<SelectProps> = ({
   children,
   className,
   onChange,

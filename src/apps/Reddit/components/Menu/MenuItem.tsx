@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useLayoutEffect, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useLayoutEffect, useState } from 'preact/hooks';
 
 import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 
@@ -13,7 +14,7 @@ export interface MenuItemProps {
   subreddit: string;
 }
 
-export const MenuItem: FC<MenuItemProps> = ({
+export const MenuItem: FunctionComponent<MenuItemProps> = ({
   activeSubreddit,
   onClickSubreddit,
   subreddit,

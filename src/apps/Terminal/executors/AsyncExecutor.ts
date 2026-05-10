@@ -1,8 +1,10 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type Executor, type ExecutorProps } from './Executor';
 
-export interface AsyncExecutor extends FC<AsyncExecutorProps & ExecutorProps> {
+export interface AsyncExecutor extends FunctionComponent<
+  AsyncExecutorProps & ExecutorProps
+> {
   async: boolean;
   suggest?(arg: string): string | undefined;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'preact/compat';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 import { getAppDescriptors } from '@/platform/utils/getAppDescriptors';

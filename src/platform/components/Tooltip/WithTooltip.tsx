@@ -1,10 +1,5 @@
-import {
-  Children,
-  cloneElement,
-  type FC,
-  type JSX,
-  type PropsWithChildren,
-} from 'preact/compat';
+import { cloneElement, type FunctionComponent, type JSX } from 'preact';
+import { Children, type PropsWithChildren } from 'preact/compat';
 
 import { type TooltipProps } from '@/platform/components/Tooltip/Tooltip';
 
@@ -14,7 +9,7 @@ export type WithTooltipProps = PropsWithChildren<
   Omit<TooltipProps, 'position'>
 >;
 
-export const WithTooltip: FC<WithTooltipProps> = ({
+export const WithTooltip: FunctionComponent<WithTooltipProps> = ({
   children,
   ...tooltipProps
 }) => {

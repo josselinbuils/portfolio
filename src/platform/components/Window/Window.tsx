@@ -1,11 +1,6 @@
 import cn from 'classnames';
-import {
-  Component,
-  createRef,
-  type JSX,
-  type MutableRefObject,
-  type PropsWithChildren,
-} from 'preact/compat';
+import { Component, createRef, type JSX } from 'preact';
+import { type MutableRefObject, type PropsWithChildren } from 'preact/compat';
 
 import { MouseButton } from '@/platform/constants';
 import { type Size } from '@/platform/interfaces/Size';

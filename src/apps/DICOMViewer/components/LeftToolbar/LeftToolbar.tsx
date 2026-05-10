@@ -5,7 +5,7 @@ import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons/faArrowsAltV';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { MouseButton } from '@/platform/constants';
@@ -54,7 +54,7 @@ export interface LeftToolbarProps {
   viewport: Viewport;
 }
 
-export const LeftToolbar: FC<LeftToolbarProps> = ({
+export const LeftToolbar: FunctionComponent<LeftToolbarProps> = ({
   activeLeftTool,
   activeRightTool,
   onToolSelected,

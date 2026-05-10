@@ -5,7 +5,8 @@ import { faRedoAlt } from '@fortawesome/free-solid-svg-icons/faRedoAlt';
 import { faStepBackward } from '@fortawesome/free-solid-svg-icons/faStepBackward';
 import { faStepForward } from '@fortawesome/free-solid-svg-icons/faStepForward';
 import cn from 'classnames';
-import { type FC, useContext } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useContext } from 'preact/hooks';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
@@ -18,7 +19,10 @@ export interface ControlsProps {
   size: number;
 }
 
-export const Controls: FC<ControlsProps> = ({ className, size }) => {
+export const Controls: FunctionComponent<ControlsProps> = ({
+  className,
+  size,
+}) => {
   const { audioController, audioState } = useContext(AudioContext);
 
   if (audioController === undefined || audioState === undefined) {

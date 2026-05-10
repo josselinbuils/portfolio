@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type CursorPosition } from '../../interfaces/CursorPosition';
 import styles from './StatusBar.module.scss';
@@ -11,7 +11,7 @@ export interface StatusBarProps {
   cursorPosition: CursorPosition;
 }
 
-export const StatusBar: FC<StatusBarProps> = ({
+export const StatusBar: FunctionComponent<StatusBarProps> = ({
   className,
   cursorPosition,
 }) => {

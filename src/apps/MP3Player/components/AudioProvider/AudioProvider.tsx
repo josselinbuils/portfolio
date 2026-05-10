@@ -1,11 +1,6 @@
-import {
-  createContext,
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from 'preact/compat';
+import { createContext, type FunctionComponent } from 'preact';
+import { type PropsWithChildren } from 'preact/compat';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { AudioController, type AudioState } from './AudioController';
 
@@ -17,7 +12,9 @@ export const AudioContext = createContext<{
   audioState: undefined,
 });
 
-export const AudioProvider: FC<PropsWithChildren> = ({ children }) => {
+export const AudioProvider: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const audioController = useMemo(() => new AudioController(), []);
   const [audioState, setAudioState] = useState<AudioState>();
 

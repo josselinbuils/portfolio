@@ -1,4 +1,5 @@
-import { type FC, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useState } from 'preact/hooks';
 
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
@@ -9,7 +10,9 @@ export interface SelectionProps {
   startPosition: Position<number>;
 }
 
-export const Selection: FC<SelectionProps> = ({ startPosition }) => {
+export const Selection: FunctionComponent<SelectionProps> = ({
+  startPosition,
+}) => {
   const [cursorPosition, setCursorPosition] = useState<Position<number>>();
 
   useEventListener('mousemove', (moveEvent: MouseEvent) => {

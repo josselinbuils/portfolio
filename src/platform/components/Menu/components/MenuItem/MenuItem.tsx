@@ -1,4 +1,4 @@
-import { type FC, type JSX } from 'preact/compat';
+import { type FunctionComponent, type JSX } from 'preact';
 
 import styles from './MenuItem.module.scss';
 
@@ -12,7 +12,7 @@ export interface MenuItemProps extends MenuItemDescriptor {
   onMouseMove(): void;
 }
 
-export const MenuItem: FC<MenuItemProps> = ({
+export const MenuItem: FunctionComponent<MenuItemProps> = ({
   active,
   onClick,
   onMouseMove,

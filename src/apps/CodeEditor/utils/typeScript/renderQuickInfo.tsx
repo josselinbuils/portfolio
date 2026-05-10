@@ -1,4 +1,4 @@
-import { type JSX } from 'preact/compat';
+import { type JSX } from 'preact';
 import { type QuickInfo, type SymbolDisplayPart } from 'typescript';
 
 import { highlightCode } from '@/apps/CodeEditor/utils/highlightCode/highlightCode';

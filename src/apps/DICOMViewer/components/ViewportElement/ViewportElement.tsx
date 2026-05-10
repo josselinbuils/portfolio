@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useEffect, useLayoutEffect, useRef } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 
 import { MouseButton } from '@/platform/constants';
 import { useElementSize } from '@/platform/hooks/useElementSize';
@@ -21,7 +22,7 @@ export interface ViewportElementProps {
   viewport: Viewport;
 }
 
-export const ViewportElement: FC<ViewportElementProps> = ({
+export const ViewportElement: FunctionComponent<ViewportElementProps> = ({
   className,
   onCanvasMouseDown,
   onError,

@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { throttle } from '@/platform/utils/throttle';
 
@@ -11,7 +11,10 @@ export interface ColorPickerProps {
   onColorChange(color: number[]): void;
 }
 
-export const ColorPicker: FC<ColorPickerProps> = ({ color, onColorChange }) => {
+export const ColorPicker: FunctionComponent<ColorPickerProps> = ({
+  color,
+  onColorChange,
+}) => {
   const colorChangeHandler = throttle((value) => {
     const rgbColor = hexToRGB(value);
 

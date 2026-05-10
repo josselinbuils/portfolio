@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type MutableRefObject, useEffect, useState } from 'preact/compat';
+import { type MutableRefObject } from 'preact/compat';
+import { useEffect, useState } from 'preact/hooks';
 
 import { useList } from '@/platform/hooks/useList';
 

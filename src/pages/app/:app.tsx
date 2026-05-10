@@ -1,8 +1,8 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { OperatingSystem } from '@/platform/components/OperatingSystem';
 
-const AppPage: FC = () => {
+const AppPage: FunctionComponent = () => {
   const lazyApp =
     typeof window !== 'undefined'
       ? window.location.pathname.split('/')[2]

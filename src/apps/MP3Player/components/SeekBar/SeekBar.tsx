@@ -1,4 +1,5 @@
-import { createRef, type FC, useContext } from 'preact/compat';
+import { createRef, type FunctionComponent } from 'preact';
+import { useContext } from 'preact/hooks';
 
 import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 
@@ -6,7 +7,7 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
 import styles from './SeekBar.module.scss';
 
-export const SeekBar: FC = () => {
+export const SeekBar: FunctionComponent = () => {
   const { audioController, audioState } = useContext(AudioContext);
   const progressBarRef = createRef<HTMLDivElement>();
   const seekStartHandler = useDragAndDrop(onSeekStart);

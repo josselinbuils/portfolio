@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { type Position } from '@/platform/interfaces/Position';
 
@@ -9,7 +9,10 @@ export interface CrossProps {
   position: Position<number>;
 }
 
-export const Cross: FC<CrossProps> = ({ highlighted = false, position }) => {
+export const Cross: FunctionComponent<CrossProps> = ({
+  highlighted = false,
+  position,
+}) => {
   const { x, y } = position;
 
   return (

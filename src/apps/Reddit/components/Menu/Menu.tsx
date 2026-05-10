@@ -1,4 +1,4 @@
-import { type FC } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
 
 import { subreddits } from '../../subreddits';
 import styles from './Menu.module.scss';
@@ -9,7 +9,10 @@ export interface MenuProps {
   onClickSubreddit(subreddit: string): void;
 }
 
-export const Menu: FC<MenuProps> = ({ activeSubreddit, onClickSubreddit }) => (
+export const Menu: FunctionComponent<MenuProps> = ({
+  activeSubreddit,
+  onClickSubreddit,
+}) => (
   <nav className={styles.menu}>
     {subreddits.map((subreddit) => (
       <MenuItem

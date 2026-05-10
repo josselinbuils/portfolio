@@ -1,4 +1,4 @@
-import { type FC, type RefObject } from 'preact/compat';
+import { type FunctionComponent, type RefObject } from 'preact';
 
 import { type Size } from '@/platform/interfaces/Size';
 
@@ -16,4 +16,6 @@ export interface InjectedWindowProps extends Partial<WindowProps> {
   zIndex: number;
 }
 
-export type WindowComponent<T = unknown> = FC<InjectedWindowProps & T>;
+export type WindowComponent<T = unknown> = FunctionComponent<
+  InjectedWindowProps & T
+>;

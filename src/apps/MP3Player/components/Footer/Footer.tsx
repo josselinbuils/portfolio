@@ -1,5 +1,6 @@
 import cn from 'classnames';
-import { type FC, useContext } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { useContext } from 'preact/hooks';
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Controls } from '../Controls/Controls';
@@ -12,7 +13,7 @@ export interface FooterProps {
   className?: string;
 }
 
-export const Footer: FC<FooterProps> = ({ className }) => {
+export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
   const { audioState } = useContext(AudioContext);
 
   if (audioState === undefined) {

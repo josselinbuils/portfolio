@@ -1,4 +1,6 @@
-import { type FC, Suspense, useEffect, useRef, useState } from 'preact/compat';
+import { type FunctionComponent } from 'preact';
+import { Suspense } from 'preact/compat';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
@@ -13,7 +15,7 @@ import { Windows } from './Windows';
 
 const Selection = lazy(async () => (await import('./Selection')).Selection);
 
-export const VisibleArea: FC = () => {
+export const VisibleArea: FunctionComponent = () => {
   const [selectionStartPosition, setSelectionStartPosition] =
     useState<Position<number>>();
   const [visibleAreaSize, setVisibleAreaSize] = useState<Size>();

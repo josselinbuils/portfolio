@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/compat';
+import { useEffect, useState } from 'preact/hooks';
 
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
