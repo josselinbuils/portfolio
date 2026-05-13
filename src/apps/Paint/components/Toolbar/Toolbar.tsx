@@ -1,23 +1,14 @@
-import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faFile } from '@fortawesome/free-regular-svg-icons/faFile';
-import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
-import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
-import { faFillDrip } from '@fortawesome/free-solid-svg-icons/faFillDrip';
-import { faFont } from '@fortawesome/free-solid-svg-icons/faFont';
-import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons/faRotateLeft';
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons/faRotateRight';
-import { faVectorPolygon } from '@fortawesome/free-solid-svg-icons/faVectorPolygon';
-import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
-import { type DrawTool } from '../../interfaces/DrawTool';
+import { type DrawTool, tools } from '../../tools/tools';
 import styles from './Toolbar.module.scss';
 
 export interface ToolbarProps {
@@ -85,38 +76,29 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     setShowWidthPopover(true);
   }
 
-  const showColors = !['picker', 'select', 'wand'].includes(tool);
+  const showColors = !['colorPicker', 'magicWand', 'select'].includes(tool);
   const showFillToggle = ['circle', 'rect', 'rectRound'].includes(tool);
-  const showWidth = !['bucket', 'picker', 'select', 'text', 'wand'].includes(
-    tool,
-  );
-  const showTolerance = ['bucket', 'wand'].includes(tool);
+  const showWidth = ![
+    'colorPicker',
+    'magicWand',
+    'paintBucket',
+    'select',
+    'text',
+  ].includes(tool);
+  const showTolerance = ['magicWand', 'paintBucket'].includes(tool);
   const showTextOpts = tool === 'text';
 
   return (
     <div className={styles.options}>
       {/* Tools */}
       <div className={styles.toolsGroup}>
-        {(
-          [
-            ['select', faVectorPolygon, 'Marquee select — M'],
-            ['wand', faWandMagicSparkles, 'Magic wand — W'],
-            ['pencil', faPencil, 'Pencil — B'],
-            ['eraser', faEraser, 'Eraser — E'],
-            ['rect', faSquare, 'Rectangle — R'],
-            ['rectRound', faSquare, 'Rounded rectangle'],
-            ['circle', faCircle, 'Ellipse — C'],
-            ['text', faFont, 'Text — T'],
-            ['bucket', faFillDrip, 'Paint bucket — G'],
-            ['picker', faEyeDropper, 'Eyedropper — I'],
-          ] as const
-        ).map(([t, icon, tip]) => (
+        {tools.map(({ description, icon, name, shortcut }) => (
           <button
-            className={`${styles.tool} ${tool === t ? styles.active : ''}`}
-            data-tip={tip}
-            key={t}
-            onClick={() => onSetTool(t as DrawTool)}
-            style={t === 'rectRound' ? 'border-radius:5px' : undefined}
+            className={`${styles.tool} ${tool === name ? styles.active : ''}`}
+            data-tip={`${description} - ${shortcut.toUpperCase()}`}
+            key={name}
+            onClick={() => onSetTool(name)}
+            style={name === 'rectRound' ? 'border-radius:5px' : undefined}
             type="button"
           >
             <FontAwesomeIcon icon={icon} />

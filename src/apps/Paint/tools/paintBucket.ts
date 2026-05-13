@@ -1,14 +1,24 @@
-import { CANVAS_H, CANVAS_W } from '../../../constants';
-import { colorAt, colorDist, hexToRgba } from '../../../utils/color';
+import { faFillDrip } from '@fortawesome/free-solid-svg-icons/faFillDrip';
 
-export interface BucketRefs {
+import { CANVAS_H, CANVAS_W } from '../constants';
+import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { colorAt, colorDist, hexToRgba } from '../utils/color';
+
+export const paintBucketDescriptor = {
+  description: 'Paint bucket',
+  icon: faFillDrip,
+  name: 'paintBucket' as const,
+  shortcut: 'g',
+} satisfies DrawToolDescriptor;
+
+export type PaintBucketRefs = {
   fillRef: { current: string };
   mainRef: { current: HTMLCanvasElement | null };
   toleranceRef: { current: number };
-}
+};
 
 export function paintBucket(
-  refs: BucketRefs,
+  refs: PaintBucketRefs,
   p: { x: number; y: number },
   snapshot: () => void,
 ): void {

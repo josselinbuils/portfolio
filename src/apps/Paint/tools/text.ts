@@ -1,13 +1,23 @@
-import { CANVAS_H, CANVAS_W } from '../../../constants';
+import { faFont } from '@fortawesome/free-solid-svg-icons/faFont';
 
-export interface TextRefs {
+import { CANVAS_H, CANVAS_W } from '../constants';
+import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+
+export const textDescriptor = {
+  description: 'Text',
+  icon: faFont,
+  name: 'text' as const,
+  shortcut: 't',
+} satisfies DrawToolDescriptor;
+
+export type TextRefs = {
   fontFamilyRef: { current: string };
   fontSizeRef: { current: number };
   mainRef: { current: HTMLCanvasElement | null };
   stageInnerRef: { current: HTMLDivElement | null };
   strokeRef: { current: string };
   textInputRef: { current: HTMLTextAreaElement | null };
-}
+};
 
 export function commitTextIfAny(refs: TextRefs, snapshot: () => void): void {
   const inp = refs.textInputRef.current;

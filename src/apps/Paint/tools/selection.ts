@@ -1,15 +1,33 @@
-import type { Selection } from '../../../interfaces/Selection';
+import { faVectorPolygon } from '@fortawesome/free-solid-svg-icons/faVectorPolygon';
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 
-import { CANVAS_H, CANVAS_W } from '../../../constants';
-import { colorAt, colorDist } from '../../../utils/color';
+import type { DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import type { Selection } from '../types/Selection';
 
-export interface SelectionRefs {
+import { CANVAS_H, CANVAS_W } from '../constants';
+import { colorAt, colorDist } from '../utils/color';
+
+export const magicWandDescriptor = {
+  description: 'Magic wand',
+  icon: faWandMagicSparkles,
+  name: 'magicWand' as const,
+  shortcut: 'w',
+} satisfies DrawToolDescriptor;
+
+export const selectDescriptor = {
+  description: 'Marquee select',
+  icon: faVectorPolygon,
+  name: 'select' as const,
+  shortcut: 'm',
+} satisfies DrawToolDescriptor;
+
+export type SelectionRefs = {
   antsRafRef: { current: number };
   mainRef: { current: HTMLCanvasElement | null };
   selectionRef: { current: null | Selection };
   selRef: { current: HTMLCanvasElement | null };
   toleranceRef: { current: number };
-}
+};
 
 export function clearSelection(refs: SelectionRefs): void {
   refs.selRef.current!.getContext('2d')!.clearRect(0, 0, CANVAS_W, CANVAS_H);

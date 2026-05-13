@@ -1,10 +1,21 @@
-export interface PickerRefs {
+import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
+
+import type { DrawToolDescriptor } from '../types/DrawToolDescriptor';
+
+export const colorPickerDescriptor = {
+  description: 'Color picker',
+  icon: faEyeDropper,
+  name: 'colorPicker' as const,
+  shortcut: 'i',
+} satisfies DrawToolDescriptor;
+
+export type ColorPickerRefs = {
   activeSwatchRef: { current: 'fill' | 'stroke' };
   mainRef: { current: HTMLCanvasElement | null };
-}
+};
 
 export function handlePicker(
-  refs: PickerRefs,
+  refs: ColorPickerRefs,
   p: { x: number; y: number },
   setFill: (color: string) => void,
   setStroke: (color: string) => void,

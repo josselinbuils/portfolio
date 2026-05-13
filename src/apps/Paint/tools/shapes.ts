@@ -1,11 +1,36 @@
-import type { DrawTool } from '../../../interfaces/DrawTool';
+import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
+import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 
-export interface ShapeRefs {
+import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { type DrawTool } from './tools';
+
+export const circleDescriptor = {
+  description: 'Ellipse',
+  icon: faCircle,
+  name: 'circle' as const,
+  shortcut: 'c',
+} satisfies DrawToolDescriptor;
+
+export const rectDescriptor = {
+  description: 'Rectangle',
+  icon: faSquare,
+  name: 'rect' as const,
+  shortcut: 'r',
+} satisfies DrawToolDescriptor;
+
+export const rectRoundDescriptor = {
+  description: 'Rounded rectangle',
+  icon: faSquare,
+  name: 'rectRound' as const,
+  shortcut: '',
+} satisfies DrawToolDescriptor;
+
+export type ShapeRefs = {
   fillOnRef: { current: boolean };
   fillRef: { current: string };
   strokeRef: { current: string };
   widthRef: { current: number };
-}
+};
 
 export function drawShape(
   ctx: CanvasRenderingContext2D,

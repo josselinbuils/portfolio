@@ -1,6 +1,6 @@
-import { type DrawTool } from './DrawTool';
+import { type DrawTool } from '../tools/tools';
 
-export interface DragState {
+export type DragState = {
   baseDx?: number;
   baseDy?: number;
   kind: 'marquee' | 'path' | 'selmove' | 'shape';
@@ -9,4 +9,4 @@ export interface DragState {
   tool?: DrawTool;
   x0?: number;
   y0?: number;
-}
+};

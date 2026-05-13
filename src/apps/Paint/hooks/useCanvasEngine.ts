@@ -6,13 +6,10 @@ import {
   FONT_OPTIONS,
   PRESET_PALETTE,
   UNDO_MAX,
-} from '../../constants';
-import { type DragState } from '../../interfaces/DragState';
-import { type DrawTool } from '../../interfaces/DrawTool';
-import { type Selection } from '../../interfaces/Selection';
-import { paintBucket } from './tools/bucket';
-import { beginPath, endPath, extendPath } from './tools/pencil';
-import { handlePicker } from './tools/picker';
+} from '../constants';
+import { handlePicker } from '../tools/colorPicker';
+import { beginPath, endPath, extendPath } from '../tools/eraserAndPencil';
+import { paintBucket } from '../tools/paintBucket';
 import {
   clearSelection,
   commitSelection,
@@ -20,9 +17,12 @@ import {
   magicWand,
   pickUpSelection,
   startAnts,
-} from './tools/selection';
-import { drawShape } from './tools/shapes';
-import { commitTextIfAny, openTextAt } from './tools/text';
+} from '../tools/selection';
+import { drawShape } from '../tools/shapes';
+import { commitTextIfAny, openTextAt } from '../tools/text';
+import { type DrawTool } from '../tools/tools';
+import { type DragState } from '../types/DragState';
+import { type Selection } from '../types/Selection';
 
 export function useCanvasEngine(textOverlayClassName: string) {
   // ── UI state ──────────────────────────────────────────────────────────────
@@ -220,7 +220,7 @@ export function useCanvasEngine(textOverlayClassName: string) {
     const t = toolRef.current;
     const selRefs = { antsRafRef, mainRef, selectionRef, selRef, toleranceRef };
 
-    if (selectionRef.current && (t === 'select' || t === 'wand')) {
+    if (selectionRef.current && (t === 'select' || t === 'magicWand')) {
       const s = selectionRef.current;
       if (
         p.x >= s.x + s.dx &&
@@ -268,11 +268,11 @@ export function useCanvasEngine(textOverlayClassName: string) {
         textOverlayClassName,
         snapshot,
       );
-    } else if (t === 'bucket') {
+    } else if (t === 'paintBucket') {
       paintBucket({ fillRef, mainRef, toleranceRef }, p, snapshot);
-    } else if (t === 'wand') {
+    } else if (t === 'magicWand') {
       magicWand(selRefs, p, snapshot);
-    } else if (t === 'picker') {
+    } else if (t === 'colorPicker') {
       handlePicker({ activeSwatchRef, mainRef }, p, setFill, setStroke);
     }
   }
@@ -384,15 +384,15 @@ export function useCanvasEngine(textOverlayClassName: string) {
       b: 'pencil',
       c: 'circle',
       e: 'eraser',
-      f: 'bucket',
-      g: 'bucket',
-      i: 'picker',
+      f: 'paintBucket',
+      g: 'paintBucket',
+      i: 'colorPicker',
       m: 'select',
       p: 'pencil',
       r: 'rect',
       s: 'select',
       t: 'text',
-      w: 'wand',
+      w: 'magicWand',
     };
     function onKey(ev: KeyboardEvent) {
       if (

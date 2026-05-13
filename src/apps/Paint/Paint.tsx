@@ -5,7 +5,7 @@ import { Window } from '@/platform/components/Window/Window';
 import { Palette } from './components/Palette/Palette';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { CANVAS_H, CANVAS_W } from './constants';
-import { useCanvasEngine } from './hooks/useCanvasEngine/useCanvasEngine';
+import { useCanvasEngine } from './hooks/useCanvasEngine';
 import styles from './Paint.module.scss';
 
 export const Paint: WindowComponent = ({
@@ -49,7 +49,7 @@ export const Paint: WindowComponent = ({
   const stageCursor =
     tool === 'text'
       ? styles.cursorText
-      : tool === 'bucket'
+      : tool === 'paintBucket'
         ? styles.cursorBucket
         : styles.cursorCrosshair;
 

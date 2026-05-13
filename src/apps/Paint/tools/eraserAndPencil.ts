@@ -1,13 +1,31 @@
-import type { DrawTool } from '../../../interfaces/DrawTool';
+import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
+import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 
-export interface PencilRefs {
+import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { type DrawTool } from './tools';
+
+export const eraserDescriptor = {
+  description: 'Eraser',
+  icon: faEraser,
+  name: 'eraser' as const,
+  shortcut: 'e',
+} satisfies DrawToolDescriptor;
+
+export const pencilDescriptor = {
+  description: 'Pencil',
+  icon: faPencil,
+  name: 'pencil' as const,
+  shortcut: 'b',
+} satisfies DrawToolDescriptor;
+
+export type PencilRefs = {
   fillRef: { current: string };
   mainRef: { current: HTMLCanvasElement | null };
   pathActiveRef: { current: boolean };
   strokeRef: { current: string };
   toolRef: { current: DrawTool };
   widthRef: { current: number };
-}
+};
 
 export function beginPath(refs: PencilRefs, p: { x: number; y: number }): void {
   const mctx = refs.mainRef.current!.getContext('2d')!;
