@@ -2,6 +2,7 @@ import { BlogDescriptor } from '@/apps/Blog/BlogDescriptor';
 import { CodeEditorDescriptor } from '@/apps/CodeEditor/CodeEditorDescriptor';
 import { DICOMViewerDescriptor } from '@/apps/DICOMViewer/DICOMViewerDescriptor';
 import { MP3PlayerDescriptor } from '@/apps/MP3Player/MP3PlayerDescriptor';
+import { PaintDescriptor } from '@/apps/Paint/PaintDescriptor';
 import { RedditDescriptor } from '@/apps/Reddit/RedditDescriptor';
 import { TeraviaDescriptor } from '@/apps/Teravia/TeraviaDescriptor';
 import { TerminalDescriptor } from '@/apps/Terminal/TerminalDescriptor';
@@ -12,6 +13,7 @@ export const APP_DESCRIPTORS = [
   CodeEditorDescriptor,
   DICOMViewerDescriptor,
   MP3PlayerDescriptor,
+  PaintDescriptor,
   TeraviaDescriptor,
   RedditDescriptor,
 ];

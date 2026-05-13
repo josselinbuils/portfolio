@@ -1,0 +1,346 @@
+@import '@/platform/_constants.scss';
+
+.options {
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 50px;
+  padding: 0 16px;
+  color: #1a1a1a;
+  background: #ffffff;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.08),
+    0 2px 12px rgba(0, 0, 0, 0.06);
+
+  gap: 4px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+
+  gap: $spacingS;
+
+  &:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  &:last-child {
+    margin-left: auto;
+    padding-right: 0;
+  }
+}
+
+.label {
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+// ── Tools ─────────────────────────────────────────────────────────────────────
+
+.toolsGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 32px;
+  padding-right: 12px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+
+  gap: 2px;
+}
+
+.tool {
+  @include clearButton;
+
+  font-size: 1.3rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+  color: #555;
+  border-radius: 8px;
+
+  &:hover {
+    color: #111;
+    background: #f0f0f0;
+  }
+
+  &.active {
+    color: #fff;
+    background: $primaryColor;
+    box-shadow: 0 2px 8px rgba(0, 122, 216, 0.4);
+  }
+
+  &[data-tip]:hover::after {
+    font-size: 1.15rem;
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 8px);
+    left: 50%;
+    padding: 5px 10px;
+    content: attr(data-tip);
+    transform: translateX(-50%);
+    white-space: nowrap;
+    pointer-events: none;
+    color: #fff;
+    border-radius: 6px;
+    background: #222;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// ── Dual stroke/fill swatch ───────────────────────────────────────────────────
+
+.dualSwatch {
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 34px;
+}
+
+.dsStroke,
+.dsFill {
+  @include clearButton;
+
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.dsFill {
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+}
+
+.dsStroke {
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+
+// ── Stroke width button + popover ─────────────────────────────────────────────
+
+.widthBtn {
+  @include clearButton;
+
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  color: #333;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: #f7f7f7;
+
+  gap: 7px;
+
+  &:hover {
+    background: #ececec;
+  }
+}
+
+.widthPreview {
+  display: block;
+  width: 28px;
+  height: 4px;
+  border-radius: 999px;
+  background: #333;
+}
+
+.widthPopover {
+  position: fixed;
+  z-index: 100;
+  min-width: 210px;
+  padding: 16px 20px;
+  color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  background: rgba(250, 250, 252, 0.88);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+
+  &::before {
+    position: absolute;
+    top: -7px;
+    left: 26px;
+    width: 14px;
+    height: 14px;
+    content: '';
+    transform: rotate(45deg);
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-left: 1px solid rgba(255, 255, 255, 0.6);
+    border-top-left-radius: 3px;
+    background: rgba(250, 250, 252, 0.88);
+  }
+}
+
+.wopt {
+  @include clearButton;
+
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 7px 8px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  text-align: left;
+  color: inherit;
+  border-radius: 8px;
+
+  gap: 10px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .check {
+    flex: 0 0 14px;
+    width: 14px;
+    text-align: center;
+    opacity: 0;
+    color: $primaryColor;
+  }
+
+  &.woptActive .check {
+    opacity: 1;
+  }
+
+  .bar {
+    flex: 1 1 auto;
+    border-radius: 999px;
+    background: #333;
+  }
+
+  .woptLabel {
+    font-family: monospace;
+    min-width: 24px;
+    text-align: right;
+    opacity: 0.5;
+  }
+}
+
+// ── Option inputs ─────────────────────────────────────────────────────────────
+
+.numberInput,
+.textInput {
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  padding: 4px 8px;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+  color: #1a1a1a;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  outline: 0;
+  background: #f7f7f7;
+
+  &:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 3px rgba(0, 122, 216, 0.15);
+  }
+}
+
+.numberInput {
+  width: 56px;
+}
+
+.selectInput {
+  font-family: $fontFamily;
+  font-size: 1.3rem;
+  padding: 4px 8px;
+  color: #1a1a1a;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: #f7f7f7;
+}
+
+.toleranceSlider {
+  width: 100px;
+
+  accent-color: $primaryColor;
+}
+
+.checkbox {
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  color: #444;
+
+  gap: 6px;
+
+  input {
+    accent-color: $primaryColor;
+  }
+}
+
+.actionBtn {
+  @include clearButton;
+
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+  color: #555;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: #f7f7f7;
+
+  &:hover {
+    color: #111;
+    background: #e8e8e8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+}
