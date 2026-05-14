@@ -222,8 +222,7 @@ export const Paint: WindowComponent = ({
 
   useKeyMap(
     {
-      'CtrlCmd+Shift+Z': redo,
-      'CtrlCmd+Y': redo,
+      'CtrlCmd+Y,CtrlCmd+Shift+Z': redo,
       'CtrlCmd+Z': undo,
     },
     active,

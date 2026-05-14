@@ -25,6 +25,11 @@ export const selectDescriptor = {
       handler: (_event, data) => selectAll(data),
       keyStr: 'CtrlCmd+A',
     },
+    {
+      description: 'Delete selection',
+      handler: (_event, data) => deleteSelection(data),
+      keyStr: 'Delete,Backspace',
+    },
   ],
 } satisfies DrawToolDescriptor<SelectionState>;
 
@@ -40,6 +45,27 @@ export function clearSelection({
   }
   getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
   setToolState(() => ({ antsRaf: 0 }));
+}
+
+export function deleteSelection(
+  data: DrawToolListenerData<SelectionState>,
+): void {
+  const { getSharedState, mainCanvas, setSharedState, snapshot } = data;
+  const { selection } = getSharedState();
+
+  if (!selection) {
+    return;
+  }
+
+  snapshot();
+  getCanvasContext(mainCanvas).clearRect(
+    selection.x,
+    selection.y,
+    selection.width,
+    selection.height,
+  );
+  setSharedState((state) => ({ ...state, selection: null }));
+  clearSelection(data);
 }
 
 export function drawAnts(
