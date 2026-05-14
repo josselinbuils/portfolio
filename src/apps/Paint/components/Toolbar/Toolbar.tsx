@@ -108,12 +108,16 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     setShowWidthPopover(true);
   }
 
-  const showColors = !['colorPicker', 'select'].includes(tool);
+  const showColors = !['colorPicker', 'magicWand', 'select'].includes(tool);
   const showFillToggle = ['circle', 'rect', 'rectRound'].includes(tool);
-  const showWidth = !['colorPicker', 'paintBucket', 'select', 'text'].includes(
-    tool,
-  );
-  const showTolerance = ['paintBucket'].includes(tool);
+  const showWidth = ![
+    'colorPicker',
+    'magicWand',
+    'paintBucket',
+    'select',
+    'text',
+  ].includes(tool);
+  const showTolerance = ['magicWand', 'paintBucket'].includes(tool);
   const showTextOpts = tool === 'text';
 
   return (

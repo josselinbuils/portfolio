@@ -26,18 +26,23 @@ export const selectDescriptor = {
       keyStr: 'CtrlCmd+A',
     },
     {
+      description: 'Unselect',
+      handler: (_event, data) => clearSelection(data),
+      keyStr: 'Escape',
+    },
+    {
       description: 'Delete selection',
       handler: (_event, data) => deleteSelection(data),
-      keyStr: 'Delete,Backspace',
+      keyStr: 'Backspace,Delete',
     },
   ],
 } satisfies DrawToolDescriptor<SelectionState>;
 
-export function clearSelection({
+export function clearSelection<T extends SelectionState>({
   getToolState,
   overlayCanvas,
   setToolState,
-}: DrawToolListenerData<SelectionState>): void {
+}: DrawToolListenerData<T>): void {
   const { antsRaf } = getToolState();
 
   if (antsRaf) {
@@ -49,7 +54,7 @@ export function clearSelection({
     overlayCanvas.width,
     overlayCanvas.height,
   );
-  setToolState(() => ({ antsRaf: 0 }));
+  setToolState((state) => ({ ...state, antsRaf: 0 }));
 }
 
 export function deleteSelection(
@@ -63,12 +68,30 @@ export function deleteSelection(
   }
 
   snapshot();
-  getCanvasContext(mainCanvas).clearRect(
-    selection.x,
-    selection.y,
-    selection.width,
-    selection.height,
-  );
+  const context = getCanvasContext(mainCanvas);
+
+  if (selection.mask) {
+    const imageData = context.getImageData(
+      0,
+      0,
+      mainCanvas.width,
+      mainCanvas.height,
+    );
+    for (let pixelIndex = 0; pixelIndex < selection.mask.length; pixelIndex++) {
+      if (selection.mask[pixelIndex]) {
+        imageData.data[pixelIndex * 4 + 3] = 0;
+      }
+    }
+    context.putImageData(imageData, 0, 0);
+  } else {
+    context.clearRect(
+      selection.x,
+      selection.y,
+      selection.width,
+      selection.height,
+    );
+  }
+
   setSharedState((state) => ({ ...state, selection: null }));
   clearSelection(data);
 }
@@ -89,22 +112,33 @@ export function drawAnts(
   context.save();
   context.lineWidth = 1;
   context.setLineDash([4, 4]);
-  context.lineDashOffset = -antOffset;
-  context.strokeStyle = '#ffffff';
-  context.strokeRect(
-    selection.x + 0.5,
-    selection.y + 0.5,
-    selection.width - 1,
-    selection.height - 1,
-  );
-  context.lineDashOffset = -antOffset + 4;
-  context.strokeStyle = '#000000';
-  context.strokeRect(
-    selection.x + 0.5,
-    selection.y + 0.5,
-    selection.width - 1,
-    selection.height - 1,
-  );
+
+  if (selection.boundary) {
+    context.lineDashOffset = -antOffset;
+    context.strokeStyle = '#ffffff';
+    context.stroke(selection.boundary);
+    context.lineDashOffset = -antOffset + 4;
+    context.strokeStyle = '#000000';
+    context.stroke(selection.boundary);
+  } else {
+    context.lineDashOffset = -antOffset;
+    context.strokeStyle = '#ffffff';
+    context.strokeRect(
+      selection.x + 0.5,
+      selection.y + 0.5,
+      selection.width - 1,
+      selection.height - 1,
+    );
+    context.lineDashOffset = -antOffset + 4;
+    context.strokeStyle = '#000000';
+    context.strokeRect(
+      selection.x + 0.5,
+      selection.y + 0.5,
+      selection.width - 1,
+      selection.height - 1,
+    );
+  }
+
   context.restore();
 }
 
