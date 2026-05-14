@@ -25,21 +25,39 @@ function handlePaintBucket(
     return;
   }
 
-  snapshot();
-
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { fillColor, strokeColor, tolerance } = getSharedState();
-  const [fillR, fillG, fillB, fillA] = hexToRgba(
-    event.button === MAIN_BUTTON ? strokeColor : fillColor,
-  );
+  const { fillColor, selection, strokeColor, tolerance } = getSharedState();
+  const activeColor = event.button === MAIN_BUTTON ? strokeColor : fillColor;
   const { height, width } = mainCanvas;
-  const imageData = context.getImageData(0, 0, width, height);
-  const { data } = imageData;
 
   if (x < 0 || y < 0 || x >= width || y >= height) {
     return;
   }
+
+  snapshot();
+
+  if (selection) {
+    context.save();
+    context.fillStyle = activeColor;
+    if (selection.boundary) {
+      context.fill(selection.boundary, 'nonzero');
+    } else {
+      context.fillRect(
+        selection.x,
+        selection.y,
+        selection.width,
+        selection.height,
+      );
+    }
+    context.restore();
+    return;
+  }
+
+  const [fillR, fillG, fillB, fillA] = hexToRgba(activeColor);
+
+  const imageData = context.getImageData(0, 0, width, height);
+  const { data } = imageData;
 
   const startIndex = y * width + x;
   const targetR = data[startIndex * 4];
