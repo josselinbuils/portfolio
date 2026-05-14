@@ -1,6 +1,6 @@
 import { faFont } from '@fortawesome/free-solid-svg-icons/faFont';
 
-import { CANVAS_H, CANVAS_W, FONT_OPTIONS, MAIN_BUTTON } from '../constants';
+import { FONT_OPTIONS, MAIN_BUTTON } from '../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
@@ -88,8 +88,8 @@ function openText(
     'Text input — Enter to commit, Escape to cancel',
   );
   inp.className = state.className;
-  inp.style.left = `${position.x * (rect.width / CANVAS_W)}px`;
-  inp.style.top = `${position.y * (rect.height / CANVAS_H)}px`;
+  inp.style.left = `${position.x * (rect.width / mainCanvas.width)}px`;
+  inp.style.top = `${position.y * (rect.height / mainCanvas.height)}px`;
   inp.style.font = `${state.fontSize}px ${state.fontFamily}`;
   inp.style.color = getSharedState().strokeColor;
   inp.style.lineHeight = '1.2';

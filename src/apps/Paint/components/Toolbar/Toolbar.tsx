@@ -1,4 +1,5 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons/faFile';
+import { faFolderOpen } from '@fortawesome/free-regular-svg-icons/faFolderOpen';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons/faRotateLeft';
@@ -25,6 +26,7 @@ export interface ToolbarProps {
   onFontFamilyChange(v: string): void;
   onFontSizeChange(v: number): void;
   onOpenColorPicker(target: 'fill' | 'stroke'): void;
+  onOpenImage(): void;
   onRedo(): void;
   onSetTool(t: DrawTool): void;
   onSetWidth(v: number): void;
@@ -48,6 +50,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   onFontFamilyChange,
   onFontSizeChange,
   onOpenColorPicker,
+  onOpenImage,
   onRedo,
   onSetTool,
   onSetWidth,
@@ -284,6 +287,15 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           type="button"
         >
           <FontAwesomeIcon icon={faFile} />
+        </button>
+        <button
+          aria-label="Open image"
+          className={styles.actionBtn}
+          onClick={onOpenImage}
+          title="Open"
+          type="button"
+        >
+          <FontAwesomeIcon icon={faFolderOpen} />
         </button>
         <button
           aria-label="Undo"

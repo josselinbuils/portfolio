@@ -1,7 +1,7 @@
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 
-import { CANVAS_H, CANVAS_W, MAIN_BUTTON } from '../constants';
+import { MAIN_BUTTON } from '../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
@@ -116,7 +116,12 @@ function handleShapeMouseDown(
   }
   const { x, y } = getPositionInCanvas(event, mainCanvas);
 
-  getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+  getCanvasContext(overlayCanvas).clearRect(
+    0,
+    0,
+    overlayCanvas.width,
+    overlayCanvas.height,
+  );
   setToolState(() => ({ x0: x, y0: y }));
 
   function onMouseMove(event: MouseEvent) {
@@ -152,7 +157,7 @@ function handleShapeMouseMove(
   const context = getCanvasContext(overlayCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
 
-  context.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
   drawShape(
     context,
     getSharedState(),
@@ -186,7 +191,12 @@ function handleShapeMouseUp(
   const { x0, y0 } = toolState;
 
   setToolState(() => null);
-  getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+  getCanvasContext(overlayCanvas).clearRect(
+    0,
+    0,
+    overlayCanvas.width,
+    overlayCanvas.height,
+  );
 
   const ex = event.shiftKey
     ? x0 + Math.sign(x - x0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))

@@ -37,6 +37,7 @@ export const Paint: WindowComponent = ({
   const [status, setStatus] = useState(`${CANVAS_W} × ${CANVAS_H} · 1:1`);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ h: CANVAS_H, w: CANVAS_W });
 
   const [sharedState, setSharedState] = useState<SharedState>({
     fillColor: '#ffffff',
@@ -67,22 +68,36 @@ export const Paint: WindowComponent = ({
   const stageInnerRef = useRef<HTMLDivElement>(null);
 
   const hiddenColorRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingImageRef = useRef<HTMLImageElement | null>(null);
   const redoStack = useRef<ImageData[]>([]);
   const undoStack = useRef<ImageData[]>([]);
 
   useEffect(() => {
-    const context = mainRef.current!.getContext('2d')!;
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, CANVAS_W, CANVAS_H);
     toolsStateRef.current['text'] = {
       ...getTextState(),
       className: styles.textOverlay,
     };
   }, []);
 
-  function snapshot() {
+  useEffect(() => {
     const context = mainRef.current!.getContext('2d')!;
-    undoStack.current.push(context.getImageData(0, 0, CANVAS_W, CANVAS_H));
+    if (pendingImageRef.current) {
+      context.drawImage(pendingImageRef.current, 0, 0);
+      pendingImageRef.current = null;
+    } else {
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvasSize.w, canvasSize.h);
+    }
+    setStatus(`${canvasSize.w} × ${canvasSize.h} · 1:1`);
+  }, [canvasSize]);
+
+  function snapshot() {
+    const canvas = mainRef.current!;
+    const context = canvas.getContext('2d')!;
+    undoStack.current.push(
+      context.getImageData(0, 0, canvas.width, canvas.height),
+    );
     if (undoStack.current.length > UNDO_MAX) undoStack.current.shift();
     redoStack.current.splice(0);
     setCanUndo(true);
@@ -91,8 +106,11 @@ export const Paint: WindowComponent = ({
 
   function undo() {
     if (!undoStack.current.length) return;
-    const context = mainRef.current!.getContext('2d')!;
-    redoStack.current.push(context.getImageData(0, 0, CANVAS_W, CANVAS_H));
+    const canvas = mainRef.current!;
+    const context = canvas.getContext('2d')!;
+    redoStack.current.push(
+      context.getImageData(0, 0, canvas.width, canvas.height),
+    );
     context.putImageData(undoStack.current.pop()!, 0, 0);
     setCanUndo(undoStack.current.length > 0);
     setCanRedo(true);
@@ -100,8 +118,11 @@ export const Paint: WindowComponent = ({
 
   function redo() {
     if (!redoStack.current.length) return;
-    const context = mainRef.current!.getContext('2d')!;
-    undoStack.current.push(context.getImageData(0, 0, CANVAS_W, CANVAS_H));
+    const canvas = mainRef.current!;
+    const context = canvas.getContext('2d')!;
+    undoStack.current.push(
+      context.getImageData(0, 0, canvas.width, canvas.height),
+    );
     context.putImageData(redoStack.current.pop()!, 0, 0);
     setCanUndo(true);
     setCanRedo(redoStack.current.length > 0);
@@ -162,12 +183,38 @@ export const Paint: WindowComponent = ({
     inp.click();
   }
 
+  function openImage() {
+    fileInputRef.current!.click();
+  }
+
+  function handleImageFile(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      undoStack.current.splice(0);
+      redoStack.current.splice(0);
+      setCanUndo(false);
+      setCanRedo(false);
+      pendingImageRef.current = img;
+      setCanvasSize({ h: img.naturalHeight, w: img.naturalWidth });
+      URL.revokeObjectURL(url);
+      fileInputRef.current!.value = '';
+    };
+
+    img.src = url;
+  }
+
   function clearCanvas() {
     if (!confirm('Start a new image? Unsaved work will be lost.')) return;
     snapshot();
-    const context = mainRef.current!.getContext('2d')!;
+    const canvas = mainRef.current!;
+    const context = canvas.getContext('2d')!;
     context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    context.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   function createListenerData(): DrawToolListenerData {
@@ -208,8 +255,9 @@ export const Paint: WindowComponent = ({
         return;
       }
       const { x, y } = getPositionInCanvas(event, mainRef.current);
+      const { height, width } = mainRef.current;
       setStatus(
-        `${CANVAS_W} × ${CANVAS_H}   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
+        `${width} × ${height}   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
       );
     }, 33);
 
@@ -275,6 +323,7 @@ export const Paint: WindowComponent = ({
           onFontFamilyChange={setFontFamily}
           onFontSizeChange={setFontSize}
           onOpenColorPicker={openColorPicker}
+          onOpenImage={openImage}
           onRedo={redo}
           onSetTool={setTool}
           onSetWidth={setWidth}
@@ -290,21 +339,21 @@ export const Paint: WindowComponent = ({
           <div
             className={styles.stageInner}
             ref={stageInnerRef}
-            style={{ height: CANVAS_H, width: CANVAS_W }}
+            style={{ height: canvasSize.h, width: canvasSize.w }}
           >
             <canvas
               className={cn(styles.canvasLayer, styles.mainCanvas)}
-              height={CANVAS_H}
+              height={canvasSize.h}
               onContextMenu={(e) => e.preventDefault()}
               onMouseDown={onMouseDown}
               ref={mainRef}
-              width={CANVAS_W}
+              width={canvasSize.w}
             />
             <canvas
               className={cn(styles.canvasLayer, styles.overlayCanvas)}
-              height={CANVAS_H}
+              height={canvasSize.h}
               ref={overlayRef}
-              width={CANVAS_W}
+              width={canvasSize.w}
             />
           </div>
         </div>
@@ -324,6 +373,13 @@ export const Paint: WindowComponent = ({
           ref={hiddenColorRef}
           style="position:absolute;width:0;height:0;opacity:0;pointer-events:none"
           type="color"
+        />
+        <input
+          accept="image/*"
+          onChange={handleImageFile}
+          ref={fileInputRef}
+          style="position:absolute;width:0;height:0;opacity:0;pointer-events:none"
+          type="file"
         />
       </div>
     </Window>

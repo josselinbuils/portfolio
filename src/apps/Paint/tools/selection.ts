@@ -1,6 +1,6 @@
 import { faVectorPolygon } from '@fortawesome/free-solid-svg-icons/faVectorPolygon';
 
-import { CANVAS_H, CANVAS_W, MAIN_BUTTON } from '../constants';
+import { MAIN_BUTTON } from '../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
@@ -43,7 +43,12 @@ export function clearSelection({
   if (antsRaf) {
     cancelAnimationFrame(antsRaf);
   }
-  getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+  getCanvasContext(overlayCanvas).clearRect(
+    0,
+    0,
+    overlayCanvas.width,
+    overlayCanvas.height,
+  );
   setToolState(() => ({ antsRaf: 0 }));
 }
 
@@ -75,7 +80,7 @@ export function drawAnts(
 ): void {
   const context = getCanvasContext(overlayCanvas);
 
-  context.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
   if (!selection) {
     return;
@@ -105,6 +110,7 @@ export function drawAnts(
 
 export function selectAll({
   getToolState,
+  mainCanvas,
   overlayCanvas,
   setSharedState,
   setToolState,
@@ -113,9 +119,9 @@ export function selectAll({
   if (antsRaf) cancelAnimationFrame(antsRaf);
 
   const selection: Selection = {
-    height: CANVAS_H,
+    height: mainCanvas.height,
     imageData: null,
-    width: CANVAS_W,
+    width: mainCanvas.width,
     x: 0,
     y: 0,
   };
@@ -142,7 +148,7 @@ function handleMarqueeMove(
   const h = Math.abs(position.y - marqueeStart.y);
   const context = getCanvasContext(overlayCanvas);
 
-  context.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
   context.lineWidth = 1;
   context.setLineDash([4, 4]);
   context.strokeStyle = '#fff';
@@ -195,7 +201,12 @@ function handleMarqueeUp(
     };
     tick();
   } else {
-    getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+    getCanvasContext(overlayCanvas).clearRect(
+      0,
+      0,
+      overlayCanvas.width,
+      overlayCanvas.height,
+    );
   }
 }
 
