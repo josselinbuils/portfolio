@@ -1,8 +1,16 @@
 export const CANVAS_W = 1000;
 export const CANVAS_H = 600;
-export const UNDO_MAX = 40;
 
-export const WIDTH_PRESETS = [1, 2, 3, 5, 8, 12, 18, 26];
+export const FONT_OPTIONS = [
+  { label: 'Lucida', value: 'Lucida Sans Unicode, Lucida Grande, sans-serif' },
+  { label: 'Courier', value: 'Courier New, Courier, monospace' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Times', value: 'Times New Roman, Times, serif' },
+  { label: 'Impact', value: 'Impact, Charcoal, sans-serif' },
+];
+
+export const MAIN_BUTTON = 0;
 
 export const PRESET_PALETTE = [
   '#000000',
@@ -26,11 +34,6 @@ export const PRESET_PALETTE = [
   '#222831',
 ];
 
-export const FONT_OPTIONS = [
-  { label: 'Lucida', value: 'Lucida Sans Unicode, Lucida Grande, sans-serif' },
-  { label: 'Courier', value: 'Courier New, Courier, monospace' },
-  { label: 'Georgia', value: 'Georgia, serif' },
-  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
-  { label: 'Times', value: 'Times New Roman, Times, serif' },
-  { label: 'Impact', value: 'Impact, Charcoal, sans-serif' },
-];
+export const SECONDARY_BUTTON = 2;
+export const UNDO_MAX = 40;
+export const WIDTH_PRESETS = [1, 2, 3, 5, 8, 12, 18, 26];

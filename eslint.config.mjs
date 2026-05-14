@@ -40,15 +40,16 @@ export default defineConfig([
         'error',
         { ignoreRestSiblings: true },
       ],
-      '@typescript-eslint/no-var-requires': 'off', // applied to js files
-      'default-param-last': 'off', // false positives
+      '@typescript-eslint/no-var-requires': 'off', // Applied to js files
+      'default-param-last': 'off', // False positives
       'no-duplicate-imports': ['error', { includeExports: true }],
       'no-empty-function': 'off',
       'no-useless-constructor': 'off',
+      'perfectionist/sort-union-types': 'off', // Put null before types
       'react-hooks/exhaustive-deps': 'error',
       'react/function-component-definition': 'off',
       'react/jsx-no-bind': 'off',
-      'react/no-unused-class-component-methods': 'off', // false positives
+      'react/no-unused-class-component-methods': 'off', // False positives
       'react/prop-types': 'off',
       'react/require-default-props': 'off',
     },

@@ -184,8 +184,8 @@
 .widthPopover {
   position: fixed;
   z-index: 100;
-  min-width: 210px;
-  padding: 16px 20px;
+  min-width: 100px;
+  padding: 8px;
   color: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 16px;
@@ -193,6 +193,7 @@
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.08),
     0 16px 40px rgba(0, 0, 0, 0.16);
+
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 
@@ -248,13 +249,6 @@
     flex: 1 1 auto;
     border-radius: 999px;
     background: #333;
-  }
-
-  .woptLabel {
-    font-family: monospace;
-    min-width: 24px;
-    text-align: right;
-    opacity: 0.5;
   }
 }
 

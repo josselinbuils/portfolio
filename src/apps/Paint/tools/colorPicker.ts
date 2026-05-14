@@ -1,30 +1,42 @@
 import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
 
-import type { DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
+import {
+  type DrawToolDescriptor,
+  type DrawToolListenerData,
+} from '../types/DrawToolDescriptor';
+import { getCanvasContext } from '../utils/getCanvasContext';
+
+type ColorPickerState = {
+  activeSwatch: 'fill' | 'stroke';
+};
 
 export const colorPickerDescriptor = {
   description: 'Color picker',
   icon: faEyeDropper,
+  initialState: {
+    activeSwatch: 'stroke',
+  },
   name: 'colorPicker' as const,
+  onMouseDown: handlePicker,
   shortcut: 'i',
-} satisfies DrawToolDescriptor;
+} satisfies DrawToolDescriptor<ColorPickerState>;
 
-export type ColorPickerRefs = {
-  activeSwatchRef: { current: 'fill' | 'stroke' };
-  mainRef: { current: HTMLCanvasElement | null };
-};
+function handlePicker({
+  event,
+  mainCanvas,
+  position: { x, y },
+  setSharedState,
+}: DrawToolListenerData<ColorPickerState>) {
+  const context = getCanvasContext(mainCanvas);
+  const imageData = context.getImageData(x, y, 1, 1).data;
+  const hex = `#${[imageData[0], imageData[1], imageData[2]]
+    .map((n) => n.toString(16).padStart(2, '0'))
+    .join('')}`;
 
-export function handlePicker(
-  refs: ColorPickerRefs,
-  p: { x: number; y: number },
-  setFill: (color: string) => void,
-  setStroke: (color: string) => void,
-): void {
-  const mctx = refs.mainRef.current!.getContext('2d')!;
-  const px = mctx.getImageData(p.x, p.y, 1, 1).data;
-  const hex =
-    '#' +
-    [px[0], px[1], px[2]].map((n) => n.toString(16).padStart(2, '0')).join('');
-  if (refs.activeSwatchRef.current === 'fill') setFill(hex);
-  else setStroke(hex);
+  if (event.button === MAIN_BUTTON) {
+    setSharedState((state) => ({ ...state, strokeColor: hex }));
+  } else if (event.button === SECONDARY_BUTTON) {
+    setSharedState((state) => ({ ...state, fillColor: hex }));
+  }
 }

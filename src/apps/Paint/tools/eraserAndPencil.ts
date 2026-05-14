@@ -1,69 +1,124 @@
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
 import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 
-import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
-import { type DrawTool } from './tools';
+import { MAIN_BUTTON } from '../constants';
+import {
+  type DrawToolDescriptor,
+  type DrawToolListenerData,
+} from '../types/DrawToolDescriptor';
+import { getCanvasContext } from '../utils/getCanvasContext';
+import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 
 export const eraserDescriptor = {
   description: 'Eraser',
   icon: faEraser,
+  initialState: undefined,
   name: 'eraser' as const,
+  onMouseDown: handleEraser,
   shortcut: 'e',
 } satisfies DrawToolDescriptor;
 
 export const pencilDescriptor = {
   description: 'Pencil',
   icon: faPencil,
+  initialState: undefined,
   name: 'pencil' as const,
+  onMouseDown: handlePencil,
   shortcut: 'b',
 } satisfies DrawToolDescriptor;
 
-export type PencilRefs = {
-  fillRef: { current: string };
-  mainRef: { current: HTMLCanvasElement | null };
-  pathActiveRef: { current: boolean };
-  strokeRef: { current: string };
-  toolRef: { current: DrawTool };
-  widthRef: { current: number };
-};
-
-export function beginPath(refs: PencilRefs, p: { x: number; y: number }): void {
-  const mctx = refs.mainRef.current!.getContext('2d')!;
-  refs.pathActiveRef.current = true;
-  mctx.lineWidth = refs.widthRef.current;
-  mctx.strokeStyle = refs.strokeRef.current;
-  mctx.fillStyle = refs.fillRef.current;
-  mctx.lineCap = 'round';
-  mctx.lineJoin = 'round';
-  mctx.globalCompositeOperation =
-    refs.toolRef.current === 'eraser' ? 'destination-out' : 'source-over';
-  mctx.beginPath();
-  mctx.arc(p.x, p.y, refs.widthRef.current / 2, 0, Math.PI * 2);
-  mctx.fillStyle =
-    refs.toolRef.current === 'eraser'
-      ? 'rgba(0,0,0,1)'
-      : refs.strokeRef.current;
-  mctx.fill();
-  mctx.beginPath();
-  mctx.moveTo(p.x, p.y);
+function endPath(canvas: HTMLCanvasElement): void {
+  getCanvasContext(canvas).globalCompositeOperation = 'source-over';
 }
 
-export function endPath(
-  refs: Pick<PencilRefs, 'mainRef' | 'pathActiveRef'>,
-): void {
-  refs.pathActiveRef.current = false;
-  refs.mainRef.current!.getContext('2d')!.globalCompositeOperation =
-    'source-over';
+function extendPath(ctx: CanvasRenderingContext2D, x: number, y: number): void {
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
 }
 
-export function extendPath(
-  refs: Pick<PencilRefs, 'mainRef' | 'pathActiveRef'>,
-  p: { x: number; y: number },
-): void {
-  if (!refs.pathActiveRef.current) return;
-  const mctx = refs.mainRef.current!.getContext('2d')!;
-  mctx.lineTo(p.x, p.y);
-  mctx.stroke();
-  mctx.beginPath();
-  mctx.moveTo(p.x, p.y);
+function handleEraser({
+  event,
+  getSharedState,
+  mainCanvas,
+  position: { x, y },
+  snapshot,
+}: DrawToolListenerData) {
+  if (event.button !== MAIN_BUTTON) {
+    return;
+  }
+
+  const context = getCanvasContext(mainCanvas);
+  const { width } = getSharedState();
+
+  snapshot();
+
+  context.lineWidth = width;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.globalCompositeOperation = 'destination-out';
+  context.beginPath();
+  context.arc(x, y, width / 2, 0, Math.PI * 2);
+  context.fillStyle = 'rgba(0,0,0,1)';
+  context.fill();
+  context.beginPath();
+  context.moveTo(x, y);
+
+  function onMouseMove(event: MouseEvent) {
+    const { x, y } = getPositionInCanvas(event, mainCanvas);
+    extendPath(context, x, y);
+  }
+
+  function onMouseUp() {
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+    endPath(mainCanvas);
+  }
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+}
+
+function handlePencil({
+  event,
+  getSharedState,
+  mainCanvas,
+  position: { x, y },
+  snapshot,
+}: DrawToolListenerData) {
+  if (event.button !== MAIN_BUTTON) {
+    return;
+  }
+
+  const context = getCanvasContext(mainCanvas);
+  const sharedState = getSharedState();
+
+  snapshot();
+
+  context.lineWidth = sharedState.width;
+  context.strokeStyle = sharedState.strokeColor;
+  context.fillStyle = sharedState.strokeColor;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.globalCompositeOperation = 'source-over';
+  context.beginPath();
+  context.arc(x, y, sharedState.width / 2, 0, Math.PI * 2);
+  context.fill();
+  context.beginPath();
+  context.moveTo(x, y);
+
+  function onMouseMove(event: MouseEvent) {
+    const { x, y } = getPositionInCanvas(event, mainCanvas);
+    extendPath(context, x, y);
+  }
+
+  function onMouseUp() {
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+    endPath(mainCanvas);
+  }
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
 }

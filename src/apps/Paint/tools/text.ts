@@ -1,80 +1,118 @@
 import { faFont } from '@fortawesome/free-solid-svg-icons/faFont';
 
-import { CANVAS_H, CANVAS_W } from '../constants';
-import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { CANVAS_H, CANVAS_W, FONT_OPTIONS, MAIN_BUTTON } from '../constants';
+import {
+  type DrawToolDescriptor,
+  type DrawToolListenerData,
+} from '../types/DrawToolDescriptor';
+
+export type TextState = {
+  className: string;
+  fontFamily: string;
+  fontSize: number;
+  input: HTMLTextAreaElement | null;
+};
+
+export const INITIAL_TEXT_STATE: TextState = {
+  className: '',
+  fontFamily: FONT_OPTIONS[0].value,
+  fontSize: 24,
+  input: null,
+};
 
 export const textDescriptor = {
   description: 'Text',
   icon: faFont,
+  initialState: INITIAL_TEXT_STATE,
   name: 'text' as const,
+  onMouseDown: openText,
   shortcut: 't',
-} satisfies DrawToolDescriptor;
+} satisfies DrawToolDescriptor<TextState>;
 
-export type TextRefs = {
-  fontFamilyRef: { current: string };
-  fontSizeRef: { current: number };
-  mainRef: { current: HTMLCanvasElement | null };
-  stageInnerRef: { current: HTMLDivElement | null };
-  strokeRef: { current: string };
-  textInputRef: { current: HTMLTextAreaElement | null };
-};
-
-export function commitTextIfAny(refs: TextRefs, snapshot: () => void): void {
-  const inp = refs.textInputRef.current;
-  if (!inp) return;
-  const txt = inp.value;
-  const x = +inp.dataset.x!;
-  const y = +inp.dataset.y!;
-  const size = +inp.dataset.size!;
-  const fam = inp.dataset.family!;
-  const color = inp.dataset.color!;
-  inp.remove();
-  refs.textInputRef.current = null;
-  if (!txt) return;
-  snapshot();
-  const mctx = refs.mainRef.current!.getContext('2d')!;
-  mctx.fillStyle = color;
-  mctx.font = `${size}px ${fam}`;
-  mctx.textBaseline = 'top';
-  txt.split('\n').forEach((ln, i) => mctx.fillText(ln, x, y + i * size * 1.2));
-}
-
-export function openTextAt(
-  refs: TextRefs,
-  p: { x: number; y: number },
-  textOverlayClassName: string,
+export function commitText(
+  { input }: TextState,
+  setInput: (inp: HTMLTextAreaElement | null) => void,
+  mainCanvas: HTMLCanvasElement,
   snapshot: () => void,
 ): void {
-  commitTextIfAny(refs, snapshot);
-  const r = refs.mainRef.current!.getBoundingClientRect();
+  if (!input) return;
+  const txt = input.value;
+  const x = +input.dataset.x!;
+  const y = +input.dataset.y!;
+  const size = +input.dataset.size!;
+  const fam = input.dataset.family!;
+  const color = input.dataset.color!;
+  input.remove();
+  setInput(null);
+  if (!txt) return;
+  snapshot();
+  const context = mainCanvas.getContext('2d')!;
+  context.fillStyle = color;
+  context.font = `${size}px ${fam}`;
+  context.textBaseline = 'top';
+  txt
+    .split('\n')
+    .forEach((ln, i) => context.fillText(ln, x, y + i * size * 1.2));
+}
+
+function openText({
+  event,
+  getSharedState,
+  getToolState,
+  mainCanvas,
+  position,
+  setToolState,
+  snapshot,
+  stageInner,
+}: DrawToolListenerData<TextState>): void {
+  if (event.button !== MAIN_BUTTON) {
+    return;
+  }
+  const state = getToolState();
+  const { strokeColor } = getSharedState();
+
+  const setInput = (input: HTMLTextAreaElement | null) => {
+    setToolState((state) => ({ ...state, input }));
+  };
+
+  commitText(state, setInput, mainCanvas, snapshot);
+
+  const rect = mainCanvas.getBoundingClientRect();
   const inp = document.createElement('textarea');
-  inp.className = textOverlayClassName;
-  inp.style.left = `${p.x * (r.width / CANVAS_W)}px`;
-  inp.style.top = `${p.y * (r.height / CANVAS_H)}px`;
-  inp.style.font = `${refs.fontSizeRef.current}px ${refs.fontFamilyRef.current}`;
-  inp.style.color = refs.strokeRef.current;
+
+  inp.className = state.className;
+  inp.style.left = `${position.x * (rect.width / CANVAS_W)}px`;
+  inp.style.top = `${position.y * (rect.height / CANVAS_H)}px`;
+  inp.style.font = `${state.fontSize}px ${state.fontFamily}`;
+  inp.style.color = getSharedState().strokeColor;
   inp.style.lineHeight = '1.2';
-  inp.dataset.x = String(p.x);
-  inp.dataset.y = String(p.y);
-  inp.dataset.size = String(refs.fontSizeRef.current);
-  inp.dataset.family = refs.fontFamilyRef.current;
-  inp.dataset.color = refs.strokeRef.current;
-  refs.stageInnerRef.current!.appendChild(inp);
-  refs.textInputRef.current = inp;
+  inp.dataset.x = String(position.x);
+  inp.dataset.y = String(position.y);
+  inp.dataset.size = String(state.fontSize);
+  inp.dataset.family = state.fontFamily;
+  inp.dataset.color = strokeColor;
+
+  stageInner.appendChild(inp);
+  setInput(inp);
   requestAnimationFrame(() => inp.focus());
+
   inp.addEventListener('input', () => {
     inp.style.width = Math.max(60, inp.scrollWidth + 8) + 'px';
     inp.style.height = Math.max(20, inp.scrollHeight + 4) + 'px';
   });
+
   inp.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       inp.value = '';
-      commitTextIfAny(refs, snapshot);
+      commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot);
     }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      commitTextIfAny(refs, snapshot);
+      commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot);
     }
   });
-  inp.addEventListener('blur', () => commitTextIfAny(refs, snapshot));
+
+  inp.addEventListener('blur', () =>
+    commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot),
+  );
 }

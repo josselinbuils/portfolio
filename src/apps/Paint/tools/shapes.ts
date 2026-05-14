@@ -1,40 +1,48 @@
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 
-import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { CANVAS_H, CANVAS_W, MAIN_BUTTON } from '../constants';
+import {
+  type DrawToolDescriptor,
+  type DrawToolListenerData,
+} from '../types/DrawToolDescriptor';
+import { type SharedState } from '../types/SharedState';
+import { getCanvasContext } from '../utils/getCanvasContext';
+import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 import { type DrawTool } from './tools';
+
+type ShapeState = { x0: number; y0: number } | null;
 
 export const circleDescriptor = {
   description: 'Ellipse',
   icon: faCircle,
+  initialState: null,
   name: 'circle' as const,
+  onMouseDown: (data) => handleShapeMouseDown(data, 'circle'),
   shortcut: 'c',
-} satisfies DrawToolDescriptor;
+} satisfies DrawToolDescriptor<ShapeState>;
 
 export const rectDescriptor = {
   description: 'Rectangle',
   icon: faSquare,
+  initialState: null,
   name: 'rect' as const,
+  onMouseDown: (data) => handleShapeMouseDown(data, 'rect'),
   shortcut: 'r',
-} satisfies DrawToolDescriptor;
+} satisfies DrawToolDescriptor<ShapeState>;
 
 export const rectRoundDescriptor = {
   description: 'Rounded rectangle',
   icon: faSquare,
+  initialState: null,
   name: 'rectRound' as const,
+  onMouseDown: (data) => handleShapeMouseDown(data, 'rectRound'),
   shortcut: '',
-} satisfies DrawToolDescriptor;
-
-export type ShapeRefs = {
-  fillOnRef: { current: boolean };
-  fillRef: { current: string };
-  strokeRef: { current: string };
-  widthRef: { current: number };
-};
+} satisfies DrawToolDescriptor<ShapeState>;
 
 export function drawShape(
-  ctx: CanvasRenderingContext2D,
-  refs: ShapeRefs,
+  context: CanvasRenderingContext2D,
+  state: Pick<SharedState, 'fillColor' | 'fillOn' | 'strokeColor' | 'width'>,
   shapeTool: DrawTool,
   x0: number,
   y0: number,
@@ -42,46 +50,164 @@ export function drawShape(
   y1: number,
   shiftKey = false,
 ): void {
-  let ex = x1,
-    ey = y1;
+  let ex = x1;
+  let ey = y1;
+
   if (shiftKey) {
-    const dx = x1 - x0,
-      dy = y1 - y0;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
     const m = Math.max(Math.abs(dx), Math.abs(dy));
+
     ex = x0 + Math.sign(dx || 1) * m;
     ey = y0 + Math.sign(dy || 1) * m;
   }
-  const x = Math.min(x0, ex),
-    y = Math.min(y0, ey);
-  const h = Math.abs(ey - y0),
-    w = Math.abs(ex - x0);
-  applyStrokeFill(ctx, refs);
-  ctx.beginPath();
+
+  const x = Math.min(x0, ex);
+  const y = Math.min(y0, ey);
+  const h = Math.abs(ey - y0);
+  const w = Math.abs(ex - x0);
+
+  applyStrokeFill(context, state);
+  context.beginPath();
+
   if (shapeTool === 'rect') {
-    ctx.rect(x, y, w, h);
+    context.rect(x, y, w, h);
   } else if (shapeTool === 'rectRound') {
-    const r = Math.min(20, w / 2, h / 2, 4 + refs.widthRef.current * 2);
-    if ((ctx as any).roundRect) {
-      (ctx as any).roundRect(x, y, w, h, r);
+    const r = Math.min(20, w / 2, h / 2, 4 + state.width * 2);
+
+    if ((context as any).roundRect) {
+      (context as any).roundRect(x, y, w, h, r);
     } else {
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.closePath();
+      context.moveTo(x + r, y);
+      context.arcTo(x + w, y, x + w, y + h, r);
+      context.arcTo(x + w, y + h, x, y + h, r);
+      context.arcTo(x, y + h, x, y, r);
+      context.arcTo(x, y, x + w, y, r);
+      context.closePath();
     }
   } else if (shapeTool === 'circle') {
-    ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+    context.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
   }
-  if (refs.fillOnRef.current) ctx.fill();
-  ctx.stroke();
+
+  if (state.fillOn) {
+    context.fill();
+  }
+  context.stroke();
 }
 
-function applyStrokeFill(ctx: CanvasRenderingContext2D, refs: ShapeRefs): void {
-  ctx.lineWidth = refs.widthRef.current;
-  ctx.strokeStyle = refs.strokeRef.current;
-  ctx.fillStyle = refs.fillRef.current;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+function applyStrokeFill(
+  context: CanvasRenderingContext2D,
+  state: Pick<SharedState, 'fillColor' | 'strokeColor' | 'width'>,
+): void {
+  context.lineWidth = state.width;
+  context.strokeStyle = state.strokeColor;
+  context.fillStyle = state.fillColor;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.setLineDash([]);
+}
+
+function handleShapeMouseDown(
+  data: DrawToolListenerData<ShapeState>,
+  shapeTool: DrawTool,
+): void {
+  const { event, overlayCanvas, position, setToolState } = data;
+
+  if (event.button !== MAIN_BUTTON) {
+    return;
+  }
+
+  getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+  setToolState(() => ({ x0: position.x, y0: position.y }));
+
+  function onMouseMove(event: MouseEvent) {
+    handleShapeMouseMove(event, data, shapeTool);
+  }
+
+  function onMouseUp(event: MouseEvent) {
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+    handleShapeMouseUp(event, data, shapeTool);
+  }
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+}
+
+function handleShapeMouseMove(
+  event: MouseEvent,
+  {
+    getSharedState,
+    getToolState,
+    mainCanvas,
+    overlayCanvas,
+  }: DrawToolListenerData<ShapeState>,
+  shapeTool: DrawTool,
+): void {
+  const toolState = getToolState();
+
+  if (!toolState) {
+    return;
+  }
+
+  const context = getCanvasContext(overlayCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
+
+  context.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  drawShape(
+    context,
+    getSharedState(),
+    shapeTool,
+    toolState.x0,
+    toolState.y0,
+    x,
+    y,
+    event.shiftKey,
+  );
+}
+
+function handleShapeMouseUp(
+  event: MouseEvent,
+  {
+    getSharedState,
+    getToolState,
+    mainCanvas,
+    overlayCanvas,
+    setToolState,
+    snapshot,
+  }: DrawToolListenerData<ShapeState>,
+  shapeTool: DrawTool,
+): void {
+  const toolState = getToolState();
+
+  if (!toolState) {
+    return;
+  }
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
+  const { x0, y0 } = toolState;
+
+  setToolState(() => null);
+  getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+  const ex = event.shiftKey
+    ? x0 + Math.sign(x - x0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
+    : x;
+
+  const ey = event.shiftKey
+    ? y0 + Math.sign(y - y0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
+    : y;
+
+  if (x0 !== ex || y0 !== ey) {
+    snapshot();
+    drawShape(
+      mainCanvas.getContext('2d')!,
+      getSharedState(),
+      shapeTool,
+      x0,
+      y0,
+      ex,
+      ey,
+      event.shiftKey,
+    );
+  }
 }
