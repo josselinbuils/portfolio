@@ -281,17 +281,12 @@ export const Paint: WindowComponent = ({
 
   useKeyMap(
     Object.fromEntries(
-      tools.flatMap(({ name, shortcuts }: DrawToolDescriptor) =>
-        (shortcuts ?? []).map(({ handler, keyStr }) => [
-          keyStr,
-          (event: KeyboardEvent) => {
-            if (currentTool !== name) {
-              return false;
-            }
-            return handler(event, createListenerData());
-          },
-        ]),
-      ),
+      (
+        tools.find(({ name }) => name === currentTool) as DrawToolDescriptor
+      ).shortcuts?.map(({ handler, keyStr }) => [
+        keyStr,
+        (event: KeyboardEvent) => handler(event, createListenerData()),
+      ]) ?? [],
     ),
     active,
   );
