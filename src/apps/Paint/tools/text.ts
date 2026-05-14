@@ -80,6 +80,10 @@ function openText({
   const rect = mainCanvas.getBoundingClientRect();
   const inp = document.createElement('textarea');
 
+  inp.setAttribute(
+    'aria-label',
+    'Text input — Enter to commit, Escape to cancel',
+  );
   inp.className = state.className;
   inp.style.left = `${position.x * (rect.width / CANVAS_W)}px`;
   inp.style.top = `${position.y * (rect.height / CANVAS_H)}px`;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
@@ -9,10 +9,7 @@ import { CANVAS_H, CANVAS_W, PRESET_PALETTE, UNDO_MAX } from './constants';
 import styles from './Paint.module.scss';
 import { commitText, INITIAL_TEXT_STATE, type TextState } from './tools/text';
 import { type DrawTool, tools } from './tools/tools';
-import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from './types/DrawToolDescriptor';
+import { type DrawToolDescriptor } from './types/DrawToolDescriptor';
 import { type SharedState } from './types/SharedState';
 import { getPositionInCanvas } from './utils/getPositionInCanvas';
 
@@ -25,11 +22,6 @@ export const Paint: WindowComponent = ({
   ...injectedWindowProps
 }) => {
   const [currentTool, setCurrentTool] = useState<DrawTool>('pencil');
-  const [stroke, setStrokeState] = useState('#111111');
-  const [fill, setFillState] = useState('#ffffff');
-  const [fillOn, setFillOnState] = useState(false);
-  const [width, setWidthState] = useState(3);
-  const [tolerance, setToleranceState] = useState(20);
   const [fontSize, setFontSizeState] = useState(INITIAL_TEXT_STATE.fontSize);
   const [fontFamily, setFontFamilyState] = useState(
     INITIAL_TEXT_STATE.fontFamily,
@@ -39,7 +31,7 @@ export const Paint: WindowComponent = ({
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
 
-  const sharedStateRef = useRef<SharedState>({
+  const [sharedState, setSharedState] = useState<SharedState>({
     fillColor: '#ffffff',
     fillOn: false,
     selection: null,
@@ -67,16 +59,9 @@ export const Paint: WindowComponent = ({
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const stageInnerRef = useRef<HTMLDivElement>(null);
 
-  const activeSwatchRef = useRef<'fill' | 'stroke'>('stroke');
-  const fillOnRef = useRef(false);
-  const fillRef = useRef('#ffffff');
   const hiddenColorRef = useRef<HTMLInputElement>(null);
   const redoStack = useRef<ImageData[]>([]);
-  const strokeRef = useRef('#111111');
-  const toleranceRef = useRef(20);
-  const toolRef = useRef<DrawTool>('pencil');
   const undoStack = useRef<ImageData[]>([]);
-  const widthRef = useRef(3);
 
   useEffect(() => {
     const context = mainRef.current!.getContext('2d')!;
@@ -116,39 +101,28 @@ export const Paint: WindowComponent = ({
   }
 
   function setTool(name: DrawTool) {
-    toolRef.current = name;
     setCurrentTool(name);
     commitText(getTextState(), setTextInput, mainRef.current!, snapshot);
   }
 
   function setStroke(color: string) {
-    strokeRef.current = color;
-    sharedStateRef.current = { ...sharedStateRef.current, strokeColor: color };
-    setStrokeState(color);
+    setSharedState((state) => ({ ...state, strokeColor: color }));
   }
 
   function setFill(color: string) {
-    fillRef.current = color;
-    sharedStateRef.current = { ...sharedStateRef.current, fillColor: color };
-    setFillState(color);
+    setSharedState((state) => ({ ...state, fillColor: color }));
   }
 
   function setFillOn(v: boolean) {
-    fillOnRef.current = v;
-    sharedStateRef.current = { ...sharedStateRef.current, fillOn: v };
-    setFillOnState(v);
+    setSharedState((state) => ({ ...state, fillOn: v }));
   }
 
   function setWidth(v: number) {
-    widthRef.current = v;
-    sharedStateRef.current = { ...sharedStateRef.current, width: v };
-    setWidthState(v);
+    setSharedState((state) => ({ ...state, width: v }));
   }
 
   function setTolerance(v: number) {
-    toleranceRef.current = v;
-    sharedStateRef.current = { ...sharedStateRef.current, tolerance: v };
-    setToleranceState(v);
+    setSharedState((state) => ({ ...state, tolerance: v }));
   }
 
   function setFontSize(v: number) {
@@ -162,9 +136,9 @@ export const Paint: WindowComponent = ({
   }
 
   function openColorPicker(target: 'fill' | 'stroke') {
-    activeSwatchRef.current = target;
     const inp = hiddenColorRef.current!;
-    inp.value = target === 'stroke' ? strokeRef.current : fillRef.current;
+    inp.value =
+      target === 'stroke' ? sharedState.strokeColor : sharedState.fillColor;
     inp.oninput = (e) => {
       const val = (e.target as HTMLInputElement).value;
       if (target === 'stroke') setStroke(val);
@@ -175,7 +149,7 @@ export const Paint: WindowComponent = ({
 
   function addSwatch() {
     const inp = hiddenColorRef.current!;
-    inp.value = strokeRef.current;
+    inp.value = sharedState.strokeColor;
     inp.oninput = (e) =>
       setSwatches((s) => [...s, (e.target as HTMLInputElement).value]);
     inp.click();
@@ -189,54 +163,31 @@ export const Paint: WindowComponent = ({
     context.fillRect(0, 0, CANVAS_W, CANVAS_H);
   }
 
-  const createListenerData = useCallback(
-    (event: MouseEvent, toolName: DrawTool): DrawToolListenerData => {
-      function setSharedState(setter: (state: SharedState) => SharedState) {
-        const prev = sharedStateRef.current;
-        const next = setter(prev);
-        sharedStateRef.current = next;
-        if (next.strokeColor !== prev.strokeColor) setStroke(next.strokeColor);
-        if (next.fillColor !== prev.fillColor) setFill(next.fillColor);
-        if (next.fillOn !== prev.fillOn) setFillOn(next.fillOn);
-        if (next.width !== prev.width) setWidth(next.width);
-        if (next.tolerance !== prev.tolerance) setTolerance(next.tolerance);
-      }
-
-      if (!mainRef.current) {
-        throw new Error('Main canvas ref is null');
-      }
-      if (!overlayRef.current) {
-        throw new Error('Overlay canvas ref is null');
-      }
-
-      return {
-        event,
-        getSharedState: () => sharedStateRef.current,
-        getToolState: () => toolsStateRef.current[toolName],
-        mainCanvas: mainRef.current,
-        overlayCanvas: overlayRef.current,
-        position: getPositionInCanvas(event, mainRef.current),
-        setSharedState,
-        setToolState: setToolState(toolName),
-        snapshot,
-        stageInner: stageInnerRef.current!,
-      };
-    },
-    [],
-  );
-
   function onMouseDown(event: MouseEvent) {
-    if (!mainRef.current) {
+    if (!mainRef.current || !overlayRef.current) {
       return;
     }
-    const t = toolRef.current;
 
-    const toolDescriptor = tools.find((d) => d.name === t) as
+    const toolDescriptor = tools.find(({ name }) => name === currentTool) as
       | DrawToolDescriptor
       | undefined;
-    if (!toolDescriptor) throw new Error('Descriptor not found');
 
-    toolDescriptor.onMouseDown(createListenerData(event, t));
+    if (!toolDescriptor) {
+      throw new Error('Descriptor not found');
+    }
+
+    toolDescriptor.onMouseDown({
+      event,
+      getSharedState: () => sharedState,
+      getToolState: () => toolsStateRef.current[currentTool],
+      mainCanvas: mainRef.current,
+      overlayCanvas: overlayRef.current,
+      position: getPositionInCanvas(event, mainRef.current),
+      setSharedState,
+      setToolState: setToolState(currentTool),
+      snapshot,
+      stageInner: stageInnerRef.current!,
+    });
   }
 
   useEffect(() => {
@@ -329,8 +280,8 @@ export const Paint: WindowComponent = ({
         <Toolbar
           canRedo={canRedo}
           canUndo={canUndo}
-          fill={fill}
-          fillOn={fillOn}
+          fill={sharedState.fillColor}
+          fillOn={sharedState.fillOn}
           fontFamily={fontFamily}
           fontSize={fontSize}
           onClear={clearCanvas}
@@ -343,10 +294,10 @@ export const Paint: WindowComponent = ({
           onSetWidth={setWidth}
           onToleranceChange={setTolerance}
           onUndo={undo}
-          stroke={stroke}
-          tolerance={tolerance}
+          stroke={sharedState.strokeColor}
+          tolerance={sharedState.tolerance}
           tool={currentTool}
-          width={width}
+          width={sharedState.width}
         />
 
         <div className={`${styles.stage} ${stageCursor}`}>
@@ -373,13 +324,13 @@ export const Paint: WindowComponent = ({
         </div>
 
         <Palette
-          fill={fill}
+          fill={sharedState.fillColor}
           onAddSwatch={addSwatch}
           onOpenColorPicker={openColorPicker}
           onSetFill={setFill}
           onSetStroke={setStroke}
           status={status}
-          stroke={stroke}
+          stroke={sharedState.strokeColor}
           swatches={swatches}
         />
 

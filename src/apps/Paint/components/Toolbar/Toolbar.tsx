@@ -5,6 +5,7 @@ import { faRotateLeft } from '@fortawesome/free-solid-svg-icons/faRotateLeft';
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons/faRotateRight';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type FunctionComponent } from 'preact';
+import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
@@ -59,15 +60,42 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   const [showWidthPopover, setShowWidthPopover] = useState(false);
   const [widthPopoverPos, setWidthPopoverPos] = useState({ left: 0, top: 0 });
   const widthBtnRef = useRef<HTMLButtonElement>(null);
+  const widthPopoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!showWidthPopover) return;
-    function onOutside(e: MouseEvent) {
-      if (widthBtnRef.current?.contains(e.target as Node)) return;
+
+    function onClickOutside(event: MouseEvent) {
+      if (widthBtnRef.current?.contains(event.target as Node)) {
+        return;
+      }
       setShowWidthPopover(false);
     }
-    document.addEventListener('click', onOutside);
-    return () => document.removeEventListener('click', onOutside);
+
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        setShowWidthPopover(false);
+        widthBtnRef.current?.focus();
+      }
+    }
+    document.addEventListener('click', onClickOutside);
+    document.addEventListener('keydown', onKey);
+
+    return () => {
+      document.removeEventListener('click', onClickOutside);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [showWidthPopover]);
+
+  useEffect(() => {
+    if (!showWidthPopover || !widthPopoverRef.current) {
+      return;
+    }
+    const activeBtn = widthPopoverRef.current.querySelector<HTMLButtonElement>(
+      '[aria-pressed="true"]',
+    );
+    (activeBtn ?? widthPopoverRef.current.querySelector('button'))?.focus();
   }, [showWidthPopover]);
 
   function openWidthPopover() {
@@ -85,11 +113,17 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   const showTextOpts = tool === 'text';
 
   return (
-    <div className={styles.options}>
+    <div aria-label="Paint tools" className={styles.options} role="toolbar">
       {/* Tools */}
-      <div className={styles.toolsGroup}>
+      <div
+        aria-label="Drawing tools"
+        className={styles.toolsGroup}
+        role="group"
+      >
         {tools.map(({ description, icon, name, shortcut }) => (
           <button
+            aria-label={`${description} (${shortcut.toUpperCase()})`}
+            aria-pressed={tool === name}
             className={`${styles.tool} ${tool === name ? styles.active : ''}`}
             data-tip={`${description} - ${shortcut.toUpperCase()}`}
             key={name}
@@ -104,20 +138,20 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Colors */}
       {showColors && (
-        <div className={styles.group}>
+        <div aria-label="Colors" className={styles.group} role="group">
           <div
             className={styles.dualSwatch}
             title="Stroke (front) / Fill (back)"
           >
             <button
-              aria-label="Fill color"
+              aria-label={`Fill color: ${fill}`}
               className={styles.dsFill}
               onClick={() => onOpenColorPicker('fill')}
               style={{ background: fill }}
               type="button"
             />
             <button
-              aria-label="Stroke color"
+              aria-label={`Stroke color: ${stroke}`}
               className={styles.dsStroke}
               onClick={() => onOpenColorPicker('stroke')}
               style={{ background: stroke }}
@@ -141,9 +175,11 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Stroke width */}
       {showWidth && (
-        <div className={styles.group}>
+        <div aria-label="Stroke width" className={styles.group} role="group">
           <button
             aria-expanded={showWidthPopover}
+            aria-haspopup="true"
+            aria-label={`Stroke width: ${width}px`}
             className={styles.widthBtn}
             onClick={
               showWidthPopover
@@ -154,6 +190,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             type="button"
           >
             <span
+              aria-hidden="true"
               className={styles.widthPreview}
               style={{ height: Math.max(1, Math.min(width, 14)) + 'px' }}
             />
@@ -164,9 +201,16 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Tolerance */}
       {showTolerance && (
-        <div className={styles.group}>
-          <span className={styles.label}>Tolerance</span>
+        <div
+          aria-label="Paint bucket options"
+          className={styles.group}
+          role="group"
+        >
+          <span aria-hidden="true" className={styles.label}>
+            Tolerance
+          </span>
           <input
+            aria-label="Tolerance"
             className={styles.toleranceSlider}
             max={128}
             min={0}
@@ -177,6 +221,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             value={tolerance}
           />
           <input
+            aria-label="Tolerance"
             className={styles.numberInput}
             max={255}
             min={0}
@@ -191,9 +236,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Text options */}
       {showTextOpts && (
-        <div className={styles.group}>
-          <span className={styles.label}>Size</span>
+        <div aria-label="Text options" className={styles.group} role="group">
+          <span aria-hidden="true" className={styles.label}>
+            Size
+          </span>
           <input
+            aria-label="Font size"
             className={styles.numberInput}
             max={200}
             min={8}
@@ -203,8 +251,11 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             type="number"
             value={fontSize}
           />
-          <span className={styles.label}>Font</span>
+          <span aria-hidden="true" className={styles.label}>
+            Font
+          </span>
           <select
+            aria-label="Font family"
             className={styles.selectInput}
             onChange={(e) =>
               onFontFamilyChange((e.target as HTMLSelectElement).value)
@@ -221,8 +272,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
       )}
 
       {/* Actions */}
-      <div className={styles.group}>
+      <div aria-label="Actions" className={styles.group} role="group">
         <button
+          aria-label="New image"
           className={styles.actionBtn}
           onClick={onClear}
           title="New"
@@ -231,6 +283,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           <FontAwesomeIcon icon={faFile} />
         </button>
         <button
+          aria-label="Undo"
           className={styles.actionBtn}
           disabled={!canUndo}
           onClick={onUndo}
@@ -240,6 +293,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           <FontAwesomeIcon icon={faRotateLeft} />
         </button>
         <button
+          aria-label="Redo"
           className={styles.actionBtn}
           disabled={!canRedo}
           onClick={onRedo}
@@ -250,33 +304,59 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         </button>
       </div>
 
-      {/* Width popover — position:fixed so it escapes the toolbar */}
-      {showWidthPopover && (
-        <div
-          className={styles.widthPopover}
-          style={{ left: widthPopoverPos.left, top: widthPopoverPos.top }}
-        >
-          {WIDTH_PRESETS.map((w) => (
-            <button
-              className={`${styles.wopt} ${width === w ? styles.woptActive : ''}`}
-              key={w}
-              onClick={() => {
-                onSetWidth(w);
-                setShowWidthPopover(false);
-              }}
-              type="button"
-            >
-              <span className={styles.check}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span
-                className={styles.bar}
-                style={{ height: Math.max(1, Math.min(w, 14)) + 'px' }}
-              />
-            </button>
-          ))}
-        </div>
-      )}
+      {showWidthPopover &&
+        createPortal(
+          <div
+            aria-label="Stroke width options"
+            className={styles.widthPopover}
+            onKeyDown={(e) => {
+              if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+              e.preventDefault();
+              const buttons = Array.from(
+                widthPopoverRef.current!.querySelectorAll<HTMLButtonElement>(
+                  'button',
+                ),
+              );
+              const idx = buttons.indexOf(
+                document.activeElement as HTMLButtonElement,
+              );
+              const next =
+                e.key === 'ArrowDown'
+                  ? (idx + 1) % buttons.length
+                  : (idx - 1 + buttons.length) % buttons.length;
+              buttons[next]?.focus();
+            }}
+            ref={widthPopoverRef}
+            role="listbox"
+            style={{ left: widthPopoverPos.left, top: widthPopoverPos.top }}
+            tabIndex={-1}
+          >
+            {WIDTH_PRESETS.map((w) => (
+              <button
+                aria-label={`${w}px`}
+                aria-pressed={width === w}
+                className={`${styles.wopt} ${width === w ? styles.woptActive : ''}`}
+                key={w}
+                onClick={() => {
+                  onSetWidth(w);
+                  setShowWidthPopover(false);
+                  widthBtnRef.current?.focus();
+                }}
+                type="button"
+              >
+                <span aria-hidden="true" className={styles.check}>
+                  <FontAwesomeIcon icon={faCheck} />
+                </span>
+                <span
+                  aria-hidden="true"
+                  className={styles.bar}
+                  style={{ height: Math.max(1, Math.min(w, 14)) + 'px' }}
+                />
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

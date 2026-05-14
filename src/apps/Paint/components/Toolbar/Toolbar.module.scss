@@ -82,6 +82,11 @@
     background: #f0f0f0;
   }
 
+  &:focus-visible {
+    outline: 2px solid $primaryColor;
+    outline-offset: 2px;
+  }
+
   &.active {
     color: #fff;
     background: $primaryColor;
@@ -133,6 +138,11 @@
   &:hover {
     transform: scale(1.1);
   }
+
+  &:focus-visible {
+    outline: 2px solid $primaryColor;
+    outline-offset: 2px;
+  }
 }
 
 .dsFill {
@@ -171,6 +181,11 @@
   &:hover {
     background: #ececec;
   }
+
+  &:focus-visible {
+    outline: 2px solid $primaryColor;
+    outline-offset: 2px;
+  }
 }
 
 .widthPreview {
@@ -184,7 +199,7 @@
 .widthPopover {
   position: fixed;
   z-index: 100;
-  min-width: 100px;
+  min-width: 68px;
   padding: 8px;
   color: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -196,20 +211,6 @@
 
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-
-  &::before {
-    position: absolute;
-    top: -7px;
-    left: 26px;
-    width: 14px;
-    height: 14px;
-    content: '';
-    transform: rotate(45deg);
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
-    border-left: 1px solid rgba(255, 255, 255, 0.6);
-    border-top-left-radius: 3px;
-    background: rgba(250, 250, 252, 0.88);
-  }
 }
 
 .wopt {
@@ -231,6 +232,11 @@
 
   &:hover {
     background: rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primaryColor;
+    outline-offset: 2px;
   }
 
   .check {
@@ -331,6 +337,11 @@
   &:hover {
     color: #111;
     background: #e8e8e8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primaryColor;
+    outline-offset: 2px;
   }
 
   &:disabled {

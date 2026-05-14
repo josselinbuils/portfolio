@@ -40,9 +40,10 @@ export const Palette: FunctionComponent<PaletteProps> = ({
         type="button"
       />
     </div>
-    <div className={styles.swatches}>
+    <div aria-label="Color palette" className={styles.swatches} role="group">
       {swatches.map((c, i) => (
         <button
+          aria-label={c}
           className={styles.swatch}
           key={i}
           onClick={(e) => {
@@ -58,6 +59,13 @@ export const Palette: FunctionComponent<PaletteProps> = ({
             (e as Event).preventDefault();
             onSetFill(c);
           }}
+          onKeyDown={(e) => {
+            const ke = e as KeyboardEvent;
+            if (ke.key !== 'Enter' && ke.key !== ' ') return;
+            ke.preventDefault();
+            if (ke.shiftKey || ke.metaKey || ke.ctrlKey) onSetFill(c);
+            else onSetStroke(c);
+          }}
           style={{ background: c }}
           title={`${c} — click: stroke · right-click / shift: fill`}
           type="button"
@@ -65,6 +73,7 @@ export const Palette: FunctionComponent<PaletteProps> = ({
       ))}
     </div>
     <button
+      aria-label="Add current color to palette"
       className={styles.addSwatch}
       onClick={onAddSwatch}
       title="Save current color"
@@ -72,6 +81,8 @@ export const Palette: FunctionComponent<PaletteProps> = ({
     >
       +
     </button>
-    <div className={styles.status}>{status}</div>
+    <div aria-label="status" className={styles.status}>
+      {status}
+    </div>
   </div>
 );
