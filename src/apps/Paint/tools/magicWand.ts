@@ -267,74 +267,43 @@ async function handleMagicWand(
 // Traces the boundary of a pixel mask into a Path2D using directed pixel edges.
 // Each selected pixel contributes clockwise edges on its unshared sides, producing
 // one outer loop per connected region and one inner loop per hole (counter-clockwise).
-// When the image is large the mask is downsampled first so the vertex count stays
-// bounded, which both prevents crashes and smooths jagged pixel boundaries.
 // Collinear consecutive edges are merged into a single lineTo (O(corners) calls).
 function traceBoundary(
   mask: Uint8Array,
   width: number,
   height: number,
 ): Path2D {
-  // Cap the longest traced dimension at 1000 px.  scale=1 for small images.
-  const MAX_DIM = 1000;
-  const scale = Math.max(1, Math.ceil(Math.max(width, height) / MAX_DIM));
-
-  let traceMask = mask;
-  let tw = width;
-  let th = height;
-
-  if (scale > 1) {
-    tw = Math.ceil(width / scale);
-    th = Math.ceil(height / scale);
-    traceMask = new Uint8Array(tw * th);
-    // OR-downsampling: a downsampled pixel is selected if ANY source pixel is.
-    for (let dy = 0; dy < th; dy++) {
-      for (let dx = 0; dx < tw; dx++) {
-        outer: for (let sy = 0; sy < scale; sy++) {
-          for (let sx = 0; sx < scale; sx++) {
-            const ox = dx * scale + sx;
-            const oy = dy * scale + sy;
-            if (ox < width && oy < height && mask[oy * width + ox]) {
-              traceMask[dy * tw + dx] = 1;
-              break outer;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Vertex grid is (tw+1) × (th+1). Encode vertex (vx,vy) as vy*(tw+1)+vx.
-  const stride = tw + 1;
-  const vertexCount = stride * (th + 1);
+  // Vertex grid is (width+1) × (height+1). Encode vertex (vx,vy) as vy*(width+1)+vx.
+  const stride = width + 1;
+  const vertexCount = stride * (height + 1);
   // nextVertex[v] = successor vertex index, or -1 if no outgoing edge.
   // Int32Array gives O(1) reads/writes vs Map's hash overhead.
   const nextVertex = new Int32Array(vertexCount).fill(-1);
   // Collect edge-start vertices inline so tracing skips the O(vertexCount) scan.
   const edgeStarts: number[] = [];
 
-  for (let py = 0; py < th; py++) {
-    for (let px = 0; px < tw; px++) {
-      if (!traceMask[py * tw + px]) continue;
+  for (let py = 0; py < height; py++) {
+    for (let px = 0; px < width; px++) {
+      if (!mask[py * width + px]) continue;
 
       const topLeft = py * stride + px;
       const topRight = topLeft + 1;
       const bottomLeft = topLeft + stride;
       const bottomRight = bottomLeft + 1;
 
-      if (py === 0 || !traceMask[(py - 1) * tw + px]) {
+      if (py === 0 || !mask[(py - 1) * width + px]) {
         nextVertex[topLeft] = topRight;
         edgeStarts.push(topLeft);
       }
-      if (px === tw - 1 || !traceMask[py * tw + px + 1]) {
+      if (px === width - 1 || !mask[py * width + px + 1]) {
         nextVertex[topRight] = bottomRight;
         edgeStarts.push(topRight);
       }
-      if (py === th - 1 || !traceMask[(py + 1) * tw + px]) {
+      if (py === height - 1 || !mask[(py + 1) * width + px]) {
         nextVertex[bottomRight] = bottomLeft;
         edgeStarts.push(bottomRight);
       }
-      if (px === 0 || !traceMask[py * tw + px - 1]) {
+      if (px === 0 || !mask[py * width + px - 1]) {
         nextVertex[bottomLeft] = topLeft;
         edgeStarts.push(bottomLeft);
       }
@@ -347,8 +316,8 @@ function traceBoundary(
   for (const startKey of edgeStarts) {
     if (visited[startKey]) continue;
 
-    const startX = (startKey % stride) * scale;
-    const startY = Math.floor(startKey / stride) * scale;
+    const startX = startKey % stride;
+    const startY = Math.floor(startKey / stride);
     path.moveTo(startX, startY);
 
     // Establish the initial direction from startKey to its successor.
@@ -356,8 +325,8 @@ function traceBoundary(
     let currentKey = nextVertex[startKey];
     let prevX = startX;
     let prevY = startY;
-    const currX = (currentKey % stride) * scale;
-    const currY = Math.floor(currentKey / stride) * scale;
+    const currX = currentKey % stride;
+    const currY = Math.floor(currentKey / stride);
     let dirX = currX - prevX;
     let dirY = currY - prevY;
     prevX = currX;
@@ -376,8 +345,8 @@ function traceBoundary(
         break;
       }
 
-      const nextX = (nextKey % stride) * scale;
-      const nextY = Math.floor(nextKey / stride) * scale;
+      const nextX = nextKey % stride;
+      const nextY = Math.floor(nextKey / stride);
       const newDirX = nextX - prevX;
       const newDirY = nextY - prevY;
 
