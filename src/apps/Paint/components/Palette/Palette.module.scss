@@ -6,12 +6,12 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  height: 60px;
-  padding: 0 16px;
+  height: 6rem;
+  padding: 0 1.6rem;
   background: #ffffff;
   box-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.07),
-    0 -4px 12px rgba(0, 0, 0, 0.04);
+    0 -0.1rem 0 rgba(0, 0, 0, 0.07),
+    0 -0.4rem 1.2rem rgba(0, 0, 0, 0.04);
 
   gap: $spacingM;
 }
@@ -19,8 +19,8 @@
 .strokeFill {
   position: relative;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
 }
 
 .sfFill,
@@ -28,23 +28,23 @@
   @include clearButton;
 
   position: absolute;
-  width: 26px;
-  height: 26px;
+  width: 2.6rem;
+  height: 2.6rem;
   cursor: pointer;
   transition: transform 0.1s ease;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 5px;
+  border: 0.2rem solid rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.18),
-    0 2px 6px rgba(0, 0, 0, 0.12);
+    0 0 0 0.1rem rgba(0, 0, 0, 0.18),
+    0 0.2rem 0.6rem rgba(0, 0, 0, 0.12);
 
   &:hover {
     transform: scale(1.08);
   }
 
   &:focus-visible {
-    outline: 2px solid $primaryColor;
-    outline-offset: 2px;
+    outline: 0.2rem solid $primaryColor;
+    outline-offset: 0.2rem;
   }
 }
 
@@ -62,8 +62,8 @@
     linear-gradient(45deg, #bbb 25%, #ddd 25%, #ddd 75%, #bbb 75%);
   background-position:
     0 0,
-    4px 4px;
-  background-size: 8px 8px;
+    0.4rem 0.4rem;
+  background-size: 0.8rem 0.8rem;
 }
 
 .sfStroke {
@@ -77,35 +77,35 @@
   overflow-y: hidden;
   align-items: center;
   flex: 1 1 auto;
-  height: 40px;
+  height: 4rem;
 
-  gap: 5px;
+  gap: 0.5rem;
 }
 
 .swatch {
   @include clearButton;
 
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
   transition:
     transform 0.1s ease,
     box-shadow 0.1s ease;
-  border: 2px solid rgba(255, 255, 255, 0.7);
+  border: 0.2rem solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.15);
 
   &:hover {
     transform: scale(1.2);
     box-shadow:
-      0 0 0 1px rgba(0, 0, 0, 0.2),
-      0 4px 10px rgba(0, 0, 0, 0.18);
+      0 0 0 0.1rem rgba(0, 0, 0, 0.2),
+      0 0.4rem 1rem rgba(0, 0, 0, 0.18);
   }
 
   &:focus-visible {
-    outline: 2px solid $primaryColor;
-    outline-offset: 2px;
+    outline: 0.2rem solid $primaryColor;
+    outline-offset: 0.2rem;
   }
 }
 
@@ -115,14 +115,14 @@
   font-size: 1.4rem;
   line-height: 1;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
   transition:
     background 0.1s ease,
     color 0.1s ease;
   color: #aaa;
-  border: 1.5px dashed #ccc;
+  border: 0.15rem dashed #ccc;
   border-radius: 50%;
 
   &:hover {
@@ -132,8 +132,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid $primaryColor;
-    outline-offset: 2px;
+    outline: 0.2rem solid $primaryColor;
+    outline-offset: 0.2rem;
   }
 }
 
@@ -141,9 +141,9 @@
   font-family: monospace;
   font-size: 1.1rem;
   margin-left: auto;
-  padding: 4px 10px;
+  padding: 0.4rem 1rem;
   white-space: nowrap;
   color: #888;
-  border-radius: 6px;
+  border-radius: 0.6rem;
   background: #f4f4f4;
 }
