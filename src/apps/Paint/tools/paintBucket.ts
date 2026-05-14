@@ -5,7 +5,7 @@ import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
 } from '../types/DrawToolDescriptor';
-import { colorAt, colorDist, hexToRgba } from '../utils/color';
+import { hexToRgba } from '../utils/color';
 import { getCanvasContext } from '../utils/getCanvasContext';
 import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 
@@ -30,7 +30,7 @@ function handlePaintBucket(
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
   const { fillColor, strokeColor, tolerance } = getSharedState();
-  const [red, green, blue, alpha] = hexToRgba(
+  const [fillR, fillG, fillB, fillA] = hexToRgba(
     event.button === MAIN_BUTTON ? strokeColor : fillColor,
   );
   const { height, width } = mainCanvas;
@@ -41,60 +41,99 @@ function handlePaintBucket(
     return;
   }
 
-  const targetColor = colorAt(data, x, y, width);
-  const visited = new Uint8Array(width * height);
-  const stack: [number, number][] = [[x, y]];
+  const startIndex = y * width + x;
+  const targetR = data[startIndex * 4];
+  const targetG = data[startIndex * 4 + 1];
+  const targetB = data[startIndex * 4 + 2];
+  const targetA = data[startIndex * 4 + 3];
+  const threshold = tolerance * 4;
 
-  visited[y * width + x] = 1;
+  const pixelCount = width * height;
+  const visited = new Uint8Array(pixelCount);
+  const queue = new Int32Array(pixelCount);
+  let head = 0;
+  let tail = 0;
 
-  while (stack.length) {
-    const [x, y] = stack.pop()!;
+  visited[startIndex] = 1;
+  queue[tail++] = startIndex;
 
-    if (
-      colorDist([...colorAt(data, x, y, width)], [...targetColor]) >
-      tolerance * 4
-    ) {
-      continue;
+  while (head < tail) {
+    const index = queue[head++];
+    const byteIndex = index * 4;
+
+    data[byteIndex] = fillR;
+    data[byteIndex + 1] = fillG;
+    data[byteIndex + 2] = fillB;
+    data[byteIndex + 3] = fillA;
+
+    const px = index % width;
+    const py = (index - px) / width;
+
+    if (px > 0) {
+      const left = index - 1;
+      if (!visited[left]) {
+        visited[left] = 1;
+        const bi = left * 4;
+        if (
+          Math.abs(data[bi] - targetR) +
+            Math.abs(data[bi + 1] - targetG) +
+            Math.abs(data[bi + 2] - targetB) +
+            Math.abs(data[bi + 3] - targetA) <=
+          threshold
+        ) {
+          queue[tail++] = left;
+        }
+      }
     }
-
-    const pixelIndex = (y * width + x) * 4;
-
-    data[pixelIndex] = red;
-    data[pixelIndex + 1] = green;
-    data[pixelIndex + 2] = blue;
-    data[pixelIndex + 3] = alpha;
-
-    for (const [neighborX, neighborY] of [
-      [x + 1, y],
-      [x - 1, y],
-      [x, y + 1],
-      [x, y - 1],
-    ] as [number, number][]) {
-      if (
-        neighborX < 0 ||
-        neighborY < 0 ||
-        neighborX >= width ||
-        neighborY >= height
-      ) {
-        continue;
+    if (px < width - 1) {
+      const right = index + 1;
+      if (!visited[right]) {
+        visited[right] = 1;
+        const bi = right * 4;
+        if (
+          Math.abs(data[bi] - targetR) +
+            Math.abs(data[bi + 1] - targetG) +
+            Math.abs(data[bi + 2] - targetB) +
+            Math.abs(data[bi + 3] - targetA) <=
+          threshold
+        ) {
+          queue[tail++] = right;
+        }
       }
-      const visitedIndex = neighborY * width + neighborX;
-
-      if (visited[visitedIndex]) {
-        continue;
+    }
+    if (py > 0) {
+      const up = index - width;
+      if (!visited[up]) {
+        visited[up] = 1;
+        const bi = up * 4;
+        if (
+          Math.abs(data[bi] - targetR) +
+            Math.abs(data[bi + 1] - targetG) +
+            Math.abs(data[bi + 2] - targetB) +
+            Math.abs(data[bi + 3] - targetA) <=
+          threshold
+        ) {
+          queue[tail++] = up;
+        }
       }
-      visited[visitedIndex] = 1;
-
-      if (
-        colorDist(
-          [...colorAt(data, neighborX, neighborY, width)],
-          [...targetColor],
-        ) <=
-        tolerance * 4
-      ) {
-        stack.push([neighborX, neighborY]);
+    }
+    if (py < height - 1) {
+      const down = index + width;
+      if (!visited[down]) {
+        visited[down] = 1;
+        const bi = down * 4;
+        if (
+          Math.abs(data[bi] - targetR) +
+            Math.abs(data[bi + 1] - targetG) +
+            Math.abs(data[bi + 2] - targetB) +
+            Math.abs(data[bi + 3] - targetA) <=
+          threshold
+        ) {
+          queue[tail++] = down;
+        }
       }
     }
   }
+
   context.putImageData(imageData, 0, 0);
 }
