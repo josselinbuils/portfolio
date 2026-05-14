@@ -30,7 +30,7 @@ function handlePaintBucket(
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
   const { fillColor, strokeColor, tolerance } = getSharedState();
-  const [r, g, b, a] = hexToRgba(
+  const [red, green, blue, alpha] = hexToRgba(
     event.button === MAIN_BUTTON ? strokeColor : fillColor,
   );
   const { height, width } = mainCanvas;
@@ -57,34 +57,42 @@ function handlePaintBucket(
       continue;
     }
 
-    const i = (y * width + x) * 4;
+    const pixelIndex = (y * width + x) * 4;
 
-    data[i] = r;
-    data[i + 1] = g;
-    data[i + 2] = b;
-    data[i + 3] = a;
+    data[pixelIndex] = red;
+    data[pixelIndex + 1] = green;
+    data[pixelIndex + 2] = blue;
+    data[pixelIndex + 3] = alpha;
 
-    for (const [nx, ny] of [
+    for (const [neighborX, neighborY] of [
       [x + 1, y],
       [x - 1, y],
       [x, y + 1],
       [x, y - 1],
     ] as [number, number][]) {
-      if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+      if (
+        neighborX < 0 ||
+        neighborY < 0 ||
+        neighborX >= width ||
+        neighborY >= height
+      ) {
         continue;
       }
-      const idx = ny * width + nx;
+      const visitedIndex = neighborY * width + neighborX;
 
-      if (visited[idx]) {
+      if (visited[visitedIndex]) {
         continue;
       }
-      visited[idx] = 1;
+      visited[visitedIndex] = 1;
 
       if (
-        colorDist([...colorAt(data, nx, ny, width)], [...targetColor]) <=
+        colorDist(
+          [...colorAt(data, neighborX, neighborY, width)],
+          [...targetColor],
+        ) <=
         tolerance * 4
       ) {
-        stack.push([nx, ny]);
+        stack.push([neighborX, neighborY]);
       }
     }
   }

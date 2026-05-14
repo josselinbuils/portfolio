@@ -141,36 +141,36 @@ export const Paint: WindowComponent = ({
     setSharedState((state) => ({ ...state, fillColor: color }));
   }
 
-  function setFillOn(v: boolean) {
-    setSharedState((state) => ({ ...state, fillOn: v }));
+  function setFillOn(enabled: boolean) {
+    setSharedState((state) => ({ ...state, fillOn: enabled }));
   }
 
-  function setWidth(v: number) {
-    setSharedState((state) => ({ ...state, width: v }));
+  function setWidth(width: number) {
+    setSharedState((state) => ({ ...state, width }));
   }
 
-  function setTolerance(v: number) {
-    setSharedState((state) => ({ ...state, tolerance: v }));
+  function setTolerance(tolerance: number) {
+    setSharedState((state) => ({ ...state, tolerance }));
   }
 
-  function setFontSize(v: number) {
-    toolsStateRef.current['text'] = { ...getTextState(), fontSize: v };
-    setFontSizeState(v);
+  function setFontSize(size: number) {
+    toolsStateRef.current['text'] = { ...getTextState(), fontSize: size };
+    setFontSizeState(size);
   }
 
-  function setFontFamily(v: string) {
-    toolsStateRef.current['text'] = { ...getTextState(), fontFamily: v };
-    setFontFamilyState(v);
+  function setFontFamily(family: string) {
+    toolsStateRef.current['text'] = { ...getTextState(), fontFamily: family };
+    setFontFamilyState(family);
   }
 
   function openColorPicker(target: 'fill' | 'stroke') {
     const inp = hiddenColorRef.current!;
     inp.value =
       target === 'stroke' ? sharedState.strokeColor : sharedState.fillColor;
-    inp.oninput = (e) => {
-      const val = (e.target as HTMLInputElement).value;
-      if (target === 'stroke') setStroke(val);
-      else setFill(val);
+    inp.oninput = (event) => {
+      const color = (event.target as HTMLInputElement).value;
+      if (target === 'stroke') setStroke(color);
+      else setFill(color);
     };
     inp.click();
   }
@@ -178,8 +178,11 @@ export const Paint: WindowComponent = ({
   function addSwatch() {
     const inp = hiddenColorRef.current!;
     inp.value = sharedState.strokeColor;
-    inp.oninput = (e) =>
-      setSwatches((s) => [...s, (e.target as HTMLInputElement).value]);
+    inp.oninput = (event) =>
+      setSwatches((swatches) => [
+        ...swatches,
+        (event.target as HTMLInputElement).value,
+      ]);
     inp.click();
   }
 

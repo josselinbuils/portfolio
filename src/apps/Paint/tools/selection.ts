@@ -125,13 +125,16 @@ export function selectAll({
     x: 0,
     y: 0,
   };
-  setSharedState((s) => ({ ...s, selection }));
+  setSharedState((state) => ({ ...state, selection }));
 
-  let off = 0;
+  let offset = 0;
   const tick = () => {
-    off = (off + 0.5) % 8;
-    drawAnts(overlayCanvas, selection, off);
-    setToolState((s) => ({ ...s, antsRaf: requestAnimationFrame(tick) }));
+    offset = (offset + 0.5) % 8;
+    drawAnts(overlayCanvas, selection, offset);
+    setToolState((state) => ({
+      ...state,
+      antsRaf: requestAnimationFrame(tick),
+    }));
   };
   tick();
 }
@@ -144,18 +147,18 @@ function handleMarqueeMove(
   const position = getPositionInCanvas(event, mainCanvas);
   const x = Math.min(marqueeStart.x, position.x);
   const y = Math.min(marqueeStart.y, position.y);
-  const w = Math.abs(position.x - marqueeStart.x);
-  const h = Math.abs(position.y - marqueeStart.y);
+  const width = Math.abs(position.x - marqueeStart.x);
+  const height = Math.abs(position.y - marqueeStart.y);
   const context = getCanvasContext(overlayCanvas);
 
   context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
   context.lineWidth = 1;
   context.setLineDash([4, 4]);
   context.strokeStyle = '#fff';
-  context.strokeRect(x + 0.5, y + 0.5, w, h);
+  context.strokeRect(x + 0.5, y + 0.5, width, height);
   context.lineDashOffset = 4;
   context.strokeStyle = '#000';
-  context.strokeRect(x + 0.5, y + 0.5, w, h);
+  context.strokeRect(x + 0.5, y + 0.5, width, height);
 }
 
 function handleMarqueeUp(
@@ -188,11 +191,11 @@ function handleMarqueeUp(
       cancelAnimationFrame(antsRaf);
     }
 
-    let off = 0;
+    let offset = 0;
 
     const tick = () => {
-      off = (off + 0.5) % 8;
-      drawAnts(overlayCanvas, selection, off);
+      offset = (offset + 0.5) % 8;
+      drawAnts(overlayCanvas, selection, offset);
 
       setToolState((state) => ({
         ...state,
@@ -222,14 +225,14 @@ function handleSelect(
 
   clearSelection(data);
 
-  function onMouseMove(e: MouseEvent) {
-    handleMarqueeMove(e, data, marqueeStart);
+  function onMouseMove(moveEvent: MouseEvent) {
+    handleMarqueeMove(moveEvent, data, marqueeStart);
   }
 
-  function onMouseUp(e: MouseEvent) {
+  function onMouseUp(upEvent: MouseEvent) {
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
-    handleMarqueeUp(e, data, marqueeStart);
+    handleMarqueeUp(upEvent, data, marqueeStart);
   }
 
   window.addEventListener('mousemove', onMouseMove);
