@@ -4,6 +4,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons/faRotateLeft';
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons/faRotateRight';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import cn from 'classnames';
 import { type FunctionComponent } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -120,12 +121,14 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         className={styles.toolsGroup}
         role="group"
       >
-        {tools.map(({ description, icon, name, shortcut }) => (
+        {tools.map(({ description, icon, name }) => (
           <button
-            aria-label={`${description} (${shortcut.toUpperCase()})`}
+            aria-label={description}
             aria-pressed={tool === name}
-            className={`${styles.tool} ${tool === name ? styles.active : ''}`}
-            data-tip={`${description} - ${shortcut.toUpperCase()}`}
+            className={cn(styles.tool, {
+              [styles.active]: tool === name,
+            })}
+            data-tip={description}
             key={name}
             onClick={() => onSetTool(name)}
             style={name === 'rectRound' ? 'border-radius:5px' : undefined}
@@ -335,7 +338,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               <button
                 aria-label={`${w}px`}
                 aria-pressed={width === w}
-                className={`${styles.wopt} ${width === w ? styles.woptActive : ''}`}
+                className={cn(styles.wopt, {
+                  [styles.woptActive]: width === w,
+                })}
                 key={w}
                 onClick={() => {
                   onSetWidth(w);

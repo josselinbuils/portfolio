@@ -12,6 +12,7 @@ import {
 } from '../types/DrawToolDescriptor';
 import { colorAt, colorDist, hexToRgba } from '../utils/color';
 import { getCanvasContext } from '../utils/getCanvasContext';
+import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 
 export const paintBucketDescriptor = {
   description: 'Paint bucket',
@@ -19,22 +20,20 @@ export const paintBucketDescriptor = {
   initialState: undefined,
   name: 'paintBucket' as const,
   onMouseDown: handlePaintBucket,
-  shortcut: 'g',
 } satisfies DrawToolDescriptor;
 
-function handlePaintBucket({
-  event,
-  getSharedState,
-  mainCanvas,
-  position: { x, y },
-  snapshot,
-}: DrawToolListenerData) {
+function handlePaintBucket(
+  event: MouseEvent,
+  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+) {
   if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;
   }
 
   snapshot();
+
   const context = getCanvasContext(mainCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
   const { fillColor, strokeColor, tolerance } = getSharedState();
   const [r, g, b, a] = hexToRgba(
     event.button === MAIN_BUTTON ? strokeColor : fillColor,

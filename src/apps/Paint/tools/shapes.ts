@@ -14,12 +14,11 @@ import { type DrawTool } from './tools';
 type ShapeState = { x0: number; y0: number } | null;
 
 export const circleDescriptor = {
-  description: 'Ellipse',
+  description: 'Circle',
   icon: faCircle,
   initialState: null,
   name: 'circle' as const,
-  onMouseDown: (data) => handleShapeMouseDown(data, 'circle'),
-  shortcut: 'c',
+  onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'circle'),
 } satisfies DrawToolDescriptor<ShapeState>;
 
 export const rectDescriptor = {
@@ -27,8 +26,7 @@ export const rectDescriptor = {
   icon: faSquare,
   initialState: null,
   name: 'rect' as const,
-  onMouseDown: (data) => handleShapeMouseDown(data, 'rect'),
-  shortcut: 'r',
+  onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rect'),
 } satisfies DrawToolDescriptor<ShapeState>;
 
 export const rectRoundDescriptor = {
@@ -36,8 +34,7 @@ export const rectRoundDescriptor = {
   icon: faSquare,
   initialState: null,
   name: 'rectRound' as const,
-  onMouseDown: (data) => handleShapeMouseDown(data, 'rectRound'),
-  shortcut: '',
+  onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rectRound'),
 } satisfies DrawToolDescriptor<ShapeState>;
 
 export function drawShape(
@@ -108,17 +105,19 @@ function applyStrokeFill(
 }
 
 function handleShapeMouseDown(
+  event: MouseEvent,
   data: DrawToolListenerData<ShapeState>,
   shapeTool: DrawTool,
 ): void {
-  const { event, overlayCanvas, position, setToolState } = data;
+  const { mainCanvas, overlayCanvas, setToolState } = data;
 
   if (event.button !== MAIN_BUTTON) {
     return;
   }
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
 
   getCanvasContext(overlayCanvas).clearRect(0, 0, CANVAS_W, CANVAS_H);
-  setToolState(() => ({ x0: position.x, y0: position.y }));
+  setToolState(() => ({ x0: x, y0: y }));
 
   function onMouseMove(event: MouseEvent) {
     handleShapeMouseMove(event, data, shapeTool);

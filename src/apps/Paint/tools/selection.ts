@@ -19,7 +19,13 @@ export const selectDescriptor = {
   initialState: { antsRaf: 0 },
   name: 'select' as const,
   onMouseDown: handleSelect,
-  shortcut: 'm',
+  shortcuts: [
+    {
+      description: 'Select all',
+      handler: (_event, data) => selectAll(data),
+      keyStr: 'CtrlCmd+A',
+    },
+  ],
 } satisfies DrawToolDescriptor<SelectionState>;
 
 export function clearSelection({
@@ -71,18 +77,38 @@ export function drawAnts(
   context.restore();
 }
 
+export function selectAll({
+  getToolState,
+  overlayCanvas,
+  setSharedState,
+  setToolState,
+}: DrawToolListenerData<SelectionState>) {
+  const { antsRaf } = getToolState();
+  if (antsRaf) cancelAnimationFrame(antsRaf);
+
+  const selection: Selection = {
+    height: CANVAS_H,
+    imageData: null,
+    width: CANVAS_W,
+    x: 0,
+    y: 0,
+  };
+  setSharedState((s) => ({ ...s, selection }));
+
+  let off = 0;
+  const tick = () => {
+    off = (off + 0.5) % 8;
+    drawAnts(overlayCanvas, selection, off);
+    setToolState((s) => ({ ...s, antsRaf: requestAnimationFrame(tick) }));
+  };
+  tick();
+}
+
 function handleMarqueeMove(
   event: MouseEvent,
-  {
-    mainCanvas,
-    overlayCanvas,
-    position: marqueeStart,
-  }: DrawToolListenerData<SelectionState>,
+  { mainCanvas, overlayCanvas }: DrawToolListenerData<SelectionState>,
+  marqueeStart: { x: number; y: number },
 ) {
-  if (!marqueeStart) {
-    return;
-  }
-
   const position = getPositionInCanvas(event, mainCanvas);
   const x = Math.min(marqueeStart.x, position.x);
   const y = Math.min(marqueeStart.y, position.y);
@@ -103,6 +129,7 @@ function handleMarqueeMove(
 function handleMarqueeUp(
   event: MouseEvent,
   data: DrawToolListenerData<SelectionState>,
+  marqueeStart: { x: number; y: number },
 ) {
   const {
     getToolState,
@@ -113,7 +140,6 @@ function handleMarqueeUp(
   } = data;
   const position = getPositionInCanvas(event, mainCanvas);
 
-  const marqueeStart = data.position;
   const x = Math.min(marqueeStart.x, position.x);
   const y = Math.min(marqueeStart.y, position.y);
   const width = Math.abs(position.x - marqueeStart.x);
@@ -147,21 +173,26 @@ function handleMarqueeUp(
   }
 }
 
-function handleSelect(data: DrawToolListenerData<SelectionState>) {
-  if (data.event.button !== MAIN_BUTTON) {
+function handleSelect(
+  event: MouseEvent,
+  data: DrawToolListenerData<SelectionState>,
+) {
+  if (event.button !== MAIN_BUTTON) {
     return;
   }
 
+  const marqueeStart = getPositionInCanvas(event, data.mainCanvas);
+
   clearSelection(data);
 
-  function onMouseMove(event: MouseEvent) {
-    handleMarqueeMove(event, data);
+  function onMouseMove(e: MouseEvent) {
+    handleMarqueeMove(e, data, marqueeStart);
   }
 
-  function onMouseUp(event: MouseEvent) {
+  function onMouseUp(e: MouseEvent) {
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
-    handleMarqueeUp(event, data);
+    handleMarqueeUp(e, data, marqueeStart);
   }
 
   window.addEventListener('mousemove', onMouseMove);

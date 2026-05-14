@@ -5,6 +5,7 @@ import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
 } from '../types/DrawToolDescriptor';
+import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 
 export type TextState = {
   className: string;
@@ -26,7 +27,6 @@ export const textDescriptor = {
   initialState: INITIAL_TEXT_STATE,
   name: 'text' as const,
   onMouseDown: openText,
-  shortcut: 't',
 } satisfies DrawToolDescriptor<TextState>;
 
 export function commitText(
@@ -55,19 +55,22 @@ export function commitText(
     .forEach((ln, i) => context.fillText(ln, x, y + i * size * 1.2));
 }
 
-function openText({
-  event,
-  getSharedState,
-  getToolState,
-  mainCanvas,
-  position,
-  setToolState,
-  snapshot,
-  stageInner,
-}: DrawToolListenerData<TextState>): void {
+function openText(
+  event: MouseEvent,
+  {
+    getSharedState,
+    getToolState,
+    mainCanvas,
+    setToolState,
+    snapshot,
+    stageInner,
+  }: DrawToolListenerData<TextState>,
+): void {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
+
+  const position = getPositionInCanvas(event, mainCanvas);
   const state = getToolState();
   const { strokeColor } = getSharedState();
 

@@ -1,7 +1,10 @@
+import cn from 'classnames';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
+import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { throttle } from '@/platform/utils/throttle';
 
 import { Palette } from './components/Palette/Palette';
 import { Toolbar } from './components/Toolbar/Toolbar';
@@ -9,7 +12,10 @@ import { CANVAS_H, CANVAS_W, PRESET_PALETTE, UNDO_MAX } from './constants';
 import styles from './Paint.module.scss';
 import { commitText, INITIAL_TEXT_STATE, type TextState } from './tools/text';
 import { type DrawTool, tools } from './tools/tools';
-import { type DrawToolDescriptor } from './types/DrawToolDescriptor';
+import {
+  type DrawToolDescriptor,
+  type DrawToolListenerData,
+} from './types/DrawToolDescriptor';
 import { type SharedState } from './types/SharedState';
 import { getPositionInCanvas } from './utils/getPositionInCanvas';
 
@@ -18,6 +24,7 @@ const initialToolsState = Object.fromEntries(
 ) as Record<DrawTool, unknown>;
 
 export const Paint: WindowComponent = ({
+  active,
   windowRef,
   ...injectedWindowProps
 }) => {
@@ -163,6 +170,22 @@ export const Paint: WindowComponent = ({
     context.fillRect(0, 0, CANVAS_W, CANVAS_H);
   }
 
+  function createListenerData(): DrawToolListenerData {
+    if (!mainRef.current || !overlayRef.current) {
+      throw new Error('Main or overlay canvas ref null');
+    }
+    return {
+      getSharedState: () => sharedState,
+      getToolState: () => toolsStateRef.current[currentTool],
+      mainCanvas: mainRef.current,
+      overlayCanvas: overlayRef.current,
+      setSharedState,
+      setToolState: setToolState(currentTool),
+      snapshot,
+      stageInner: stageInnerRef.current!,
+    };
+  }
+
   function onMouseDown(event: MouseEvent) {
     if (!mainRef.current || !overlayRef.current) {
       return;
@@ -176,22 +199,11 @@ export const Paint: WindowComponent = ({
       throw new Error('Descriptor not found');
     }
 
-    toolDescriptor.onMouseDown({
-      event,
-      getSharedState: () => sharedState,
-      getToolState: () => toolsStateRef.current[currentTool],
-      mainCanvas: mainRef.current,
-      overlayCanvas: overlayRef.current,
-      position: getPositionInCanvas(event, mainRef.current),
-      setSharedState,
-      setToolState: setToolState(currentTool),
-      snapshot,
-      stageInner: stageInnerRef.current!,
-    });
+    toolDescriptor.onMouseDown(event, createListenerData());
   }
 
   useEffect(() => {
-    function onMouseMove(event: MouseEvent) {
+    const onMouseMove = throttle((event: MouseEvent) => {
       if (!mainRef.current) {
         return;
       }
@@ -199,7 +211,7 @@ export const Paint: WindowComponent = ({
       setStatus(
         `${CANVAS_W} × ${CANVAS_H}   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
       );
-    }
+    }, 33);
 
     window.addEventListener('mousemove', onMouseMove);
 
@@ -208,57 +220,31 @@ export const Paint: WindowComponent = ({
     };
   }, []);
 
-  useEffect(() => {
-    const SHORTCUTS: Record<string, DrawTool> = Object.fromEntries(
-      tools.map(({ name, shortcut }) => [shortcut, name]),
-    );
+  useKeyMap(
+    {
+      'CtrlCmd+Shift+Z': redo,
+      'CtrlCmd+Y': redo,
+      'CtrlCmd+Z': undo,
+    },
+    active,
+  );
 
-    function onKey(ev: KeyboardEvent) {
-      const { input } = getTextState();
-      if (input && document.activeElement === input) return;
-      if (ev.metaKey || ev.ctrlKey) {
-        if (ev.key === 'z') {
-          ev.preventDefault();
-          if (ev.shiftKey) redo();
-          else undo();
-          return;
-        }
-        if (ev.key === 'y') {
-          ev.preventDefault();
-          redo();
-          return;
-        }
-        return;
-      }
-      const t = SHORTCUTS[ev.key.toLowerCase()];
-      if (t) {
-        setTool(t);
-        return;
-      }
-      // const { selection } = selectionStateRef.current;
-      // if ((ev.key === 'Delete' || ev.key === 'Backspace') && selection) {
-      //   snapshot();
-      //   const context = mainRef.current!.getContext('2d')!;
-      //   context.fillStyle = '#ffffff';
-      //   context.fillRect(
-      //     selection.x + selection.dx,
-      //     selection.y + selection.dy,
-      //     selection.w,
-      //     selection.h,
-      //   );
-      //   if (selection.imageData) {
-      //     selectionStateRef.current = {
-      //       ...selectionStateRef.current,
-      //       selection: { ...selection, imageData: null },
-      //     };
-      //   }
-      //   // clearSelection(createSelectionContext());
-      // }
-    }
-    window.addEventListener('keydown', onKey);
-
-    return () => window.removeEventListener('keydown', onKey);
-  });
+  useKeyMap(
+    Object.fromEntries(
+      tools.flatMap(({ name, shortcuts }: DrawToolDescriptor) =>
+        (shortcuts ?? []).map(({ handler, keyStr }) => [
+          keyStr,
+          (event: KeyboardEvent) => {
+            if (currentTool !== name) {
+              return false;
+            }
+            return handler(event, createListenerData());
+          },
+        ]),
+      ),
+    ),
+    active,
+  );
 
   const stageCursor =
     currentTool === 'text'
@@ -269,6 +255,7 @@ export const Paint: WindowComponent = ({
 
   return (
     <Window
+      active={active}
       minHeight={500}
       minWidth={800}
       ref={windowRef}
@@ -300,14 +287,14 @@ export const Paint: WindowComponent = ({
           width={sharedState.width}
         />
 
-        <div className={`${styles.stage} ${stageCursor}`}>
+        <div className={cn(styles.stage, stageCursor)}>
           <div
             className={styles.stageInner}
             ref={stageInnerRef}
             style={{ height: CANVAS_H, width: CANVAS_W }}
           >
             <canvas
-              className={`${styles.canvasLayer} ${styles.mainCanvas}`}
+              className={cn(styles.canvasLayer, styles.mainCanvas)}
               height={CANVAS_H}
               onContextMenu={(e) => e.preventDefault()}
               onMouseDown={onMouseDown}
@@ -315,7 +302,7 @@ export const Paint: WindowComponent = ({
               width={CANVAS_W}
             />
             <canvas
-              className={`${styles.canvasLayer} ${styles.overlayCanvas}`}
+              className={cn(styles.canvasLayer, styles.overlayCanvas)}
               height={CANVAS_H}
               ref={overlayRef}
               width={CANVAS_W}

@@ -1,5 +1,7 @@
 import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
 
+import { getPositionInCanvas } from '@/apps/Paint/utils/getPositionInCanvas';
+
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
 import {
   type DrawToolDescriptor,
@@ -19,16 +21,14 @@ export const colorPickerDescriptor = {
   },
   name: 'colorPicker' as const,
   onMouseDown: handlePicker,
-  shortcut: 'i',
 } satisfies DrawToolDescriptor<ColorPickerState>;
 
-function handlePicker({
-  event,
-  mainCanvas,
-  position: { x, y },
-  setSharedState,
-}: DrawToolListenerData<ColorPickerState>) {
+function handlePicker(
+  event: MouseEvent,
+  { mainCanvas, setSharedState }: DrawToolListenerData<ColorPickerState>,
+) {
   const context = getCanvasContext(mainCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
   const imageData = context.getImageData(x, y, 1, 1).data;
   const hex = `#${[imageData[0], imageData[1], imageData[2]]
     .map((n) => n.toString(16).padStart(2, '0'))

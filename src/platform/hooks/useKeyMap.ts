@@ -9,7 +9,7 @@ const priorities = [] as number[];
  * Allows listening keyboard events.
  */
 export function useKeyMap(
-  keyMap: Record<string, (event: KeyboardEvent) => any | false>,
+  keyMap: Record<string, (event: KeyboardEvent) => unknown | false>,
   active = true,
   priority = 1,
 ): void {

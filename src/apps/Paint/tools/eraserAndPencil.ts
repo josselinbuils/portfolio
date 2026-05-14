@@ -15,7 +15,6 @@ export const eraserDescriptor = {
   initialState: undefined,
   name: 'eraser' as const,
   onMouseDown: handleEraser,
-  shortcut: 'e',
 } satisfies DrawToolDescriptor;
 
 export const pencilDescriptor = {
@@ -24,7 +23,6 @@ export const pencilDescriptor = {
   initialState: undefined,
   name: 'pencil' as const,
   onMouseDown: handlePencil,
-  shortcut: 'b',
 } satisfies DrawToolDescriptor;
 
 function endPath(canvas: HTMLCanvasElement): void {
@@ -38,18 +36,16 @@ function extendPath(ctx: CanvasRenderingContext2D, x: number, y: number): void {
   ctx.moveTo(x, y);
 }
 
-function handleEraser({
-  event,
-  getSharedState,
-  mainCanvas,
-  position: { x, y },
-  snapshot,
-}: DrawToolListenerData) {
+function handleEraser(
+  event: MouseEvent,
+  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+) {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
 
   const context = getCanvasContext(mainCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
   const { width } = getSharedState();
 
   snapshot();
@@ -80,18 +76,16 @@ function handleEraser({
   window.addEventListener('mouseup', onMouseUp);
 }
 
-function handlePencil({
-  event,
-  getSharedState,
-  mainCanvas,
-  position: { x, y },
-  snapshot,
-}: DrawToolListenerData) {
+function handlePencil(
+  event: MouseEvent,
+  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+) {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
 
   const context = getCanvasContext(mainCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
   const sharedState = getSharedState();
 
   snapshot();

@@ -7,17 +7,25 @@ export type DrawToolDescriptor<DrawToolState = any> = {
   icon: IconDefinition;
   initialState: DrawToolState;
   name: string;
-  onMouseDown: (data: DrawToolListenerData<DrawToolState>) => void;
-  shortcut: string;
+  onMouseDown: (
+    event: MouseEvent,
+    data: DrawToolListenerData<DrawToolState>,
+  ) => void;
+  shortcuts?: readonly {
+    description: string;
+    handler: (
+      event: KeyboardEvent,
+      data: DrawToolListenerData<DrawToolState>,
+    ) => void | false;
+    keyStr: string;
+  }[];
 };
 
 export type DrawToolListenerData<DrawToolState = unknown> = {
-  event: MouseEvent;
   getSharedState: () => SharedState;
   getToolState: () => DrawToolState;
   mainCanvas: HTMLCanvasElement;
   overlayCanvas: HTMLCanvasElement;
-  position: { x: number; y: number };
   setSharedState: StateSetterDispatch<SharedState>;
   setToolState: StateSetterDispatch<DrawToolState>;
   snapshot: () => void;
