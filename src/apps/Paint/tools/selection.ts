@@ -105,7 +105,6 @@ function handleMarqueeUp(
   data: DrawToolListenerData<SelectionState>,
 ) {
   const {
-    getSharedState,
     getToolState,
     mainCanvas,
     overlayCanvas,
@@ -121,10 +120,9 @@ function handleMarqueeUp(
   const height = Math.abs(position.y - marqueeStart.y);
 
   if (width > 1 && height > 1) {
-    setSharedState((state) => ({
-      ...state,
-      selection: { height, imageData: null, width, x, y },
-    }));
+    const selection = { height, imageData: null, width, x, y };
+
+    setSharedState((state) => ({ ...state, selection }));
 
     const { antsRaf } = getToolState();
 
@@ -135,8 +133,6 @@ function handleMarqueeUp(
     let off = 0;
 
     const tick = () => {
-      const { selection } = getSharedState();
-
       off = (off + 0.5) % 8;
       drawAnts(overlayCanvas, selection, off);
 
