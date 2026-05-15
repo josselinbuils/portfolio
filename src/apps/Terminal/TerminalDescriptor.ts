@@ -6,6 +6,6 @@ export const TerminalDescriptor: AppDescriptor = {
   description: 'Command-line interface.',
   factory: () => import('./Terminal'),
   icon: faTerminal,
-  iconScale: 0.8,
+  iconScale: 0.9,
   name: 'Terminal',
 };

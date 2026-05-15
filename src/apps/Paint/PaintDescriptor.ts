@@ -6,5 +6,6 @@ export const PaintDescriptor: AppDescriptor = {
   description: 'Raster image editor.',
   factory: () => import('./Paint'),
   icon: faPaintbrush,
+  iconScale: 0.85,
   name: 'Paint',
 };
