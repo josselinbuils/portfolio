@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
 
-import styles from './Selection.module.scss';
+import styles from './Selection.module.css';
 
 export type SelectionProps = {
   startPosition: Position<number>;

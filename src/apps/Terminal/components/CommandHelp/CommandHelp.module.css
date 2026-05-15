@@ -1,7 +1,5 @@
-@import '../../_constants.scss';
-
 .description {
-  color: $secondaryColor;
+  color: var(--term-secondary);
 }
 
 .descriptions .description {

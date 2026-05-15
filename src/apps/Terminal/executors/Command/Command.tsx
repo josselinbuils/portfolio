@@ -1,5 +1,5 @@
 import { type Executor } from '../Executor';
-import styles from './Command.module.scss';
+import styles from './Command.module.css';
 
 export const PREFIX_SIZE_CH = 4;
 

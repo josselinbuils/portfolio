@@ -1,5 +1,5 @@
 import { type Executor } from '../Executor';
-import styles from './BashError.module.scss';
+import styles from './BashError.module.css';
 
 const COMMANDS = [
   'cat',

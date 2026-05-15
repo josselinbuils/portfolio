@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import styles from './Spinner.module.scss';
+import styles from './Spinner.module.css';
 
 const DISPLAY_DELAY_MS = 100;
 

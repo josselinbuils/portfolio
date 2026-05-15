@@ -1,18 +1,15 @@
-@import '@/platform/_constants.scss';
-@import '../../../_constants.scss';
-
 .anchor {
   float: right;
 }
 
 .details {
   font-size: 1.1rem;
-  margin: $spacingS $spacingS 0 0;
-  color: $textSecondaryColor;
+  margin: var(--spacing-s) var(--spacing-s) 0 0;
+  color: var(--reddit-text-secondary);
 }
 
 .subreddit {
   font-weight: bold;
-  margin-right: $spacingS;
-  color: $textColor;
+  margin-right: var(--spacing-s);
+  color: black;
 }

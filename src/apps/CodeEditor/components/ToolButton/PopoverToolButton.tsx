@@ -6,7 +6,7 @@ import { useRef } from 'preact/hooks';
 import { type MenuDescriptor } from '@/platform/components/Menu/Menu';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 
-import styles from './PopoverToolButton.module.scss';
+import styles from './PopoverToolButton.module.css';
 import { ToolButton, type ToolButtonProps } from './ToolButton';
 
 export type PopoverToolButtonProps = Omit<ToolButtonProps, 'onClick'> & {

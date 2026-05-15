@@ -9,7 +9,7 @@ import { throttle } from '@/platform/utils/throttle';
 import { Palette } from './components/Palette/Palette';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { CANVAS_H, CANVAS_W, PRESET_PALETTE, UNDO_MAX } from './constants';
-import styles from './Paint.module.scss';
+import styles from './Paint.module.css';
 import { commitText, INITIAL_TEXT_STATE, type TextState } from './tools/text';
 import { type DrawTool, tools } from './tools/tools';
 import {

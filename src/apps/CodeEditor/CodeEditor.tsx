@@ -16,7 +16,7 @@ import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
 import { cancelable } from '@/platform/utils/cancelable';
 
-import styles from './CodeEditor.module.scss';
+import styles from './CodeEditor.module.css';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
 import { Shortcut } from './components/Shortcut/Shortcut';

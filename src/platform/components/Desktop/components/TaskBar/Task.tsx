@@ -12,7 +12,7 @@ import { noop } from '@/platform/utils/noop';
 
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
-import styles from './Task.module.scss';
+import styles from './Task.module.css';
 import { type TaskDescriptor } from './TaskDescriptor';
 import { isAppTaskDescriptor } from './utils/isAppTaskDescriptor';
 

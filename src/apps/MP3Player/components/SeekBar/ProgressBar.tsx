@@ -1,6 +1,6 @@
 import { forwardRef } from 'preact/compat';
 
-import styles from './ProgressBar.module.scss';
+import styles from './ProgressBar.module.css';
 
 export type ProgressBarProps = {
   onSeekStart(downEvent: MouseEvent | TouchEvent): void;

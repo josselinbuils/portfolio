@@ -1,5 +1,3 @@
-@import '../../_constants.scss';
-
 .console {
   position: relative;
   display: flex;
@@ -15,12 +13,12 @@
   flex: 0 0 1rem;
   box-sizing: border-box;
   cursor: row-resize;
-  color: $textPrimaryColor;
-  border-right: 0.1rem solid $borderColorPrimary;
-  border-left: 0.1rem solid $borderColorPrimary;
-  background: $backgroundPrimaryColor;
+  color: var(--ce-text-primary);
+  border-right: 0.1rem solid var(--ce-border-primary);
+  border-left: 0.1rem solid var(--ce-border-primary);
+  background: var(--ce-bg-primary);
 }
 
 .toolbar {
-  flex: 0 0 $toolbarWidth;
+  flex: 0 0 var(--ce-toolbar-width);
 }

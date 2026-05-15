@@ -8,7 +8,7 @@ import { Logo } from './components/Logo/Logo';
 import { Menu } from './components/Menu/Menu';
 import { Posts } from './components/Posts/Posts';
 import { type RedditFilter } from './interfaces/RedditFilter';
-import styles from './Reddit.module.scss';
+import styles from './Reddit.module.css';
 
 const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [filter, setFilter] = useState<RedditFilter>('hot');

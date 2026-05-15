@@ -1,22 +1,20 @@
-@import '../../../../_constants.scss';
-
 .activeLine {
-  color: $textPrimaryColor;
+  color: var(--ce-text-primary);
 }
 
 .lineNumbers {
-  font-family: $fontFamily;
-  font-size: $fontSize;
-  line-height: $lineHeight;
+  font-family: var(--ce-font-family), monospace;
+  font-size: var(--ce-font-size);
+  line-height: var(--ce-line-height);
   overflow: hidden;
   box-sizing: border-box;
   padding: 0.5rem 0.7rem;
   user-select: none;
   text-align: right;
   white-space: pre-wrap;
-  color: $textTertiaryColor;
-  border-right: 0.1rem solid $borderColorTertiary;
-  background: $backgroundTertiaryColor;
+  color: var(--ce-text-tertiary);
+  border-right: 0.1rem solid var(--ce-border-tertiary);
+  background: var(--ce-bg-tertiary);
 
   & > * {
     display: block;

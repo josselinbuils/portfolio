@@ -1,7 +1,5 @@
-@import '@/platform/_constants.scss';
-
 .buttonLink {
-  font-family: $fontFamily;
+  font-family: var(--font-family), sans-serif;
   padding: 0;
   color: inherit;
   border: none;

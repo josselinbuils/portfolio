@@ -6,7 +6,7 @@ import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 
-import styles from './BarPreview.module.scss';
+import styles from './BarPreview.module.css';
 
 export type BarPreviewProps = {
   className?: string;

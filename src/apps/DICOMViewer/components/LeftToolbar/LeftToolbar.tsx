@@ -12,7 +12,7 @@ import { MouseButton } from '@/platform/constants';
 
 import { type MouseTool } from '../../interfaces/MouseTool';
 import { type Viewport } from '../../models/Viewport';
-import styles from './LeftToolbar.module.scss';
+import styles from './LeftToolbar.module.css';
 
 const mouseTools: {
   condition?: (viewport: Viewport) => boolean;

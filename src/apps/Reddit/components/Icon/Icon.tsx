@@ -6,7 +6,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { cancelable } from '@/platform/utils/cancelable';
 
-import styles from './Icon.module.scss';
+import styles from './Icon.module.css';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
 
 export type IconProps = {

@@ -1,11 +1,9 @@
-@import '@/platform/_constants.scss';
-
 .item {
   font-size: 1.3em;
   display: block;
-  margin-top: $spacingS;
+  margin-top: var(--spacing-s);
 
   &.checked {
-    color: $primaryColor;
+    color: var(--primary-color);
   }
 }

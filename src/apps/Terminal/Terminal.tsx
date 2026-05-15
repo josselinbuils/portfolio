@@ -12,7 +12,7 @@ import { BashError } from './executors/BashError/BashError';
 import { Command, PREFIX_SIZE_CH } from './executors/Command/Command';
 import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
-import styles from './Terminal.module.scss';
+import styles from './Terminal.module.css';
 
 const executors: Record<string, () => Promise<AsyncExecutor | Executor>> = {
   about: async () => About,

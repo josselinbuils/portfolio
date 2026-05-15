@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './JamendoLink.module.scss';
+import styles from './JamendoLink.module.css';
 
 export const JamendoLink: FunctionComponent = () => (
   <a

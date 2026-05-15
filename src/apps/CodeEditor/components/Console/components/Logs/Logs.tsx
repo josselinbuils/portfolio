@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Log, LogLevel } from '../../Log';
-import styles from './Logs.module.scss';
+import styles from './Logs.module.css';
 
 export type LogsProps = {
   className?: string;

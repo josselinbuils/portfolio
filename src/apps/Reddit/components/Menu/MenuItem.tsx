@@ -6,7 +6,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';
-import styles from './MenuItem.module.scss';
+import styles from './MenuItem.module.css';
 
 export type MenuItemProps = {
   activeSubreddit: string;

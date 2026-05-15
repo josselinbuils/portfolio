@@ -1,21 +1,18 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .icon {
   font-size: 1.6rem;
-  margin-right: $spacingS;
+  margin-right: var(--spacing-s);
   vertical-align: text-top;
 }
 
 .tab {
-  font-family: $fontFamily;
-  font-size: $fontSize;
+  font-family: var(--ce-font-family), monospace;
+  font-size: var(--ce-font-size);
   position: relative;
   display: inline-block;
   height: 100%;
-  padding: 0 $spacingM;
+  padding: 0 var(--spacing-m);
   user-select: none;
-  color: $textPrimaryColor;
+  color: var(--ce-text-primary);
   border: none;
   outline: none;
   background: none;
@@ -27,7 +24,7 @@
   &:not(:disabled) {
     &:hover,
     &[aria-selected='true'] {
-      background: lighten($backgroundPrimaryColor, 10%);
+      background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
     }
 
     &[aria-selected='true']::after {
@@ -37,7 +34,7 @@
       left: 0;
       height: 0.3rem;
       content: '';
-      background: $secondaryColor;
+      background: var(--ce-secondary);
     }
   }
 }

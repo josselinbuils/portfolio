@@ -6,7 +6,7 @@ import { MouseButton } from '@/platform/constants';
 import { type Size } from '@/platform/interfaces/Size';
 
 import { TitleBar } from './TitleBar';
-import styles from './Window.module.scss';
+import styles from './Window.module.css';
 
 const BUTTONS_WIDTH = 66;
 const MIN_USABLE_SIZE = 20;

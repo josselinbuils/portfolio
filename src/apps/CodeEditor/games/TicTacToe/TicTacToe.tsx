@@ -6,7 +6,7 @@ import { type Position } from '@/platform/interfaces/Position';
 import { Cross } from './components/Cross';
 import { Grid } from './components/Grid';
 import { Round } from './components/Round';
-import styles from './TicTacToe.module.scss';
+import styles from './TicTacToe.module.css';
 import { GameManager, type Grid as GridType } from './utils/GameManager';
 
 export const TicTacToe: FunctionComponent = () => {

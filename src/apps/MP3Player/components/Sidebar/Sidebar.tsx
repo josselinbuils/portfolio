@@ -4,7 +4,7 @@ import { type FunctionComponent } from 'preact';
 import { JamendoLink } from './components/JamendoLink/JamendoLink';
 import { Logo } from './components/Logo/Logo';
 import { Menu, type MenuProps } from './components/Menu/Menu';
-import styles from './Sidebar.module.scss';
+import styles from './Sidebar.module.css';
 
 export type SidebarProps = MenuProps & {
   className?: string;

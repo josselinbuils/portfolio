@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .paint {
   display: flex;
   overflow: hidden;
@@ -8,7 +6,7 @@
   user-select: none;
 }
 
-// ── Canvas stage ──────────────────────────────────────────────────────────────
+/* ── Canvas stage ──────────────────────────────────────────────────────────── */
 
 .stage {
   position: relative;
@@ -90,7 +88,7 @@
   resize: none;
   white-space: pre;
   color: inherit;
-  border: 0.1rem dashed $primaryColor;
+  border: 0.1rem dashed var(--primary-color);
   outline: 0;
   background: transparent;
 }

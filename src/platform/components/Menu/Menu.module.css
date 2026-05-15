@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .contextMenu {
   position: fixed;
   z-index: 1000;

@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .about {
   position: relative;
   display: flex;
@@ -35,11 +33,11 @@
   font-size: 3rem;
 
   a + a {
-    margin-left: $spacingL;
+    margin-left: var(--spacing-l);
   }
 }
 
-@media only screen and (max-width: $mobileBreakpoint) {
+@media only screen and (max-width: 1024px) {
   .about {
     flex-direction: column;
   }
@@ -52,7 +50,7 @@
     margin: 0;
 
     .social {
-      margin-bottom: $spacingM;
+      margin-bottom: var(--spacing-m);
     }
   }
 
@@ -64,7 +62,7 @@
     font-size: 3rem;
 
     a + a {
-      margin-left: $spacingL;
+      margin-left: var(--spacing-l);
     }
   }
 }

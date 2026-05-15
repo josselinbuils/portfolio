@@ -12,7 +12,7 @@ import 'prismjs/components/prism-tsx.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-yaml.min';
 
-import styles from './manomano.module.scss';
+import styles from './manomano.module.css';
 
 const CLOSING_BRACKETS = [')', ']', '}'];
 const OPENING_BRACKETS = ['(', '[', '{'];

@@ -1,7 +1,9 @@
-@import '@/platform/_constants.scss';
-
 .button {
-  @include clearButton;
+  text-align: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
 
   font: inherit;
   box-sizing: border-box;

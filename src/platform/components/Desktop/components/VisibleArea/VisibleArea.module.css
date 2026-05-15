@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .visibleArea {
   position: relative;
   flex-basis: auto;
@@ -7,14 +5,14 @@
   flex-shrink: 1;
 }
 
-@media only screen and (max-width: $mobileBreakpoint) {
+@media only screen and (max-width: 1024px) {
   .visibleArea {
     margin: 0;
   }
 }
 
-@media only screen and (min-width: $mobileBreakpoint + 0.1px) {
+@media only screen and (min-width: 1024.1px) {
   .visibleArea {
-    margin: $spacingXs $spacingXs $spacingXs 0;
+    margin: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) 0;
   }
 }

@@ -13,7 +13,7 @@ import {
 import { type Annotations } from '../../interfaces/Annotations';
 import { type RendererType } from '../../interfaces/RendererType';
 import { type ViewType } from '../../interfaces/ViewType';
-import styles from './AnnotationsElement.module.scss';
+import styles from './AnnotationsElement.module.css';
 
 const viewTypeLabels: Record<ViewType, string> = {
   axial: 'Axial',

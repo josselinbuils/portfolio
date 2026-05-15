@@ -12,7 +12,7 @@ import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { VIEW_TYPES_WITH_ROTATION } from './constants';
-import styles from './DICOMViewer.module.scss';
+import styles from './DICOMViewer.module.css';
 import { type Annotations } from './interfaces/Annotations';
 import { type LUTComponent } from './interfaces/LUTComponent';
 import { type MouseTool } from './interfaces/MouseTool';

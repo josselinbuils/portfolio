@@ -1,21 +1,16 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
-$previewSize: 3.5rem;
-
 .album,
 .artistName {
-  font-size: $secondaryTextSize;
-  color: $secondaryTextColor;
+  font-size: var(--mp3-text-size);
+  color: var(--mp3-text-secondary);
 }
 
 .artistName {
-  margin: $spacingXs 0 0;
+  margin: var(--spacing-xs) 0 0;
 }
 
 .header {
   flex: 0 0 auto;
-  padding-right: $spacingS;
+  padding-right: var(--spacing-s);
 }
 
 .listInfo {
@@ -31,7 +26,7 @@ $previewSize: 3.5rem;
 .musicList {
   display: flex;
   flex-direction: column;
-  margin: $spacingS $spacingM $spacingM $spacingM;
+  margin: var(--spacing-s) var(--spacing-m) var(--spacing-m) var(--spacing-m);
 
   table {
     width: calc(100% - 1rem);
@@ -42,7 +37,7 @@ $previewSize: 3.5rem;
       position: relative;
       overflow: hidden;
       height: 4.6rem;
-      padding-right: $spacingL;
+      padding-right: var(--spacing-l);
       user-select: text;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -50,18 +45,18 @@ $previewSize: 3.5rem;
 
     tr {
       height: 6rem;
-      color: $textColor;
-      border-bottom: 0.1rem solid lighten($backgroundColor, 5%);
+      color: var(--mp3-text);
+      border-bottom: 0.1rem solid hsl(from var(--mp3-bg) h s calc(l + 5));
 
       .colPreview {
-        width: $previewSize;
+        width: 3.5rem;
         padding-left: 0.7rem;
       }
     }
 
     tbody tr {
       &.active {
-        color: $primaryColor;
+        color: var(--primary-color);
 
         .inlineMusicPreview {
           background-color: transparent;
@@ -75,12 +70,12 @@ $previewSize: 3.5rem;
 
       &.active:hover .inlineMusicPreview {
         i:hover:not(:active) {
-          color: lighten($primaryColor, 10%);
+          color: hsl(from var(--primary-color) h s calc(l + 10));
         }
       }
 
       &:hover {
-        background: lighten($backgroundColor, 2%);
+        background: hsl(from var(--mp3-bg) h s calc(l + 2));
 
         .inlineMusicPreview {
           background-color: transparent;
@@ -91,25 +86,25 @@ $previewSize: 3.5rem;
           }
 
           i:active {
-            color: $primaryColor;
+            color: var(--primary-color);
           }
 
           i:hover:not(:active) {
-            color: lighten($textColor, 10%);
+            color: hsl(from var(--mp3-text) h s calc(l + 10));
           }
         }
       }
 
       .inlineMusicPreview {
-        width: $previewSize;
-        height: $previewSize;
+        width: 3.5rem;
+        height: 3.5rem;
         text-align: center;
         background-repeat: no-repeat;
-        background-size: $previewSize;
+        background-size: 3.5rem;
 
         .previewIcon {
-          font-size: $previewSize;
-          line-height: $previewSize;
+          font-size: 3.5rem;
+          line-height: 3.5rem;
           display: none;
         }
       }
@@ -125,28 +120,16 @@ $previewSize: 3.5rem;
   overflow-x: hidden;
   overflow-y: auto;
   flex-grow: 1;
-
-  &::-webkit-scrollbar {
-    width: 0.8rem;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: $radiusXs;
-    background: $secondaryColor;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: $radiusXs;
-  }
+  scrollbar-color: var(--mp3-secondary) transparent;
 }
 
 .select {
-  font-family: $fontFamily;
-  color: $textColor;
-  border-color: $secondaryColor;
+  font-family: var(--font-family), sans-serif;
+  color: var(--mp3-text);
+  border-color: var(--mp3-secondary);
 
   select:focus {
-    border-color: $primaryColor;
+    border-color: var(--primary-color);
   }
 }
 
@@ -154,7 +137,7 @@ $previewSize: 3.5rem;
   width: 100%;
 
   th {
-    padding: $spacingXs $spacingL $spacingM 0;
+    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-m) 0;
     text-align: left;
   }
 }

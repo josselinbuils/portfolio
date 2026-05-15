@@ -1,13 +1,10 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .button {
-  font-family: $fontFamily;
+  font-family: var(--font-family), sans-serif;
   font-size: inherit;
   display: inline-block;
   padding: 0;
   vertical-align: middle;
-  color: $textColor;
+  color: var(--mp3-text);
   border: none;
   outline: none;
   background: none;
@@ -18,22 +15,22 @@
 
   &:not(:disabled) {
     &:hover {
-      color: lighten($textColor, $lightenAmountLevel1);
+      color: hsl(from var(--mp3-text) h s calc(l + 20));
     }
 
     &:active {
-      color: $primaryColor;
+      color: var(--primary-color);
     }
 
     &:active,
     &.checked {
       &:hover {
-        color: lighten($primaryColor, $lightenAmountLevel1);
+        color: hsl(from var(--primary-color) h s calc(l + 20));
       }
     }
   }
 
   &.checked {
-    color: $primaryColor;
+    color: var(--primary-color);
   }
 }

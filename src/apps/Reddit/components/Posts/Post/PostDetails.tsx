@@ -5,7 +5,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { Icon } from '../../Icon/Icon';
-import styles from './PostDetails.module.scss';
+import styles from './PostDetails.module.css';
 
 export type PostDetailsProps = {
   author: string;

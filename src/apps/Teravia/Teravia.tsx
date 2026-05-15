@@ -4,7 +4,7 @@ import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { PROD_BASE_URL } from '@/platform/constants';
 
-import styles from './Teravia.module.scss';
+import styles from './Teravia.module.css';
 
 const Teravia: WindowComponent = ({
   active,

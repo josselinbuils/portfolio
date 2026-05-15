@@ -2,8 +2,8 @@ import cn from 'classnames';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import '../../global.scss';
-import styles from './NotFound.module.scss';
+import '../../global.css';
+import styles from './NotFound.module.css';
 
 export const NotFound: FunctionComponent = () => {
   const [progress, setProgress] = useState(20);

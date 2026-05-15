@@ -5,7 +5,7 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Executor } from '../Executor';
-import styles from './About.module.scss';
+import styles from './About.module.css';
 
 export const About: Executor = () => (
   <div className={styles.about}>

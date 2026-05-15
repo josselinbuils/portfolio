@@ -12,7 +12,7 @@ import {
   type MenuItemDescriptor,
 } from './components/MenuItem/MenuItem';
 import { MenuOverlay } from './components/MenuOverlay/MenuOverlay';
-import styles from './Menu.module.scss';
+import styles from './Menu.module.css';
 
 export { type MenuItemDescriptor };
 

@@ -1,9 +1,7 @@
-@import '../../_constants.scss';
-
 .header {
   display: flex;
   justify-content: space-between;
-  color: $textColor;
+  color: black;
 }
 
 .path {

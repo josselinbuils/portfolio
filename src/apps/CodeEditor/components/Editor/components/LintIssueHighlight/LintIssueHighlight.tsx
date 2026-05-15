@@ -5,7 +5,7 @@ import { useMemo } from 'preact/hooks';
 import { type LintIssue } from '@/apps/CodeEditor/interfaces/LanguageService';
 
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './LintIssueHighlight.module.scss';
+import styles from './LintIssueHighlight.module.css';
 
 export type LintIssueHighlightProps = {
   code: string;

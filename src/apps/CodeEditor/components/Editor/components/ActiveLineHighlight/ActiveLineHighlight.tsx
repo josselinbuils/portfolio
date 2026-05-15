@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './ActiveLineHighlight.module.scss';
+import styles from './ActiveLineHighlight.module.css';
 
 export type ActiveLineHighlightProps = {
   code: string;

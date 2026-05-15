@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './MenuOverlay.module.scss';
+import styles from './MenuOverlay.module.css';
 
 export type MenuOverlayProps = {
   hideMenu(): unknown;

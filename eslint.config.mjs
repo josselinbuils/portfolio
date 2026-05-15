@@ -1,5 +1,6 @@
 // @ts-check
 
+import css from '@eslint/css';
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier/flat';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
@@ -11,15 +12,18 @@ import { configs as typescript } from 'typescript-eslint';
 
 export default defineConfig([
   globalIgnores(['build/**/*', 'dist/**/*']),
-  js.configs.recommended,
-  typescript.strict,
-  perfectionist['recommended-natural'],
-  react.configs.flat.recommended,
-  react.configs.flat['jsx-runtime'],
-  reactHooks.configs.flat.recommended,
-  jsxA11y.flatConfigs.recommended,
-  prettier,
   {
+    extends: [
+      js.configs.recommended,
+      typescript.strict,
+      perfectionist['recommended-natural'],
+      react.configs.flat.recommended,
+      react.configs.flat['jsx-runtime'],
+      reactHooks.configs.flat.recommended,
+      jsxA11y.flatConfigs.recommended,
+      prettier,
+    ],
+    files: ['**/*.js', '**/*.mjs', '**/*.ts', '**/*.tsx'],
     languageOptions: {
       globals: {
         browser: true,
@@ -67,6 +71,24 @@ export default defineConfig([
           version: '16.0',
         },
       },
+    },
+  },
+  {
+    extends: ['css/recommended'],
+    files: ['**/*.css'],
+    language: 'css/css',
+    plugins: { css },
+    rules: {
+      'css/no-important': 'off',
+      'css/no-invalid-properties': ['error', { allowUnknownVariables: true }],
+      'css/use-baseline': [
+        'error',
+        {
+          allowProperties: ['accent-color', 'resize', 'user-select'],
+          allowPropertyValues: { 'background-attachment': ['fixed'] },
+          available: 'newly',
+        },
+      ],
     },
   },
 ]);

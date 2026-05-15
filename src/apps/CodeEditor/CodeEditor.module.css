@@ -1,5 +1,3 @@
-@import './_constants.scss';
-
 @font-face {
   font-family: 'JetBrainsMono';
   font-weight: 400;
@@ -20,19 +18,17 @@
 }
 
 .codeEditorTitleBar {
-  color: $textPrimaryColor;
+  color: var(--ce-text-primary);
 }
 
 .codeEditorWindow {
-  $background: #45484a;
-
-  border-color: darken($background, 5%);
-  background: $background;
+  border-color: hsl(from #45484a h s calc(l - 5));
+  background: #45484a;
 }
 
 .codeEditor {
-  font-family: $fontFamily;
-  line-height: $lineHeight;
+  font-family: var(--ce-font-family), monospace;
+  line-height: var(--ce-line-height);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -50,12 +46,28 @@
   position: relative;
   flex-grow: 1;
   flex-shrink: 1;
-  color: $textSecondaryColor;
-  background: $backgroundSecondaryColor;
+  color: var(--ce-text-secondary);
+  background: var(--ce-bg-secondary);
 }
 
 ul.newFileMenu {
-  @include menu;
+  border: 0.1rem solid var(--ce-border-primary);
+  border-radius: var(--radius-s);
+  background: var(--ce-bg-primary);
+  scrollbar-color: var(--ce-bg-tertiary) transparent;
+
+  button {
+    font-family: var(--ce-font-family), monospace;
+    font-size: 1.3rem;
+    line-height: 1.4rem;
+    padding: var(--spacing-s);
+    color: var(--ce-text-primary);
+    border-radius: var(--radius-s);
+
+    &[aria-current='true'] {
+      background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
+    }
+  }
 
   width: 20rem;
   height: 22rem;
@@ -67,18 +79,18 @@ ul.newFileMenu {
   flex: 0 0 1rem;
   box-sizing: border-box;
   cursor: row-resize;
-  color: $textPrimaryColor;
-  border-top: 0.1rem solid $borderColorPrimary;
-  border-bottom: 0.1rem solid $borderColorPrimary;
-  background: $backgroundPrimaryColor;
+  color: var(--ce-text-primary);
+  border-top: 0.1rem solid var(--ce-border-primary);
+  border-bottom: 0.1rem solid var(--ce-border-primary);
+  background: var(--ce-bg-primary);
 }
 
 .tabs {
   position: absolute;
   top: 0;
   right: 0;
-  left: $toolbarWidth;
-  height: $tabsHeight;
+  left: var(--ce-toolbar-width);
+  height: var(--ce-tabs-height);
 }
 
 .toolbar {
@@ -86,5 +98,5 @@ ul.newFileMenu {
   top: 0;
   bottom: 0;
   left: 0;
-  width: $toolbarWidth;
+  width: var(--ce-toolbar-width);
 }

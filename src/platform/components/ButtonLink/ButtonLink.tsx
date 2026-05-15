@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { type ButtonHTMLAttributes, type FunctionComponent } from 'preact';
 
-import styles from './ButtonLink.module.scss';
+import styles from './ButtonLink.module.css';
 
 export type ButtonLinkProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   className?: string;

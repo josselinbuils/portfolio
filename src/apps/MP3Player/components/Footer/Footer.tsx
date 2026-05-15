@@ -6,7 +6,7 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Controls } from '../Controls/Controls';
 import { MusicPreview } from '../MusicPreview/MusicPreview';
 import { SeekBar } from '../SeekBar/SeekBar';
-import styles from './Footer.module.scss';
+import styles from './Footer.module.css';
 import { MusicInfo } from './MusicInfo';
 
 export type FooterProps = {

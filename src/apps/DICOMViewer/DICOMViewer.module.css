@@ -1,24 +1,19 @@
-@import '@/platform/_constants.scss';
-@import './_constants.scss';
-
 .dicomViewerTitleBar {
-  color: $color;
+  color: var(--dv-color);
 }
 
 .dicomViewerWindow {
-  $background: black;
-
-  border-color: darken($background, 5%);
-  background: $background;
+  border-color: black;
+  background: black;
 }
 
 .dicomViewer {
-  font-family: $fontFamily;
+  font-family: monospace;
   font-size: 1.3rem;
   position: relative;
   display: flex;
   height: 100%;
-  color: $color;
+  color: var(--dv-color);
 
   * {
     user-select: none;
@@ -29,19 +24,19 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  padding: $spacingXs $spacingS;
-  color: $color;
-  border: 0.1rem solid $color;
-  border-radius: $radiusXs;
+  padding: var(--spacing-xs) var(--spacing-s);
+  color: var(--dv-color);
+  border: 0.1rem solid var(--dv-color);
+  border-radius: var(--radius-xs);
   outline: none;
-  background: $backgroundColor;
+  background: var(--dv-bg);
 
   &:active:hover {
-    background: lighten($backgroundColor, $lightenAmountLevel2);
+    background: hsl(from var(--dv-bg) h s calc(l + 25));
   }
 
   &:hover {
-    background: lighten($backgroundColor, $lightenAmountLevel1);
+    background: hsl(from var(--dv-bg) h s calc(l + 20));
   }
 }
 

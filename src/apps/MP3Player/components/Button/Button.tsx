@@ -5,7 +5,7 @@ import {
   type FunctionComponent,
 } from 'preact';
 
-import styles from './Button.module.scss';
+import styles from './Button.module.css';
 
 export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,

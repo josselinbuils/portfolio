@@ -5,7 +5,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type RedditPost } from '../../../interfaces/RedditPost';
-import styles from './Post.module.scss';
+import styles from './Post.module.css';
 import { PostDetails } from './PostDetails';
 import { formatNumber } from './utils/formatNumber';
 import { getPreviewDisplaySize } from './utils/getPreviewDisplaySize';

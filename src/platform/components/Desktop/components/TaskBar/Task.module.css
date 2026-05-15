@@ -1,8 +1,5 @@
-@import '@/platform/_constants.scss';
-@import './_constants.scss';
-
 .icon {
-  margin-bottom: $spacingXs;
+  margin-bottom: var(--spacing-xs);
 }
 
 .loading {
@@ -11,28 +8,29 @@
 
 .runIndicator {
   position: absolute;
-  right: $spacingM;
+  right: var(--spacing-m);
   bottom: 0.6rem;
-  left: $spacingM;
+  left: var(--spacing-m);
   height: 0.4rem;
-  border-radius: $radiusXxs;
-  background: $primaryColor;
+  border-radius: var(--radius-xxs);
+  background: var(--primary-color);
 }
 
 .task {
-  @include clearButton;
+  color: inherit;
+  outline: none;
 
-  font-size: $taskBarWidth * 0.6;
-  line-height: $taskBarWidth;
+  font-size: calc(var(--taskbar-width) * 0.6);
+  line-height: var(--taskbar-width);
   position: relative;
   display: inline-block;
   flex: 0 0 6rem;
-  width: $taskBarWidth;
-  height: $taskBarWidth;
+  width: var(--taskbar-width);
+  height: var(--taskbar-width);
   text-align: center;
   border: 0.1rem solid transparent;
   border-right: 0;
-  background: $backgroundColor;
+  background: var(--background-color);
 
   &:first-child {
     border-top-left-radius: 8px;
@@ -51,28 +49,28 @@
   }
 
   &:hover {
-    border-color: darken($darkGrey, 5%);
+    border-color: hsl(from var(--dark-grey) h s calc(l - 5));
   }
 
   &:hover,
   &.taskButtonActive {
-    background: $darkGrey;
+    background: var(--dark-grey);
   }
 
   &.taskButtonActive {
-    box-shadow: inset 0.5rem 0 $primaryColor;
+    box-shadow: inset 0.5rem 0 var(--primary-color);
   }
 
   &.windowInstanceActive {
-    background: $grey;
+    background: var(--grey);
 
     &:hover {
-      border-color: darken($lightGrey, 5%);
+      border-color: hsl(from var(--light-grey) h s calc(l - 5));
     }
 
     &:hover,
     &.taskButtonActive {
-      background: $lightGrey;
+      background: var(--light-grey);
     }
   }
 }
@@ -80,19 +78,19 @@
 .contextMenu {
   font-size: 1.4rem;
   box-sizing: border-box;
-  height: $taskBarWidth;
-  padding: $spacingXs;
-  color: $textColor;
-  border-radius: $radiusS;
-  background: $backgroundColor;
+  height: var(--taskbar-width);
+  padding: var(--spacing-xs);
+  color: var(--text-color);
+  border-radius: var(--radius-s);
+  background: var(--background-color);
 
   button {
     line-height: 2rem;
-    padding: $spacingXs $spacingL $spacingXs $spacingS;
-    border-radius: $radiusS;
+    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-xs) var(--spacing-s);
+    border-radius: var(--radius-s);
 
     &[aria-current='true'] {
-      background: lighten($backgroundColor, $lightenAmountLevel1);
+      background: hsl(from var(--background-color) h s calc(l + 20));
     }
   }
 }
@@ -101,36 +99,36 @@
   font-size: 1.6rem;
   display: inline-block;
   width: 2.5rem;
-  padding-right: $spacingS;
+  padding-right: var(--spacing-s);
   text-align: center;
 }
 
 .tooltip {
-  font-family: $fontFamily;
+  font-family: var(--font-family), sans-serif;
   font-size: 1.4rem;
   display: flex;
   overflow: hidden;
   flex-direction: column;
   justify-content: space-around;
   box-sizing: border-box;
-  height: $taskBarWidth;
+  height: var(--taskbar-width);
   margin: 0;
-  padding: $spacingS $spacingM $spacingS $spacingS;
-  color: $textColor;
-  border: 0.1rem solid darken($darkGrey, 5%);
+  padding: var(--spacing-s) var(--spacing-m) var(--spacing-s) var(--spacing-s);
+  color: var(--text-color);
+  border: 0.1rem solid hsl(from var(--dark-grey) h s calc(l - 5));
   border-left: 0;
-  border-radius: 0 $radiusS $radiusS 0;
-  background: $darkGrey;
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  background: var(--dark-grey);
 
   &.windowInstanceActive {
-    border-color: darken($lightGrey, 5%);
-    background: $lightGrey;
+    border-color: hsl(from var(--light-grey) h s calc(l - 5));
+    background: var(--light-grey);
   }
 }
 
 .tooltipBody {
   margin: 0;
-  color: darken($textColor, $lightenAmountLevel1);
+  color: hsl(from var(--text-color) h s calc(l - 20));
 }
 
 @keyframes loading {

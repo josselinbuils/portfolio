@@ -3,10 +3,8 @@
 }
 
 .teraviaWindow {
-  $background: #1a1d1e;
-
-  border-color: darken($background, 5%);
-  background: $background;
+  border-color: hsl(from #1a1d1e h s calc(l - 5));
+  background: #1a1d1e;
 }
 
 .iframe {

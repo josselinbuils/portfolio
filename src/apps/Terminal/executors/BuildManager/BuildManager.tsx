@@ -6,7 +6,7 @@ import { useList } from '@/platform/hooks/useList';
 
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { type AsyncExecutor } from '../AsyncExecutor';
-import styles from './BuildManager.module.scss';
+import styles from './BuildManager.module.css';
 import { type BMError, BuildManagerClient } from './BuildManagerClient';
 import { type Log } from './Log';
 import { formatLogs } from './utils/formatLogs';

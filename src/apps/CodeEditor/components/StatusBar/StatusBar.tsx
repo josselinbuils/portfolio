@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { type FunctionComponent } from 'preact';
 
 import { type CursorPosition } from '../../interfaces/CursorPosition';
-import styles from './StatusBar.module.scss';
+import styles from './StatusBar.module.css';
 
 const DEBUG = true;
 

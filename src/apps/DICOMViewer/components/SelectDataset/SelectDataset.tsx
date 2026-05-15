@@ -9,7 +9,7 @@ import { preloadImage } from '@/platform/utils/preloadImage';
 import { type DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';
-import styles from './SelectDataset.module.scss';
+import styles from './SelectDataset.module.css';
 import { loadDatasetList } from './utils/loadDatasetList';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;

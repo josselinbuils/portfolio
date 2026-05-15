@@ -6,7 +6,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type RedditFilter } from '../../interfaces/RedditFilter';
-import styles from './FilterButton.module.scss';
+import styles from './FilterButton.module.css';
 
 const filters: RedditFilter[] = ['hot', 'top'];
 

@@ -1,9 +1,7 @@
-@import '@/platform/_constants.scss';
-
 .logo {
   font-size: 7rem;
   line-height: 11rem;
   margin: 0;
   text-align: center;
-  color: $primaryColor;
+  color: var(--primary-color);
 }

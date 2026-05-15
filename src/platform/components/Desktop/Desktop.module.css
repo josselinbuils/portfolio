@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .desktop {
   display: flex;
   overflow: hidden;
@@ -13,5 +11,5 @@
 }
 
 .taskBar {
-  margin: auto $spacingXs;
+  margin: auto var(--spacing-xs);
 }

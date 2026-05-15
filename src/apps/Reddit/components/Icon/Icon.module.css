@@ -1,5 +1,3 @@
-@import '../../_constants.scss';
-
 .defaultIcon,
 .icon {
   vertical-align: top;
@@ -12,7 +10,7 @@
 .defaultIcon {
   font-size: 1.2em;
   font-weight: normal;
-  color: $reddit;
+  color: var(--reddit);
 }
 
 .icon {

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import { type LUTComponent } from '../../interfaces/LUTComponent';
 import { type Viewport } from '../../models/Viewport';
-import styles from './ColorPalette.module.scss';
+import styles from './ColorPalette.module.css';
 import { BarPreview } from './components/BarPreview/BarPreview';
 import { GraphPreview } from './components/GraphPreview/GraphPreview';
 import { LUTComponentList } from './components/LUTComponentList/LUTComponentList';

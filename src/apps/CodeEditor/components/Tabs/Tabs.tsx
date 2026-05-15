@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { cloneElement, type FunctionComponent, type JSX } from 'preact';
 import { Children } from 'preact/compat';
 
-import styles from './Tabs.module.scss';
+import styles from './Tabs.module.css';
 
 export type TabsProps = {
   children: JSX.Element | JSX.Element[];

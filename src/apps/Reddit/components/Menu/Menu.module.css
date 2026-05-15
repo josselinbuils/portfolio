@@ -1,11 +1,8 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .menu {
-  margin: $spacingL 0 0 $spacingL;
-  padding: $spacingS $spacingM;
-  color: $textColor;
-  border: 0.1rem solid $borderColor;
-  border-radius: $radiusS;
-  background: $backgroundSecondaryColor;
+  margin: var(--spacing-l) 0 0 var(--spacing-l);
+  padding: var(--spacing-s) var(--spacing-m);
+  color: black;
+  border: 0.1rem solid var(--reddit-secondary);
+  border-radius: var(--radius-s);
+  background: white;
 }

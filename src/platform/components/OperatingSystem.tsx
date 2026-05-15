@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 
-import '../global.scss';
+import '../global.css';
 import { type AppDescriptor } from '../interfaces/AppDescriptor';
 import { windowManager } from '../services/windowManager/windowManager';
 import { getAppDescriptors } from '../utils/getAppDescriptors';

@@ -8,7 +8,7 @@ import {
 } from '@/platform/components/Menu/Menu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 
-import styles from '../Task.module.scss';
+import styles from '../Task.module.css';
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 

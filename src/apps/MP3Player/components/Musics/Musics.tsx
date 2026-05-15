@@ -13,7 +13,7 @@ import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
-import styles from './Musics.module.scss';
+import styles from './Musics.module.css';
 
 const ORDERS = [
   { name: 'Top All', value: 'popularity_total' },

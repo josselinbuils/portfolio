@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { cloneElement, type FunctionComponent, type JSX } from 'preact';
 import { Children } from 'preact/compat';
 
-import styles from './Toolbar.module.scss';
+import styles from './Toolbar.module.css';
 
 export type ToolbarProps = {
   children: JSX.Element | JSX.Element[];

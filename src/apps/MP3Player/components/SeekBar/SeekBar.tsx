@@ -5,7 +5,7 @@ import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
-import styles from './SeekBar.module.scss';
+import styles from './SeekBar.module.css';
 
 export const SeekBar: FunctionComponent = () => {
   const { audioController, audioState } = useContext(AudioContext);

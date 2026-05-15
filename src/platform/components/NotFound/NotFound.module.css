@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .notFound {
   position: fixed;
   z-index: 9999;
@@ -23,7 +21,7 @@
 
   h2 {
     font-size: 3rem;
-    margin: $spacingXl 0;
+    margin: var(--spacing-xl) 0;
   }
 }
 

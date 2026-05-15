@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './CommandHelp.module.scss';
+import styles from './CommandHelp.module.css';
 
 export type CommandHelpProps = {
   command: string;

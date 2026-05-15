@@ -1,10 +1,21 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
-$lineNumbersWidth: 5rem;
-
 ul.autoCompletionMenu {
-  @include menu;
+  border: 0.1rem solid var(--ce-border-primary);
+  border-radius: var(--radius-s);
+  background: var(--ce-bg-primary);
+  scrollbar-color: var(--ce-bg-tertiary) transparent;
+
+  button {
+    font-family: var(--ce-font-family), monospace;
+    font-size: 1.3rem;
+    line-height: 1.4rem;
+    padding: var(--spacing-s);
+    color: var(--ce-text-primary);
+    border-radius: var(--radius-s);
+
+    &[aria-current='true'] {
+      background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
+    }
+  }
 
   min-width: 15rem;
   max-height: 12rem;
@@ -12,7 +23,7 @@ ul.autoCompletionMenu {
   margin-left: -0.7rem;
 
   mark {
-    color: $primaryColor;
+    color: var(--ce-primary);
     background: transparent;
   }
 }
@@ -24,10 +35,10 @@ ul.autoCompletionMenu {
 
 .editor {
   position: absolute;
-  top: $tabsHeight;
+  top: var(--ce-tabs-height);
   right: 0;
   bottom: 0;
-  left: $toolbarWidth;
+  left: var(--ce-toolbar-width);
   display: flex;
 }
 
@@ -38,11 +49,9 @@ ul.autoCompletionMenu {
 .graphicalObjects,
 .highlightedCode,
 .textarea {
-  @include scrollbar;
-
-  font-family: $fontFamily;
-  font-size: $fontSize;
-  line-height: $lineHeight;
+  font-family: var(--ce-font-family), monospace;
+  font-size: var(--ce-font-size);
+  line-height: var(--ce-line-height);
   position: absolute;
   top: 0;
   left: 0;
@@ -54,6 +63,7 @@ ul.autoCompletionMenu {
   white-space: pre-wrap;
   border: none;
   outline: none;
+  scrollbar-color: var(--ce-bg-tertiary) transparent;
 
   overflow-wrap: break-word;
 }
@@ -63,24 +73,24 @@ ul.autoCompletionMenu {
 }
 
 .infoTooltip {
-  font-family: $fontFamily;
-  font-size: $fontSize;
+  font-family: var(--ce-font-family), monospace;
+  font-size: var(--ce-font-size);
   overflow: auto;
   min-width: 20rem;
-  padding: $spacingS;
+  padding: var(--spacing-s);
   white-space: pre-wrap;
-  color: $textPrimaryColor;
-  border: 0.1rem solid $borderColorPrimary;
-  border-radius: $radiusS;
-  background: $backgroundPrimaryColor;
+  color: var(--ce-text-primary);
+  border: 0.1rem solid var(--ce-border-primary);
+  border-radius: var(--radius-s);
+  background: var(--ce-bg-primary);
 }
 
 .infoTooltipIssue:not(:last-child) {
-  margin-bottom: $spacingM;
+  margin-bottom: var(--spacing-m);
 }
 
 .lineNumbers {
-  flex: 0 0 $lineNumbersWidth;
+  flex: 0 0 5rem;
 }
 
 .textarea {

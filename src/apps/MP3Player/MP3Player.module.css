@@ -1,15 +1,10 @@
-@import '@/platform/_constants.scss';
-@import './_constants.scss';
-
-$footerHeight: 7.7rem;
-
 .mp3PlayerTitleBar {
-  color: $textColor;
+  color: var(--mp3-text);
 }
 
 .mp3PlayerWindow {
-  border-color: darken($backgroundColor, 5%);
-  background: $backgroundColor;
+  border-color: hsl(from var(--mp3-bg) h s calc(l - 5));
+  background: var(--mp3-bg);
 }
 
 .body {
@@ -19,7 +14,7 @@ $footerHeight: 7.7rem;
 }
 
 .footer {
-  flex: 0 0 $footerHeight;
+  flex: 0 0 7.7rem;
 }
 
 .musics {
@@ -27,13 +22,13 @@ $footerHeight: 7.7rem;
 }
 
 .player {
-  font-family: $fontFamily;
+  font-family: var(--font-family), sans-serif;
   font-size: 1.4rem;
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  color: $textColor;
+  color: var(--mp3-text);
 
   &,
   * {

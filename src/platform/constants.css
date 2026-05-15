@@ -1,0 +1,59 @@
+:root {
+  /* Platform */
+  --font-family: Lucida Sans Unicode, Lucida Grande;
+  --background-color: rgba(0, 0, 0, 0.9);
+  --dark-grey: #333333;
+  --grey: #404040;
+  --light-grey: #4d4d4d;
+  --primary-color: #007ad8;
+  --text-color: #efefef;
+  --radius-xxs: 0.2rem;
+  --radius-xs: 0.4rem;
+  --radius-s: 0.8rem;
+  --spacing-xs: 0.4rem;
+  --spacing-s: 0.8rem;
+  --spacing-m: 1.2rem;
+  --spacing-l: 2rem;
+  --spacing-xl: 3.2rem;
+
+  /* TaskBar */
+  --taskbar-width: 7rem;
+
+  /* CodeEditor */
+  --ce-primary: #cc7832;
+  --ce-secondary: #007ad8;
+  --ce-bg-primary: #434548;
+  --ce-bg-secondary: #2b2b2b;
+  --ce-bg-tertiary: #383a3d;
+  --ce-border-primary: hsl(from #434548 h s calc(l - 5));
+  --ce-border-tertiary: #606060;
+  --ce-font-family: 'JetBrainsMono';
+  --ce-font-size: 1.3rem;
+  --ce-line-height: 2.2rem;
+  --ce-tabs-height: 3.6rem;
+  --ce-text-primary: #c3c3c3;
+  --ce-text-secondary: #a3b7c6;
+  --ce-text-tertiary: #70808c;
+  --ce-toolbar-width: 5rem;
+  --ce-button-size: calc(5rem - 0.8rem);
+
+  /* MP3Player */
+  --mp3-bg: #111625;
+  --mp3-secondary: hsl(from #111625 h s calc(l + 10));
+  --mp3-text: hsl(from #111625 h s calc(l + 80));
+  --mp3-text-secondary: hsl(from var(--mp3-text) h s calc(l - 20));
+  --mp3-text-size: 0.9em;
+
+  /* Reddit */
+  --reddit: #ff4501;
+  --reddit-secondary: lightgrey;
+  --reddit-text-secondary: #7b7b7b;
+
+  /* Terminal */
+  --term-bg: rgba(30, 30, 30, 0.9);
+  --term-secondary: #c5c5c5;
+
+  /* DICOMViewer */
+  --dv-bg: black;
+  --dv-color: #efefef;
+}

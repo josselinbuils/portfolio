@@ -1,5 +1,5 @@
 import { type Executor } from '../Executor';
-import styles from './Help.module.scss';
+import styles from './Help.module.css';
 
 const commands = [
   ['bm', 'build manager'],

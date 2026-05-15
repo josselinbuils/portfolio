@@ -1,12 +1,8 @@
-@import '../../../../_constants.scss';
-
 .error {
-  $color: #ea4848;
-
-  color: $color;
-  border-top: 0.1rem solid darken($color, 30%);
-  border-bottom: 0.1rem solid darken($color, 30%);
-  background: transparentize($color, 0.95);
+  color: #ea4848;
+  border-top: 0.1rem solid hsl(from #ea4848 h s calc(l - 30));
+  border-bottom: 0.1rem solid hsl(from #ea4848 h s calc(l - 30));
+  background: rgba(234, 72, 72, 0.05);
 
   & + & {
     margin-top: -0.1rem;
@@ -18,10 +14,10 @@
 }
 
 .info {
-  color: $textSecondaryColor;
+  color: var(--ce-text-secondary);
 
   & + & {
-    border-top: 0.1rem solid darken($textSecondaryColor, 40%);
+    border-top: 0.1rem solid hsl(from var(--ce-text-secondary) h s calc(l - 40));
   }
 }
 
@@ -30,13 +26,12 @@
 }
 
 .logs {
-  @include scrollbar;
-
   font-size: 1.2rem;
   overflow-y: auto;
   box-sizing: border-box;
   white-space: pre-wrap;
-  background: $backgroundSecondaryColor;
+  background: var(--ce-bg-secondary);
+  scrollbar-color: var(--ce-bg-tertiary) transparent;
 
   overflow-wrap: break-word;
 }

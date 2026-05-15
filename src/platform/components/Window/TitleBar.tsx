@@ -7,7 +7,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
 
-import styles from './TitleBar.module.scss';
+import styles from './TitleBar.module.css';
 
 export type TitleBarProps = {
   className: string | undefined;

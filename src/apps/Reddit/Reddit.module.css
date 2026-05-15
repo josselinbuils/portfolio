@@ -1,28 +1,23 @@
-@import '@/platform/_constants.scss';
-@import './_constants.scss';
-
 .redditTitleBar {
-  color: $reddit;
+  color: var(--reddit);
 }
 
 .redditWindow {
-  $background: #fbfbfb;
-
-  border-color: darken($background, 5%);
-  background: $background;
+  border-color: hsl(from #fbfbfb h s calc(l - 5));
+  background: #fbfbfb;
 }
 
 .body {
   position: relative;
   overflow-y: scroll;
   flex-grow: 1;
-  padding: $spacingS $spacingM $spacingL $spacingM;
+  padding: var(--spacing-s) var(--spacing-m) var(--spacing-l) var(--spacing-m);
 
   scroll-behavior: smooth;
 }
 
 .reddit {
-  font-family: $fontFamily;
+  font-family: var(--font-family), sans-serif;
   display: flex;
   height: 100%;
 }

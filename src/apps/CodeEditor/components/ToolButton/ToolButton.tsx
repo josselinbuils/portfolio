@@ -6,7 +6,7 @@ import { forwardRef } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 
-import styles from './ToolButton.module.scss';
+import styles from './ToolButton.module.css';
 
 export type ToolButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,

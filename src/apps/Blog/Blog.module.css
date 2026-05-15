@@ -3,10 +3,8 @@
 }
 
 .blogWindow {
-  $background: white;
-
-  border-color: darken($background, 5%);
-  background: $background;
+  border-color: hsl(from white h s calc(l - 5));
+  background: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,10 +13,8 @@
   }
 
   .blogWindow {
-    $background: #393939;
-
-    border-color: darken($background, 5%);
-    background: $background;
+    border-color: hsl(from #393939 h s calc(l - 5));
+    background: #393939;
   }
 }
 

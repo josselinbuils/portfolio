@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .container {
   position: relative;
   display: inline-block;
@@ -18,16 +16,14 @@
 }
 
 .select {
+  appearance: none;
   font-size: 1.3rem;
   line-height: 2.1rem;
   width: 100%;
   padding: 0.6rem 3rem 0.6rem 1rem;
   color: inherit;
   border: 0.1rem solid;
-  border-radius: $radiusS;
+  border-radius: var(--radius-s);
   outline: none;
   background: transparent;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }

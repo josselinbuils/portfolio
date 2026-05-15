@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .tooltip {
   position: fixed;
   z-index: 900;

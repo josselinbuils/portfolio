@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
 import { type DrawTool, tools } from '../../tools/tools';
-import styles from './Toolbar.module.scss';
+import styles from './Toolbar.module.css';
 
 export type ToolbarProps = {
   canRedo: boolean;

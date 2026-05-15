@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './Palette.module.scss';
+import styles from './Palette.module.css';
 
 export type PaletteProps = {
   fill: string;

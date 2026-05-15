@@ -9,7 +9,7 @@ import { type Size } from '@/platform/interfaces/Size';
 import { type ViewportStats } from '../../interfaces/ViewportStats';
 import { type Viewport } from '../../models/Viewport';
 import { type Renderer } from './renderers/Renderer';
-import styles from './ViewportElement.module.scss';
+import styles from './ViewportElement.module.css';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 

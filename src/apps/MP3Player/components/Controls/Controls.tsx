@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
-import styles from './Controls.module.scss';
+import styles from './Controls.module.css';
 
 export type ControlsProps = {
   className?: string;

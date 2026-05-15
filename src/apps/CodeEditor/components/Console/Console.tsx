@@ -12,7 +12,7 @@ import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Loader } from './components/Loader';
 import { Logs } from './components/Logs/Logs';
-import styles from './Console.module.scss';
+import styles from './Console.module.css';
 import { type Log } from './Log';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';

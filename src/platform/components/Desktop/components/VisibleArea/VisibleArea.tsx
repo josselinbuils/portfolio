@@ -10,7 +10,7 @@ import { getRefElementSize } from '@/platform/utils/getRefElementSize';
 import { lazy } from '@/platform/utils/lazy';
 
 import { CursorDelayedLoader } from '../../../CursorDelayedLoader/CursorDelayedLoader';
-import styles from './VisibleArea.module.scss';
+import styles from './VisibleArea.module.css';
 import { Windows } from './Windows';
 
 const Selection = lazy(async () => (await import('./Selection')).Selection);

@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 
 import { subreddits } from '../../subreddits';
-import styles from './Menu.module.scss';
+import styles from './Menu.module.css';
 import { MenuItem } from './MenuItem';
 
 export type MenuProps = {

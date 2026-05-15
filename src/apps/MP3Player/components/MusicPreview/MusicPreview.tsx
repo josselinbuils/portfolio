@@ -5,7 +5,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Music } from '../../interfaces/Music';
-import styles from './MusicPreview.module.scss';
+import styles from './MusicPreview.module.css';
 
 export type MusicPreviewProps = {
   music: Music | undefined;

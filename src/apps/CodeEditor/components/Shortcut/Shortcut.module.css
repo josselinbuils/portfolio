@@ -1,6 +1,3 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .key {
   font-size: 1.1rem;
   font-weight: bold;
@@ -9,11 +6,11 @@
   box-sizing: border-box;
   height: 1.3rem;
   margin: auto 0;
-  padding: 0 $spacingXs;
+  padding: 0 var(--spacing-xs);
   white-space: nowrap;
-  color: lighten($backgroundPrimaryColor, 10%);
-  border-radius: $radiusXxs;
-  background-color: $textPrimaryColor;
+  color: hsl(from var(--ce-bg-primary) h s calc(l + 10));
+  border-radius: var(--radius-xxs);
+  background-color: var(--ce-text-primary);
   box-shadow: 0.2rem 0.2rem black;
 }
 

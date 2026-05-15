@@ -1,13 +1,10 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .toolbar {
   overflow: hidden;
   box-sizing: border-box;
-  padding: $spacingXs;
+  padding: var(--spacing-xs);
   text-align: center;
-  border-right: 0.1rem solid $borderColorPrimary;
-  background: $backgroundPrimaryColor;
+  border-right: 0.1rem solid var(--ce-border-primary);
+  background: var(--ce-bg-primary);
 }
 
 .toolButton {

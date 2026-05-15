@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'preact';
 
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 
-import styles from './MusicInfo.module.scss';
+import styles from './MusicInfo.module.css';
 
 export type MusicInfoProps = {
   className?: string;

@@ -29,7 +29,7 @@ import { CharacterLimitLine } from './components/CharacterLimitLine/CharacterLim
 import { Cursor } from './components/Cursor/Cursor';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
-import styles from './Editor.module.scss';
+import styles from './Editor.module.css';
 import { type Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';

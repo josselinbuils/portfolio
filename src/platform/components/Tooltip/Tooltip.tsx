@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
 import { type Position } from '@/platform/interfaces/Position';
 
-import styles from './Tooltip.module.scss';
+import styles from './Tooltip.module.css';
 
 export type TooltipProps = {
   className?: string;

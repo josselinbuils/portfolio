@@ -1,5 +1,3 @@
-@import '@/platform/_constants.scss';
-
 .error {
   color: red;
 }
@@ -10,7 +8,7 @@
 }
 
 .stepNumber {
-  padding: $spacingXs $spacingS;
+  padding: var(--spacing-xs) var(--spacing-s);
   border: 0.1rem solid black;
   background: #007ad8;
 }

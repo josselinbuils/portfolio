@@ -1,49 +1,46 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .mouseTool {
   font-size: 2rem;
   position: relative;
   display: block;
   width: 3.2rem;
   height: 3.2rem;
-  color: $color;
-  border: 0.1rem solid $color;
+  color: var(--dv-color);
+  border: 0.1rem solid var(--dv-color);
   border-radius: 0;
   outline: none;
-  background: transparentize($backgroundColor, 0.4);
+  background: rgba(0, 0, 0, 0.6);
 
   &:active:hover {
-    background: lighten($backgroundColor, $lightenAmountLevel2);
+    background: hsl(from var(--dv-bg) h s calc(l + 25));
   }
 
   &:hover {
-    background: lighten($backgroundColor, $lightenAmountLevel1);
+    background: hsl(from var(--dv-bg) h s calc(l + 20));
   }
 
   &:first-child {
-    border-top-left-radius: $radiusXs;
-    border-top-right-radius: $radiusXs;
+    border-top-left-radius: var(--radius-xs);
+    border-top-right-radius: var(--radius-xs);
 
     &.activeLeft:before {
-      border-top-left-radius: $radiusXs;
+      border-top-left-radius: var(--radius-xs);
     }
 
     &.activeRight:before {
-      border-top-right-radius: $radiusXs;
+      border-top-right-radius: var(--radius-xs);
     }
   }
 
   &:last-child {
-    border-bottom-right-radius: $radiusXs;
-    border-bottom-left-radius: $radiusXs;
+    border-bottom-right-radius: var(--radius-xs);
+    border-bottom-left-radius: var(--radius-xs);
 
     &.activeLeft:before {
-      border-bottom-left-radius: $radiusXs;
+      border-bottom-left-radius: var(--radius-xs);
     }
 
     &.activeRight:before {
-      border-bottom-right-radius: $radiusXs;
+      border-bottom-right-radius: var(--radius-xs);
     }
   }
 
@@ -67,11 +64,11 @@
       width: 1.6rem;
       height: 3.2rem;
       content: '';
-      background: $color;
+      background: var(--dv-color);
     }
 
     svg {
-      color: $color;
+      color: var(--dv-color);
 
       mix-blend-mode: difference;
     }
@@ -82,7 +79,7 @@
   }
 
   & + & {
-    border-top: 0.1rem solid $color;
+    border-top: 0.1rem solid var(--dv-color);
   }
 }
 

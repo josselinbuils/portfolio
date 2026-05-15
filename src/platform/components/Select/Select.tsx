@@ -5,7 +5,7 @@ import { type PropsWithChildren } from 'preact/compat';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
-import styles from './Select.module.scss';
+import styles from './Select.module.css';
 
 export type SelectProps = PropsWithChildren & {
   className?: string;

@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './ProgressRing.module.scss';
+import styles from './ProgressRing.module.css';
 
 export type ProgressRingProps = {
   className?: string;

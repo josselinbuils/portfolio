@@ -1,9 +1,7 @@
-@import '@/platform/_constants.scss';
-
 .jamendoLink {
   font-size: 1.4rem;
   display: block;
-  margin-top: $spacingL;
+  margin-top: var(--spacing-l);
   cursor: pointer;
   text-decoration: none;
   outline: none;
@@ -12,7 +10,7 @@
   &:active,
   &:hover,
   &:focus {
-    color: $primaryColor;
+    color: var(--primary-color);
   }
 
   &:hover,

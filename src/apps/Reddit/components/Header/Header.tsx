@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'preact';
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
-import styles from './Header.module.scss';
+import styles from './Header.module.css';
 
 export type HeaderProps = {
   filter: RedditFilter;

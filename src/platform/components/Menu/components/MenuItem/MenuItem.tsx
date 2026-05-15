@@ -1,6 +1,6 @@
 import { type FunctionComponent, type JSX } from 'preact';
 
-import styles from './MenuItem.module.scss';
+import styles from './MenuItem.module.css';
 
 export type MenuItemDescriptor = {
   onClick(): void;

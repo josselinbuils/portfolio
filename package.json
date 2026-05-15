@@ -33,13 +33,13 @@
     "preact": "10.29.1",
     "prettier": "3.8.3",
     "prismjs": "1.30.0",
-    "sass": "1.99.0",
     "snoowrap": "1.23.0",
     "source-map-support": "0.5.21",
     "typescript": "6.0.3",
     "ws": "8.20.0"
   },
   "devDependencies": {
+    "@eslint/css": "^1.2.0",
     "@eslint/js": "10.0.1",
     "@josselinbuils/exec-staged": "1.0.2",
     "@preact/preset-vite": "2.10.3",

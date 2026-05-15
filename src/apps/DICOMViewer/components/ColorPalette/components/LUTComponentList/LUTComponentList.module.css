@@ -1,12 +1,10 @@
-@import '@/platform/_constants.scss';
-
 .colorWindow {
-  margin: 0 $spacingS;
+  margin: 0 var(--spacing-s);
 }
 
 .container {
   margin: 0;
-  padding-left: $spacingXs;
+  padding-left: var(--spacing-xs);
   list-style: none;
 
   li {

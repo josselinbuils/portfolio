@@ -1,8 +1,6 @@
-@import '../../_constants.scss';
-
 .icon {
   font-size: 10rem;
-  color: $reddit;
+  color: var(--reddit);
 }
 
 .logo {

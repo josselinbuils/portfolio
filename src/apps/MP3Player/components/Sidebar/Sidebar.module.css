@@ -1,9 +1,6 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .sidebar {
   box-sizing: border-box;
   width: 19rem;
   padding: 1.5rem;
-  background-color: $backgroundColor;
+  background-color: var(--mp3-bg);
 }

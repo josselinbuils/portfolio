@@ -1,43 +1,39 @@
-@import '@/platform/_constants.scss';
-@import './_constants.scss';
-
 .active {
-  border-color: $borderColorPrimary;
-  background: lighten($backgroundPrimaryColor, 10%);
+  border-color: var(--ce-border-primary);
+  background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
 }
 
 .linkWithMenu {
   position: fixed;
   z-index: 1001;
   width: 0.5rem;
-  height: $buttonSize - 0.2rem; // - border size
+  height: calc(var(--ce-button-size) - 0.2rem);
   margin-left: -0.1rem;
-  border: 0.1rem solid $borderColorPrimary;
+  border: 0.1rem solid var(--ce-border-primary);
   border-right: 0;
   border-left: 0;
-  background: lighten($backgroundPrimaryColor, 10%);
+  background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
 }
 
 ul.menu {
-  @include scrollbar;
-
   min-width: 15rem;
   max-height: 22rem;
   margin-left: 0.3rem;
-  border: 0.1rem solid $borderColorPrimary;
-  border-radius: 0 $radiusS $radiusS $radiusS;
-  background: lighten($backgroundPrimaryColor, 10%);
+  border: 0.1rem solid var(--ce-border-primary);
+  border-radius: 0 var(--radius-s) var(--radius-s) var(--radius-s);
+  background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
+  scrollbar-color: var(--ce-bg-tertiary) transparent;
 
   button {
-    font-family: $fontFamily;
+    font-family: var(--ce-font-family), monospace;
     font-size: 1.3rem;
     line-height: 1.4rem;
-    padding: $spacingS $spacingL $spacingS $spacingS;
-    color: $buttonColor;
-    border-radius: $radiusS;
+    padding: var(--spacing-s) var(--spacing-l) var(--spacing-s) var(--spacing-s);
+    color: var(--ce-text-primary);
+    border-radius: var(--radius-s);
 
     &[aria-current='true'] {
-      background: lighten($backgroundPrimaryColor, 20%);
+      background: hsl(from var(--ce-bg-primary) h s calc(l + 20));
     }
   }
 }

@@ -4,7 +4,7 @@ import { type FunctionComponent, type JSX } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
-import styles from './Tab.module.scss';
+import styles from './Tab.module.css';
 
 export type TabProps = JSX.HTMLAttributes<HTMLButtonElement> & {
   className?: string;

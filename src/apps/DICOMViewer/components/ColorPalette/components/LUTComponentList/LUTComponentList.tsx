@@ -7,7 +7,7 @@ import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { ColorPicker } from './ColorPicker/ColorPicker';
-import styles from './LUTComponentList.module.scss';
+import styles from './LUTComponentList.module.css';
 
 export type LUTComponentListProps = {
   lutComponents: LUTComponent[];

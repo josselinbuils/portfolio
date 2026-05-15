@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { type HTMLAttributes } from 'preact';
 import { forwardRef } from 'preact/compat';
 
-import styles from './FontAwesomeIcon.module.scss';
+import styles from './FontAwesomeIcon.module.css';
 
 export type FontAwesomeIconProps = Omit<
   HTMLAttributes<SVGSVGElement>,

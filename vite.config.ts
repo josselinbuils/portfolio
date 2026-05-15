@@ -42,12 +42,6 @@ export default defineConfig(({ isSsrBuild }) => ({
         return `${name}_${cssHashMap.get(css)}`;
       },
     },
-    preprocessorOptions: {
-      scss: {
-        quietDeps: true,
-        silenceDeprecations: ['color-functions', 'global-builtin', 'import'],
-      },
-    },
   },
   plugins: [
     vitePluginPage(),

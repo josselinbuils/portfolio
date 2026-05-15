@@ -1,6 +1,3 @@
-@import '@/platform/_constants.scss';
-@import '../../_constants.scss';
-
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -13,7 +10,7 @@
   position: relative;
   width: 13rem;
   height: 13rem;
-  margin: $spacingM;
+  margin: var(--spacing-m);
   padding: 0;
   text-align: center;
   border: 0;
@@ -35,7 +32,7 @@
     content: '3D';
     pointer-events: none;
     border-radius: 100%;
-    background: $color;
+    background: var(--dv-color);
   }
 
   img {
@@ -50,7 +47,7 @@
     margin: 0 auto;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: $color;
+    color: var(--dv-color);
   }
 }
 
@@ -62,19 +59,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   padding: 6rem;
-
-  &::-webkit-scrollbar {
-    width: 0.8rem;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: $radiusXs;
-    background: lighten($backgroundColor, 15%);
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: $radiusXs;
-  }
+  scrollbar-color: hsl(from var(--dv-bg) h s calc(l + 15)) transparent;
 
   h1 {
     margin-top: 0;

@@ -2,7 +2,7 @@ import { type FunctionComponent, type JSX } from 'preact';
 
 import { makeKeysHumanReadable, normaliseKeys } from '@/platform/utils/keys';
 
-import styles from './Shortcut.module.scss';
+import styles from './Shortcut.module.css';
 
 export type ShortcutProps = {
   keys: string[];
