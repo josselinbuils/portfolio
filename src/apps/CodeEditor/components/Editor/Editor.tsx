@@ -29,7 +29,7 @@ import { CharacterLimitLine } from './components/CharacterLimitLine/CharacterLim
 import { Cursor } from './components/Cursor/Cursor';
 import { LineNumbers } from './components/LineNumbers/LineNumbers';
 import { LintIssueHighlight } from './components/LintIssueHighlight/LintIssueHighlight';
-import styles from './Editor.module.css';
+import classes from './Editor.module.css';
 import { type Completion, useAutoCompletion } from './hooks/useAutoCompletion';
 import { useHistory } from './hooks/useHistory';
 import { useSharedFile } from './hooks/useSharedFile/useSharedFile';
@@ -87,7 +87,7 @@ export const Editor: FunctionComponent<EditorProps> = ({
     cursorOffset,
     language: activeFile.language,
     lineIndent: getLineIndent(code, cursorOffset),
-    menuClassName: styles.autoCompletionMenu,
+    menuClassName: classes.autoCompletionMenu,
     onCompletion: applyAutoCompletion,
     textAreaElement,
   });
@@ -113,7 +113,7 @@ export const Editor: FunctionComponent<EditorProps> = ({
     selection,
   });
   const { hideTooltip, showTooltip, tooltipElement, tooltipRef } = useTooltip({
-    className: styles.infoTooltip,
+    className: classes.infoTooltip,
     relativePosition: 'bottom-right',
   });
   const tooltipTimeoutRef = useRef<number>();
@@ -331,7 +331,7 @@ export const Editor: FunctionComponent<EditorProps> = ({
                 <>
                   {elementIssues.map((issue) => (
                     <section
-                      className={styles.infoTooltipIssue}
+                      className={classes.infoTooltipIssue}
                       key={issue.message}
                     >
                       {issue.message}
@@ -415,19 +415,19 @@ export const Editor: FunctionComponent<EditorProps> = ({
   }
 
   return (
-    <div className={cn(styles.editor, className)}>
+    <div className={cn(classes.editor, className)}>
       <LineNumbers
-        className={styles.lineNumbers}
+        className={classes.lineNumbers}
         code={code}
         editorWidth={getWidthWithoutPadding(textAreaElement)}
         scrollTop={scrollTop}
         selection={selection}
       />
-      <div className={styles.code} onMouseMove={handleMouseMove}>
-        <div className={styles.highlightedCode} ref={codeElementRef}>
+      <div className={classes.code} onMouseMove={handleMouseMove}>
+        <div className={classes.highlightedCode} ref={codeElementRef}>
           {highlightedCode}
         </div>
-        <div className={styles.graphicalObjects}>
+        <div className={classes.graphicalObjects}>
           {textAreaElement && (
             <>
               {activeFile.shared &&
@@ -458,7 +458,7 @@ export const Editor: FunctionComponent<EditorProps> = ({
           )}
         </div>
         <textarea
-          className={styles.textarea}
+          className={classes.textarea}
           onBlur={() => setActive(false)}
           onChange={handleChange}
           onClick={(event) => {

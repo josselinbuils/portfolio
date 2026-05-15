@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './ActiveLineHighlight.module.css';
+import classes from './ActiveLineHighlight.module.css';
 
 export type ActiveLineHighlightProps = {
   code: string;
@@ -20,6 +20,6 @@ export const ActiveLineHighlight: FunctionComponent<
     [code, parent, selection],
   );
   return (
-    <div className={styles.activeLineHighlight} style={{ top: position.y }} />
+    <div className={classes.activeLineHighlight} style={{ top: position.y }} />
   );
 };

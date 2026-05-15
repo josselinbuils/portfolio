@@ -6,7 +6,7 @@ import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { loadVOILUT } from '@/apps/DICOMViewer/utils/loadVOILUT';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 
-import styles from './BarPreview.module.css';
+import classes from './BarPreview.module.css';
 
 export type BarPreviewProps = {
   className?: string;
@@ -47,7 +47,7 @@ export const BarPreview: FunctionComponent<BarPreviewProps> = ({
 
   return (
     <canvas
-      className={cn(styles.barPreview, className)}
+      className={cn(classes.barPreview, className)}
       height={canvasHeight}
       ref={canvasElementRef}
       width={canvasWidth}

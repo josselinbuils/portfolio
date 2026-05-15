@@ -1,10 +1,10 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './JamendoLink.module.css';
+import classes from './JamendoLink.module.css';
 
 export const JamendoLink: FunctionComponent = () => (
   <a
-    className={styles.jamendoLink}
+    className={classes.jamendoLink}
     href="https://www.jamendo.com"
     rel="noopener noreferrer"
     target="_blank"

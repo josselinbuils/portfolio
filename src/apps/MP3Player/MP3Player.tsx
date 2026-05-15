@@ -8,7 +8,7 @@ import { Footer } from './components/Footer/Footer';
 import { Musics } from './components/Musics/Musics';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { type MusicList } from './interfaces/MusicList';
-import styles from './MP3Player.module.css';
+import classes from './MP3Player.module.css';
 import { musicLists } from './musicLists';
 
 const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
@@ -22,26 +22,26 @@ const MP3Player: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      className={styles.mp3PlayerWindow}
+      className={classes.mp3PlayerWindow}
       minHeight={641}
       minWidth={950}
       ref={windowRef}
       resizable
       title="MP3Player"
-      titleClassName={styles.mp3PlayerTitleBar}
+      titleClassName={classes.mp3PlayerTitleBar}
       {...injectedWindowProps}
     >
       <AudioProvider>
-        <div className={styles.player}>
-          <div className={styles.body}>
+        <div className={classes.player}>
+          <div className={classes.body}>
             <Sidebar
               activeMusicList={activeMusicList}
-              className={styles.sidebar}
+              className={classes.sidebar}
               onClickMusicList={onClickMusicList}
             />
-            <Musics className={styles.musics} musicList={activeMusicList} />
+            <Musics className={classes.musics} musicList={activeMusicList} />
           </div>
-          <Footer className={styles.footer} />
+          <Footer className={classes.footer} />
         </div>
       </AudioProvider>
     </Window>

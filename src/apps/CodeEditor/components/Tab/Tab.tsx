@@ -4,7 +4,7 @@ import { type FunctionComponent, type JSX } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
-import styles from './Tab.module.css';
+import classes from './Tab.module.css';
 
 export type TabProps = JSX.HTMLAttributes<HTMLButtonElement> & {
   className?: string;
@@ -19,12 +19,12 @@ export const Tab: FunctionComponent<TabProps> = ({
 }) => (
   <button
     aria-selected={selected}
-    className={cn(styles.tab, className)}
+    className={cn(classes.tab, className)}
     role="tab"
     type="button"
     {...forwardedProps}
   >
-    <FontAwesomeIcon className={styles.icon} icon={faFileCode} />
+    <FontAwesomeIcon className={classes.icon} icon={faFileCode} />
     {children}
   </button>
 );

@@ -10,7 +10,7 @@ import { getRefElementSize } from '@/platform/utils/getRefElementSize';
 import { lazy } from '@/platform/utils/lazy';
 
 import { CursorDelayedLoader } from '../../../CursorDelayedLoader/CursorDelayedLoader';
-import styles from './VisibleArea.module.css';
+import classes from './VisibleArea.module.css';
 import { Windows } from './Windows';
 
 const Selection = lazy(async () => (await import('./Selection')).Selection);
@@ -49,7 +49,7 @@ export const VisibleArea: FunctionComponent = () => {
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      className={styles.visibleArea}
+      className={classes.visibleArea}
       onMouseDown={mouseDownHandler}
       ref={visibleAreaRef}
     >

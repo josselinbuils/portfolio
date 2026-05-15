@@ -12,7 +12,7 @@ import { Toolbar } from '../Toolbar/Toolbar';
 import { ToolButton } from '../ToolButton/ToolButton';
 import { Loader } from './components/Loader';
 import { Logs } from './components/Logs/Logs';
-import styles from './Console.module.css';
+import classes from './Console.module.css';
 import { type Log } from './Log';
 import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
@@ -54,11 +54,11 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
 
     return (
       <div
-        className={cn(styles.console, className)}
+        className={cn(classes.console, className)}
         ref={ref}
         style={{ flexBasis: height }}
       >
-        <Toolbar className={styles.toolbar}>
+        <Toolbar className={classes.toolbar}>
           <ToolButton
             disabled={!codeToExec}
             icon={faPlay}
@@ -82,10 +82,10 @@ export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
             <Suspense fallback={<Loader onStateChange={setLoading} />}>
               {children}
             </Suspense>
-            {!loading && <div className={styles.separator} />}
+            {!loading && <div className={classes.separator} />}
           </>
         )}
-        <Logs className={styles.logs} logs={logs} ref={logsElementRef} />
+        <Logs className={classes.logs} logs={logs} ref={logsElementRef} />
       </div>
     );
   },

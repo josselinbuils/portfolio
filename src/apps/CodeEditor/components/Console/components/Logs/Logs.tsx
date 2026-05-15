@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Log, LogLevel } from '../../Log';
-import styles from './Logs.module.css';
+import classes from './Logs.module.css';
 
 export type LogsProps = {
   className?: string;
@@ -14,16 +14,16 @@ export type LogsProps = {
 
 export const Logs = forwardRef<HTMLDivElement, LogsProps>(
   ({ className, logs }, ref) => (
-    <div className={cn(styles.logs, className)} ref={ref}>
+    <div className={cn(classes.logs, className)} ref={ref}>
       {logs.map(({ id, level, message }) => (
-        <div className={cn(styles.log, styles[level])} key={id}>
+        <div className={cn(classes.log, classes[level])} key={id}>
           {level === LogLevel.Error ? (
             <>
-              <span className={styles.errorMessage}>
+              <span className={classes.errorMessage}>
                 <FontAwesomeIcon icon={faBomb} /> {message[0]}
                 {'\n'}
               </span>
-              <span className={styles.errorStack}>{message.slice(1)}</span>
+              <span className={classes.errorStack}>{message.slice(1)}</span>
             </>
           ) : (
             message.map((line) =>

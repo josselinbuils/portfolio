@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import styles from './Spinner.module.css';
+import classes from './Spinner.module.css';
 
 const DISPLAY_DELAY_MS = 100;
 
@@ -22,9 +22,9 @@ export const Spinner: FunctionComponent<SpinnerProps> = ({ color }) => {
   }, []);
 
   return isDisplayed ? (
-    <div className={styles.spinner}>
-      <div className={styles.doubleBounce1} style={style} />
-      <div className={styles.doubleBounce2} style={style} />
+    <div className={classes.spinner}>
+      <div className={classes.doubleBounce1} style={style} />
+      <div className={classes.doubleBounce2} style={style} />
     </div>
   ) : null;
 };

@@ -12,7 +12,7 @@ import 'prismjs/components/prism-tsx.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-yaml.min';
 
-import styles from './manomano.module.css';
+import classes from './manomano.module.css';
 
 const CLOSING_BRACKETS = [')', ']', '}'];
 const OPENING_BRACKETS = ['(', '[', '{'];
@@ -205,7 +205,7 @@ function reactify(
 
   return (
     <span
-      className={styles[type]}
+      className={classes[type]}
       data-offset={
         ['builtin', 'class-name', 'function', 'keyword', 'other'].includes(type)
           ? offset
@@ -230,8 +230,8 @@ function stringify(
 
   const { content, type } = input;
 
-  return styles[type]
-    ? `<span class="${styles[type]}">${stringify(content)}</span>`
+  return classes[type]
+    ? `<span class="${classes[type]}">${stringify(content)}</span>`
     : stringify(content);
 }
 

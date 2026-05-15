@@ -5,7 +5,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { Icon } from '../../Icon/Icon';
-import styles from './PostDetails.module.css';
+import classes from './PostDetails.module.css';
 
 export type PostDetailsProps = {
   author: string;
@@ -24,10 +24,10 @@ export const PostDetails: FunctionComponent<PostDetailsProps> = ({
   stickied,
   subreddit,
 }) => (
-  <div className={styles.details}>
+  <div className={classes.details}>
     {currentSubreddit === 'r/popular' && (
       <ButtonLink
-        className={styles.subreddit}
+        className={classes.subreddit}
         onClick={() => onClickSubreddit(subreddit)}
       >
         <Icon subreddit={subreddit} />
@@ -37,6 +37,6 @@ export const PostDetails: FunctionComponent<PostDetailsProps> = ({
     <span>
       Posted <time>{since}</time> by {author}
     </span>
-    {stickied && <FontAwesomeIcon className={styles.anchor} icon={faAnchor} />}
+    {stickied && <FontAwesomeIcon className={classes.anchor} icon={faAnchor} />}
   </div>
 );

@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './Palette.module.css';
+import classes from './Palette.module.css';
 
 export type PaletteProps = {
   fill: string;
@@ -23,28 +23,28 @@ export const Palette: FunctionComponent<PaletteProps> = ({
   stroke,
   swatches,
 }) => (
-  <div className={styles.palette}>
-    <div className={styles.strokeFill}>
+  <div className={classes.palette}>
+    <div className={classes.strokeFill}>
       <button
         aria-label="Fill color"
-        className={styles.sfFill}
+        className={classes.sfFill}
         onClick={() => onOpenColorPicker('fill')}
         style={{ background: fill }}
         type="button"
       />
       <button
         aria-label="Stroke color"
-        className={styles.sfStroke}
+        className={classes.sfStroke}
         onClick={() => onOpenColorPicker('stroke')}
         style={{ background: stroke }}
         type="button"
       />
     </div>
-    <div aria-label="Color palette" className={styles.swatches} role="group">
+    <div aria-label="Color palette" className={classes.swatches} role="group">
       {swatches.map((c, i) => (
         <button
           aria-label={c}
-          className={styles.swatch}
+          className={classes.swatch}
           key={i}
           onClick={(e) => {
             if (
@@ -74,14 +74,14 @@ export const Palette: FunctionComponent<PaletteProps> = ({
     </div>
     <button
       aria-label="Add current color to palette"
-      className={styles.addSwatch}
+      className={classes.addSwatch}
       onClick={onAddSwatch}
       title="Save current color"
       type="button"
     >
       +
     </button>
-    <div aria-label="status" className={styles.status}>
+    <div aria-label="status" className={classes.status}>
       {status}
     </div>
   </div>

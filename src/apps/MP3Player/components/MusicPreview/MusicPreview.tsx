@@ -5,7 +5,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Music } from '../../interfaces/Music';
-import styles from './MusicPreview.module.css';
+import classes from './MusicPreview.module.css';
 
 export type MusicPreviewProps = {
   music: Music | undefined;
@@ -20,8 +20,8 @@ export const MusicPreview: FunctionComponent<MusicPreviewProps> = ({
 
   return (
     <div
-      className={cn(styles.musicPreview, {
-        [styles.defaultPreview]: useDefaultPreview,
+      className={cn(classes.musicPreview, {
+        [classes.defaultPreview]: useDefaultPreview,
       })}
       style={{
         backgroundImage: music && music.image ? `url(${music.image})` : 'none',

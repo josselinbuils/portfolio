@@ -6,7 +6,7 @@ import { MouseButton } from '@/platform/constants';
 import { type Size } from '@/platform/interfaces/Size';
 
 import { TitleBar } from './TitleBar';
-import styles from './Window.module.css';
+import classes from './Window.module.css';
 
 const BUTTONS_WIDTH = 66;
 const MIN_USABLE_SIZE = 20;
@@ -195,13 +195,13 @@ export class Window extends Component<WindowProps, WindowState> {
       <dialog
         aria-label={`Window: ${title}`}
         className={cn(
-          styles.window,
+          classes.window,
           {
-            [styles.active]: active,
-            [styles.animated]: animated,
-            [styles.frozen]: frozen,
-            [styles.maximized]: maximized,
-            [styles.minimized]: minimized,
+            [classes.active]: active,
+            [classes.animated]: animated,
+            [classes.frozen]: frozen,
+            [classes.maximized]: maximized,
+            [classes.minimized]: minimized,
           },
           className,
         )}
@@ -224,7 +224,7 @@ export class Window extends Component<WindowProps, WindowState> {
           title={title}
         />
         <main
-          className={cn(styles.content, { [styles.frozen]: frozen })}
+          className={cn(classes.content, { [classes.frozen]: frozen })}
           ref={contentRef}
         >
           {children}
@@ -233,7 +233,7 @@ export class Window extends Component<WindowProps, WindowState> {
           <button
             aria-hidden
             aria-label="Window resize corner"
-            className={styles.resize}
+            className={classes.resize}
             onMouseDown={startResize}
             tabIndex={-1}
             type="button"

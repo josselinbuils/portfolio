@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { ROOT_FONT_SIZE_PX } from '@/platform/constants';
 import { type Position } from '@/platform/interfaces/Position';
 
-import styles from './Tooltip.module.css';
+import classes from './Tooltip.module.css';
 
 export type TooltipProps = {
   className?: string;
@@ -21,7 +21,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
     return (
       <div
-        className={cn(styles.tooltip, styles[relativePosition], className)}
+        className={cn(classes.tooltip, classes[relativePosition], className)}
         ref={ref}
         style={{
           ...style,

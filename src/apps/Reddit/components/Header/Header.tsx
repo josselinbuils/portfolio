@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'preact';
 import { type RedditFilter } from '../../interfaces/RedditFilter';
 import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
-import styles from './Header.module.css';
+import classes from './Header.module.css';
 
 export type HeaderProps = {
   filter: RedditFilter;
@@ -16,8 +16,8 @@ export const Header: FunctionComponent<HeaderProps> = ({
   onClickFilter,
   subreddit,
 }) => (
-  <header className={styles.header}>
-    <h1 className={styles.path}>
+  <header className={classes.header}>
+    <h1 className={classes.path}>
       <Icon subreddit={subreddit} />
       <span>
         {subreddit}/{filter}

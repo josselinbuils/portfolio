@@ -6,7 +6,7 @@ import { useList } from '@/platform/hooks/useList';
 
 import { CommandHelp } from '../../components/CommandHelp/CommandHelp';
 import { type AsyncExecutor } from '../AsyncExecutor';
-import styles from './BuildManager.module.css';
+import classes from './BuildManager.module.css';
 import { type BMError, BuildManagerClient } from './BuildManagerClient';
 import { type Log } from './Log';
 import { formatLogs } from './utils/formatLogs';
@@ -66,7 +66,7 @@ export const BuildManager: AsyncExecutor = ({
           .onClose(onRelease)
           .onMessage(async ({ type, value }) => {
             if (type === 'logs') {
-              const formattedLogs = await formatLogs(value, styles.stepNumber);
+              const formattedLogs = await formatLogs(value, classes.stepNumber);
               logManager.push(...formattedLogs);
             }
           })
@@ -123,7 +123,10 @@ export const BuildManager: AsyncExecutor = ({
           .onClose(onRelease)
           .onMessage(async ({ value: lastLogs }) => {
             const follow = hasOption(args, 'follow');
-            const formattedLogs = await formatLogs(lastLogs, styles.stepNumber);
+            const formattedLogs = await formatLogs(
+              lastLogs,
+              classes.stepNumber,
+            );
 
             logManager.push(...formattedLogs);
 
@@ -153,11 +156,11 @@ export const BuildManager: AsyncExecutor = ({
   }, [alive, bmClient]);
 
   if (errorMessage) {
-    return <p className={cn(styles.p, styles.error)}>✘ {errorMessage}</p>;
+    return <p className={cn(classes.p, classes.error)}>✘ {errorMessage}</p>;
   }
 
   if (successMessage) {
-    return <p className={cn(styles.p, styles.success)}>✔ {successMessage}</p>;
+    return <p className={cn(classes.p, classes.success)}>✔ {successMessage}</p>;
   }
 
   if (showHelp) {
@@ -232,7 +235,7 @@ export const BuildManager: AsyncExecutor = ({
       <>
         {logs.map(({ data, id }) => (
           <p
-            className={styles.p}
+            className={classes.p}
             dangerouslySetInnerHTML={{ __html: data }}
             key={id}
           />
@@ -241,7 +244,7 @@ export const BuildManager: AsyncExecutor = ({
     );
   }
   if (command === 'logs' && !alive) {
-    return <p className={styles.p}>No log to display</p>;
+    return <p className={classes.p}>No log to display</p>;
   }
 
   return null;

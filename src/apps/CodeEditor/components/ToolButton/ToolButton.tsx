@@ -6,7 +6,7 @@ import { forwardRef } from 'preact/compat';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 
-import styles from './ToolButton.module.css';
+import classes from './ToolButton.module.css';
 
 export type ToolButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -19,9 +19,9 @@ export type ToolButtonProps = Omit<
 
 export const ToolButton = forwardRef<HTMLButtonElement, ToolButtonProps>(
   ({ children, className, icon, title, ...forwardedProps }, ref) => (
-    <WithTooltip className={styles.tooltip} title={title}>
+    <WithTooltip className={classes.tooltip} title={title}>
       <button
-        className={cn(styles.toolButton, className)}
+        className={cn(classes.toolButton, className)}
         type="button"
         {...forwardedProps}
         ref={ref}

@@ -6,7 +6,7 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Controls } from '../Controls/Controls';
 import { MusicPreview } from '../MusicPreview/MusicPreview';
 import { SeekBar } from '../SeekBar/SeekBar';
-import styles from './Footer.module.css';
+import classes from './Footer.module.css';
 import { MusicInfo } from './MusicInfo';
 
 export type FooterProps = {
@@ -23,10 +23,10 @@ export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
   const { currentMusic } = audioState;
 
   return (
-    <footer className={cn(styles.footer, className)}>
+    <footer className={cn(classes.footer, className)}>
       <MusicPreview music={currentMusic} size={50} />
-      <MusicInfo className={styles.musicInfo} music={currentMusic} />
-      <div className={styles.grow}>
+      <MusicInfo className={classes.musicInfo} music={currentMusic} />
+      <div className={classes.grow}>
         <Controls size={40} />
         <SeekBar />
       </div>

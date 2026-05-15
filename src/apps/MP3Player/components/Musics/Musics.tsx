@@ -13,7 +13,7 @@ import { Spinner } from '@/platform/components/Spinner/Spinner';
 import { cancelable } from '@/platform/utils/cancelable';
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
-import styles from './Musics.module.css';
+import classes from './Musics.module.css';
 
 const ORDERS = [
   { name: 'Top All', value: 'popularity_total' },
@@ -60,13 +60,13 @@ export const Musics: FunctionComponent<MusicsProps> = ({
   }
 
   return (
-    <div className={cn(styles.musicList, className)}>
+    <div className={cn(classes.musicList, className)}>
       {loading && <Spinner color="#007ad8" />}
-      <div className={styles.header}>
-        <div className={styles.listInfo}>
+      <div className={classes.header}>
+        <div className={classes.listInfo}>
           <h2>{musicList.name}</h2>
           <Select
-            className={styles.select}
+            className={classes.select}
             onChange={setJamendoOrder}
             value={jamendoOrder}
           >
@@ -77,35 +77,36 @@ export const Musics: FunctionComponent<MusicsProps> = ({
             ))}
           </Select>
         </div>
-        <table className={styles.tableHeader}>
+        <table className={classes.tableHeader}>
           <thead>
             <tr>
               {}
-              <th className={styles.colPreview} scope="col" />
+              <th className={classes.colPreview} scope="col" />
               <th scope="col">Title</th>
               <th scope="col">Album</th>
             </tr>
           </thead>
         </table>
       </div>
-      <div className={styles.overflow}>
+      <div className={classes.overflow}>
         <table>
           <tbody>
             {musics.map((music) => (
               <tr
                 className={cn({
-                  [styles.active]: currentMusic && music.id === currentMusic.id,
+                  [classes.active]:
+                    currentMusic && music.id === currentMusic.id,
                 })}
                 key={music.id}
                 onClick={() => play(music)}
               >
-                <td className={styles.colPreview}>
+                <td className={classes.colPreview}>
                   <div
-                    className={styles.inlineMusicPreview}
+                    className={classes.inlineMusicPreview}
                     style={{ backgroundImage: `url(${music.image})` }}
                   >
                     <FontAwesomeIcon
-                      className={styles.previewIcon}
+                      className={classes.previewIcon}
                       icon={
                         music === currentMusic && !paused
                           ? faPauseCircle
@@ -116,10 +117,10 @@ export const Musics: FunctionComponent<MusicsProps> = ({
                 </td>
 
                 <td>
-                  <p className={styles.musicName}>{music.name}</p>
-                  <p className={styles.artistName}>{music.artistName}</p>
+                  <p className={classes.musicName}>{music.name}</p>
+                  <p className={classes.artistName}>{music.artistName}</p>
                 </td>
-                <td className={styles.album}>{music.albumName}</td>
+                <td className={classes.album}>{music.albumName}</td>
               </tr>
             ))}
           </tbody>

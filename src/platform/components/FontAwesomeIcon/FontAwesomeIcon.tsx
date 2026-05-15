@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { type HTMLAttributes } from 'preact';
 import { forwardRef } from 'preact/compat';
 
-import styles from './FontAwesomeIcon.module.css';
+import classes from './FontAwesomeIcon.module.css';
 
 export type FontAwesomeIconProps = Omit<
   HTMLAttributes<SVGSVGElement>,
@@ -19,7 +19,7 @@ export const FontAwesomeIcon = forwardRef<SVGSVGElement, FontAwesomeIconProps>(
     return (
       <svg
         aria-hidden="true"
-        className={cn(styles.icon, className)}
+        className={cn(classes.icon, className)}
         focusable="false"
         ref={ref}
         role="img"

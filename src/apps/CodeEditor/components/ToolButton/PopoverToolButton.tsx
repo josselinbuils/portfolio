@@ -6,7 +6,7 @@ import { useRef } from 'preact/hooks';
 import { type MenuDescriptor } from '@/platform/components/Menu/Menu';
 import { useMenu } from '@/platform/components/Menu/useMenu';
 
-import styles from './PopoverToolButton.module.css';
+import classes from './PopoverToolButton.module.css';
 import { ToolButton, type ToolButtonProps } from './ToolButton';
 
 export type PopoverToolButtonProps = Omit<ToolButtonProps, 'onClick'> & {
@@ -27,8 +27,8 @@ export const PopoverToolButton: FunctionComponent<PopoverToolButtonProps> = ({
       <ToolButton
         {...forwardedProps}
         className={cn(
-          styles.popoverToolButton,
-          { [styles.active]: isMenuDisplayed },
+          classes.popoverToolButton,
+          { [classes.active]: isMenuDisplayed },
           className,
         )}
         onClick={() => {
@@ -37,7 +37,7 @@ export const PopoverToolButton: FunctionComponent<PopoverToolButtonProps> = ({
 
             showMenu({
               ...menu,
-              className: cn(styles.menu, menu.className),
+              className: cn(classes.menu, menu.className),
               position: { x, y },
             });
           }
@@ -48,7 +48,7 @@ export const PopoverToolButton: FunctionComponent<PopoverToolButtonProps> = ({
       {!!menuPosition &&
         createPortal(
           <div
-            className={styles.linkWithMenu}
+            className={classes.linkWithMenu}
             style={{
               left: menuPosition.x,
               top: menuPosition.y,

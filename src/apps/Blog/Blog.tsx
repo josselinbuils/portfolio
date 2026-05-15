@@ -4,7 +4,7 @@ import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { PROD_BASE_URL } from '@/platform/constants';
 
-import styles from './Blog.module.css';
+import classes from './Blog.module.css';
 
 const Blog: WindowComponent = ({
   active,
@@ -13,17 +13,17 @@ const Blog: WindowComponent = ({
 }) => (
   <Window
     active={active}
-    className={styles.blogWindow}
+    className={classes.blogWindow}
     minHeight={700}
     minWidth={830}
     ref={windowRef}
     title="Blog"
-    titleClassName={styles.blogTitleBar}
+    titleClassName={classes.blogTitleBar}
     {...injectedWindowProps}
   >
     <iframe
       allow="fullscreen"
-      className={cn(styles.iframe, { [styles.inactive]: !active })}
+      className={cn(classes.iframe, { [classes.inactive]: !active })}
       height="100%"
       src={`${PROD_BASE_URL}/blog`}
       title="Blog"

@@ -5,7 +5,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type RedditPost } from '../../../interfaces/RedditPost';
-import styles from './Post.module.css';
+import classes from './Post.module.css';
 import { PostDetails } from './PostDetails';
 import { formatNumber } from './utils/formatNumber';
 import { getPreviewDisplaySize } from './utils/getPreviewDisplaySize';
@@ -49,29 +49,29 @@ export const Post: FunctionComponent<PostProps> = ({
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
-      className={cn(styles.post, { [styles.outdated]: outdated })}
+      className={cn(classes.post, { [classes.outdated]: outdated })}
       onClick={clickHandler}
       role="button"
       tabIndex={0}
     >
-      <aside className={styles.aside}>
+      <aside className={classes.aside}>
         <span>{formatNumber(score)}</span>
       </aside>
-      <main className={styles.main}>
+      <main className={classes.main}>
         <PostDetails {...rest} />
-        <h3 className={styles.title}>{title}</h3>
+        <h3 className={classes.title}>{title}</h3>
         {previewResolution && (
           <img
             alt="thumbnail"
-            className={styles.thumbnail}
+            className={classes.thumbnail}
             loading="lazy"
             src={previewResolution.url}
             style={previewStyle}
           />
         )}
-        <div className={styles.footer}>
+        <div className={classes.footer}>
           <FontAwesomeIcon icon={faComment} />
-          <span className={styles.comments}>{formatNumber(numComments)}</span>
+          <span className={classes.comments}>{formatNumber(numComments)}</span>
         </div>
       </main>
     </div>

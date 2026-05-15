@@ -13,7 +13,7 @@ import {
 import { type Annotations } from '../../interfaces/Annotations';
 import { type RendererType } from '../../interfaces/RendererType';
 import { type ViewType } from '../../interfaces/ViewType';
-import styles from './AnnotationsElement.module.css';
+import classes from './AnnotationsElement.module.css';
 
 const viewTypeLabels: Record<ViewType, string> = {
   axial: 'Axial',
@@ -67,7 +67,7 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
     const { bottom, left } = elementRef.current.getBoundingClientRect();
 
     showMenu({
-      className: styles.contextMenu,
+      className: classes.contextMenu,
       items,
       position: {
         x: left,
@@ -85,7 +85,7 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
           onClick: () => onRendererTypeSwitch(type),
           title: (
             <>
-              <div className={styles.contextMenuIcon}>
+              <div className={classes.contextMenuIcon}>
                 {icon && <FontAwesomeIcon icon={icon} />}
               </div>
               {type}
@@ -105,7 +105,7 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
         onClick: () => onViewTypeSwitch(type),
         title: (
           <>
-            <div className={styles.contextMenuIcon}>
+            <div className={classes.contextMenuIcon}>
               {icon && <FontAwesomeIcon icon={icon} />}
             </div>
             {viewTypeLabels[type]}
@@ -118,10 +118,10 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
 
   return (
     <>
-      <div className={styles.overlayTopLeft}>
-        <p className={styles.annotation}>{datasetName || '-'}</p>
+      <div className={classes.overlayTopLeft}>
+        <p className={classes.annotation}>{datasetName || '-'}</p>
         <button
-          className={styles.annotation}
+          className={classes.annotation}
           onClick={showViewTypeMenu}
           ref={viewTypeElementRef}
           type="button"
@@ -130,11 +130,11 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
           <FontAwesomeIcon icon={faSquareCaretDown} />
         </button>
       </div>
-      <div className={styles.overlayTopRight}>
-        <p className={styles.annotation}>
+      <div className={classes.overlayTopRight}>
+        <p className={classes.annotation}>
           renderer:{' '}
           <button
-            className={styles.annotation}
+            className={classes.annotation}
             onClick={showRendererTypeMenu}
             ref={rendererElementRef}
             type="button"
@@ -142,22 +142,22 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
             {rendererType || '-'} <FontAwesomeIcon icon={faSquareCaretDown} />
           </button>
         </p>
-        <p className={styles.annotation}>
+        <p className={classes.annotation}>
           framerate: {fps ? `${fps}fps` : '-'}
         </p>
-        <p className={styles.annotation}>
+        <p className={classes.annotation}>
           rendering:{' '}
           {meanRenderDuration ? `${meanRenderDuration.toFixed(2)}ms` : '-'}
         </p>
       </div>
-      <div className={styles.overlayBottomRight}>
-        <p className={styles.annotation}>
+      <div className={classes.overlayBottomRight}>
+        <p className={classes.annotation}>
           zoom: {zoom ? zoom.toFixed(2) : '-'}
         </p>
       </div>
-      <div className={styles.overlayBottomLeft}>
-        <p className={styles.annotation}>wc: {windowCenter || '-'}</p>
-        <p className={styles.annotation}>ww: {windowWidth || '-'}</p>
+      <div className={classes.overlayBottomLeft}>
+        <p className={classes.annotation}>wc: {windowCenter || '-'}</p>
+        <p className={classes.annotation}>ww: {windowWidth || '-'}</p>
       </div>
       {menuElement}
     </>

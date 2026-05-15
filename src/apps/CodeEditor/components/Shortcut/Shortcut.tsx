@@ -2,7 +2,7 @@ import { type FunctionComponent, type JSX } from 'preact';
 
 import { makeKeysHumanReadable, normaliseKeys } from '@/platform/utils/keys';
 
-import styles from './Shortcut.module.css';
+import classes from './Shortcut.module.css';
 
 export type ShortcutProps = {
   keys: string[];
@@ -12,7 +12,7 @@ export const Shortcut: FunctionComponent<ShortcutProps> = ({ keys }) => (
   <>
     {keys
       .map<JSX.Element>((key) => (
-        <kbd className={styles.key} key={key}>
+        <kbd className={classes.key} key={key}>
           {makeKeysHumanReadable(normaliseKeys(key))}
         </kbd>
       ))
@@ -21,7 +21,7 @@ export const Shortcut: FunctionComponent<ShortcutProps> = ({ keys }) => (
           [
             prev,
 
-            <span className={styles.plus} key={`plus-${index}`}>
+            <span className={classes.plus} key={`plus-${index}`}>
               +
             </span>,
             curr,

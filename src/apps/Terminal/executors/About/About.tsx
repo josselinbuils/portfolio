@@ -5,16 +5,16 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type Executor } from '../Executor';
-import styles from './About.module.css';
+import classes from './About.module.css';
 
 export const About: Executor = () => (
-  <div className={styles.about}>
+  <div className={classes.about}>
     <img alt="me" height={269} src="/assets/me.webp" width={202} />
-    <div className={styles.info}>
-      <p className={styles.resume}>
+    <div className={classes.info}>
+      <p className={classes.resume}>
         Hey, I&apos;m Josselin, a full-stack JavaScript developer :)
       </p>
-      <p className={styles.social}>
+      <p className={classes.social}>
         <a
           aria-label="LinkedIn account"
           href="https://linkedin.com/in/josselinbuils"
@@ -35,7 +35,7 @@ export const About: Executor = () => (
           <FontAwesomeIcon icon={faAddressCard} />
         </a>
       </p>
-      <p className={styles.help}>Type help for more information</p>
+      <p className={classes.help}>Type help for more information</p>
     </div>
   </div>
 );

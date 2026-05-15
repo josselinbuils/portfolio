@@ -7,7 +7,7 @@ import { type LUTComponent } from '@/apps/DICOMViewer/interfaces/LUTComponent';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { ColorPicker } from './ColorPicker/ColorPicker';
-import styles from './LUTComponentList.module.css';
+import classes from './LUTComponentList.module.css';
 
 export type LUTComponentListProps = {
   lutComponents: LUTComponent[];
@@ -22,19 +22,19 @@ export const LUTComponentList: FunctionComponent<LUTComponentListProps> = ({
   onLUTComponentColorChange,
   onLUTComponentDelete,
 }) => (
-  <ul className={styles.container}>
+  <ul className={classes.container}>
     {lutComponents.map(({ color, end, id, start }) => (
       <li key={id}>
         <ColorPicker
           color={color}
           onColorChange={(newColor) => onLUTComponentColorChange(id, newColor)}
         />
-        <span className={styles.colorWindow}>
+        <span className={classes.colorWindow}>
           {formatNumber(start)} <FontAwesomeIcon icon={faLongArrowAltRight} />{' '}
           {formatNumber(end)}
         </span>
         <FontAwesomeIcon
-          className={styles.trashIcon}
+          className={classes.trashIcon}
           icon={faTrashAlt}
           onClick={() => onLUTComponentDelete(id)}
         />
@@ -42,7 +42,7 @@ export const LUTComponentList: FunctionComponent<LUTComponentListProps> = ({
     ))}
     <li>
       <FontAwesomeIcon
-        className={styles.addIcon}
+        className={classes.addIcon}
         icon={faPlusSquare}
         onClick={onLUTComponentAdd}
       />

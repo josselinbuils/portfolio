@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './CommandHelp.module.css';
+import classes from './CommandHelp.module.css';
 
 export type CommandHelpProps = {
   command: string;
@@ -19,7 +19,7 @@ export const CommandHelp: FunctionComponent<CommandHelpProps> = ({
   description,
   parameters,
 }) => (
-  <div className={styles.help}>
+  <div className={classes.help}>
     <p>
       Usage: {command}{' '}
       {parameters
@@ -28,7 +28,7 @@ export const CommandHelp: FunctionComponent<CommandHelpProps> = ({
         )
         .join(' ')}
     </p>
-    {description && <p className={styles.description}>{description}</p>}
+    {description && <p className={classes.description}>{description}</p>}
     {parameters
       .filter((parameter) => parameter.values)
       .map(({ name, values = [] }) => (
@@ -37,17 +37,17 @@ export const CommandHelp: FunctionComponent<CommandHelpProps> = ({
             {capitalize(name)}
             {name.slice(-1) !== 's' && 's'}:
           </p>
-          <div className={styles.values}>
+          <div className={classes.values}>
             {values.map(({ value }) => (
-              <p className={styles.value} key={value}>
+              <p className={classes.value} key={value}>
                 {!value.startsWith('-') && '- '}
                 {value}
               </p>
             ))}
           </div>
-          <div className={styles.descriptions}>
+          <div className={classes.descriptions}>
             {values.map(({ description: valueDescription = '', value }) => (
-              <p className={styles.description} key={value}>
+              <p className={classes.description} key={value}>
                 {valueDescription}
               </p>
             ))}

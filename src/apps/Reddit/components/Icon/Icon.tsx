@@ -6,7 +6,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { cancelable } from '@/platform/utils/cancelable';
 
-import styles from './Icon.module.css';
+import classes from './Icon.module.css';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
 
 export type IconProps = {
@@ -32,17 +32,17 @@ export const Icon: FunctionComponent<IconProps> = ({
   }, [subreddit]);
 
   return (
-    <figure className={styles.iconContainer}>
+    <figure className={classes.iconContainer}>
       {src ? (
         <img
           alt="icon"
-          className={cn(styles.icon, { [styles.active]: active })}
+          className={cn(classes.icon, { [classes.active]: active })}
           src={src}
         />
       ) : (
         <FontAwesomeIcon
-          className={cn(styles.defaultIcon, {
-            [styles.active]: active,
+          className={cn(classes.defaultIcon, {
+            [classes.active]: active,
           })}
           icon={faReddit}
         />

@@ -12,7 +12,7 @@ import { MouseButton } from '@/platform/constants';
 
 import { type MouseTool } from '../../interfaces/MouseTool';
 import { type Viewport } from '../../models/Viewport';
-import styles from './LeftToolbar.module.css';
+import classes from './LeftToolbar.module.css';
 
 const mouseTools: {
   condition?: (viewport: Viewport) => boolean;
@@ -60,13 +60,13 @@ export const LeftToolbar: FunctionComponent<LeftToolbarProps> = ({
   onToolSelected,
   viewport,
 }) => (
-  <div className={styles.toolbar}>
+  <div className={classes.toolbar}>
     {mouseTools.map(({ condition, icon, tool }) =>
       !condition || condition(viewport) ? (
         <button
-          className={cn(styles.mouseTool, {
-            [styles.activeLeft]: activeLeftTool === tool,
-            [styles.activeRight]: activeRightTool === tool,
+          className={cn(classes.mouseTool, {
+            [classes.activeLeft]: activeLeftTool === tool,
+            [classes.activeRight]: activeRightTool === tool,
           })}
           key={tool}
           onClick={() => onToolSelected(tool, MouseButton.Left)}

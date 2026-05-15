@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 
 import { throttle } from '@/platform/utils/throttle';
 
-import styles from './ColorPicker.module.css';
+import classes from './ColorPicker.module.css';
 import { hexToRGB } from './utils/hexToRGB';
 import { rgbToHex } from './utils/rgbToHex';
 
@@ -25,11 +25,11 @@ export const ColorPicker: FunctionComponent<ColorPickerProps> = ({
 
   return (
     <figure
-      className={styles.colorPicker}
+      className={classes.colorPicker}
       style={{ background: `rgb(${color})` }}
     >
       <input
-        className={styles.colorPicker}
+        className={classes.colorPicker}
         defaultValue={rgbToHex(color)}
         onChange={(event) => colorChangeHandler(event.currentTarget.value)}
         type="color"

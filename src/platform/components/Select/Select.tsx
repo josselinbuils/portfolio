@@ -5,7 +5,7 @@ import { type PropsWithChildren } from 'preact/compat';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
-import styles from './Select.module.css';
+import classes from './Select.module.css';
 
 export type SelectProps = PropsWithChildren & {
   className?: string;
@@ -19,10 +19,10 @@ export const Select: FunctionComponent<SelectProps> = ({
   onChange,
   value,
 }) => (
-  <div className={cn(styles.container, className)}>
-    <FontAwesomeIcon className={styles.icon} icon={faArrowDown} />
+  <div className={cn(classes.container, className)}>
+    <FontAwesomeIcon className={classes.icon} icon={faArrowDown} />
     <select
-      className={styles.select}
+      className={classes.select}
       onChange={(event) => onChange(event.currentTarget.value)}
       value={value}
     >

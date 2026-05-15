@@ -9,7 +9,7 @@ import { preloadImage } from '@/platform/utils/preloadImage';
 import { type DatasetDescriptor } from '../../interfaces/DatasetDescriptor';
 import { Dataset } from '../../models/Dataset';
 import { ProgressRing } from './ProgressRing/ProgressRing';
-import styles from './SelectDataset.module.css';
+import classes from './SelectDataset.module.css';
 import { loadDatasetList } from './utils/loadDatasetList';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
@@ -87,7 +87,7 @@ export const SelectDataset: FunctionComponent<SelectDatasetProps> = ({
   if (loading) {
     return datasetDescriptor ? (
       <ProgressRing
-        className={styles.progressRing}
+        className={classes.progressRing}
         color="white"
         progress={loadingProgress}
         radius={50}
@@ -99,12 +99,12 @@ export const SelectDataset: FunctionComponent<SelectDatasetProps> = ({
   }
 
   return (
-    <div className={styles.selectDataset}>
+    <div className={classes.selectDataset}>
       <h1>Select the dataset</h1>
-      <div className={styles.container}>
+      <div className={classes.container}>
         {datasetDescriptors.map((descriptor) => (
           <button
-            className={cn(styles.dataset, { [styles.thd]: descriptor.is3D })}
+            className={cn(classes.dataset, { [classes.thd]: descriptor.is3D })}
             key={descriptor.name}
             onClick={() => setDatasetDescriptor(descriptor)}
             type="button"

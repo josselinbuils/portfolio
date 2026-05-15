@@ -9,7 +9,7 @@ import { throttle } from '@/platform/utils/throttle';
 import { Palette } from './components/Palette/Palette';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { CANVAS_H, CANVAS_W, PRESET_PALETTE, UNDO_MAX } from './constants';
-import styles from './Paint.module.css';
+import classes from './Paint.module.css';
 import { commitText, INITIAL_TEXT_STATE, type TextState } from './tools/text';
 import { type DrawTool, tools } from './tools/tools';
 import {
@@ -76,7 +76,7 @@ export const Paint: WindowComponent = ({
   useEffect(() => {
     toolsStateRef.current['text'] = {
       ...getTextState(),
-      className: styles.textOverlay,
+      className: classes.textOverlay,
     };
   }, []);
 
@@ -293,10 +293,10 @@ export const Paint: WindowComponent = ({
 
   const stageCursor =
     currentTool === 'text'
-      ? styles.cursorText
+      ? classes.cursorText
       : currentTool === 'paintBucket'
-        ? styles.cursorBucket
-        : styles.cursorCrosshair;
+        ? classes.cursorBucket
+        : classes.cursorCrosshair;
 
   return (
     <Window
@@ -308,7 +308,7 @@ export const Paint: WindowComponent = ({
       title="Paint"
       {...injectedWindowProps}
     >
-      <div className={styles.paint}>
+      <div className={classes.paint}>
         <Toolbar
           canRedo={canRedo}
           canUndo={canUndo}
@@ -333,14 +333,14 @@ export const Paint: WindowComponent = ({
           width={sharedState.width}
         />
 
-        <div className={cn(styles.stage, stageCursor)}>
+        <div className={cn(classes.stage, stageCursor)}>
           <div
-            className={styles.stageInner}
+            className={classes.stageInner}
             ref={stageInnerRef}
             style={{ height: canvasSize.h, width: canvasSize.w }}
           >
             <canvas
-              className={cn(styles.canvasLayer, styles.mainCanvas)}
+              className={cn(classes.canvasLayer, classes.mainCanvas)}
               height={canvasSize.h}
               onContextMenu={(e) => e.preventDefault()}
               onMouseDown={onMouseDown}
@@ -348,7 +348,7 @@ export const Paint: WindowComponent = ({
               width={canvasSize.w}
             />
             <canvas
-              className={cn(styles.canvasLayer, styles.overlayCanvas)}
+              className={cn(classes.canvasLayer, classes.overlayCanvas)}
               height={canvasSize.h}
               ref={overlayRef}
               width={canvasSize.w}

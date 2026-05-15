@@ -7,7 +7,7 @@ import { useToolbar } from '@/platform/hooks/useToolbar';
 
 import { useAppTaskDescriptors } from './hooks/useAppTaskDescriptors';
 import { Task } from './Task';
-import styles from './TaskBar.module.css';
+import classes from './TaskBar.module.css';
 import { getTaskId } from './utils/getTaskId';
 
 const PINNED_ACTION_TASK_DESCRIPTORS = [
@@ -36,7 +36,7 @@ export const TaskBar: FunctionComponent<TaskBarProps> = ({ className }) => {
 
   return (
     <div
-      className={cn(styles.taskBar, className, toolbarClassName)}
+      className={cn(classes.taskBar, className, toolbarClassName)}
       {...otherToolbarProps}
     >
       {[...taskDescriptors, ...PINNED_ACTION_TASK_DESCRIPTORS].map(

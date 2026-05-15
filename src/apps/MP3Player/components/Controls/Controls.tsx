@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
-import styles from './Controls.module.css';
+import classes from './Controls.module.css';
 
 export type ControlsProps = {
   className?: string;
@@ -35,32 +35,32 @@ export const Controls: FunctionComponent<ControlsProps> = ({
 
   return (
     <div
-      className={cn(styles.controls, className)}
+      className={cn(classes.controls, className)}
       style={{ fontSize: `${size / 10}rem` }}
     >
       <Button
         checked={random}
-        className={styles.randomButton}
+        className={classes.randomButton}
         onClick={toggleRandom}
       >
         <FontAwesomeIcon icon={faRandom} />
       </Button>
       <Button
-        className={styles.previousButton}
+        className={classes.previousButton}
         disabled={!isThereCurrentMusic}
         onClick={prev}
       >
         <FontAwesomeIcon icon={faStepBackward} />
       </Button>
       <Button
-        className={styles.playButton}
+        className={classes.playButton}
         disabled={!isThereCurrentMusic}
         onClick={play}
       >
         <FontAwesomeIcon icon={paused ? faPlayCircle : faPauseCircle} />
       </Button>
       <Button
-        className={styles.nextButton}
+        className={classes.nextButton}
         disabled={!isThereCurrentMusic}
         onClick={next}
       >
@@ -68,7 +68,7 @@ export const Controls: FunctionComponent<ControlsProps> = ({
       </Button>
       <Button
         checked={repeat}
-        className={styles.repeatButton}
+        className={classes.repeatButton}
         onClick={toggleRepeat}
       >
         <FontAwesomeIcon icon={faRedoAlt} />

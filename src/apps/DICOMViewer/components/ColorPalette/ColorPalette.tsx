@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import { type LUTComponent } from '../../interfaces/LUTComponent';
 import { type Viewport } from '../../models/Viewport';
-import styles from './ColorPalette.module.css';
+import classes from './ColorPalette.module.css';
 import { BarPreview } from './components/BarPreview/BarPreview';
 import { GraphPreview } from './components/GraphPreview/GraphPreview';
 import { LUTComponentList } from './components/LUTComponentList/LUTComponentList';
@@ -135,20 +135,20 @@ export const ColorPalette: FunctionComponent<ColorPaletteProps> = ({
   }
 
   return (
-    <div className={cn(styles.colorPalette, { [styles.open]: open })}>
-      <button className={styles.button} onClick={toggleOpen} type="button">
+    <div className={cn(classes.colorPalette, { [classes.open]: open })}>
+      <button className={classes.button} onClick={toggleOpen} type="button">
         <FontAwesomeIcon icon={faPalette} />
       </button>
       {open && (
         <>
           <GraphPreview
             activeLUTComponentID={activeLUTComponentID}
-            className={styles.graphPreview}
+            className={classes.graphPreview}
             lutComponents={lutComponents}
             onLUTComponentDrag={dragLUTComponent}
           />
           <BarPreview
-            className={styles.barPreview}
+            className={classes.barPreview}
             lutComponents={lutComponents}
           />
           <LUTComponentList

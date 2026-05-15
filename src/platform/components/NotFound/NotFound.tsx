@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import '../../global.css';
-import styles from './NotFound.module.css';
+import classes from './NotFound.module.css';
 
 export const NotFound: FunctionComponent = () => {
   const [progress, setProgress] = useState(20);
@@ -24,7 +24,7 @@ export const NotFound: FunctionComponent = () => {
 
   return (
     <main
-      className={cn(styles.notFound, { [styles.complete]: progress >= 100 })}
+      className={cn(classes.notFound, { [classes.complete]: progress >= 100 })}
     >
       <h1>:(</h1>
       <h2>The website ran into and problem and needs to restart.</h2>

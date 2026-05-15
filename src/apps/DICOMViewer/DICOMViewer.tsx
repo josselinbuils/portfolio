@@ -12,7 +12,7 @@ import { LeftToolbar } from './components/LeftToolbar/LeftToolbar';
 import { SelectDataset } from './components/SelectDataset/SelectDataset';
 import { ViewportElement } from './components/ViewportElement/ViewportElement';
 import { VIEW_TYPES_WITH_ROTATION } from './constants';
-import styles from './DICOMViewer.module.css';
+import classes from './DICOMViewer.module.css';
 import { type Annotations } from './interfaces/Annotations';
 import { type LUTComponent } from './interfaces/LUTComponent';
 import { type MouseTool } from './interfaces/MouseTool';
@@ -284,22 +284,22 @@ const DICOMViewer: WindowComponent = ({
 
   return (
     <Window
-      className={styles.dicomViewerWindow}
+      className={classes.dicomViewerWindow}
       minHeight={534}
       minWidth={880}
       ref={windowRef}
       title="DICOMViewer"
-      titleClassName={styles.dicomViewerTitleBar}
+      titleClassName={classes.dicomViewerTitleBar}
       {...injectedWindowProps}
     >
-      <div className={styles.dicomViewer}>
+      <div className={classes.dicomViewer}>
         {dataset && (
-          <button className={styles.button} onClick={back} type="button">
+          <button className={classes.button} onClick={back} type="button">
             Back
           </button>
         )}
         {render()}
-        {errorMessage && <div className={styles.error}>{errorMessage}</div>}
+        {errorMessage && <div className={classes.error}>{errorMessage}</div>}
       </div>
     </Window>
   );

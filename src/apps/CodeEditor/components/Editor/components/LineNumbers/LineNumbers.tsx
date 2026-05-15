@@ -6,7 +6,7 @@ import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 
 import { getLineNumber } from '../../utils/getLineNumber';
 import { getTextWidth } from '../../utils/getTextWidth';
-import styles from './LineNumbers.module.css';
+import classes from './LineNumbers.module.css';
 
 export type LineNumbersProps = {
   className?: string;
@@ -37,7 +37,7 @@ export const LineNumbers: FunctionComponent<LineNumbersProps> = ({
 
   return (
     <div
-      className={cn(styles.lineNumbers, className)}
+      className={cn(classes.lineNumbers, className)}
       ref={lineNumbersElementRef}
     >
       {lineNumbers}
@@ -63,7 +63,7 @@ function computeLineNumbers(
 
     numbers.push(
       lineNumber === activeLine ? (
-        <span className={styles.activeLine} key={`${lineNumber}-current`}>
+        <span className={classes.activeLine} key={`${lineNumber}-current`}>
           {lineNumber}
         </span>
       ) : (

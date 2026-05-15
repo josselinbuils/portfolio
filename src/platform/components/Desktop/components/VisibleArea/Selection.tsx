@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { type Position } from '@/platform/interfaces/Position';
 
-import styles from './Selection.module.css';
+import classes from './Selection.module.css';
 
 export type SelectionProps = {
   startPosition: Position<number>;
@@ -24,7 +24,7 @@ export const Selection: FunctionComponent<SelectionProps> = ({
 
   return cursorPosition !== undefined ? (
     <div
-      className={styles.selection}
+      className={classes.selection}
       style={{
         height: Math.abs(cursorPosition.y - startPosition.y),
         left: Math.min(startPosition.x, cursorPosition.x),

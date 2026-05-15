@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'preact';
 
 import { type Music } from '@/apps/MP3Player/interfaces/Music';
 
-import styles from './MusicInfo.module.css';
+import classes from './MusicInfo.module.css';
 
 export type MusicInfoProps = {
   className?: string;
@@ -14,8 +14,8 @@ export const MusicInfo: FunctionComponent<MusicInfoProps> = ({
   className,
   music,
 }) => (
-  <div className={cn(styles.musicInfo, className)}>
-    <div className={styles.name}>{music?.name}</div>
-    <div className={styles.artist}>{music?.artistName}</div>
+  <div className={cn(classes.musicInfo, className)}>
+    <div className={classes.name}>{music?.name}</div>
+    <div className={classes.artist}>{music?.artistName}</div>
   </div>
 );

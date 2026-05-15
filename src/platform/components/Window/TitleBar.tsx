@@ -7,7 +7,7 @@ import { type FunctionComponent } from 'preact';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 import { useToolbar } from '@/platform/hooks/useToolbar';
 
-import styles from './TitleBar.module.css';
+import classes from './TitleBar.module.css';
 
 export type TitleBarProps = {
   className: string | undefined;
@@ -38,19 +38,19 @@ export const TitleBar: FunctionComponent<TitleBarProps> = ({
   return (
     <header
       className={cn(
-        styles.titleBar,
+        classes.titleBar,
         toolbarClassName,
-        { [styles.maximized]: maximized },
+        { [classes.maximized]: maximized },
         className,
       )}
     >
       <div
-        className={cn(styles.buttons, { [styles.frozen]: frozen })}
+        className={cn(classes.buttons, { [classes.frozen]: frozen })}
         {...otherToolbarProps}
       >
         <button
           aria-label="close"
-          className={cn(styles.button, styles.close)}
+          className={cn(classes.button, classes.close)}
           onClick={onClose}
           type="button"
           {...getToolProps<HTMLButtonElement>(`closeButton${title}`)}
@@ -59,7 +59,7 @@ export const TitleBar: FunctionComponent<TitleBarProps> = ({
         </button>
         <button
           aria-label="minimize"
-          className={cn(styles.button, styles.minimize)}
+          className={cn(classes.button, classes.minimize)}
           onClick={onMinimise}
           type="button"
           {...getToolProps<HTMLButtonElement>(`minimizeButton${title}`)}
@@ -69,7 +69,7 @@ export const TitleBar: FunctionComponent<TitleBarProps> = ({
         {showMaximizeButton && (
           <button
             aria-label="maximize"
-            className={cn(styles.button, styles.maximize)}
+            className={cn(classes.button, classes.maximize)}
             onClick={onToggleMaximize}
             type="button"
             {...getToolProps<HTMLButtonElement>(`toggleMaximizeButton${title}`)}
@@ -80,7 +80,7 @@ export const TitleBar: FunctionComponent<TitleBarProps> = ({
       </div>
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <h2
-        className={styles.title}
+        className={classes.title}
         // eslint-disable-next-line react/no-unknown-property
         onDblClick={onToggleMaximize}
         onMouseDown={onMoveStart}

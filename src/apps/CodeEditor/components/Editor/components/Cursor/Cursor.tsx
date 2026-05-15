@@ -5,7 +5,7 @@ import { type Selection } from '@/apps/CodeEditor/interfaces/Selection';
 import { type Position } from '@/platform/interfaces/Position';
 
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './Cursor.module.css';
+import classes from './Cursor.module.css';
 import { computeSegments, type Segment } from './utils/computeSegments';
 
 export type CursorProps = {
@@ -34,7 +34,7 @@ export const Cursor: FunctionComponent<CursorProps> = ({
       <>
         {segments.map(({ width, x, y }) => (
           <div
-            className={styles.segment}
+            className={classes.segment}
             key={`${color}${x}${y}${width}`}
             style={{ background: color, left: x, top: y, width }}
           />
@@ -45,7 +45,7 @@ export const Cursor: FunctionComponent<CursorProps> = ({
 
   return position ? (
     <div
-      className={styles.cursor}
+      className={classes.cursor}
       style={{ borderColor: color, left: position.x, top: position.y }}
     />
   ) : null;

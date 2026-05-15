@@ -6,7 +6,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
 import { type RedditFilter } from '../../interfaces/RedditFilter';
-import styles from './FilterButton.module.css';
+import classes from './FilterButton.module.css';
 
 const filters: RedditFilter[] = ['hot', 'top'];
 
@@ -28,7 +28,7 @@ export const FilterButton: FunctionComponent<FilterButtonProps> = ({
 
   return (
     <ButtonLink
-      className={styles.filterButton}
+      className={classes.filterButton}
       onClick={() => onClick(otherFilter)}
     >
       {labelMap[otherFilter]}

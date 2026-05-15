@@ -4,7 +4,7 @@ import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { PROD_BASE_URL } from '@/platform/constants';
 
-import styles from './Teravia.module.css';
+import classes from './Teravia.module.css';
 
 const Teravia: WindowComponent = ({
   active,
@@ -13,7 +13,7 @@ const Teravia: WindowComponent = ({
 }) => (
   <Window
     active={active}
-    className={styles.teraviaWindow}
+    className={classes.teraviaWindow}
     keepContentRatio
     maxHeight={791}
     maxWidth={1367}
@@ -21,12 +21,12 @@ const Teravia: WindowComponent = ({
     minWidth={800}
     ref={windowRef}
     title="Teravia"
-    titleClassName={styles.teraviaTitleBar}
+    titleClassName={classes.teraviaTitleBar}
     {...injectedWindowProps}
   >
     <iframe
       allow="fullscreen"
-      className={cn(styles.iframe, { [styles.inactive]: !active })}
+      className={cn(classes.iframe, { [classes.inactive]: !active })}
       height="100%"
       src={`${PROD_BASE_URL}/teravia`}
       title="Teravia"

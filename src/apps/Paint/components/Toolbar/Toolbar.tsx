@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
 import { type DrawTool, tools } from '../../tools/tools';
-import styles from './Toolbar.module.css';
+import classes from './Toolbar.module.css';
 
 export type ToolbarProps = {
   canRedo: boolean;
@@ -121,19 +121,19 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   const showTextOpts = tool === 'text';
 
   return (
-    <div aria-label="Paint tools" className={styles.options} role="toolbar">
+    <div aria-label="Paint tools" className={classes.options} role="toolbar">
       {/* Tools */}
       <div
         aria-label="Drawing tools"
-        className={styles.toolsGroup}
+        className={classes.toolsGroup}
         role="group"
       >
         {tools.map(({ description, icon, name }) => (
           <button
             aria-label={description}
             aria-pressed={tool === name}
-            className={cn(styles.tool, {
-              [styles.active]: tool === name,
+            className={cn(classes.tool, {
+              [classes.active]: tool === name,
             })}
             data-tip={description}
             key={name}
@@ -148,28 +148,28 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Colors */}
       {showColors && (
-        <div aria-label="Colors" className={styles.group} role="group">
+        <div aria-label="Colors" className={classes.group} role="group">
           <div
-            className={styles.dualSwatch}
+            className={classes.dualSwatch}
             title="Stroke (front) / Fill (back)"
           >
             <button
               aria-label={`Fill color: ${fill}`}
-              className={styles.dsFill}
+              className={classes.dsFill}
               onClick={() => onOpenColorPicker('fill')}
               style={{ background: fill }}
               type="button"
             />
             <button
               aria-label={`Stroke color: ${stroke}`}
-              className={styles.dsStroke}
+              className={classes.dsStroke}
               onClick={() => onOpenColorPicker('stroke')}
               style={{ background: stroke }}
               type="button"
             />
           </div>
           {showFillToggle && (
-            <label className={styles.checkbox}>
+            <label className={classes.checkbox}>
               <input
                 checked={fillOn}
                 onChange={(e) =>
@@ -185,12 +185,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Stroke width */}
       {showWidth && (
-        <div aria-label="Stroke width" className={styles.group} role="group">
+        <div aria-label="Stroke width" className={classes.group} role="group">
           <button
             aria-expanded={showWidthPopover}
             aria-haspopup="true"
             aria-label={`Stroke width: ${width}px`}
-            className={styles.widthBtn}
+            className={classes.widthBtn}
             onClick={
               showWidthPopover
                 ? () => setShowWidthPopover(false)
@@ -201,7 +201,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           >
             <span
               aria-hidden="true"
-              className={styles.widthPreview}
+              className={classes.widthPreview}
               style={{ height: Math.max(1, Math.min(width, 14)) + 'px' }}
             />
             <FontAwesomeIcon icon={faCaretDown} />
@@ -213,15 +213,15 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
       {showTolerance && (
         <div
           aria-label="Paint bucket options"
-          className={styles.group}
+          className={classes.group}
           role="group"
         >
-          <span aria-hidden="true" className={styles.label}>
+          <span aria-hidden="true" className={classes.label}>
             Tolerance
           </span>
           <input
             aria-label="Tolerance"
-            className={styles.toleranceSlider}
+            className={classes.toleranceSlider}
             max={128}
             min={0}
             onInput={(e) =>
@@ -232,7 +232,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           />
           <input
             aria-label="Tolerance"
-            className={styles.numberInput}
+            className={classes.numberInput}
             max={255}
             min={0}
             onInput={(e) =>
@@ -246,13 +246,13 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
 
       {/* Text options */}
       {showTextOpts && (
-        <div aria-label="Text options" className={styles.group} role="group">
-          <span aria-hidden="true" className={styles.label}>
+        <div aria-label="Text options" className={classes.group} role="group">
+          <span aria-hidden="true" className={classes.label}>
             Size
           </span>
           <input
             aria-label="Font size"
-            className={styles.numberInput}
+            className={classes.numberInput}
             max={200}
             min={8}
             onInput={(e) =>
@@ -261,12 +261,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             type="number"
             value={fontSize}
           />
-          <span aria-hidden="true" className={styles.label}>
+          <span aria-hidden="true" className={classes.label}>
             Font
           </span>
           <select
             aria-label="Font family"
-            className={styles.selectInput}
+            className={classes.selectInput}
             onChange={(e) =>
               onFontFamilyChange((e.target as HTMLSelectElement).value)
             }
@@ -282,10 +282,10 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
       )}
 
       {/* Actions */}
-      <div aria-label="Actions" className={styles.group} role="group">
+      <div aria-label="Actions" className={classes.group} role="group">
         <button
           aria-label="New image"
-          className={styles.actionBtn}
+          className={classes.actionBtn}
           onClick={onClear}
           title="New"
           type="button"
@@ -294,7 +294,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         </button>
         <button
           aria-label="Open image"
-          className={styles.actionBtn}
+          className={classes.actionBtn}
           onClick={onOpenImage}
           title="Open"
           type="button"
@@ -303,7 +303,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         </button>
         <button
           aria-label="Undo"
-          className={styles.actionBtn}
+          className={classes.actionBtn}
           disabled={!canUndo}
           onClick={onUndo}
           title="Undo (⌘Z)"
@@ -313,7 +313,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         </button>
         <button
           aria-label="Redo"
-          className={styles.actionBtn}
+          className={classes.actionBtn}
           disabled={!canRedo}
           onClick={onRedo}
           title="Redo (⌘⇧Z)"
@@ -327,7 +327,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         createPortal(
           <div
             aria-label="Stroke width options"
-            className={styles.widthPopover}
+            className={classes.widthPopover}
             onKeyDown={(e) => {
               if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
               e.preventDefault();
@@ -354,8 +354,8 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               <button
                 aria-label={`${w}px`}
                 aria-pressed={width === w}
-                className={cn(styles.wopt, {
-                  [styles.woptActive]: width === w,
+                className={cn(classes.wopt, {
+                  [classes.woptActive]: width === w,
                 })}
                 key={w}
                 onClick={() => {
@@ -365,12 +365,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
                 }}
                 type="button"
               >
-                <span aria-hidden="true" className={styles.check}>
+                <span aria-hidden="true" className={classes.check}>
                   <FontAwesomeIcon icon={faCheck} />
                 </span>
                 <span
                   aria-hidden="true"
-                  className={styles.bar}
+                  className={classes.bar}
                   style={{ height: Math.max(1, Math.min(w, 14)) + 'px' }}
                 />
               </button>

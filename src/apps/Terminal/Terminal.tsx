@@ -12,7 +12,7 @@ import { BashError } from './executors/BashError/BashError';
 import { Command, PREFIX_SIZE_CH } from './executors/Command/Command';
 import { type Executor } from './executors/Executor';
 import { UserQuery } from './executors/UserQuery';
-import styles from './Terminal.module.css';
+import classes from './Terminal.module.css';
 
 const executors: Record<string, () => Promise<AsyncExecutor | Executor>> = {
   about: async () => About,
@@ -330,15 +330,15 @@ const Terminal: WindowComponent = ({
   return (
     <Window
       active={active}
-      className={styles.terminalWindow}
+      className={classes.terminalWindow}
       minHeight={400}
       minWidth={800}
       ref={windowRef}
       title="Terminal"
-      titleClassName={styles.terminalTitleBar}
+      titleClassName={classes.terminalTitleBar}
       {...injectedWindowProps}
     >
-      <div className={styles.terminal} ref={terminalRef}>
+      <div className={classes.terminal} ref={terminalRef}>
         {executions.map(
           ({
             args,
@@ -361,10 +361,10 @@ const Terminal: WindowComponent = ({
               <ExecutorComponent args={args} key={id} />
             ),
         )}
-        <noscript className={styles.error}>
+        <noscript className={classes.error}>
           ✘ failed to run command bin/zsh: JavaScript disabled
         </noscript>
-        <div className={styles.userInput}>
+        <div className={classes.userInput}>
           {!waiting && <Command args={[userInput]} />}
           {query && (
             <UserQuery
@@ -372,7 +372,7 @@ const Terminal: WindowComponent = ({
             />
           )}
           <span
-            className={styles.caret}
+            className={classes.caret}
             style={{
               left: `${getCaretOffset()}ch`,
             }}

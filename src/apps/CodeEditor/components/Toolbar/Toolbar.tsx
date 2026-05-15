@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { cloneElement, type FunctionComponent, type JSX } from 'preact';
 import { Children } from 'preact/compat';
 
-import styles from './Toolbar.module.css';
+import classes from './Toolbar.module.css';
 
 export type ToolbarProps = {
   children: JSX.Element | JSX.Element[];
@@ -13,10 +13,10 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   children,
   className,
 }) => (
-  <div className={cn(styles.toolbar, className)}>
+  <div className={cn(classes.toolbar, className)}>
     {Children.map(children, (child: JSX.Element) =>
       cloneElement(child, {
-        className: cn(child.props.className, styles.toolButton),
+        className: cn(child.props.className, classes.toolButton),
       }),
     )}
   </div>

@@ -8,7 +8,7 @@ import { Logo } from './components/Logo/Logo';
 import { Menu } from './components/Menu/Menu';
 import { Posts } from './components/Posts/Posts';
 import { type RedditFilter } from './interfaces/RedditFilter';
-import styles from './Reddit.module.css';
+import classes from './Reddit.module.css';
 
 const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
   const [filter, setFilter] = useState<RedditFilter>('hot');
@@ -28,20 +28,20 @@ const Reddit: WindowComponent = ({ windowRef, ...injectedWindowProps }) => {
 
   return (
     <Window
-      className={styles.redditWindow}
+      className={classes.redditWindow}
       minHeight={600}
       minWidth={850}
       ref={windowRef}
       title="Reddit"
-      titleClassName={styles.redditTitleBar}
+      titleClassName={classes.redditTitleBar}
       {...injectedWindowProps}
     >
-      <div className={styles.reddit}>
-        <aside className={styles.sidebar}>
+      <div className={classes.reddit}>
+        <aside className={classes.sidebar}>
           <Logo />
           <Menu activeSubreddit={subreddit} onClickSubreddit={goTo} />
         </aside>
-        <main className={styles.body} ref={bodyRef}>
+        <main className={classes.body} ref={bodyRef}>
           <Header
             filter={filter}
             onClickFilter={setFilter}

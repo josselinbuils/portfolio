@@ -7,7 +7,7 @@ import { applyPolynomialInterpolation } from '@/apps/DICOMViewer/utils/math/appl
 import { scaleLUTComponents } from '@/apps/DICOMViewer/utils/scaleLUTComponents';
 import { useElementSize } from '@/platform/hooks/useElementSize';
 
-import styles from './GraphPreview.module.css';
+import classes from './GraphPreview.module.css';
 
 const BOTTOM_OFFSET = 5;
 const LEFT_OFFSET = 5;
@@ -184,9 +184,9 @@ export const GraphPreview: FunctionComponent<GraphPreviewProps> = ({
   return (
     <canvas
       className={cn(
-        styles.preview,
+        classes.preview,
         {
-          [styles.withActiveComponent]:
+          [classes.withActiveComponent]:
             hoveredLUTComponentID || activeLUTComponentID,
         },
         className,

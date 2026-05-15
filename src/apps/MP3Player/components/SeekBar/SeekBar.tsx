@@ -5,7 +5,7 @@ import { useDragAndDrop } from '@/platform/hooks/useDragAndDrop';
 
 import { AudioContext } from '../AudioProvider/AudioProvider';
 import { ProgressBar } from './ProgressBar';
-import styles from './SeekBar.module.css';
+import classes from './SeekBar.module.css';
 
 export const SeekBar: FunctionComponent = () => {
   const { audioController, audioState } = useContext(AudioContext);
@@ -36,14 +36,14 @@ export const SeekBar: FunctionComponent = () => {
   }
 
   return (
-    <div className={styles.seekBar}>
-      <time className={styles.currentTime}>{currentTime}</time>
+    <div className={classes.seekBar}>
+      <time className={classes.currentTime}>{currentTime}</time>
       <ProgressBar
         onSeekStart={seekStartHandler}
         progress={progress}
         ref={progressBarRef}
       />
-      <time className={styles.duration}>
+      <time className={classes.duration}>
         {currentMusic ? currentMusic.duration : '00:00'}
       </time>
     </div>

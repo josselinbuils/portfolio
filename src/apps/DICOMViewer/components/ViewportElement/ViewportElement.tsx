@@ -9,7 +9,7 @@ import { type Size } from '@/platform/interfaces/Size';
 import { type ViewportStats } from '../../interfaces/ViewportStats';
 import { type Viewport } from '../../models/Viewport';
 import { type Renderer } from './renderers/Renderer';
-import styles from './ViewportElement.module.css';
+import classes from './ViewportElement.module.css';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
@@ -156,7 +156,7 @@ export const ViewportElement: FunctionComponent<ViewportElementProps> = ({
   };
 
   return (
-    <div className={cn(styles.viewport, className)}>
+    <div className={cn(classes.viewport, className)}>
       <canvas
         height={viewportHeight}
         key={viewport.rendererType}

@@ -16,7 +16,7 @@ import { useList } from '@/platform/hooks/useList';
 import { useMemState } from '@/platform/hooks/useMemState';
 import { cancelable } from '@/platform/utils/cancelable';
 
-import styles from './CodeEditor.module.css';
+import classes from './CodeEditor.module.css';
 import { Console } from './components/Console/Console';
 import { Editor } from './components/Editor/Editor';
 import { Shortcut } from './components/Shortcut/Shortcut';
@@ -190,7 +190,7 @@ const CodeEditor: WindowComponent = ({
     const { height, width, x, y } = windowElement.getBoundingClientRect();
 
     showMenu({
-      className: cn(styles.menu, styles.newFileMenu), // TODO fix me
+      className: cn(classes.menu, classes.newFileMenu),
       items: newFileMenuItems,
       makeFirstItemActive: true,
       position: {
@@ -203,17 +203,17 @@ const CodeEditor: WindowComponent = ({
   return (
     <Window
       active={active}
-      className={styles.codeEditorWindow}
+      className={classes.codeEditorWindow}
       minHeight={675}
       minWidth={900}
       ref={windowRef}
       title="CodeEditor"
-      titleClassName={styles.codeEditorTitleBar}
+      titleClassName={classes.codeEditorTitleBar}
       {...injectedWindowProps}
     >
-      <div className={styles.codeEditor}>
-        <div className={styles.editor}>
-          <Toolbar className={styles.toolbar}>
+      <div className={classes.codeEditor}>
+        <div className={classes.editor}>
+          <Toolbar className={classes.toolbar}>
             <PopoverToolButton
               icon={faFileCirclePlus}
               menu={{ items: newFileMenuItems }}
@@ -254,7 +254,7 @@ const CodeEditor: WindowComponent = ({
               title="Show shortcuts"
             />
           </Toolbar>
-          <Tabs className={styles.tabs}>
+          <Tabs className={classes.tabs}>
             {files.map(({ name }, index) => (
               <Tab
                 key={name}
@@ -264,7 +264,7 @@ const CodeEditor: WindowComponent = ({
                 {name}
                 {index >= fileSaver.defaultFiles.length && (
                   <FontAwesomeIcon
-                    className={styles.close}
+                    className={classes.close}
                     icon={faTimes}
                     onClick={(event: Event) => {
                       event.stopPropagation();
@@ -277,16 +277,16 @@ const CodeEditor: WindowComponent = ({
           </Tabs>
           <Editor
             activeFile={activeFile}
-            className={styles.editor}
+            className={classes.editor}
             code={code}
             onChange={setCode}
             onCursorPositionUpdate={setCursorPosition}
           />
         </div>
-        <div className={styles.resizeBar} onPointerDown={resizeStartHandler} />
+        <div className={classes.resizeBar} onPointerDown={resizeStartHandler} />
         <Console
           active={active}
-          className={styles.console}
+          className={classes.console}
           codeToExec={codeToExec}
           height={consoleHeight}
           ref={consoleElementRef}
@@ -294,7 +294,7 @@ const CodeEditor: WindowComponent = ({
           {!!activeFile.SideComponent && <activeFile.SideComponent />}
         </Console>
         <StatusBar
-          className={styles.statusBar}
+          className={classes.statusBar}
           cursorPosition={cursorPosition}
         />
       </div>

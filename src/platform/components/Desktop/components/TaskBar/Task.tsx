@@ -12,7 +12,7 @@ import { noop } from '@/platform/utils/noop';
 
 import { useTaskContextMenu } from './hooks/useTaskContextMenu';
 import { useTaskRunner } from './hooks/useTaskRunner';
-import styles from './Task.module.css';
+import classes from './Task.module.css';
 import { type TaskDescriptor } from './TaskDescriptor';
 import { isAppTaskDescriptor } from './utils/isAppTaskDescriptor';
 
@@ -82,22 +82,22 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
     const tooltip = (
       <>
         <header>{name}</header>
-        <p className={styles.tooltipBody}>{description}</p>
+        <p className={classes.tooltipBody}>{description}</p>
       </>
     );
 
     return (
       <WithTooltip
-        className={cn(styles.tooltip, {
-          [styles.windowInstanceActive]: windowInstanceActive,
+        className={cn(classes.tooltip, {
+          [classes.windowInstanceActive]: windowInstanceActive,
         })}
         title={tooltip}
       >
         <button
           aria-label={name}
-          className={cn(styles.task, {
-            [styles.taskButtonActive]: taskButtonActive && !isMenuDisplayed,
-            [styles.windowInstanceActive]:
+          className={cn(classes.task, {
+            [classes.taskButtonActive]: taskButtonActive && !isMenuDisplayed,
+            [classes.windowInstanceActive]:
               windowInstanceActive && !isMenuDisplayed,
           })}
           onClick={(event) => {
@@ -119,11 +119,11 @@ export const Task = forwardRef<HTMLButtonElement, TaskProps>(
           {...forwardedProps}
         >
           <FontAwesomeIcon
-            className={cn(styles.icon, { [styles.loading]: loading })}
+            className={cn(classes.icon, { [classes.loading]: loading })}
             icon={icon}
             style={{ fontSize: `${iconScale}em` }}
           />
-          {running && <div className={styles.runIndicator} />}
+          {running && <div className={classes.runIndicator} />}
           {menuElement}
         </button>
       </WithTooltip>

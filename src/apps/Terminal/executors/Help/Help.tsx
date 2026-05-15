@@ -1,5 +1,5 @@
 import { type Executor } from '../Executor';
-import styles from './Help.module.css';
+import classes from './Help.module.css';
 
 const commands = [
   ['bm', 'build manager'],
@@ -8,12 +8,12 @@ const commands = [
 ];
 
 export const Help: Executor = () => (
-  <div className={styles.help}>
+  <div className={classes.help}>
     <p>Available commands:</p>
     {commands.map(([command, description]) => (
       <p key={command}>
-        <span className={styles.command}>- {command}</span>
-        <span className={styles.description}>{description}</span>
+        <span className={classes.command}>- {command}</span>
+        <span className={classes.description}>{description}</span>
       </p>
     ))}
   </div>

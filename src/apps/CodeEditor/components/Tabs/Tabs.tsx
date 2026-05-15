@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { cloneElement, type FunctionComponent, type JSX } from 'preact';
 import { Children } from 'preact/compat';
 
-import styles from './Tabs.module.css';
+import classes from './Tabs.module.css';
 
 export type TabsProps = {
   children: JSX.Element | JSX.Element[];
@@ -10,10 +10,10 @@ export type TabsProps = {
 };
 
 export const Tabs: FunctionComponent<TabsProps> = ({ children, className }) => (
-  <div aria-label="tabs" className={cn(styles.tabs, className)} role="tablist">
+  <div aria-label="tabs" className={cn(classes.tabs, className)} role="tablist">
     {Children.map(children, (child: JSX.Element) =>
       cloneElement(child, {
-        className: cn(child.props.className, styles.tab),
+        className: cn(child.props.className, classes.tab),
       }),
     )}
   </div>

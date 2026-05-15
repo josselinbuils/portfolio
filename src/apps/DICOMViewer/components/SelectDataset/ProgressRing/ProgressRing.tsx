@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 
-import styles from './ProgressRing.module.css';
+import classes from './ProgressRing.module.css';
 
 export type ProgressRingProps = {
   className?: string;
@@ -25,7 +25,7 @@ export const ProgressRing: FunctionComponent<ProgressRingProps> = ({
   return (
     <svg className={className} height={diameter} width={diameter}>
       <circle
-        className={styles.progressRing}
+        className={classes.progressRing}
         cx={radius}
         cy={radius}
         fill="transparent"
@@ -36,7 +36,7 @@ export const ProgressRing: FunctionComponent<ProgressRingProps> = ({
         strokeWidth={thickness}
       />
       <circle
-        className={styles.backgroundRing}
+        className={classes.backgroundRing}
         cx={radius}
         cy={radius}
         fill="transparent"

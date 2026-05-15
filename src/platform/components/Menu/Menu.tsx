@@ -12,7 +12,7 @@ import {
   type MenuItemDescriptor,
 } from './components/MenuItem/MenuItem';
 import { MenuOverlay } from './components/MenuOverlay/MenuOverlay';
-import styles from './Menu.module.css';
+import classes from './Menu.module.css';
 
 export { type MenuItemDescriptor };
 
@@ -116,7 +116,7 @@ export const Menu: FunctionComponent<MenuProps> = ({
   return (
     <>
       <ul
-        className={cn(styles.contextMenu, className)}
+        className={cn(classes.contextMenu, className)}
         onMouseLeave={() => setActiveIndex(items.length === 1 ? 0 : -1)}
         ref={listElementRef}
         role="menu"

@@ -6,7 +6,7 @@ import { type Position } from '@/platform/interfaces/Position';
 import { Cross } from './components/Cross';
 import { Grid } from './components/Grid';
 import { Round } from './components/Round';
-import styles from './TicTacToe.module.css';
+import classes from './TicTacToe.module.css';
 import { GameManager, type Grid as GridType } from './utils/GameManager';
 
 export const TicTacToe: FunctionComponent = () => {
@@ -33,7 +33,7 @@ export const TicTacToe: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className={styles.ticTacToe}>
+    <div className={classes.ticTacToe}>
       <Grid>
         {grid?.map((row, y) =>
           row.map((mark, x) => {

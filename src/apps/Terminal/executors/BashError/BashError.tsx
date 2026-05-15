@@ -1,5 +1,5 @@
 import { type Executor } from '../Executor';
-import styles from './BashError.module.css';
+import classes from './BashError.module.css';
 
 const COMMANDS = [
   'cat',
@@ -37,7 +37,7 @@ export const BashError: Executor = ({ args }) => {
   }
 
   return (
-    <p className={styles.error}>
+    <p className={classes.error}>
       zsh: {command}: {errorMessage}
     </p>
   );

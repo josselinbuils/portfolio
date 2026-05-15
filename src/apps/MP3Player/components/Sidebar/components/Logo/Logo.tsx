@@ -3,10 +3,10 @@ import { type FunctionComponent } from 'preact';
 
 import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAwesomeIcon';
 
-import styles from './Logo.module.css';
+import classes from './Logo.module.css';
 
 export const Logo: FunctionComponent = () => (
-  <figure className={styles.logo}>
+  <figure className={classes.logo}>
     <FontAwesomeIcon icon={faHeadphones} />
   </figure>
 );

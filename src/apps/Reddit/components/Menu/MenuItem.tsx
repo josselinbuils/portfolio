@@ -6,7 +6,7 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 
 import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';
-import styles from './MenuItem.module.css';
+import classes from './MenuItem.module.css';
 
 export type MenuItemProps = {
   activeSubreddit: string;
@@ -31,14 +31,14 @@ export const MenuItem: FunctionComponent<MenuItemProps> = ({
 
   return (
     <ButtonLink
-      className={styles.item}
+      className={classes.item}
       disabled={isActiveSubreddit}
       onClick={() => onClickSubreddit(subreddit)}
       onMouseEnter={() => setOverflew(true)}
       onMouseLeave={() => setOverflew(false)}
     >
       <Icon active={isActiveSubreddit || overflew} subreddit={subreddit} />
-      <span className={cn({ [styles.active]: isActiveSubreddit })}>
+      <span className={cn({ [classes.active]: isActiveSubreddit })}>
         {uppercaseFirstLetter(subreddit.slice(2))}
       </span>
     </ButtonLink>

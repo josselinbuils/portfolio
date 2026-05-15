@@ -5,7 +5,7 @@ import { useMemo } from 'preact/hooks';
 import { type LintIssue } from '@/apps/CodeEditor/interfaces/LanguageService';
 
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
-import styles from './LintIssueHighlight.module.css';
+import classes from './LintIssueHighlight.module.css';
 
 export type LintIssueHighlightProps = {
   code: string;
@@ -25,7 +25,7 @@ export const LintIssueHighlight: FunctionComponent<LintIssueHighlightProps> = ({
   );
   return (
     <div
-      className={cn(styles.lintIssue, styles[level])}
+      className={cn(classes.lintIssue, classes[level])}
       style={{ left: position.x, top: position.y, width: `${length}ch` }}
     />
   );

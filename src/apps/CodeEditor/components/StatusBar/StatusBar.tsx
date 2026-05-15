@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { type FunctionComponent } from 'preact';
 
 import { type CursorPosition } from '../../interfaces/CursorPosition';
-import styles from './StatusBar.module.css';
+import classes from './StatusBar.module.css';
 
 const DEBUG = true;
 
@@ -17,7 +17,7 @@ export const StatusBar: FunctionComponent<StatusBarProps> = ({
 }) => {
   const { offset, x, y } = cursorPosition;
   return (
-    <div className={cn(styles.statusBar, className)}>
+    <div className={cn(classes.statusBar, className)}>
       {x}:{y}
       {DEBUG && ` (${offset})`}
     </div>

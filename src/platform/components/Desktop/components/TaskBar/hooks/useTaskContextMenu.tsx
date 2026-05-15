@@ -8,7 +8,7 @@ import {
 } from '@/platform/components/Menu/Menu';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 
-import styles from '../Task.module.css';
+import classes from '../Task.module.css';
 import { type TaskDescriptor } from '../TaskDescriptor';
 import { isAppTaskDescriptor } from '../utils/isAppTaskDescriptor';
 
@@ -34,7 +34,7 @@ export function useTaskContextMenu(
         onClick: () => windowManager.openApp(taskDescriptor),
         title: (
           <>
-            <div className={styles.contextMenuIcon}>
+            <div className={classes.contextMenuIcon}>
               <FontAwesomeIcon icon={icon} />
             </div>
             {name}
@@ -48,7 +48,7 @@ export function useTaskContextMenu(
         onClick: () => windowManager.closeWindow(windowInstance.id),
         title: (
           <>
-            <div className={styles.contextMenuIcon}>
+            <div className={classes.contextMenuIcon}>
               <FontAwesomeIcon icon={faTimes} />
             </div>
             Close
@@ -58,7 +58,7 @@ export function useTaskContextMenu(
     }
 
     return {
-      className: styles.contextMenu,
+      className: classes.contextMenu,
       items,
       position: { x, y },
       style: {

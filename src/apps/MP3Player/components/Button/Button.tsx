@@ -5,7 +5,7 @@ import {
   type FunctionComponent,
 } from 'preact';
 
-import styles from './Button.module.css';
+import classes from './Button.module.css';
 
 export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -22,7 +22,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   ...forwardedProps
 }) => (
   <button
-    className={cn(styles.button, className, { [styles.checked]: checked })}
+    className={cn(classes.button, className, { [classes.checked]: checked })}
     type="button"
     {...forwardedProps}
   >
