@@ -9,9 +9,9 @@ import { SeekBar } from '../SeekBar/SeekBar';
 import styles from './Footer.module.scss';
 import { MusicInfo } from './MusicInfo';
 
-export interface FooterProps {
+export type FooterProps = {
   className?: string;
-}
+};
 
 export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
   const { audioState } = useContext(AudioContext);

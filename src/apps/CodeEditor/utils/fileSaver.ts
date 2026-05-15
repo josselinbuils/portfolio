@@ -104,9 +104,9 @@ export const fileSaver = {
   saveFiles,
 };
 
-interface SaveState {
+type SaveState = {
   files: Omit<EditorFile, 'sideComponent'>[];
-}
+};
 
 function loadFiles(): EditorFile[] {
   const stored = localStorage.getItem(STORAGE_KEY);

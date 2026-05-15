@@ -6,8 +6,8 @@ export enum LogLevel {
   Warning = 'warning',
 }
 
-export interface Log {
+export type Log = {
   id: string;
   level: LogLevel;
   message: (JSX.Element | string)[];
-}
+};

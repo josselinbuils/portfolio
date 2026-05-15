@@ -26,12 +26,12 @@ const viewTypeLabels: Record<ViewType, string> = {
   skin: '3D Skin',
 };
 
-export interface AnnotationsElementProps {
+export type AnnotationsElementProps = {
   annotations: Annotations;
   availableViewTypes: ViewType[];
   onRendererTypeSwitch(rendererType: RendererType): void;
   onViewTypeSwitch(viewType: ViewType): void;
-}
+};
 
 export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
   annotations,

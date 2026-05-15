@@ -4,9 +4,9 @@ import { makeKeysHumanReadable, normaliseKeys } from '@/platform/utils/keys';
 
 import styles from './Shortcut.module.scss';
 
-export interface ShortcutProps {
+export type ShortcutProps = {
   keys: string[];
-}
+};
 
 export const Shortcut: FunctionComponent<ShortcutProps> = ({ keys }) => (
   <>

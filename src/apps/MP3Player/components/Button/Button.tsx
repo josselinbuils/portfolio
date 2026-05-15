@@ -7,13 +7,13 @@ import {
 
 import styles from './Button.module.scss';
 
-export interface ButtonProps extends DetailedHTMLProps<
+export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
-> {
+> & {
   checked?: boolean;
   className?: string;
-}
+};
 
 export const Button: FunctionComponent<ButtonProps> = ({
   checked = false,

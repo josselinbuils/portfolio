@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 
 import styles from './Palette.module.scss';
 
-export interface PaletteProps {
+export type PaletteProps = {
   fill: string;
   onAddSwatch(): void;
   onOpenColorPicker(target: 'fill' | 'stroke'): void;
@@ -11,7 +11,7 @@ export interface PaletteProps {
   status: string;
   stroke: string;
   swatches: string[];
-}
+};
 
 export const Palette: FunctionComponent<PaletteProps> = ({
   fill,

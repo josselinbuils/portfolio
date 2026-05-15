@@ -5,9 +5,9 @@ import { getOffsetPosition } from '../../../utils/getOffsetPosition';
 
 const END_LINE_SPACE_PX = 7;
 
-export interface Segment extends Position<number> {
+export type Segment = Position<number> & {
   width: number;
-}
+};
 
 export function computeSegments(
   code: string,

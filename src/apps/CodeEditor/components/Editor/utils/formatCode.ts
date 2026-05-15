@@ -6,10 +6,10 @@ import { type EditableState } from '../../../interfaces/EditableState';
 import { type SupportedLanguage } from '../../../interfaces/SupportedLanguage';
 import { createSelection } from '../../../utils/createSelection';
 
-interface Parser {
+type Parser = {
   name: string;
   parserFactory(): Promise<{ default: Plugin }>[];
-}
+};
 
 const babelParserFactory = () => [
   import('prettier/plugins/babel'),

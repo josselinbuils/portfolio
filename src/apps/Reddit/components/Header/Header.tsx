@@ -5,11 +5,11 @@ import { Icon } from '../Icon/Icon';
 import { FilterButton } from './FilterButton';
 import styles from './Header.module.scss';
 
-export interface HeaderProps {
+export type HeaderProps = {
   filter: RedditFilter;
   onClickFilter(filter: RedditFilter): void;
   subreddit: string;
-}
+};
 
 export const Header: FunctionComponent<HeaderProps> = ({
   filter,

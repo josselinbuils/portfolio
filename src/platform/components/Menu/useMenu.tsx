@@ -10,13 +10,13 @@ import { type MenuDescriptor } from './Menu';
 
 export { type MenuDescriptor, type MenuItemDescriptor };
 
-export interface MenuManager {
+export type MenuManager = {
   hideMenu(): void;
   isMenuDisplayed: boolean;
   menuDescriptor: MenuDescriptor | undefined;
   menuElement: JSX.Element | null;
   showMenu(descriptor: MenuDescriptor): void;
-}
+};
 
 const Menu = lazy(async () => (await import('./Menu')).Menu);
 

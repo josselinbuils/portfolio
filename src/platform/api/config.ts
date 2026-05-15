@@ -11,7 +11,7 @@ const rawConfig = JSON.parse(
 export const config = validate(rawConfig, configSchema, { throwError: true })
   .instance as Config;
 
-interface Config {
+type Config = {
   jamendo: {
     clientId: string;
   };
@@ -21,4 +21,4 @@ interface Config {
     password: string;
     username: string;
   };
-}
+};

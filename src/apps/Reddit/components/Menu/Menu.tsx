@@ -4,10 +4,10 @@ import { subreddits } from '../../subreddits';
 import styles from './Menu.module.scss';
 import { MenuItem } from './MenuItem';
 
-export interface MenuProps {
+export type MenuProps = {
   activeSubreddit: string;
   onClickSubreddit(subreddit: string): void;
-}
+};
 
 export const Menu: FunctionComponent<MenuProps> = ({
   activeSubreddit,

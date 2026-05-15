@@ -9,12 +9,9 @@ import { useMenu } from '@/platform/components/Menu/useMenu';
 import styles from './PopoverToolButton.module.scss';
 import { ToolButton, type ToolButtonProps } from './ToolButton';
 
-export interface PopoverToolButtonProps extends Omit<
-  ToolButtonProps,
-  'onClick'
-> {
+export type PopoverToolButtonProps = Omit<ToolButtonProps, 'onClick'> & {
   menu: MenuDescriptor;
-}
+};
 
 export const PopoverToolButton: FunctionComponent<PopoverToolButtonProps> = ({
   className,

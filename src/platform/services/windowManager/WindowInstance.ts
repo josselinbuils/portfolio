@@ -7,7 +7,7 @@ import {
 } from '@/platform/components/Window/WindowComponent';
 import { type AppDescriptor } from '@/platform/interfaces/AppDescriptor';
 
-export interface WindowInstance extends Partial<InjectedWindowProps> {
+export type WindowInstance = Partial<InjectedWindowProps> & {
   active: boolean;
   appDescriptor: AppDescriptor;
   id: number;
@@ -15,4 +15,4 @@ export interface WindowInstance extends Partial<InjectedWindowProps> {
   windowComponent: WindowComponent;
   windowRef: RefObject<Window>;
   zIndex: number;
-}
+};

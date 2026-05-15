@@ -2,13 +2,13 @@ import { type FunctionComponent } from 'preact';
 
 import styles from './ProgressRing.module.scss';
 
-export interface ProgressRingProps {
+export type ProgressRingProps = {
   className?: string;
   color: string;
   progress: number;
   radius: number;
   thickness: number;
-}
+};
 
 export const ProgressRing: FunctionComponent<ProgressRingProps> = ({
   className,

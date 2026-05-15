@@ -23,10 +23,10 @@ export const getInitialGrid = (): Grid => [
 
 const DELAY_MS = 1000;
 
-export interface Winner {
+export type Winner = {
   cases: Position[];
   mark: Mark;
-}
+};
 
 export class GameManager {
   readonly subject: Subject<Grid>;

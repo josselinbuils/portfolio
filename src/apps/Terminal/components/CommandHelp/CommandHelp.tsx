@@ -2,17 +2,17 @@ import { type FunctionComponent } from 'preact';
 
 import styles from './CommandHelp.module.scss';
 
-export interface CommandHelpProps {
+export type CommandHelpProps = {
   command: string;
   description?: string;
   parameters: CommandParameter[];
-}
+};
 
-export interface CommandParameter {
+export type CommandParameter = {
   name: string;
   optional?: boolean;
   values?: { description?: string; value: string }[];
-}
+};
 
 export const CommandHelp: FunctionComponent<CommandHelpProps> = ({
   command,

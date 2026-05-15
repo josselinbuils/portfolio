@@ -14,12 +14,12 @@ const PADDING_LEFT_PX = 20;
 const WOFF_FONT_URL =
   'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2';
 
-export interface RenderedSvg {
+export type RenderedSvg = {
   dataUrl: string;
   height: number;
   svg: string;
   width: number;
-}
+};
 
 export async function renderSvg(
   code: string,

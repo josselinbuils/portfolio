@@ -7,14 +7,14 @@ import { V } from '@/apps/DICOMViewer/utils/math/Vector';
 export type Line = Point[];
 export type Point = number[];
 
-interface LineInfo {
+type LineInfo = {
   crossesViewport: boolean;
   isBehindViewport: boolean;
   isInFrontOfViewport: boolean;
   pointBehindViewport?: number[];
   pointInFrontOfViewport?: number[];
   pointInViewport?: number[];
-}
+};
 
 export function computeVolumeBox(viewport: Viewport): {
   linesBehindImage: Line[];

@@ -9,10 +9,10 @@ import { cancelable } from '@/platform/utils/cancelable';
 import styles from './Icon.module.scss';
 import { getPreloadedIconSrc } from './utils/getPreloadedIconSrc';
 
-export interface IconProps {
+export type IconProps = {
   active?: boolean;
   subreddit: string;
-}
+};
 
 export const Icon: FunctionComponent<IconProps> = ({
   active = true,

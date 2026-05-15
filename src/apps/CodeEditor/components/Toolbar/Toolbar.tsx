@@ -4,10 +4,10 @@ import { Children } from 'preact/compat';
 
 import styles from './Toolbar.module.scss';
 
-export interface ToolbarProps {
+export type ToolbarProps = {
   children: JSX.Element | JSX.Element[];
   className?: string;
-}
+};
 
 export const Toolbar: FunctionComponent<ToolbarProps> = ({
   children,

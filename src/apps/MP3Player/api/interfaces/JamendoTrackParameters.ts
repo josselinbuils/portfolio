@@ -1,7 +1,7 @@
 import { type JamendoBoost } from './JamendoBoost';
 import { type JamendoOrder } from './JamendoOrder';
 
-export interface JamendoTrackParameters {
+export type JamendoTrackParameters = {
   boost?: JamendoBoost;
   client_id: string;
   format?: 'json' | 'jsonpretty' | 'xml';
@@ -26,4 +26,4 @@ export interface JamendoTrackParameters {
   limit?: string;
   order?: JamendoOrder;
   tags?: string;
-}
+};

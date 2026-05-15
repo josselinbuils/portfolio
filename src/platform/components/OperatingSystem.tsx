@@ -8,15 +8,15 @@ import { getAppDescriptors } from '../utils/getAppDescriptors';
 import { Desktop } from './Desktop/Desktop';
 import { type WindowComponent } from './Window/WindowComponent';
 
-export interface DefaultApp {
+export type DefaultApp = {
   appDescriptor: AppDescriptor;
   windowComponent: WindowComponent;
-}
+};
 
-export interface OperatingSystemProps {
+export type OperatingSystemProps = {
   defaultApp?: DefaultApp;
   lazyApp?: string;
-}
+};
 
 let initialised = false;
 

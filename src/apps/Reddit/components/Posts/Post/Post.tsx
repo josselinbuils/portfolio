@@ -13,11 +13,11 @@ import { getPreviewResolution } from './utils/getPreviewResolution';
 
 const REDDIT_URL = 'https://www.reddit.com';
 
-export interface PostProps extends RedditPost {
+export type PostProps = RedditPost & {
   currentSubreddit: string;
   onClickSubreddit(subreddit: string): void;
   outdated: boolean;
-}
+};
 
 export const Post: FunctionComponent<PostProps> = ({
   numComments,

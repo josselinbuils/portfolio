@@ -14,10 +14,10 @@ import { loadDatasetList } from './utils/loadDatasetList';
 
 const WAIT_FOR_FULL_PROGRESS_RING_DELAY_MS = 500;
 
-export interface SelectDatasetProps {
+export type SelectDatasetProps = {
   onDatasetSelected(dataset: Dataset): void;
   onError(message: string): void;
-}
+};
 
 export const SelectDataset: FunctionComponent<SelectDatasetProps> = ({
   onDatasetSelected,

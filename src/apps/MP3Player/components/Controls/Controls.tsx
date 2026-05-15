@@ -14,10 +14,10 @@ import { AudioContext } from '../AudioProvider/AudioProvider';
 import { Button } from '../Button/Button';
 import styles from './Controls.module.scss';
 
-export interface ControlsProps {
+export type ControlsProps = {
   className?: string;
   size: number;
-}
+};
 
 export const Controls: FunctionComponent<ControlsProps> = ({
   className,

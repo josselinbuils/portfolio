@@ -2,18 +2,18 @@ import { type JSX } from 'preact';
 
 import { type Awaitable } from '@/platform/interfaces/Awaitable';
 
-export interface CompletionItem {
+export type CompletionItem = {
   cursorOffsetInValue?: number; // value.length by default
   name: string;
   value: string;
-}
+};
 
-export interface Completions {
+export type Completions = {
   items: CompletionItem[];
   startOffset: number;
-}
+};
 
-export interface LanguageService {
+export type LanguageService = {
   getCompletions(
     code: string,
     cursorOffset: number,
@@ -24,13 +24,13 @@ export interface LanguageService {
   ): Awaitable<JSX.Element | string | undefined>;
   lint(code: string): Awaitable<LintIssue[]>;
   transpile(code: string): Awaitable<string>;
-}
+};
 
-export interface LintIssue {
+export type LintIssue = {
   length: number;
   level: LintIssueLevel;
   message: string;
   start: number;
-}
+};
 
 export type LintIssueLevel = 'error' | 'warning';

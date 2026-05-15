@@ -7,13 +7,13 @@ import { type Position } from '@/platform/interfaces/Position';
 
 import styles from './Tooltip.module.scss';
 
-export interface TooltipProps {
+export type TooltipProps = {
   className?: string;
   position: Position<number>;
   relativePosition?: 'bottom-right' | 'right';
   style?: CSSProperties;
   title: JSX.Element | string;
-}
+};
 
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   ({ className, position, relativePosition = 'right', style, title }, ref) => {

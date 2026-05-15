@@ -7,11 +7,11 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import styles from './Select.module.scss';
 
-export interface SelectProps extends PropsWithChildren {
+export type SelectProps = PropsWithChildren & {
   className?: string;
   onChange(value: string): void;
   value: string;
-}
+};
 
 export const Select: FunctionComponent<SelectProps> = ({
   children,

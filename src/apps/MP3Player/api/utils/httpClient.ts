@@ -9,9 +9,9 @@ const protocolClientMap: Record<string, HTTPClient> = {
 
 export const httpClient = { get };
 
-interface HTTPClient {
+type HTTPClient = {
   get(url: string, callback: (res: IncomingMessage) => void): ClientRequest;
-}
+};
 
 async function get(url: string): Promise<any> {
   return new Promise((resolve, reject) => {

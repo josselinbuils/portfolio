@@ -4,7 +4,7 @@ import { type Size } from '@/platform/interfaces/Size';
 
 import { type Window, type WindowProps } from './Window';
 
-export interface InjectedWindowProps extends Partial<WindowProps> {
+export type InjectedWindowProps = Partial<WindowProps> & {
   active: boolean;
   id: number;
   onClose(id: number): void;
@@ -14,7 +14,7 @@ export interface InjectedWindowProps extends Partial<WindowProps> {
   visibleAreaSize: Size | undefined;
   windowRef: RefObject<Window>;
   zIndex: number;
-}
+};
 
 export type WindowComponent<T = unknown> = FunctionComponent<
   InjectedWindowProps & T

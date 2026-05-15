@@ -1,6 +1,6 @@
 import { type Selection } from './Selection';
 
-export interface EditableState {
+export type EditableState = {
   code: string;
   selection: Selection;
-}
+};

@@ -3,12 +3,12 @@ import { useMemo, useState } from 'preact/hooks';
 /**
  * Manager provided by useList.
  */
-export interface ListManager<T> {
+export type ListManager<T> = {
   clear(): void;
   push(...items: T[]): void;
   set(items: ((currentItems: T[]) => T[]) | T[]): void;
   update(): void;
-}
+};
 
 /**
  * Allows managing lists easily.

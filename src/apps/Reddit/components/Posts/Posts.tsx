@@ -8,11 +8,11 @@ import { type RedditPost } from '../../interfaces/RedditPost';
 import { getPosts } from './getPosts';
 import { Post } from './Post/Post';
 
-export interface PostsProps {
+export type PostsProps = {
   filter: RedditFilter;
   onClickSubreddit(subreddit: string): void;
   subreddit: string;
-}
+};
 
 export const Posts: FunctionComponent<PostsProps> = ({
   filter,

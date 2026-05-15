@@ -4,10 +4,10 @@ import { type Position } from '@/platform/interfaces/Position';
 
 const POSITIONS = ['16%', '50%', '84%'];
 
-export interface CrossProps {
+export type CrossProps = {
   highlighted?: boolean;
   position: Position<number>;
-}
+};
 
 export const Cross: FunctionComponent<CrossProps> = ({
   highlighted = false,

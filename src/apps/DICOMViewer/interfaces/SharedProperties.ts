@@ -1,3 +1,3 @@
-export interface SharedProperties {
+export type SharedProperties = {
   voxelSpacing: number[];
-}
+};

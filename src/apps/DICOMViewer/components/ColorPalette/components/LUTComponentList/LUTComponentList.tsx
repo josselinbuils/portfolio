@@ -9,12 +9,12 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { ColorPicker } from './ColorPicker/ColorPicker';
 import styles from './LUTComponentList.module.scss';
 
-export interface LUTComponentListProps {
+export type LUTComponentListProps = {
   lutComponents: LUTComponent[];
   onLUTComponentAdd(): void;
   onLUTComponentColorChange(componentId: string, color: number[]): void;
   onLUTComponentDelete(componentId: string): void;
-}
+};
 
 export const LUTComponentList: FunctionComponent<LUTComponentListProps> = ({
   lutComponents,

@@ -1,5 +1,5 @@
 import { type Position } from '@/platform/interfaces/Position';
 
-export interface CursorPosition extends Position<number> {
+export type CursorPosition = Position<number> & {
   offset: number;
-}
+};

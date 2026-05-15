@@ -48,13 +48,13 @@ import { unindent } from './utils/unindent';
 
 const TOOLTIP_DISPLAY_DELAY_MS = 500;
 
-export interface EditorProps {
+export type EditorProps = {
   activeFile: EditorFile;
   className?: string;
   code: string;
   onChange(code: string): void;
   onCursorPositionUpdate(cursorPosition: CursorPosition): void;
-}
+};
 
 export const Editor: FunctionComponent<EditorProps> = ({
   activeFile,

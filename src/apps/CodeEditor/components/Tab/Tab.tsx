@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 
 import styles from './Tab.module.scss';
 
-export interface TabProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+export type TabProps = JSX.HTMLAttributes<HTMLButtonElement> & {
   className?: string;
   selected: boolean;
-}
+};
 
 export const Tab: FunctionComponent<TabProps> = ({
   children,

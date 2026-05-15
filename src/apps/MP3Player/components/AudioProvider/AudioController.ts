@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import { type Music } from '../../interfaces/Music';
 
-export interface AudioState {
+export type AudioState = {
   currentMusic?: Music;
   currentTime: string;
   paused: boolean;
@@ -11,7 +11,7 @@ export interface AudioState {
   progress: number;
   random: boolean;
   repeat: boolean;
-}
+};
 
 export class AudioController {
   audioStateSubject: Subject<AudioState>;

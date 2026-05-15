@@ -1,9 +1,9 @@
 import { type FunctionComponent } from 'preact';
 
-export interface Executor extends FunctionComponent<ExecutorProps> {
+export type Executor = FunctionComponent<ExecutorProps> & {
   suggest?(arg: string): string | undefined;
-}
+};
 
-export interface ExecutorProps {
+export type ExecutorProps = {
   args: string[];
-}
+};

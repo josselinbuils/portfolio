@@ -8,7 +8,7 @@ import { V } from '../../../../utils/math/Vector';
  *
  * Coordinates cannot be outside the viewport.
  */
-export interface BoundedViewportSpaceCoordinates {
+export type BoundedViewportSpaceCoordinates = {
   imageHeight: number;
   // Dimensions of the image in the viewport space
   imageWidth: number;
@@ -20,7 +20,7 @@ export interface BoundedViewportSpaceCoordinates {
 
   imageY0: number;
   imageY1: number;
-}
+};
 
 /**
  * Origin: top left corner of the image
@@ -28,7 +28,7 @@ export interface BoundedViewportSpaceCoordinates {
  *
  * Coordinates cannot be outside the viewport.
  */
-export interface ImageSpaceCoordinates {
+export type ImageSpaceCoordinates = {
   displayHeight: number;
   // Dimensions of the image in the image space
   displayWidth: number;
@@ -40,21 +40,21 @@ export interface ImageSpaceCoordinates {
 
   displayY0: number;
   displayY1: number;
-}
+};
 
-export interface RenderingProperties {
+export type RenderingProperties = {
   boundedViewportSpace: BoundedViewportSpaceCoordinates;
   imageSpace: ImageSpaceCoordinates;
   leftLimit: number;
   rightLimit: number;
   viewportSpace: ViewportSpaceCoordinates;
-}
+};
 
 /**
  * Origin: top left corner of the viewport
  * Unit: viewport pixel
  */
-export interface ViewportSpaceCoordinates {
+export type ViewportSpaceCoordinates = {
   imageHeight: number;
   // Dimensions of the image in the viewport
   imageWidth: number;
@@ -70,7 +70,7 @@ export interface ViewportSpaceCoordinates {
   // Position of the last pixel in the viewport
   lastPixelX: number;
   lastPixelY: number;
-}
+};
 
 export function getRenderingProperties(
   viewport: Viewport,

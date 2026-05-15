@@ -18,10 +18,10 @@ const baseLUTComponents = [
   { color: [255, 0, 0], end: 135, id: '2', start: 10 },
 ] as LUTComponent[];
 
-export interface ColorPaletteProps {
+export type ColorPaletteProps = {
   onLUTComponentsUpdate(lutComponents: LUTComponent[] | undefined): void;
   viewport: undefined | Viewport;
-}
+};
 
 export const ColorPalette: FunctionComponent<ColorPaletteProps> = ({
   onLUTComponentsUpdate,

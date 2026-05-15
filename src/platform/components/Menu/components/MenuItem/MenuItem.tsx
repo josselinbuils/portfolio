@@ -2,15 +2,15 @@ import { type FunctionComponent, type JSX } from 'preact';
 
 import styles from './MenuItem.module.scss';
 
-export interface MenuItemDescriptor {
+export type MenuItemDescriptor = {
   onClick(): void;
   title: JSX.Element | string;
-}
+};
 
-export interface MenuItemProps extends MenuItemDescriptor {
+export type MenuItemProps = MenuItemDescriptor & {
   active: boolean;
   onMouseMove(): void;
-}
+};
 
 export const MenuItem: FunctionComponent<MenuItemProps> = ({
   active,

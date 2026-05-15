@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { Icon } from '../../Icon/Icon';
 import styles from './PostDetails.module.scss';
 
-export interface PostDetailsProps {
+export type PostDetailsProps = {
   author: string;
   currentSubreddit: string;
   onClickSubreddit(subreddit: string): void;
   since: string;
   stickied: boolean;
   subreddit: string;
-}
+};
 
 export const PostDetails: FunctionComponent<PostDetailsProps> = ({
   author,

@@ -47,12 +47,12 @@ const mouseTools: {
   },
 ];
 
-export interface LeftToolbarProps {
+export type LeftToolbarProps = {
   activeLeftTool: MouseTool;
   activeRightTool: MouseTool;
   onToolSelected(tool: MouseTool, button: MouseButton): void;
   viewport: Viewport;
-}
+};
 
 export const LeftToolbar: FunctionComponent<LeftToolbarProps> = ({
   activeLeftTool,

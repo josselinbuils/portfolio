@@ -5,10 +5,10 @@ import { type Music } from '@/apps/MP3Player/interfaces/Music';
 
 import styles from './MusicInfo.module.scss';
 
-export interface MusicInfoProps {
+export type MusicInfoProps = {
   className?: string;
   music: Music | undefined;
-}
+};
 
 export const MusicInfo: FunctionComponent<MusicInfoProps> = ({
   className,

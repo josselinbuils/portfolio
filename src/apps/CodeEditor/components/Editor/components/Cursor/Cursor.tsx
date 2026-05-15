@@ -8,12 +8,12 @@ import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './Cursor.module.scss';
 import { computeSegments, type Segment } from './utils/computeSegments';
 
-export interface CursorProps {
+export type CursorProps = {
   code: string;
   color: string;
   parent: HTMLTextAreaElement;
   selection: Selection;
-}
+};
 
 export const Cursor: FunctionComponent<CursorProps> = ({
   code,

@@ -6,15 +6,15 @@ import { isIntoBrackets } from './isIntoBrackets';
 
 const HISTORY_SIZE_LIMIT = 50;
 
-export interface HistoryEntry {
+export type HistoryEntry = {
   diffs: Diff[];
   selection: Selection;
-}
+};
 
-export interface HistoryState {
+export type HistoryState = {
   entries: HistoryEntry[];
   index: number;
-}
+};
 
 export class History {
   constructor(

@@ -18,12 +18,12 @@ import { decorateConsole } from './utils/decorateConsole';
 import { execCode } from './utils/execCode';
 import { observeMutations } from './utils/observeMutations';
 
-export interface ConsoleProps extends PropsWithChildren {
+export type ConsoleProps = PropsWithChildren & {
   active: boolean;
   className?: string;
   codeToExec: string | undefined;
   height: string;
-}
+};
 
 export const Console = forwardRef<HTMLDivElement, ConsoleProps>(
   ({ active, children, className, codeToExec = '', height }, ref) => {

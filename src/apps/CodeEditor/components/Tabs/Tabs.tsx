@@ -4,10 +4,10 @@ import { Children } from 'preact/compat';
 
 import styles from './Tabs.module.scss';
 
-export interface TabsProps {
+export type TabsProps = {
   children: JSX.Element | JSX.Element[];
   className?: string;
-}
+};
 
 export const Tabs: FunctionComponent<TabsProps> = ({ children, className }) => (
   <div aria-label="tabs" className={cn(styles.tabs, className)} role="tablist">

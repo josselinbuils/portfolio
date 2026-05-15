@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'preact';
 
-interface DocumentProps {
+type DocumentProps = {
   entryScriptUrl?: string;
-}
+};
 
 const Document: FunctionComponent<DocumentProps> = ({
   children,

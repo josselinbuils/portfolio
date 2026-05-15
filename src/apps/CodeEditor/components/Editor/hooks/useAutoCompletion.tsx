@@ -9,10 +9,10 @@ import { cancelable } from '@/platform/utils/cancelable';
 
 import { getOffsetPosition } from '../utils/getOffsetPosition';
 
-export interface Completion {
+export type Completion = {
   completion: string;
   newCursorOffset: number;
-}
+};
 
 export function useAutoCompletion({
   active,

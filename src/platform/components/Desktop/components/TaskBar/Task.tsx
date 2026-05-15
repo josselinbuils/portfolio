@@ -18,10 +18,10 @@ import { isAppTaskDescriptor } from './utils/isAppTaskDescriptor';
 
 const LOADER_APPARITION_DELAY_MS = 200;
 
-interface TaskProps extends HTMLAttributes<HTMLButtonElement> {
+type TaskProps = HTMLAttributes<HTMLButtonElement> & {
   taskButtonActive: boolean;
   taskDescriptor: TaskDescriptor;
-}
+};
 
 export const Task = forwardRef<HTMLButtonElement, TaskProps>(
   (

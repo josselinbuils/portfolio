@@ -15,7 +15,7 @@ const RIGHT_OFFSET = 5;
 const TOP_OFFSET = 5;
 const GRAPH_LINE_OFFSET = 10;
 
-export interface GraphPreviewProps {
+export type GraphPreviewProps = {
   activeLUTComponentID: string | undefined;
   className?: string;
   lutComponents: LUTComponent[];
@@ -24,7 +24,7 @@ export interface GraphPreviewProps {
     previewWidth: number,
     componentId: string,
   ): void;
-}
+};
 
 export const GraphPreview: FunctionComponent<GraphPreviewProps> = ({
   activeLUTComponentID,

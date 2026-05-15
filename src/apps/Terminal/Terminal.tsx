@@ -387,7 +387,7 @@ const Terminal: WindowComponent = ({
 
 export default Terminal;
 
-interface Execution {
+type Execution = {
   args: string[];
   executor: AsyncExecutor | Executor;
   id: number;
@@ -403,4 +403,4 @@ interface Execution {
     hideAnswer?: boolean,
   ): void;
   releaseHandler?(error: Error | undefined): void;
-}
+};

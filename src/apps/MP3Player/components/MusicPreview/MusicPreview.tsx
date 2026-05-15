@@ -7,10 +7,10 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { type Music } from '../../interfaces/Music';
 import styles from './MusicPreview.module.scss';
 
-export interface MusicPreviewProps {
+export type MusicPreviewProps = {
   music: Music | undefined;
   size: number;
-}
+};
 
 export const MusicPreview: FunctionComponent<MusicPreviewProps> = ({
   music,

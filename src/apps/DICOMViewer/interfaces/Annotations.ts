@@ -1,6 +1,6 @@
 import { type ViewType } from './ViewType';
 
-export interface Annotations {
+export type Annotations = {
   datasetName?: string;
   fps?: number;
   meanRenderDuration?: number;
@@ -9,4 +9,4 @@ export interface Annotations {
   windowCenter?: number;
   windowWidth?: number;
   zoom?: number;
-}
+};

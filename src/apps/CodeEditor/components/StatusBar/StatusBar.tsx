@@ -6,10 +6,10 @@ import styles from './StatusBar.module.scss';
 
 const DEBUG = true;
 
-export interface StatusBarProps {
+export type StatusBarProps = {
   className?: string;
   cursorPosition: CursorPosition;
-}
+};
 
 export const StatusBar: FunctionComponent<StatusBarProps> = ({
   className,

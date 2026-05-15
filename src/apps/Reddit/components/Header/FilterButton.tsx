@@ -15,10 +15,10 @@ const labelMap = {
   top: <FontAwesomeIcon icon={faChartBar} />,
 };
 
-export interface FilterButtonProps {
+export type FilterButtonProps = {
   filter: RedditFilter;
   onClick(filter: RedditFilter): void;
-}
+};
 
 export const FilterButton: FunctionComponent<FilterButtonProps> = ({
   filter,

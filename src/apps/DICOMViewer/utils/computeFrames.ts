@@ -8,7 +8,7 @@ import { V } from './math/Vector';
 
 type DicomImageFormat = 'int8' | 'int16' | 'rgb' | 'uint8' | 'uint16';
 
-interface FrameGeometry {
+type FrameGeometry = {
   dimensionsMm: number[];
   imageCenter: number[];
   imageNormal: number[];
@@ -16,7 +16,7 @@ interface FrameGeometry {
   imagePosition: number[];
   pixelSpacing: number[];
   sliceLocation: number;
-}
+};
 
 export function computeFrames(dicomFrames: DicomFrame[]): Frame[] {
   const firstFrame = dicomFrames[0];

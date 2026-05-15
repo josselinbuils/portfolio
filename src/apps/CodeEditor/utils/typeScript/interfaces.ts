@@ -4,11 +4,11 @@ export type WorkerAction<Handler extends WorkerActionGenericHandler> =
 export type WorkerActionArgs<Handler extends WorkerActionGenericHandler> =
   Handler['action']['args'];
 
-export interface WorkerActionGenericHandler<
+export type WorkerActionGenericHandler<
   Type extends string = string,
   Args extends any[] = any[],
   Result = unknown,
-> {
+> = {
   action: {
     args: Args;
     type: Type;
@@ -18,7 +18,7 @@ export interface WorkerActionGenericHandler<
     result: Result;
     uuid: string;
   };
-}
+};
 
 export type WorkerActionType<Handler extends WorkerActionGenericHandler> =
   Handler['action']['type'];

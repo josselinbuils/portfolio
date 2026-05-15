@@ -8,10 +8,10 @@ import { useElementSize } from '@/platform/hooks/useElementSize';
 
 import styles from './BarPreview.module.scss';
 
-export interface BarPreviewProps {
+export type BarPreviewProps = {
   className?: string;
   lutComponents: LUTComponent[];
-}
+};
 
 export const BarPreview: FunctionComponent<BarPreviewProps> = ({
   className,

@@ -8,11 +8,11 @@ import { uppercaseFirstLetter } from '../../utils/uppercaseFirstLetter';
 import { Icon } from '../Icon/Icon';
 import styles from './MenuItem.module.scss';
 
-export interface MenuItemProps {
+export type MenuItemProps = {
   activeSubreddit: string;
   onClickSubreddit(subreddit: string): void;
   subreddit: string;
-}
+};
 
 export const MenuItem: FunctionComponent<MenuItemProps> = ({
   activeSubreddit,

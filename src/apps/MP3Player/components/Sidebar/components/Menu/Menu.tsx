@@ -5,10 +5,10 @@ import { musicLists } from '@/apps/MP3Player/musicLists';
 
 import { MenuItem } from './MenuItem';
 
-export interface MenuProps {
+export type MenuProps = {
   activeMusicList: MusicList;
   onClickMusicList(playlist: MusicList): void;
-}
+};
 
 export const Menu: FunctionComponent<MenuProps> = ({
   activeMusicList,

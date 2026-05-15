@@ -6,9 +6,9 @@ import { Logo } from './components/Logo/Logo';
 import { Menu, type MenuProps } from './components/Menu/Menu';
 import styles from './Sidebar.module.scss';
 
-export interface SidebarProps extends MenuProps {
+export type SidebarProps = MenuProps & {
   className?: string;
-}
+};
 
 export const Sidebar: FunctionComponent<SidebarProps> = ({
   activeMusicList,

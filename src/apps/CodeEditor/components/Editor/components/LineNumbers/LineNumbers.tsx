@@ -8,13 +8,13 @@ import { getLineNumber } from '../../utils/getLineNumber';
 import { getTextWidth } from '../../utils/getTextWidth';
 import styles from './LineNumbers.module.scss';
 
-export interface LineNumbersProps {
+export type LineNumbersProps = {
   className?: string;
   code: string;
   editorWidth: number;
   scrollTop: number;
   selection: Selection;
-}
+};
 
 export const LineNumbers: FunctionComponent<LineNumbersProps> = ({
   className,

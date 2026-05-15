@@ -8,10 +8,10 @@ import {
   type PhotometricInterpretation,
 } from '../models/DicomFrame';
 
-interface Windowing {
+type Windowing = {
   windowCenter: number;
   windowWidth: number;
-}
+};
 
 export async function decodeFrames(files: File[]): Promise<DicomFrame[]> {
   let frames: DicomFrame[];

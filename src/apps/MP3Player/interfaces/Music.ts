@@ -1,4 +1,4 @@
-export interface Music {
+export type Music = {
   albumName: string;
   artistName: string;
   audio: string;
@@ -6,4 +6,4 @@ export interface Music {
   id: string;
   image: string;
   name: string;
-}
+};

@@ -4,10 +4,10 @@ import { type Position } from '@/platform/interfaces/Position';
 
 const POSITIONS = ['16%', '50%', '84%'];
 
-export interface RoundProps {
+export type RoundProps = {
   highlighted?: boolean;
   position: Position<number>;
-}
+};
 
 export const Round: FunctionComponent<RoundProps> = ({
   highlighted = false,

@@ -5,15 +5,15 @@ import { noop } from '@/platform/utils/noop';
 
 const RETRY_DELAY_MS = 2000;
 
-export interface BMError {
+export type BMError = {
   code: number;
   message: string;
-}
+};
 
-export interface BMMessage {
+export type BMMessage = {
   type: MessageType;
   value: any;
-}
+};
 
 export type MessageType =
   | 'authToken'

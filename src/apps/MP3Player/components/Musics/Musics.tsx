@@ -21,10 +21,10 @@ const ORDERS = [
   { name: 'Top Week', value: 'popularity_week' },
 ];
 
-export interface MusicsProps {
+export type MusicsProps = {
   className?: string;
   musicList: MusicList;
-}
+};
 
 export const Musics: FunctionComponent<MusicsProps> = ({
   className,

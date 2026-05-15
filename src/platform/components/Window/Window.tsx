@@ -12,7 +12,7 @@ const BUTTONS_WIDTH = 66;
 const MIN_USABLE_SIZE = 20;
 const TOOLBAR_HEIGHT = 22;
 
-export interface WindowProps extends PropsWithChildren {
+export type WindowProps = PropsWithChildren & {
   active: boolean;
   className?: string;
   id: number;
@@ -33,17 +33,17 @@ export interface WindowProps extends PropsWithChildren {
   titleClassName?: string;
   visibleAreaSize: Size | undefined;
   zIndex: number;
-}
+};
 
-interface WindowAnimation {
+type WindowAnimation = {
   finished(finishedCallback: () => void): WindowAnimation;
 
   ready(readyCallback: () => void): WindowAnimation;
 
   start(): void;
-}
+};
 
-interface WindowState {
+type WindowState = {
   animated: boolean;
   height: string;
   left: string;
@@ -53,7 +53,7 @@ interface WindowState {
   resizing: boolean;
   top: string;
   width: string;
-}
+};
 
 export class Window extends Component<WindowProps, WindowState> {
   visible = true;

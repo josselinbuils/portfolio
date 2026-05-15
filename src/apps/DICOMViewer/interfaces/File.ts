@@ -1,4 +1,4 @@
-export interface File {
+export type File = {
   content: ArrayBuffer;
   name: string;
-}
+};

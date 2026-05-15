@@ -9,7 +9,7 @@ import { useToolbar } from '@/platform/hooks/useToolbar';
 
 import styles from './TitleBar.module.scss';
 
-export interface TitleBarProps {
+export type TitleBarProps = {
   className: string | undefined;
   frozen: boolean;
   maximized: boolean;
@@ -19,7 +19,7 @@ export interface TitleBarProps {
   onToggleMaximize(): void;
   showMaximizeButton: boolean;
   title: string;
-}
+};
 
 export const TitleBar: FunctionComponent<TitleBarProps> = ({
   className,

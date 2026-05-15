@@ -14,7 +14,7 @@ import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
 import { type DrawTool, tools } from '../../tools/tools';
 import styles from './Toolbar.module.scss';
 
-export interface ToolbarProps {
+export type ToolbarProps = {
   canRedo: boolean;
   canUndo: boolean;
   fill: string;
@@ -36,7 +36,7 @@ export interface ToolbarProps {
   tolerance: number;
   tool: DrawTool;
   width: number;
-}
+};
 
 export const Toolbar: FunctionComponent<ToolbarProps> = ({
   canRedo,

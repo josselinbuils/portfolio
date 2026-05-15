@@ -18,10 +18,10 @@ const CLOSING_BRACKETS = [')', ']', '}'];
 const OPENING_BRACKETS = ['(', '[', '{'];
 const BRACKETS = [...OPENING_BRACKETS, ...CLOSING_BRACKETS];
 
-interface ProcessedToken extends Token {
+type ProcessedToken = Token & {
   content: (ProcessedToken | string)[] | ProcessedToken | string;
   offset: number;
-}
+};
 
 export function highlightCode(
   code: string,

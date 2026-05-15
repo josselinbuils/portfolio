@@ -25,9 +25,9 @@ const PINNED_ACTION_TASK_DESCRIPTORS = [
   },
 ];
 
-export interface TaskBarProps {
+export type TaskBarProps = {
   className?: string;
-}
+};
 
 export const TaskBar: FunctionComponent<TaskBarProps> = ({ className }) => {
   const { getToolProps, isToolActive, toolbarProps } = useToolbar('vertical');

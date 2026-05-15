@@ -5,13 +5,13 @@ import { forwardRef } from 'preact/compat';
 
 import styles from './FontAwesomeIcon.module.scss';
 
-export interface FontAwesomeIconProps extends Omit<
+export type FontAwesomeIconProps = Omit<
   HTMLAttributes<SVGSVGElement>,
   'icon'
-> {
+> & {
   className?: string;
   icon: IconDefinition;
-}
+};
 
 export const FontAwesomeIcon = forwardRef<SVGSVGElement, FontAwesomeIconProps>(
   ({ className, icon, ...forwardedProps }, ref) => {

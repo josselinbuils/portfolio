@@ -4,17 +4,17 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { useEventListener } from '@/platform/hooks/useEventListener';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
 
-export interface ToolbarProps {
+export type ToolbarProps = {
   className: string | undefined;
   onBlur(): void;
   onFocus(): void;
   role: JSX.AriaRole;
-}
+};
 
-export interface ToolProps<T extends HTMLElement> {
+export type ToolProps<T extends HTMLElement> = {
   ref: RefObject<T>;
   tabIndex: number;
-}
+};
 
 export function useToolbar(
   orientation: 'horizontal' | 'vertical' = 'horizontal',

@@ -1,3 +1,3 @@
-export interface Subreddit {
+export type Subreddit = {
   iconSrc: string | undefined;
-}
+};

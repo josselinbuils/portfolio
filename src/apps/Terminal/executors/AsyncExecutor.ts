@@ -2,14 +2,14 @@ import { type FunctionComponent } from 'preact';
 
 import { type Executor, type ExecutorProps } from './Executor';
 
-export interface AsyncExecutor extends FunctionComponent<
+export type AsyncExecutor = FunctionComponent<
   AsyncExecutorProps & ExecutorProps
-> {
+> & {
   async: boolean;
   suggest?(arg: string): string | undefined;
-}
+};
 
-interface AsyncExecutorProps {
+type AsyncExecutorProps = {
   alive: boolean;
   onQueryUser(
     query: string,
@@ -18,7 +18,7 @@ interface AsyncExecutorProps {
   ): void;
   onRelease(): void;
   userInput: string | undefined;
-}
+};
 
 export function isAsyncExecutor(
   executor: AsyncExecutor | Executor,

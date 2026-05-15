@@ -7,10 +7,10 @@ import { FontAwesomeIcon } from '@/platform/components/FontAwesomeIcon/FontAweso
 import { type Log, LogLevel } from '../../Log';
 import styles from './Logs.module.scss';
 
-export interface LogsProps {
+export type LogsProps = {
   className?: string;
   logs: Log[];
-}
+};
 
 export const Logs = forwardRef<HTMLDivElement, LogsProps>(
   ({ className, logs }, ref) => (

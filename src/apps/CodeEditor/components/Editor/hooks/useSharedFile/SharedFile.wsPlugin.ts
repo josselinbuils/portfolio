@@ -17,24 +17,24 @@ import { type SharedFileServerBaseAction } from './serverActions';
 
 const CURSOR_COLORS = ['red', 'fuchsia', 'yellow', 'orange', 'aqua', 'green'];
 
-interface ClientState {
+type ClientState = {
   cursorColor: string;
   filename: string | undefined;
   selection: Selection;
-}
+};
 
-interface FileState {
+type FileState = {
   code: string;
   codeHash: string;
   history: History;
-}
+};
 
-interface PersistentState {
+type PersistentState = {
   [filename: string]: {
     code: string;
     historyState: HistoryState;
   };
-}
+};
 
 const sharedFiles = fileSaver.defaultFiles.filter(({ shared }) => shared);
 

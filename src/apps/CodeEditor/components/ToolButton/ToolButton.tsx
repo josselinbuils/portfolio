@@ -8,14 +8,14 @@ import { WithTooltip } from '@/platform/components/Tooltip/WithTooltip';
 
 import styles from './ToolButton.module.scss';
 
-export interface ToolButtonProps extends Omit<
+export type ToolButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'icon' | 'title'
-> {
+> & {
   className?: string;
   icon: IconDefinition;
   title: JSX.Element | string;
-}
+};
 
 export const ToolButton = forwardRef<HTMLButtonElement, ToolButtonProps>(
   ({ children, className, icon, title, ...forwardedProps }, ref) => (

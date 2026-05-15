@@ -16,7 +16,7 @@ import styles from './Menu.module.scss';
 
 export { type MenuItemDescriptor };
 
-export interface MenuDescriptor {
+export type MenuDescriptor = {
   className?: string;
   enterWithTab?: boolean;
   items: MenuItemDescriptor[];
@@ -24,11 +24,11 @@ export interface MenuDescriptor {
   onActivate?(index: number): void;
   position?: Position;
   style?: CSSProperties;
-}
+};
 
-export interface MenuProps extends MenuDescriptor {
+export type MenuProps = MenuDescriptor & {
   onHide(): void;
-}
+};
 
 export const Menu: FunctionComponent<MenuProps> = ({
   className,

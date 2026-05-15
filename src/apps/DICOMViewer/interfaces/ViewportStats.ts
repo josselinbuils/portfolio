@@ -1,4 +1,4 @@
-export interface ViewportStats {
+export type ViewportStats = {
   fps: number;
   meanRenderDuration?: number;
-}
+};

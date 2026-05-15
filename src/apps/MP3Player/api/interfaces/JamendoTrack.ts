@@ -1,4 +1,4 @@
-export interface JamendoTrack {
+export type JamendoTrack = {
   album_id: string;
   album_image: string;
   album_name: string;
@@ -31,4 +31,4 @@ export interface JamendoTrack {
   shareurl: string;
   shorturl: string;
   waveform: { peaks: number[] };
-}
+};

@@ -6,10 +6,10 @@ import styles from './ColorPicker.module.scss';
 import { hexToRGB } from './utils/hexToRGB';
 import { rgbToHex } from './utils/rgbToHex';
 
-export interface ColorPickerProps {
+export type ColorPickerProps = {
   color: number[];
   onColorChange(color: number[]): void;
-}
+};
 
 export const ColorPicker: FunctionComponent<ColorPickerProps> = ({
   color,

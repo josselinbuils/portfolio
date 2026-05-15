@@ -13,14 +13,14 @@ import styles from './ViewportElement.module.scss';
 
 const ANNOTATIONS_REFRESH_DELAY = 500;
 
-export interface ViewportElementProps {
+export type ViewportElementProps = {
   className?: string;
   onCanvasMouseDown?(downEvent: MouseEvent): void;
   onError(message: string): void;
   onResize?(size: Size): void;
   onStatsUpdate?(stats: ViewportStats): void;
   viewport: Viewport;
-}
+};
 
 export const ViewportElement: FunctionComponent<ViewportElementProps> = ({
   className,

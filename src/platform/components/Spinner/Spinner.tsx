@@ -5,9 +5,9 @@ import styles from './Spinner.module.scss';
 
 const DISPLAY_DELAY_MS = 100;
 
-export interface SpinnerProps {
+export type SpinnerProps = {
   color: string;
-}
+};
 
 export const Spinner: FunctionComponent<SpinnerProps> = ({ color }) => {
   const [isDisplayed, setIsDisplayed] = useState(false);

@@ -6,11 +6,11 @@ import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 
 import styles from './MenuItem.module.scss';
 
-export interface MenuItemProps {
+export type MenuItemProps = {
   activeMusicList: MusicList;
   musicList: MusicList;
   onClickPlaylist(musicList: MusicList): void;
-}
+};
 
 export const MenuItem: FunctionComponent<MenuItemProps> = ({
   activeMusicList,

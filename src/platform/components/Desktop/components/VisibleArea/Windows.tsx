@@ -5,9 +5,9 @@ import { type Size } from '@/platform/interfaces/Size';
 import { type WindowInstance } from '@/platform/services/windowManager/WindowInstance';
 import { windowManager } from '@/platform/services/windowManager/windowManager';
 
-export interface WindowsProps {
+export type WindowsProps = {
   visibleAreaSize: Size | undefined;
-}
+};
 
 export const Windows: FunctionComponent<WindowsProps> = ({
   visibleAreaSize,

@@ -1,15 +1,15 @@
-export interface Image {
+export type Image = {
   resolutions?: ImageResolution[];
   source: ImageResolution;
-}
+};
 
-export interface ImageResolution {
+export type ImageResolution = {
   height: number;
   url: string;
   width: number;
-}
+};
 
-export interface RedditPost {
+export type RedditPost = {
   author: string;
   numComments: number;
   permalink: string;
@@ -21,4 +21,4 @@ export interface RedditPost {
   stickied: boolean;
   subreddit: string;
   title: string;
-}
+};

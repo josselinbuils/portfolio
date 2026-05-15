@@ -7,11 +7,11 @@ import { type LintIssue } from '@/apps/CodeEditor/interfaces/LanguageService';
 import { getOffsetPosition } from '../../utils/getOffsetPosition';
 import styles from './LintIssueHighlight.module.scss';
 
-export interface LintIssueHighlightProps {
+export type LintIssueHighlightProps = {
   code: string;
   issue: LintIssue;
   parent: HTMLTextAreaElement;
-}
+};
 
 export const LintIssueHighlight: FunctionComponent<LintIssueHighlightProps> = ({
   code,

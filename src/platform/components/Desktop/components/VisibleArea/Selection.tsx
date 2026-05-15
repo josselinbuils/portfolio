@@ -6,9 +6,9 @@ import { type Position } from '@/platform/interfaces/Position';
 
 import styles from './Selection.module.scss';
 
-export interface SelectionProps {
+export type SelectionProps = {
   startPosition: Position<number>;
-}
+};
 
 export const Selection: FunctionComponent<SelectionProps> = ({
   startPosition,

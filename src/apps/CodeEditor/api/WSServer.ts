@@ -15,13 +15,13 @@ const PERSISTENT_STATE_FILE_PATH = path.join(
   'persistentState.json',
 );
 
-export interface WSPlugin {
+export type WSPlugin = {
   loadPersistentState?(state: any): unknown;
   name: string;
   onWSClientClose?(wsClient: WSClient): unknown;
   onWSClientOpen?(wsClient: WSClient): unknown;
   reduce(wsClient: WSClient, action: Action<any>): unknown;
-}
+};
 
 export class WSServer {
   readonly clients = [] as WSClient[];
