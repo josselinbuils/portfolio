@@ -15,8 +15,6 @@
   box-shadow:
     0 0.1rem 0 rgba(0, 0, 0, 0.08),
     0 0.2rem 1.2rem rgba(0, 0, 0, 0.06);
-
-  gap: 0.4rem;
 }
 
 .group {
@@ -32,7 +30,6 @@
   }
 
   &:last-child {
-    margin-left: auto;
     padding-right: 0;
   }
 }
@@ -53,8 +50,6 @@
   height: 3.2rem;
   padding-right: 1.2rem;
   border-right: 0.1rem solid rgba(0, 0, 0, 0.08);
-
-  gap: 0.2rem;
 }
 
 .tool {
@@ -317,6 +312,38 @@
 
   input {
     accent-color: var(--primary-color);
+  }
+}
+
+.zoomLabel {
+  font-family: var(--font-family), sans-serif;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.4rem;
+  height: 3.2rem;
+  padding: 0 0.6rem;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+  letter-spacing: 0.02em;
+  color: #555;
+  border: 0.1rem solid rgba(0, 0, 0, 0.12);
+  border-radius: 0.8rem;
+  outline: none;
+  background: #f7f7f7;
+
+  &:hover {
+    color: #111;
+    background: #e8e8e8;
+  }
+
+  &:focus-visible {
+    outline: 0.2rem solid var(--primary-color);
+    outline-offset: 0.2rem;
   }
 }
 

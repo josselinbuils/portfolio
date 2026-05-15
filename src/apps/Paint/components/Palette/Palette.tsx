@@ -41,33 +41,44 @@ export const Palette: FunctionComponent<PaletteProps> = ({
       />
     </div>
     <div aria-label="Color palette" className={classes.swatches} role="group">
-      {swatches.map((c, i) => (
+      {swatches.map((color, index) => (
         <button
-          aria-label={c}
+          aria-label={color}
           className={classes.swatch}
-          key={i}
-          onClick={(e) => {
+          key={index}
+          onClick={(event) => {
             if (
-              (e as MouseEvent).shiftKey ||
-              (e as MouseEvent).metaKey ||
-              (e as MouseEvent).ctrlKey
-            )
-              onSetFill(c);
-            else onSetStroke(c);
+              (event as MouseEvent).shiftKey ||
+              (event as MouseEvent).metaKey ||
+              (event as MouseEvent).ctrlKey
+            ) {
+              onSetFill(color);
+            } else {
+              onSetStroke(color);
+            }
           }}
-          onContextMenu={(e) => {
-            (e as Event).preventDefault();
-            onSetFill(c);
+          onContextMenu={(event) => {
+            (event as Event).preventDefault();
+            onSetFill(color);
           }}
-          onKeyDown={(e) => {
-            const ke = e as KeyboardEvent;
-            if (ke.key !== 'Enter' && ke.key !== ' ') return;
-            ke.preventDefault();
-            if (ke.shiftKey || ke.metaKey || ke.ctrlKey) onSetFill(c);
-            else onSetStroke(c);
+          onKeyDown={(event) => {
+            const keyboardEvent = event as KeyboardEvent;
+            if (keyboardEvent.key !== 'Enter' && keyboardEvent.key !== ' ') {
+              return;
+            }
+            keyboardEvent.preventDefault();
+            if (
+              keyboardEvent.shiftKey ||
+              keyboardEvent.metaKey ||
+              keyboardEvent.ctrlKey
+            ) {
+              onSetFill(color);
+            } else {
+              onSetStroke(color);
+            }
           }}
-          style={{ background: c }}
-          title={`${c} — click: stroke · right-click / shift: fill`}
+          style={{ background: color }}
+          title={`${color} — click: stroke · right-click / shift: fill`}
           type="button"
         />
       ))}

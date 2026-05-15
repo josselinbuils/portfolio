@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
@@ -8,7 +8,14 @@ import { throttle } from '@/platform/utils/throttle';
 
 import { Palette } from './components/Palette/Palette';
 import { Toolbar } from './components/Toolbar/Toolbar';
-import { CANVAS_H, CANVAS_W, PRESET_PALETTE, UNDO_MAX } from './constants';
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  MIDDLE_BUTTON,
+  PRESET_PALETTE,
+  UNDO_MAX,
+  ZOOM_LEVELS,
+} from './constants';
 import classes from './Paint.module.css';
 import { commitText, INITIAL_TEXT_STATE, type TextState } from './tools/text';
 import { type DrawTool, tools } from './tools/tools';
@@ -17,6 +24,9 @@ import {
   type DrawToolListenerData,
 } from './types/DrawToolDescriptor';
 import { type SharedState } from './types/SharedState';
+import { computeFitCanvasSize } from './utils/computeFitCanvasSize';
+import { computeFitZoom } from './utils/computeFitZoom';
+import { getCanvasContext } from './utils/getCanvasContext';
 import { getPositionInCanvas } from './utils/getPositionInCanvas';
 
 const initialToolsState = Object.fromEntries(
@@ -34,10 +44,22 @@ export const Paint: WindowComponent = ({
     INITIAL_TEXT_STATE.fontFamily,
   );
   const [swatches, setSwatches] = useState<string[]>(PRESET_PALETTE);
-  const [status, setStatus] = useState(`${CANVAS_W} × ${CANVAS_H} · 1:1`);
+  const [status, setStatus] = useState(
+    `${CANVAS_WIDTH} × ${CANVAS_HEIGHT} · 100%`,
+  );
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  const [canvasSize, setCanvasSize] = useState({ h: CANVAS_H, w: CANVAS_W });
+  const [canvasSize, setCanvasSize] = useState({
+    height: CANVAS_HEIGHT,
+    width: CANVAS_WIDTH,
+  });
+  const [zoom, setZoom] = useState(1);
+  const [isPanning, setIsPanning] = useState(false);
+  const zoomRef = useRef(1);
+  const pendingPanOffsetRef = useRef<{ x: number; y: number } | null>(null);
+  const panOffsetRef = useRef({ x: 0, y: 0 });
+  const [panOffsetStyle, setPanOffsetStyle] = useState('translate(0px, 0px)');
+  const canvasSizeRef = useRef(canvasSize);
 
   const [sharedState, setSharedState] = useState<SharedState>({
     fillColor: '#ffffff',
@@ -59,13 +81,14 @@ export const Paint: WindowComponent = ({
     return toolsStateRef.current['text'] as TextState;
   }
 
-  function setTextInput(inp: HTMLTextAreaElement | null) {
-    toolsStateRef.current['text'] = { ...getTextState(), input: inp };
+  function setTextInput(input: HTMLTextAreaElement | null) {
+    toolsStateRef.current['text'] = { ...getTextState(), input };
   }
 
   const mainRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
-  const stageInnerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const viewportInnerRef = useRef<HTMLDivElement>(null);
 
   const hiddenColorRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,56 +104,110 @@ export const Paint: WindowComponent = ({
   }, []);
 
   useEffect(() => {
-    const context = mainRef.current!.getContext('2d')!;
+    canvasSizeRef.current = canvasSize;
+  }, [canvasSize]);
+
+  function resetPanOffset() {
+    panOffsetRef.current = { x: 0, y: 0 };
+    pendingPanOffsetRef.current = null;
+    setPanOffsetStyle('translate(0px, 0px)');
+  }
+
+  useEffect(() => {
+    if (!mainRef.current) {
+      return;
+    }
+    const context = getCanvasContext(mainRef.current);
     if (pendingImageRef.current) {
       context.drawImage(pendingImageRef.current, 0, 0);
       pendingImageRef.current = null;
     } else {
       context.fillStyle = '#ffffff';
-      context.fillRect(0, 0, canvasSize.w, canvasSize.h);
+      context.fillRect(0, 0, canvasSize.width, canvasSize.height);
     }
-    setStatus(`${canvasSize.w} × ${canvasSize.h} · 1:1`);
   }, [canvasSize]);
 
+  useEffect(() => {
+    setStatus(
+      `${canvasSize.width} × ${canvasSize.height} · ${Math.round(zoom * 100)}%`,
+    );
+  }, [zoom, canvasSize.width, canvasSize.height]);
+
+  useLayoutEffect(() => {
+    if (!viewportRef.current) {
+      return;
+    }
+    setCanvasSize(computeFitCanvasSize(viewportRef.current));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (pendingPanOffsetRef.current) {
+      const { x, y } = pendingPanOffsetRef.current;
+      panOffsetRef.current = { x, y };
+      if (viewportInnerRef.current) {
+        viewportInnerRef.current.style.transform = `translate(${x}px, ${y}px)`;
+      }
+      setPanOffsetStyle(`translate(${x}px, ${y}px)`);
+      pendingPanOffsetRef.current = null;
+    }
+  }, [zoom, canvasSize]);
+
   function snapshot() {
-    const canvas = mainRef.current!;
-    const context = canvas.getContext('2d')!;
+    if (!mainRef.current) {
+      return;
+    }
+    const canvas = mainRef.current;
+    const context = getCanvasContext(canvas);
     undoStack.current.push(
       context.getImageData(0, 0, canvas.width, canvas.height),
     );
-    if (undoStack.current.length > UNDO_MAX) undoStack.current.shift();
+    if (undoStack.current.length > UNDO_MAX) {
+      undoStack.current.shift();
+    }
     redoStack.current.splice(0);
     setCanUndo(true);
     setCanRedo(false);
   }
 
   function undo() {
-    if (!undoStack.current.length) return;
-    const canvas = mainRef.current!;
-    const context = canvas.getContext('2d')!;
+    if (!undoStack.current.length || !mainRef.current) {
+      return;
+    }
+    const canvas = mainRef.current;
+    const context = getCanvasContext(canvas);
     redoStack.current.push(
       context.getImageData(0, 0, canvas.width, canvas.height),
     );
-    context.putImageData(undoStack.current.pop()!, 0, 0);
+    const imageData = undoStack.current.pop();
+    if (imageData) {
+      context.putImageData(imageData, 0, 0);
+    }
     setCanUndo(undoStack.current.length > 0);
     setCanRedo(true);
   }
 
   function redo() {
-    if (!redoStack.current.length) return;
-    const canvas = mainRef.current!;
-    const context = canvas.getContext('2d')!;
+    if (!redoStack.current.length || !mainRef.current) {
+      return;
+    }
+    const canvas = mainRef.current;
+    const context = getCanvasContext(canvas);
     undoStack.current.push(
       context.getImageData(0, 0, canvas.width, canvas.height),
     );
-    context.putImageData(redoStack.current.pop()!, 0, 0);
+    const imageData = redoStack.current.pop();
+    if (imageData) {
+      context.putImageData(imageData, 0, 0);
+    }
     setCanUndo(true);
     setCanRedo(redoStack.current.length > 0);
   }
 
   function setTool(name: DrawTool) {
     setCurrentTool(name);
-    commitText(getTextState(), setTextInput, mainRef.current!, snapshot);
+    if (mainRef.current) {
+      commitText(getTextState(), setTextInput, mainRef.current, snapshot);
+    }
   }
 
   function setStroke(color: string) {
@@ -164,35 +241,46 @@ export const Paint: WindowComponent = ({
   }
 
   function openColorPicker(target: 'fill' | 'stroke') {
-    const inp = hiddenColorRef.current!;
-    inp.value =
+    if (!hiddenColorRef.current) {
+      return;
+    }
+    const colorInput = hiddenColorRef.current;
+    colorInput.value =
       target === 'stroke' ? sharedState.strokeColor : sharedState.fillColor;
-    inp.oninput = (event) => {
+    colorInput.oninput = (event) => {
       const color = (event.target as HTMLInputElement).value;
-      if (target === 'stroke') setStroke(color);
-      else setFill(color);
+      if (target === 'stroke') {
+        setStroke(color);
+      } else {
+        setFill(color);
+      }
     };
-    inp.click();
+    colorInput.click();
   }
 
   function addSwatch() {
-    const inp = hiddenColorRef.current!;
-    inp.value = sharedState.strokeColor;
-    inp.oninput = (event) =>
+    if (!hiddenColorRef.current) {
+      return;
+    }
+    const colorInput = hiddenColorRef.current;
+    colorInput.value = sharedState.strokeColor;
+    colorInput.oninput = (event) =>
       setSwatches((swatches) => [
         ...swatches,
         (event.target as HTMLInputElement).value,
       ]);
-    inp.click();
+    colorInput.click();
   }
 
   function openImage() {
-    fileInputRef.current!.click();
+    fileInputRef.current?.click();
   }
 
   function handleImageFile(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -202,27 +290,45 @@ export const Paint: WindowComponent = ({
       redoStack.current.splice(0);
       setCanUndo(false);
       setCanRedo(false);
+      const fitZoom = computeFitZoom(
+        viewportRef.current!,
+        img.naturalWidth,
+        img.naturalHeight,
+      );
+      zoomRef.current = fitZoom;
+      setZoom(fitZoom);
+      resetPanOffset();
       pendingImageRef.current = img;
-      setCanvasSize({ h: img.naturalHeight, w: img.naturalWidth });
+      setCanvasSize({ height: img.naturalHeight, width: img.naturalWidth });
       URL.revokeObjectURL(url);
-      fileInputRef.current!.value = '';
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     };
 
     img.src = url;
   }
 
   function clearCanvas() {
-    if (!confirm('Start a new image? Unsaved work will be lost.')) return;
-    snapshot();
-    const canvas = mainRef.current!;
-    const context = canvas.getContext('2d')!;
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    if (!confirm('Start a new image? Unsaved work will be lost.')) {
+      return;
+    }
+    undoStack.current.splice(0);
+    redoStack.current.splice(0);
+    setCanUndo(false);
+    setCanRedo(false);
+    zoomRef.current = 1;
+    setZoom(1);
+    resetPanOffset();
+    if (!viewportRef.current) {
+      return;
+    }
+    setCanvasSize(computeFitCanvasSize(viewportRef.current));
   }
 
   function createListenerData(): DrawToolListenerData {
-    if (!mainRef.current || !overlayRef.current) {
-      throw new Error('Main or overlay canvas ref null');
+    if (!mainRef.current || !overlayRef.current || !viewportInnerRef.current) {
+      throw new Error('Canvas or viewport refs null');
     }
     return {
       getSharedState: () => sharedState,
@@ -232,11 +338,15 @@ export const Paint: WindowComponent = ({
       setSharedState,
       setToolState: setToolState(currentTool),
       snapshot,
-      stageInner: stageInnerRef.current!,
+      viewportInner: viewportInnerRef.current,
     };
   }
 
   function onMouseDown(event: MouseEvent) {
+    if (event.button === MIDDLE_BUTTON) {
+      return;
+    }
+
     if (!mainRef.current || !overlayRef.current) {
       return;
     }
@@ -260,7 +370,7 @@ export const Paint: WindowComponent = ({
       const { x, y } = getPositionInCanvas(event, mainRef.current);
       const { height, width } = mainRef.current;
       setStatus(
-        `${width} × ${height}   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
+        `${width} × ${height}   ·   ${Math.round(zoomRef.current * 100)}%   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
       );
     }, 33);
 
@@ -268,6 +378,205 @@ export const Paint: WindowComponent = ({
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
+
+  function applyZoom(newZoom: number) {
+    const zoomRatio = newZoom / zoomRef.current;
+    pendingPanOffsetRef.current = {
+      x: panOffsetRef.current.x * zoomRatio,
+      y: panOffsetRef.current.y * zoomRatio,
+    };
+    zoomRef.current = newZoom;
+    setZoom(newZoom);
+  }
+
+  function zoomIn() {
+    const level = ZOOM_LEVELS.find((level) => level > zoomRef.current);
+    if (level !== undefined) {
+      applyZoom(level);
+    }
+  }
+
+  function zoomOut() {
+    const level = [...ZOOM_LEVELS]
+      .reverse()
+      .find((level) => level < zoomRef.current);
+    if (level !== undefined) {
+      applyZoom(level);
+    }
+  }
+
+  function resetZoom() {
+    resetPanOffset();
+    zoomRef.current = 1;
+    setZoom(1);
+  }
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) {
+      return;
+    }
+
+    function handleWheel(event: WheelEvent) {
+      if (!event.ctrlKey && !event.metaKey) {
+        return;
+      }
+      event.preventDefault();
+
+      const currentViewport = viewportRef.current;
+      if (!currentViewport) {
+        return;
+      }
+
+      const prevZoom = zoomRef.current;
+      const newZoom =
+        event.deltaY < 0
+          ? ZOOM_LEVELS.find((level) => level > prevZoom)
+          : [...ZOOM_LEVELS].reverse().find((level) => level < prevZoom);
+
+      if (newZoom === undefined) {
+        return;
+      }
+
+      const viewportRect = currentViewport.getBoundingClientRect();
+      const cursorX = event.clientX - viewportRect.left;
+      const cursorY = event.clientY - viewportRect.top;
+      const viewportStyle = window.getComputedStyle(currentViewport);
+      const paddingLeft = parseFloat(viewportStyle.paddingLeft);
+      const paddingRight = parseFloat(viewportStyle.paddingRight);
+      const paddingTop = parseFloat(viewportStyle.paddingTop);
+      const paddingBottom = parseFloat(viewportStyle.paddingBottom);
+      const availableWidth =
+        currentViewport.clientWidth - paddingLeft - paddingRight;
+      const availableHeight =
+        currentViewport.clientHeight - paddingTop - paddingBottom;
+
+      const prevCanvasDisplayWidth = canvasSizeRef.current.width * prevZoom;
+      const prevCanvasDisplayHeight = canvasSizeRef.current.height * prevZoom;
+      const newCanvasDisplayWidth = canvasSizeRef.current.width * newZoom;
+      const newCanvasDisplayHeight = canvasSizeRef.current.height * newZoom;
+
+      // Natural margin is the centering offset flex gives when canvas fits the
+      // viewport; it clamps to 0 when the canvas is larger (margin: auto → 0).
+      const prevNaturalMarginX = Math.max(
+        0,
+        (availableWidth - prevCanvasDisplayWidth) / 2,
+      );
+      const prevNaturalMarginY = Math.max(
+        0,
+        (availableHeight - prevCanvasDisplayHeight) / 2,
+      );
+      const newNaturalMarginX = Math.max(
+        0,
+        (availableWidth - newCanvasDisplayWidth) / 2,
+      );
+      const newNaturalMarginY = Math.max(
+        0,
+        (availableHeight - newCanvasDisplayHeight) / 2,
+      );
+
+      // Canvas pixel under the cursor before zoom — must stay there after zoom.
+      const prevCanvasLeft =
+        paddingLeft + prevNaturalMarginX + panOffsetRef.current.x;
+      const prevCanvasTop =
+        paddingTop + prevNaturalMarginY + panOffsetRef.current.y;
+      const imageX = (cursorX - prevCanvasLeft) / prevZoom;
+      const imageY = (cursorY - prevCanvasTop) / prevZoom;
+
+      pendingPanOffsetRef.current = {
+        x: cursorX - paddingLeft - newNaturalMarginX - imageX * newZoom,
+        y: cursorY - paddingTop - newNaturalMarginY - imageY * newZoom,
+      };
+      zoomRef.current = newZoom;
+      setZoom(newZoom);
+    }
+
+    function handleMiddleMouseDown(event: MouseEvent) {
+      if (event.button !== MIDDLE_BUTTON) {
+        return;
+      }
+      const currentViewport = viewportRef.current;
+      if (!currentViewport) {
+        return;
+      }
+      event.preventDefault();
+
+      const startMouseX = event.clientX;
+      const startMouseY = event.clientY;
+      const startPanOffsetX = panOffsetRef.current.x;
+      const startPanOffsetY = panOffsetRef.current.y;
+      const viewportStyle = window.getComputedStyle(currentViewport);
+      const paddingLeft = parseFloat(viewportStyle.paddingLeft);
+      const paddingRight = parseFloat(viewportStyle.paddingRight);
+      const paddingTop = parseFloat(viewportStyle.paddingTop);
+      const paddingBottom = parseFloat(viewportStyle.paddingBottom);
+
+      setIsPanning(true);
+
+      function onMouseMove(moveEvent: MouseEvent) {
+        if (!currentViewport) {
+          return;
+        }
+        const deltaX = moveEvent.clientX - startMouseX;
+        const deltaY = moveEvent.clientY - startMouseY;
+        const viewportWidth = currentViewport.clientWidth;
+        const viewportHeight = currentViewport.clientHeight;
+        const availableWidth = viewportWidth - paddingLeft - paddingRight;
+        const availableHeight = viewportHeight - paddingTop - paddingBottom;
+        const canvasDisplayWidth =
+          canvasSizeRef.current.width * zoomRef.current;
+        const canvasDisplayHeight =
+          canvasSizeRef.current.height * zoomRef.current;
+
+        // Natural canvas origin: centered when canvas fits, at padding edge when large.
+        const naturalCanvasLeft =
+          paddingLeft + Math.max(0, (availableWidth - canvasDisplayWidth) / 2);
+        const naturalCanvasTop =
+          paddingTop + Math.max(0, (availableHeight - canvasDisplayHeight) / 2);
+
+        panOffsetRef.current = {
+          x: Math.max(
+            40 - canvasDisplayWidth - naturalCanvasLeft,
+            Math.min(
+              viewportWidth - 40 - naturalCanvasLeft,
+              startPanOffsetX + deltaX,
+            ),
+          ),
+          y: Math.max(
+            40 - canvasDisplayHeight - naturalCanvasTop,
+            Math.min(
+              viewportHeight - 40 - naturalCanvasTop,
+              startPanOffsetY + deltaY,
+            ),
+          ),
+        };
+
+        if (viewportInnerRef.current) {
+          viewportInnerRef.current.style.transform = `translate(${panOffsetRef.current.x}px, ${panOffsetRef.current.y}px)`;
+        }
+      }
+
+      function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        setIsPanning(false);
+        setPanOffsetStyle(
+          `translate(${panOffsetRef.current.x}px, ${panOffsetRef.current.y}px)`,
+        );
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+
+    viewport.addEventListener('wheel', handleWheel, { passive: false });
+    viewport.addEventListener('mousedown', handleMiddleMouseDown);
+
+    return () => {
+      viewport.removeEventListener('wheel', handleWheel);
+      viewport.removeEventListener('mousedown', handleMiddleMouseDown);
     };
   }, []);
 
@@ -291,8 +600,9 @@ export const Paint: WindowComponent = ({
     active,
   );
 
-  const stageCursor =
-    currentTool === 'text'
+  const viewportCursor = isPanning
+    ? classes.cursorGrab
+    : currentTool === 'text'
       ? classes.cursorText
       : currentTool === 'paintBucket'
         ? classes.cursorBucket
@@ -301,8 +611,8 @@ export const Paint: WindowComponent = ({
   return (
     <Window
       active={active}
-      minHeight={500}
-      minWidth={800}
+      minHeight={600}
+      minWidth={960}
       ref={windowRef}
       resizable
       title="Paint"
@@ -323,35 +633,43 @@ export const Paint: WindowComponent = ({
           onOpenColorPicker={openColorPicker}
           onOpenImage={openImage}
           onRedo={redo}
+          onResetZoom={resetZoom}
           onSetTool={setTool}
           onSetWidth={setWidth}
           onToleranceChange={setTolerance}
           onUndo={undo}
+          onZoomIn={zoomIn}
+          onZoomOut={zoomOut}
           stroke={sharedState.strokeColor}
           tolerance={sharedState.tolerance}
           tool={currentTool}
           width={sharedState.width}
+          zoom={zoom}
         />
 
-        <div className={cn(classes.stage, stageCursor)}>
+        <div className={cn(classes.viewport, viewportCursor)} ref={viewportRef}>
           <div
-            className={classes.stageInner}
-            ref={stageInnerRef}
-            style={{ height: canvasSize.h, width: canvasSize.w }}
+            className={classes.viewportInner}
+            ref={viewportInnerRef}
+            style={{
+              height: canvasSize.height * zoom,
+              transform: panOffsetStyle,
+              width: canvasSize.width * zoom,
+            }}
           >
             <canvas
               className={cn(classes.canvasLayer, classes.mainCanvas)}
-              height={canvasSize.h}
-              onContextMenu={(e) => e.preventDefault()}
+              height={canvasSize.height}
+              onContextMenu={(event) => event.preventDefault()}
               onMouseDown={onMouseDown}
               ref={mainRef}
-              width={canvasSize.w}
+              width={canvasSize.width}
             />
             <canvas
               className={cn(classes.canvasLayer, classes.overlayCanvas)}
-              height={canvasSize.h}
+              height={canvasSize.height}
               ref={overlayRef}
-              width={canvasSize.w}
+              width={canvasSize.width}
             />
           </div>
         </div>

@@ -29,7 +29,7 @@ export type DrawToolListenerData<DrawToolState = unknown> = {
   setSharedState: StateSetterDispatch<SharedState>;
   setToolState: StateSetterDispatch<DrawToolState>;
   snapshot: () => void;
-  stageInner: HTMLDivElement;
+  viewportInner: HTMLDivElement;
 };
 
 export type StateSetterDispatch<State> = (

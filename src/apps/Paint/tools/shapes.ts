@@ -222,7 +222,7 @@ function handleShapeMouseUp(
   if (x0 !== endX || y0 !== endY) {
     snapshot();
     drawShape(
-      mainCanvas.getContext('2d')!,
+      getCanvasContext(mainCanvas),
       getSharedState(),
       shapeTool,
       x0,

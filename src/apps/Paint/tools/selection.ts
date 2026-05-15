@@ -150,7 +150,9 @@ export function selectAll({
   setToolState,
 }: DrawToolListenerData<SelectionState>) {
   const { antsRaf } = getToolState();
-  if (antsRaf) cancelAnimationFrame(antsRaf);
+  if (antsRaf) {
+    cancelAnimationFrame(antsRaf);
+  }
 
   const selection: Selection = {
     height: mainCanvas.height,

@@ -101,7 +101,9 @@ function bfsConnectedComponent(
 
 function cancelAnts(data: DrawToolListenerData<MagicWandState>): void {
   const { antsRaf } = data.getToolState();
-  if (antsRaf) cancelAnimationFrame(antsRaf);
+  if (antsRaf) {
+    cancelAnimationFrame(antsRaf);
+  }
   getCanvasContext(data.overlayCanvas).clearRect(
     0,
     0,
@@ -141,7 +143,9 @@ function deleteMagicSelection(
   const { getSharedState, mainCanvas, setSharedState, snapshot } = data;
   const { selection } = getSharedState();
 
-  if (!selection) return;
+  if (!selection) {
+    return;
+  }
 
   snapshot();
   const context = getCanvasContext(mainCanvas);
@@ -228,15 +232,27 @@ async function handleMagicWand(
 
   for (let py = 0; py < height; py++) {
     for (let px = 0; px < width; px++) {
-      if (!mask[py * width + px]) continue;
-      if (px < minX) minX = px;
-      if (px > maxX) maxX = px;
-      if (py < minY) minY = py;
-      if (py > maxY) maxY = py;
+      if (!mask[py * width + px]) {
+        continue;
+      }
+      if (px < minX) {
+        minX = px;
+      }
+      if (px > maxX) {
+        maxX = px;
+      }
+      if (py < minY) {
+        minY = py;
+      }
+      if (py > maxY) {
+        maxY = py;
+      }
     }
   }
 
-  if (maxX < 0) return;
+  if (maxX < 0) {
+    return;
+  }
 
   const boundary = traceBoundary(mask, width, height);
 
@@ -284,7 +300,9 @@ function traceBoundary(
 
   for (let py = 0; py < height; py++) {
     for (let px = 0; px < width; px++) {
-      if (!mask[py * width + px]) continue;
+      if (!mask[py * width + px]) {
+        continue;
+      }
 
       const topLeft = py * stride + px;
       const topRight = topLeft + 1;
@@ -314,7 +332,9 @@ function traceBoundary(
   const visited = new Uint8Array(vertexCount);
 
   for (const startKey of edgeStarts) {
-    if (visited[startKey]) continue;
+    if (visited[startKey]) {
+      continue;
+    }
 
     const startX = startKey % stride;
     const startY = Math.floor(startKey / stride);

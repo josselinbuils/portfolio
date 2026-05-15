@@ -86,7 +86,8 @@
 
   button {
     line-height: 2rem;
-    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-xs) var(--spacing-s);
+    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-xs)
+      var(--spacing-s);
     border-radius: var(--radius-s);
 
     &[aria-current='true'] {

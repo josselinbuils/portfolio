@@ -5,6 +5,7 @@ import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
 } from '../types/DrawToolDescriptor';
+import { getCanvasContext } from '../utils/getCanvasContext';
 import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 
 export type TextState = {
@@ -31,28 +32,34 @@ export const textDescriptor = {
 
 export function commitText(
   { input }: TextState,
-  setInput: (inp: HTMLTextAreaElement | null) => void,
+  setInput: (input: HTMLTextAreaElement | null) => void,
   mainCanvas: HTMLCanvasElement,
   snapshot: () => void,
 ): void {
-  if (!input) return;
-  const txt = input.value;
-  const x = +input.dataset.x!;
-  const y = +input.dataset.y!;
-  const size = +input.dataset.size!;
-  const fam = input.dataset.family!;
-  const color = input.dataset.color!;
+  if (!input) {
+    return;
+  }
+  const text = input.value;
+  const x = +(input.dataset.x ?? '0');
+  const y = +(input.dataset.y ?? '0');
+  const size = +(input.dataset.size ?? '0');
+  const fontFamily = input.dataset.family ?? '';
+  const color = input.dataset.color ?? '';
   input.remove();
   setInput(null);
-  if (!txt) return;
+  if (!text) {
+    return;
+  }
   snapshot();
-  const context = mainCanvas.getContext('2d')!;
+  const context = getCanvasContext(mainCanvas);
   context.fillStyle = color;
-  context.font = `${size}px ${fam}`;
+  context.font = `${size}px ${fontFamily}`;
   context.textBaseline = 'top';
-  txt
+  text
     .split('\n')
-    .forEach((ln, i) => context.fillText(ln, x, y + i * size * 1.2));
+    .forEach((line, lineIndex) =>
+      context.fillText(line, x, y + lineIndex * size * 1.2),
+    );
 }
 
 function openText(
@@ -63,7 +70,7 @@ function openText(
     mainCanvas,
     setToolState,
     snapshot,
-    stageInner,
+    viewportInner,
   }: DrawToolListenerData<TextState>,
 ): void {
   if (event.button !== MAIN_BUTTON) {
@@ -81,45 +88,46 @@ function openText(
   commitText(state, setInput, mainCanvas, snapshot);
 
   const rect = mainCanvas.getBoundingClientRect();
-  const inp = document.createElement('textarea');
+  const textarea = document.createElement('textarea');
 
-  inp.setAttribute(
+  textarea.setAttribute(
     'aria-label',
     'Text input — Enter to commit, Escape to cancel',
   );
-  inp.className = state.className;
-  inp.style.left = `${position.x * (rect.width / mainCanvas.width)}px`;
-  inp.style.top = `${position.y * (rect.height / mainCanvas.height)}px`;
-  inp.style.font = `${state.fontSize}px ${state.fontFamily}`;
-  inp.style.color = getSharedState().strokeColor;
-  inp.style.lineHeight = '1.2';
-  inp.dataset.x = String(position.x);
-  inp.dataset.y = String(position.y);
-  inp.dataset.size = String(state.fontSize);
-  inp.dataset.family = state.fontFamily;
-  inp.dataset.color = strokeColor;
+  textarea.className = state.className;
+  const scale = rect.width / mainCanvas.width;
+  textarea.style.left = `${position.x * scale}px`;
+  textarea.style.top = `${position.y * scale}px`;
+  textarea.style.font = `${state.fontSize * scale}px ${state.fontFamily}`;
+  textarea.style.color = getSharedState().strokeColor;
+  textarea.style.lineHeight = '1.2';
+  textarea.dataset.x = String(position.x);
+  textarea.dataset.y = String(position.y);
+  textarea.dataset.size = String(state.fontSize);
+  textarea.dataset.family = state.fontFamily;
+  textarea.dataset.color = strokeColor;
 
-  stageInner.appendChild(inp);
-  setInput(inp);
-  requestAnimationFrame(() => inp.focus());
+  viewportInner.appendChild(textarea);
+  setInput(textarea);
+  requestAnimationFrame(() => textarea.focus());
 
-  inp.addEventListener('input', () => {
-    inp.style.width = Math.max(60, inp.scrollWidth + 8) + 'px';
-    inp.style.height = Math.max(20, inp.scrollHeight + 4) + 'px';
+  textarea.addEventListener('input', () => {
+    textarea.style.width = Math.max(60, textarea.scrollWidth + 8) + 'px';
+    textarea.style.height = Math.max(20, textarea.scrollHeight + 4) + 'px';
   });
 
-  inp.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      inp.value = '';
-      commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot);
+  textarea.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      textarea.value = '';
+      commitText({ ...state, input: textarea }, setInput, mainCanvas, snapshot);
     }
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot);
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      commitText({ ...state, input: textarea }, setInput, mainCanvas, snapshot);
     }
   });
 
-  inp.addEventListener('blur', () =>
-    commitText({ ...state, input: inp }, setInput, mainCanvas, snapshot),
+  textarea.addEventListener('blur', () =>
+    commitText({ ...state, input: textarea }, setInput, mainCanvas, snapshot),
   );
 }

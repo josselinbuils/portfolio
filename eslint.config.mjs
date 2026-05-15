@@ -45,6 +45,7 @@ export default defineConfig([
         { ignoreRestSiblings: true },
       ],
       '@typescript-eslint/no-var-requires': 'off', // Applied to js files
+      curly: 'error',
       'default-param-last': 'off', // False positives
       'no-duplicate-imports': ['error', { includeExports: true }],
       'no-empty-function': 'off',

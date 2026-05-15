@@ -2,6 +2,8 @@ import { faFile } from '@fortawesome/free-regular-svg-icons/faFile';
 import { faFolderOpen } from '@fortawesome/free-regular-svg-icons/faFolderOpen';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faMagnifyingGlassMinus } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlassMinus';
+import { faMagnifyingGlassPlus } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlassPlus';
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons/faRotateLeft';
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons/faRotateRight';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +12,7 @@ import { type FunctionComponent } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { FONT_OPTIONS, WIDTH_PRESETS } from '../../constants';
+import { FONT_OPTIONS, WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
 import { type DrawTool, tools } from '../../tools/tools';
 import classes from './Toolbar.module.css';
 
@@ -28,14 +30,18 @@ export type ToolbarProps = {
   onOpenColorPicker(target: 'fill' | 'stroke'): void;
   onOpenImage(): void;
   onRedo(): void;
+  onResetZoom(): void;
   onSetTool(t: DrawTool): void;
   onSetWidth(v: number): void;
   onToleranceChange(v: number): void;
   onUndo(): void;
+  onZoomIn(): void;
+  onZoomOut(): void;
   stroke: string;
   tolerance: number;
   tool: DrawTool;
   width: number;
+  zoom: number;
 };
 
 export const Toolbar: FunctionComponent<ToolbarProps> = ({
@@ -52,14 +58,18 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   onOpenColorPicker,
   onOpenImage,
   onRedo,
+  onResetZoom,
   onSetTool,
   onSetWidth,
   onToleranceChange,
   onUndo,
+  onZoomIn,
+  onZoomOut,
   stroke,
   tolerance,
   tool,
   width,
+  zoom,
 }) => {
   const [showWidthPopover, setShowWidthPopover] = useState(false);
   const [widthPopoverPos, setWidthPopoverPos] = useState({ left: 0, top: 0 });
@@ -67,7 +77,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   const widthPopoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!showWidthPopover) return;
+    if (!showWidthPopover) {
+      return;
+    }
 
     function onClickOutside(event: MouseEvent) {
       if (widthBtnRef.current?.contains(event.target as Node)) {
@@ -103,8 +115,11 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   }, [showWidthPopover]);
 
   function openWidthPopover() {
-    const r = widthBtnRef.current!.getBoundingClientRect();
-    setWidthPopoverPos({ left: r.left, top: r.bottom + 10 });
+    if (!widthBtnRef.current) {
+      return;
+    }
+    const rect = widthBtnRef.current.getBoundingClientRect();
+    setWidthPopoverPos({ left: rect.left, top: rect.bottom + 10 });
     setShowWidthPopover(true);
   }
 
@@ -272,14 +287,52 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             }
             value={fontFamily}
           >
-            {FONT_OPTIONS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
+            {FONT_OPTIONS.map((fontOption) => (
+              <option key={fontOption.value} value={fontOption.value}>
+                {fontOption.label}
               </option>
             ))}
           </select>
         </div>
       )}
+
+      {/* Zoom */}
+      <div
+        aria-label="Zoom"
+        className={classes.group}
+        role="group"
+        style={{ marginLeft: 'auto' }}
+      >
+        <button
+          aria-label="Zoom out"
+          className={classes.actionBtn}
+          disabled={zoom <= ZOOM_LEVELS[0]}
+          onClick={onZoomOut}
+          title="Zoom out"
+          type="button"
+        >
+          <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
+        </button>
+        <button
+          aria-label={`Zoom: ${Math.round(zoom * 100)}% — click to reset`}
+          className={classes.zoomLabel}
+          onClick={onResetZoom}
+          title="Reset zoom"
+          type="button"
+        >
+          {Math.round(zoom * 100)}%
+        </button>
+        <button
+          aria-label="Zoom in"
+          className={classes.actionBtn}
+          disabled={zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]}
+          onClick={onZoomIn}
+          title="Zoom in"
+          type="button"
+        >
+          <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+        </button>
+      </div>
 
       {/* Actions */}
       <div aria-label="Actions" className={classes.group} role="group">
@@ -328,38 +381,43 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           <div
             aria-label="Stroke width options"
             className={classes.widthPopover}
-            onKeyDown={(e) => {
-              if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-              e.preventDefault();
+            onKeyDown={(event) => {
+              if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+                return;
+              }
+              event.preventDefault();
+              if (!widthPopoverRef.current) {
+                return;
+              }
               const buttons = Array.from(
-                widthPopoverRef.current!.querySelectorAll<HTMLButtonElement>(
+                widthPopoverRef.current.querySelectorAll<HTMLButtonElement>(
                   'button',
                 ),
               );
-              const idx = buttons.indexOf(
+              const index = buttons.indexOf(
                 document.activeElement as HTMLButtonElement,
               );
-              const next =
-                e.key === 'ArrowDown'
-                  ? (idx + 1) % buttons.length
-                  : (idx - 1 + buttons.length) % buttons.length;
-              buttons[next]?.focus();
+              const nextIndex =
+                event.key === 'ArrowDown'
+                  ? (index + 1) % buttons.length
+                  : (index - 1 + buttons.length) % buttons.length;
+              buttons[nextIndex]?.focus();
             }}
             ref={widthPopoverRef}
             role="listbox"
             style={{ left: widthPopoverPos.left, top: widthPopoverPos.top }}
             tabIndex={-1}
           >
-            {WIDTH_PRESETS.map((w) => (
+            {WIDTH_PRESETS.map((widthPreset) => (
               <button
-                aria-label={`${w}px`}
-                aria-pressed={width === w}
+                aria-label={`${widthPreset}px`}
+                aria-pressed={width === widthPreset}
                 className={cn(classes.wopt, {
-                  [classes.woptActive]: width === w,
+                  [classes.woptActive]: width === widthPreset,
                 })}
-                key={w}
+                key={widthPreset}
                 onClick={() => {
-                  onSetWidth(w);
+                  onSetWidth(widthPreset);
                   setShowWidthPopover(false);
                   widthBtnRef.current?.focus();
                 }}
@@ -371,7 +429,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
                 <span
                   aria-hidden="true"
                   className={classes.bar}
-                  style={{ height: Math.max(1, Math.min(w, 14)) + 'px' }}
+                  style={{
+                    height: Math.max(1, Math.min(widthPreset, 14)) + 'px',
+                  }}
                 />
               </button>
             ))}

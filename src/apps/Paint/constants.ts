@@ -1,5 +1,5 @@
-export const CANVAS_W = 1000;
-export const CANVAS_H = 600;
+export const CANVAS_WIDTH = 1000;
+export const CANVAS_HEIGHT = 600;
 
 export const FONT_OPTIONS = [
   { label: 'Lucida', value: 'Lucida Sans Unicode, Lucida Grande, sans-serif' },
@@ -11,6 +11,7 @@ export const FONT_OPTIONS = [
 ];
 
 export const MAIN_BUTTON = 0;
+export const MIDDLE_BUTTON = 1;
 
 export const PRESET_PALETTE = [
   '#000000',
@@ -37,3 +38,7 @@ export const PRESET_PALETTE = [
 export const SECONDARY_BUTTON = 2;
 export const UNDO_MAX = 40;
 export const WIDTH_PRESETS = [1, 2, 3, 5, 8, 12, 18, 26];
+export const ZOOM_LEVELS = [
+  0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 2, 3,
+  4, 5, 6, 7, 8,
+];
