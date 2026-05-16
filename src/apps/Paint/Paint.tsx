@@ -36,9 +36,7 @@ export const Paint: WindowComponent = ({
   ...injectedWindowProps
 }) => {
   const [currentTool, setCurrentTool] = useState<DrawTool>('pencil');
-  const [status, setStatus] = useState(
-    `${CANVAS_WIDTH} × ${CANVAS_HEIGHT} · 100%`,
-  );
+  const [status, setStatus] = useState('');
   const [undoRedoState, setUndoRedoState] = useState<{
     redoStack: ImageData[];
     undoStack: ImageData[];
@@ -82,17 +80,14 @@ export const Paint: WindowComponent = ({
     }
   }, [canvasSize]);
 
-  useEffect(() => {
-    setStatus(
-      `${canvasSize.width} × ${canvasSize.height} · ${Math.round(zoom * 100)}%`,
-    );
-  }, [zoom, canvasSize.width, canvasSize.height]);
-
   useLayoutEffect(() => {
     if (!viewportRef.current) {
       return;
     }
-    setCanvasSize(computeFitCanvasSize(viewportRef.current));
+    const newCanvasSize = computeFitCanvasSize(viewportRef.current);
+
+    setCanvasSize(newCanvasSize);
+    setStatus(`${newCanvasSize.width} × ${newCanvasSize.height}`);
   }, []);
 
   useLayoutEffect(() => {
@@ -266,7 +261,7 @@ export const Paint: WindowComponent = ({
       const { x, y } = getPositionInCanvas(event, mainRef.current);
       const { height, width } = mainRef.current;
       setStatus(
-        `${width} × ${height}   ·   ${Math.round(zoom * 100)}%   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
+        `${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}   ·   ${width} × ${height}`,
       );
     }, 33);
 
@@ -275,7 +270,7 @@ export const Paint: WindowComponent = ({
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [zoom]);
+  }, []);
 
   function applyZoom(newZoom: number) {
     const zoomRatio = newZoom / zoom;

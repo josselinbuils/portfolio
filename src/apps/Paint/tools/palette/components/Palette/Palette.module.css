@@ -113,36 +113,6 @@
   }
 }
 
-.addSwatch {
-  text-align: inherit;
-  outline: none;
-  background: none;
-
-  font-size: 1.4rem;
-  line-height: 1;
-  flex-shrink: 0;
-  width: 2.4rem;
-  height: 2.4rem;
-  cursor: pointer;
-  transition:
-    background 0.1s ease,
-    color 0.1s ease;
-  color: #aaa;
-  border: 0.15rem dashed #ccc;
-  border-radius: 50%;
-
-  &:hover {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-    background: rgba(0, 122, 216, 0.06);
-  }
-
-  &:focus-visible {
-    outline: 0.2rem solid var(--primary-color);
-    outline-offset: 0.2rem;
-  }
-}
-
 .status {
   font-family: monospace;
   font-size: 1.1rem;

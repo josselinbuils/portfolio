@@ -4,6 +4,28 @@ import { useRef } from 'preact/hooks';
 import { usePaletteStore } from '../../usePaletteStore';
 import classes from './Palette.module.css';
 
+const PRESET_PALETTE = [
+  '#000000',
+  '#3f3f3f',
+  '#7f7f7f',
+  '#bfbfbf',
+  '#ffffff',
+  '#e20000',
+  '#ff4501',
+  '#cc7832',
+  '#f1c40f',
+  '#27ae60',
+  '#16a085',
+  '#00aaff',
+  '#007ad8',
+  '#0044cc',
+  '#8e44ad',
+  '#c0399b',
+  '#d35400',
+  '#ecf0f1',
+  '#222831',
+];
+
 export type PaletteProps = {
   status: string;
 };
@@ -11,22 +33,7 @@ export type PaletteProps = {
 export const Palette: FunctionComponent<PaletteProps> = ({ status }) => {
   const fillColor = usePaletteStore((state) => state.fillColor);
   const strokeColor = usePaletteStore((state) => state.strokeColor);
-  const swatches = usePaletteStore((state) => state.swatches);
   const hiddenColorRef = useRef<HTMLInputElement>(null);
-
-  function addSwatch() {
-    if (!hiddenColorRef.current) {
-      return;
-    }
-    const colorInput = hiddenColorRef.current;
-    colorInput.value = usePaletteStore.getState().strokeColor;
-    colorInput.oninput = (event) => {
-      usePaletteStore.setState((state) => ({
-        swatches: [...state.swatches, (event.target as HTMLInputElement).value],
-      }));
-    };
-    colorInput.click();
-  }
 
   function openColorPicker(target: 'fill' | 'stroke') {
     if (!hiddenColorRef.current) {
@@ -68,7 +75,7 @@ export const Palette: FunctionComponent<PaletteProps> = ({ status }) => {
         />
       </div>
       <div aria-label="Color palette" className={classes.swatches} role="group">
-        {swatches.map((color, index) => (
+        {PRESET_PALETTE.map((color, index) => (
           <button
             aria-label={color}
             className={classes.swatch}
@@ -110,15 +117,6 @@ export const Palette: FunctionComponent<PaletteProps> = ({ status }) => {
           />
         ))}
       </div>
-      <button
-        aria-label="Add current color to palette"
-        className={classes.addSwatch}
-        onClick={addSwatch}
-        title="Save current color"
-        type="button"
-      >
-        +
-      </button>
       <div aria-label="status" className={classes.status}>
         {status}
       </div>
