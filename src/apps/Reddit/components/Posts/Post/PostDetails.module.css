@@ -4,12 +4,12 @@
 
 .details {
   font-size: 1.1rem;
-  margin: var(--spacing-s) var(--spacing-s) 0 0;
+  margin: var(--spacing-8) var(--spacing-8) 0 0;
   color: var(--reddit-text-secondary);
 }
 
 .subreddit {
   font-weight: bold;
-  margin-right: var(--spacing-s);
+  margin-right: var(--spacing-8);
   color: black;
 }

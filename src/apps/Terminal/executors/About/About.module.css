@@ -33,7 +33,7 @@
   font-size: 3rem;
 
   a + a {
-    margin-left: var(--spacing-l);
+    margin-left: var(--spacing-20);
   }
 }
 
@@ -50,7 +50,7 @@
     margin: 0;
 
     .social {
-      margin-bottom: var(--spacing-m);
+      margin-bottom: var(--spacing-12);
     }
   }
 
@@ -62,7 +62,7 @@
     font-size: 3rem;
 
     a + a {
-      margin-left: var(--spacing-l);
+      margin-left: var(--spacing-20);
     }
   }
 }

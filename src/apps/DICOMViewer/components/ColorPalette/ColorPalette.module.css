@@ -11,7 +11,7 @@
   height: 3.2rem;
   color: var(--dv-color);
   border: 0.1rem solid var(--dv-color);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-4);
   outline: none;
   background: transparent;
 
@@ -38,13 +38,13 @@
   background: rgba(0, 0, 0, 0.6);
 
   &.open {
-    padding: var(--spacing-s);
+    padding: var(--spacing-8);
     border: 0.1rem solid var(--dv-color);
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-4);
 
     .button {
-      margin-top: calc(-1 * var(--spacing-s));
-      margin-left: calc(-1 * var(--spacing-s));
+      margin-top: calc(-1 * var(--spacing-8));
+      margin-left: calc(-1 * var(--spacing-8));
       border: none;
     }
   }

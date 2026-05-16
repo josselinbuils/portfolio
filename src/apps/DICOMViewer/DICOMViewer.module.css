@@ -24,10 +24,10 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  padding: var(--spacing-xs) var(--spacing-s);
+  padding: var(--spacing-4) var(--spacing-8);
   color: var(--dv-color);
   border: 0.1rem solid var(--dv-color);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-4);
   outline: none;
   background: var(--dv-bg);
 

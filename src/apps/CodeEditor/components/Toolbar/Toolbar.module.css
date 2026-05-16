@@ -1,7 +1,7 @@
 .toolbar {
   overflow: hidden;
   box-sizing: border-box;
-  padding: var(--spacing-xs);
+  padding: var(--spacing-4);
   text-align: center;
   border-right: 0.1rem solid var(--ce-border-primary);
   background: var(--ce-bg-primary);

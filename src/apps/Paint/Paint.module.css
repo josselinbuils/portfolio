@@ -14,7 +14,7 @@
   overflow: hidden;
   flex: 1 1 auto;
   min-height: 0;
-  padding: 2rem;
+  padding: var(--spacing-20);
   background-color: #dce1eb;
   background-image: radial-gradient(circle, #c4cad7 0.1rem, transparent 0.1rem);
   background-size: 2rem 2rem;
@@ -93,7 +93,7 @@
   min-width: 6rem;
   min-height: 2rem;
   margin: 0;
-  padding: 0 0.2rem;
+  padding: 0 var(--spacing-4);
   resize: none;
   white-space: pre;
   color: inherit;

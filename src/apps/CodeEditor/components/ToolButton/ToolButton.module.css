@@ -10,7 +10,7 @@
   color: var(--ce-text-primary);
   border: 0.1rem solid transparent;
   border-right: 0;
-  border-radius: var(--radius-s) 0 0 var(--radius-s);
+  border-radius: var(--radius-8) 0 0 var(--radius-8);
   outline: none;
   background: none;
 
@@ -32,10 +32,10 @@
   box-sizing: border-box;
   height: var(--ce-button-size);
   margin: 0;
-  padding: 0 var(--spacing-m) 0 var(--spacing-s);
+  padding: 0 var(--spacing-12) 0 var(--spacing-8);
   color: var(--ce-text-primary);
   border: 0.1rem solid var(--ce-border-primary);
   border-left: 0;
-  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  border-radius: 0 var(--radius-8) var(--radius-8) 0;
   background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
 }

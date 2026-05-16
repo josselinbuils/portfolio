@@ -37,12 +37,12 @@
   opacity: 0.9;
   color: inherit;
   border: 0.1rem solid black;
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   outline: none;
 
   .content {
-    border-bottom-right-radius: var(--radius-s);
-    border-bottom-left-radius: var(--radius-s);
+    border-bottom-right-radius: var(--radius-8);
+    border-bottom-left-radius: var(--radius-8);
   }
 }
 

@@ -11,7 +11,7 @@
     0 -0.1rem 0 rgba(0, 0, 0, 0.07),
     0 -0.4rem 1.2rem rgba(0, 0, 0, 0.04);
 
-  gap: var(--spacing-m);
+  gap: var(--spacing-12);
 }
 
 .strokeFill {
@@ -147,7 +147,7 @@
   font-family: monospace;
   font-size: 1.1rem;
   margin-left: auto;
-  padding: 0.4rem 1rem;
+  padding: var(--spacing-4) 1rem;
   white-space: nowrap;
   color: #888;
   border-radius: 0.6rem;

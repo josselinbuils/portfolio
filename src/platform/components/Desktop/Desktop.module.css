@@ -11,5 +11,5 @@
 }
 
 .taskBar {
-  margin: auto var(--spacing-xs);
+  margin: auto var(--spacing-4);
 }

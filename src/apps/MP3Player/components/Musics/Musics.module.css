@@ -5,12 +5,12 @@
 }
 
 .artistName {
-  margin: var(--spacing-xs) 0 0;
+  margin: var(--spacing-4) 0 0;
 }
 
 .header {
   flex: 0 0 auto;
-  padding-right: var(--spacing-s);
+  padding-right: var(--spacing-8);
 }
 
 .listInfo {
@@ -26,7 +26,7 @@
 .musicList {
   display: flex;
   flex-direction: column;
-  margin: var(--spacing-s) var(--spacing-m) var(--spacing-m) var(--spacing-m);
+  margin: var(--spacing-8) var(--spacing-12) var(--spacing-12) var(--spacing-12);
 
   table {
     width: calc(100% - 1rem);
@@ -37,7 +37,7 @@
       position: relative;
       overflow: hidden;
       height: 4.6rem;
-      padding-right: var(--spacing-l);
+      padding-right: var(--spacing-20);
       user-select: text;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -137,7 +137,7 @@
   width: 100%;
 
   th {
-    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-m) 0;
+    padding: var(--spacing-4) var(--spacing-20) var(--spacing-12) 0;
     text-align: left;
   }
 }

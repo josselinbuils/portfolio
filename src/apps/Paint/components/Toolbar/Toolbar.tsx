@@ -159,10 +159,10 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             className={cn(classes.tool, {
               [classes.active]: tool === name,
             })}
-            data-tip={description}
             key={name}
             onClick={() => onSetTool(name)}
             style={name === 'rectRound' ? 'border-radius:5px' : undefined}
+            title={description}
             type="button"
           >
             <FontAwesomeIcon icon={icon} />

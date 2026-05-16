@@ -20,7 +20,7 @@ ul.menu {
   max-height: 22rem;
   margin-left: 0.3rem;
   border: 0.1rem solid var(--ce-border-primary);
-  border-radius: 0 var(--radius-s) var(--radius-s) var(--radius-s);
+  border-radius: 0 var(--radius-8) var(--radius-8) var(--radius-8);
   background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
   scrollbar-color: var(--ce-bg-tertiary) transparent;
 
@@ -28,9 +28,10 @@ ul.menu {
     font-family: var(--ce-font-family), monospace;
     font-size: 1.3rem;
     line-height: 1.4rem;
-    padding: var(--spacing-s) var(--spacing-l) var(--spacing-s) var(--spacing-s);
+    padding: var(--spacing-8) var(--spacing-20) var(--spacing-8)
+      var(--spacing-8);
     color: var(--ce-text-primary);
-    border-radius: var(--radius-s);
+    border-radius: var(--radius-8);
 
     &[aria-current='true'] {
       background: hsl(from var(--ce-bg-primary) h s calc(l + 20));

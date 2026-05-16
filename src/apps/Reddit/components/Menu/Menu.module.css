@@ -1,8 +1,8 @@
 .menu {
-  margin: var(--spacing-l) 0 0 var(--spacing-l);
-  padding: var(--spacing-s) var(--spacing-m);
+  margin: var(--spacing-20) 0 0 var(--spacing-20);
+  padding: var(--spacing-8) var(--spacing-12);
   color: black;
   border: 0.1rem solid var(--reddit-secondary);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: white;
 }

@@ -6,10 +6,10 @@
   box-sizing: border-box;
   height: 1.3rem;
   margin: auto 0;
-  padding: 0 var(--spacing-xs);
+  padding: 0 var(--spacing-4);
   white-space: nowrap;
   color: hsl(from var(--ce-bg-primary) h s calc(l + 10));
-  border-radius: var(--radius-xxs);
+  border-radius: var(--radius-2);
   background-color: var(--ce-text-primary);
   box-shadow: 0.2rem 0.2rem black;
 }

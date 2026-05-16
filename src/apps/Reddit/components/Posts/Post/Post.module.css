@@ -10,7 +10,7 @@
 }
 
 .comments {
-  margin-left: var(--spacing-xs);
+  margin-left: var(--spacing-4);
 }
 
 .footer {
@@ -26,10 +26,10 @@
 .post {
   display: flex;
   width: 55rem;
-  margin: var(--spacing-l) auto 0 auto;
+  margin: var(--spacing-20) auto 0 auto;
   color: black;
   border: 0.1rem solid var(--reddit-secondary);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: white;
 
   &,

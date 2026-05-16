@@ -1,10 +1,10 @@
 .colorWindow {
-  margin: 0 var(--spacing-s);
+  margin: 0 var(--spacing-8);
 }
 
 .container {
   margin: 0;
-  padding-left: var(--spacing-xs);
+  padding-left: var(--spacing-4);
   list-style: none;
 
   li {

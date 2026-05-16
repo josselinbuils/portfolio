@@ -1,5 +1,5 @@
 .icon {
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-4);
 }
 
 .loading {
@@ -8,11 +8,11 @@
 
 .runIndicator {
   position: absolute;
-  right: var(--spacing-m);
+  right: var(--spacing-12);
   bottom: 0.6rem;
-  left: var(--spacing-m);
+  left: var(--spacing-12);
   height: 0.4rem;
-  border-radius: var(--radius-xxs);
+  border-radius: var(--radius-2);
   background: var(--primary-color);
 }
 
@@ -79,16 +79,16 @@
   font-size: 1.4rem;
   box-sizing: border-box;
   height: var(--taskbar-width);
-  padding: var(--spacing-xs);
+  padding: var(--spacing-4);
   color: var(--text-color);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: var(--background-color);
 
   button {
     line-height: 2rem;
-    padding: var(--spacing-xs) var(--spacing-l) var(--spacing-xs)
-      var(--spacing-s);
-    border-radius: var(--radius-s);
+    padding: var(--spacing-4) var(--spacing-20) var(--spacing-4)
+      var(--spacing-8);
+    border-radius: var(--radius-8);
 
     &[aria-current='true'] {
       background: hsl(from var(--background-color) h s calc(l + 20));
@@ -100,7 +100,7 @@
   font-size: 1.6rem;
   display: inline-block;
   width: 2.5rem;
-  padding-right: var(--spacing-s);
+  padding-right: var(--spacing-8);
   text-align: center;
 }
 
@@ -114,11 +114,11 @@
   box-sizing: border-box;
   height: var(--taskbar-width);
   margin: 0;
-  padding: var(--spacing-s) var(--spacing-m) var(--spacing-s) var(--spacing-s);
+  padding: var(--spacing-8) var(--spacing-12) var(--spacing-8) var(--spacing-8);
   color: var(--text-color);
   border: 0.1rem solid hsl(from var(--dark-grey) h s calc(l - 5));
   border-left: 0;
-  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  border-radius: 0 var(--radius-8) var(--radius-8) 0;
   background: var(--dark-grey);
 
   &.windowInstanceActive {

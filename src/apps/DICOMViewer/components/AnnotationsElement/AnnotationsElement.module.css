@@ -25,22 +25,22 @@
   min-width: 13rem;
   color: var(--dv-color);
   border: 0.1rem solid white;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-4);
   background-color: var(--dv-bg);
 
   li {
     &:first-child {
-      margin-top: var(--spacing-xs);
+      margin-top: var(--spacing-4);
     }
 
     &:last-child {
-      margin-bottom: var(--spacing-xs);
+      margin-bottom: var(--spacing-4);
     }
   }
 
   button {
     line-height: 2rem;
-    padding: var(--spacing-xs) var(--spacing-m) var(--spacing-xs) 0;
+    padding: var(--spacing-4) var(--spacing-12) var(--spacing-4) 0;
 
     &[aria-current='true'] {
       background: hsl(from var(--dv-bg) h s calc(l + 20));
@@ -51,7 +51,7 @@
 .contextMenuIcon {
   display: inline-block;
   width: 2.5rem;
-  padding-left: var(--spacing-xs);
+  padding-left: var(--spacing-4);
   text-align: center;
 }
 

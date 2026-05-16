@@ -1,7 +1,7 @@
 .item {
   font-size: 1.3em;
   display: block;
-  margin-top: var(--spacing-s);
+  margin-top: var(--spacing-8);
 
   &.checked {
     color: var(--primary-color);

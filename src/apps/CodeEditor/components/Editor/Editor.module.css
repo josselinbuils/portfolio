@@ -1,6 +1,6 @@
 ul.autoCompletionMenu {
   border: 0.1rem solid var(--ce-border-primary);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: var(--ce-bg-primary);
   scrollbar-color: var(--ce-bg-tertiary) transparent;
 
@@ -8,9 +8,9 @@ ul.autoCompletionMenu {
     font-family: var(--ce-font-family), monospace;
     font-size: 1.3rem;
     line-height: 1.4rem;
-    padding: var(--spacing-s);
+    padding: var(--spacing-8);
     color: var(--ce-text-primary);
-    border-radius: var(--radius-s);
+    border-radius: var(--radius-8);
 
     &[aria-current='true'] {
       background: hsl(from var(--ce-bg-primary) h s calc(l + 10));
@@ -77,16 +77,16 @@ ul.autoCompletionMenu {
   font-size: var(--ce-font-size);
   overflow: auto;
   min-width: 20rem;
-  padding: var(--spacing-s);
+  padding: var(--spacing-8);
   white-space: pre-wrap;
   color: var(--ce-text-primary);
   border: 0.1rem solid var(--ce-border-primary);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: var(--ce-bg-primary);
 }
 
 .infoTooltipIssue:not(:last-child) {
-  margin-bottom: var(--spacing-m);
+  margin-bottom: var(--spacing-12);
 }
 
 .lineNumbers {

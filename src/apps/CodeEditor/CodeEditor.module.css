@@ -52,7 +52,7 @@
 
 ul.newFileMenu {
   border: 0.1rem solid var(--ce-border-primary);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-8);
   background: var(--ce-bg-primary);
   scrollbar-color: var(--ce-bg-tertiary) transparent;
 
@@ -60,9 +60,9 @@ ul.newFileMenu {
     font-family: var(--ce-font-family), monospace;
     font-size: 1.3rem;
     line-height: 1.4rem;
-    padding: var(--spacing-s);
+    padding: var(--spacing-8);
     color: var(--ce-text-primary);
-    border-radius: var(--radius-s);
+    border-radius: var(--radius-8);
 
     &[aria-current='true'] {
       background: hsl(from var(--ce-bg-primary) h s calc(l + 10));

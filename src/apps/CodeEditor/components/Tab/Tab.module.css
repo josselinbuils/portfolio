@@ -1,6 +1,6 @@
 .icon {
   font-size: 1.6rem;
-  margin-right: var(--spacing-s);
+  margin-right: var(--spacing-8);
   vertical-align: text-top;
 }
 
@@ -10,7 +10,7 @@
   position: relative;
   display: inline-block;
   height: 100%;
-  padding: 0 var(--spacing-m);
+  padding: 0 var(--spacing-12);
   user-select: none;
   color: var(--ce-text-primary);
   border: none;
