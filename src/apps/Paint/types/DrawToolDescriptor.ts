@@ -1,37 +1,20 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-import { type SharedState } from './SharedState';
-
-export type DrawToolDescriptor<DrawToolState = any> = {
+export type DrawToolDescriptor = {
   description: string;
   icon: IconDefinition;
-  initialState: DrawToolState;
   name: string;
-  onMouseDown: (
-    event: MouseEvent,
-    data: DrawToolListenerData<DrawToolState>,
-  ) => void;
+  onMouseDown: (event: MouseEvent, data: DrawToolListenerData) => void;
   shortcuts?: readonly {
     description: string;
-    handler: (
-      event: KeyboardEvent,
-      data: DrawToolListenerData<DrawToolState>,
-    ) => void | false;
+    handler: (event: KeyboardEvent, data: DrawToolListenerData) => void | false;
     keyStr: string;
   }[];
 };
 
-export type DrawToolListenerData<DrawToolState = unknown> = {
-  getSharedState: () => SharedState;
-  getToolState: () => DrawToolState;
+export type DrawToolListenerData = {
   mainCanvas: HTMLCanvasElement;
   overlayCanvas: HTMLCanvasElement;
-  setSharedState: StateSetterDispatch<SharedState>;
-  setToolState: StateSetterDispatch<DrawToolState>;
   snapshot: () => void;
-  viewportInner: HTMLDivElement;
+  viewportElement: HTMLDivElement;
 };
-
-export type StateSetterDispatch<State> = (
-  setter: (state: State) => State,
-) => void;

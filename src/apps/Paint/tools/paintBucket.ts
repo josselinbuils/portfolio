@@ -1,4 +1,5 @@
 import { faFillDrip } from '@fortawesome/free-solid-svg-icons/faFillDrip';
+import { create } from 'zustand/react';
 
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
 import {
@@ -8,18 +9,27 @@ import {
 import { hexToRgba } from '../utils/color';
 import { getCanvasContext } from '../utils/getCanvasContext';
 import { getPositionInCanvas } from '../utils/getPositionInCanvas';
+import { usePaletteStore } from './palette/usePaletteStore';
+import { useSelectionStore } from './selection/useSelectionStore';
+
+type PaintBucketState = {
+  tolerance: number;
+};
+
+export const usePaintBucketStore = create<PaintBucketState>(() => ({
+  tolerance: 20,
+}));
 
 export const paintBucketDescriptor = {
   description: 'Paint bucket',
   icon: faFillDrip,
-  initialState: undefined,
   name: 'paintBucket' as const,
   onMouseDown: handlePaintBucket,
 } satisfies DrawToolDescriptor;
 
 function handlePaintBucket(
   event: MouseEvent,
-  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: DrawToolListenerData,
 ) {
   if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;
@@ -27,8 +37,6 @@ function handlePaintBucket(
 
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { fillColor, selection, strokeColor, tolerance } = getSharedState();
-  const activeColor = event.button === MAIN_BUTTON ? strokeColor : fillColor;
   const { height, width } = mainCanvas;
 
   if (x < 0 || y < 0 || x >= width || y >= height) {
@@ -37,9 +45,14 @@ function handlePaintBucket(
 
   snapshot();
 
+  const { selection } = useSelectionStore.getState();
+  const { fillColor, strokeColor } = usePaletteStore.getState();
+  const activeColor = event.button === MAIN_BUTTON ? strokeColor : fillColor;
+
   if (selection) {
     context.save();
     context.fillStyle = activeColor;
+
     if (selection.boundary) {
       context.fill(selection.boundary, 'nonzero');
     } else {
@@ -64,6 +77,7 @@ function handlePaintBucket(
   const targetG = data[startIndex * 4 + 1];
   const targetB = data[startIndex * 4 + 2];
   const targetA = data[startIndex * 4 + 3];
+  const { tolerance } = usePaintBucketStore.getState();
   const threshold = tolerance * 4;
 
   const pixelCount = width * height;

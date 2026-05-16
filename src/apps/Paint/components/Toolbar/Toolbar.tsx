@@ -12,72 +12,51 @@ import { type FunctionComponent } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { FONT_OPTIONS, WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
+import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
+import { useShapeStore } from '../../tools/draw/shapes';
+import { useDrawStore } from '../../tools/draw/useDrawStore';
+import { usePaintBucketStore } from '../../tools/paintBucket';
+import { useSelectionStore } from '../../tools/selection/useSelectionStore';
+import { useTextStore } from '../../tools/text';
 import { type DrawTool, tools } from '../../tools/tools';
 import classes from './Toolbar.module.css';
 
 export type ToolbarProps = {
   canRedo: boolean;
   canUndo: boolean;
-  fill: string;
-  fillOn: boolean;
-  fontFamily: string;
-  fontSize: number;
   onClear(): void;
-  onFillOnChange(v: boolean): void;
-  onFontFamilyChange(v: string): void;
-  onFontSizeChange(v: number): void;
-  onOpenColorPicker(target: 'fill' | 'stroke'): void;
   onOpenImage(): void;
   onRedo(): void;
   onResetZoom(): void;
   onSetTool(t: DrawTool): void;
-  onSetWidth(v: number): void;
-  onToleranceChange(v: number): void;
   onUndo(): void;
   onZoomIn(): void;
   onZoomOut(): void;
-  stroke: string;
-  tolerance: number;
   tool: DrawTool;
-  width: number;
   zoom: number;
 };
 
 export const Toolbar: FunctionComponent<ToolbarProps> = ({
   canRedo,
   canUndo,
-  fill,
-  fillOn,
-  fontFamily,
-  fontSize,
   onClear,
-  onFillOnChange,
-  onFontFamilyChange,
-  onFontSizeChange,
-  onOpenColorPicker,
   onOpenImage,
   onRedo,
   onResetZoom,
   onSetTool,
-  onSetWidth,
-  onToleranceChange,
   onUndo,
   onZoomIn,
   onZoomOut,
-  stroke,
-  tolerance,
   tool,
-  width,
   zoom,
 }) => {
-  const [showWidthPopover, setShowWidthPopover] = useState(false);
+  const [showLineWidthPopover, setShowLineWidthPopover] = useState(false);
   const [widthPopoverPos, setWidthPopoverPos] = useState({ left: 0, top: 0 });
   const widthBtnRef = useRef<HTMLButtonElement>(null);
   const widthPopoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!showWidthPopover) {
+    if (!showLineWidthPopover) {
       return;
     }
 
@@ -85,13 +64,13 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
       if (widthBtnRef.current?.contains(event.target as Node)) {
         return;
       }
-      setShowWidthPopover(false);
+      setShowLineWidthPopover(false);
     }
 
     function onKey(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.stopPropagation();
-        setShowWidthPopover(false);
+        setShowLineWidthPopover(false);
         widthBtnRef.current?.focus();
       }
     }
@@ -102,17 +81,17 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
       document.removeEventListener('click', onClickOutside);
       document.removeEventListener('keydown', onKey);
     };
-  }, [showWidthPopover]);
+  }, [showLineWidthPopover]);
 
   useEffect(() => {
-    if (!showWidthPopover || !widthPopoverRef.current) {
+    if (!showLineWidthPopover || !widthPopoverRef.current) {
       return;
     }
     const activeBtn = widthPopoverRef.current.querySelector<HTMLButtonElement>(
       '[aria-pressed="true"]',
     );
     (activeBtn ?? widthPopoverRef.current.querySelector('button'))?.focus();
-  }, [showWidthPopover]);
+  }, [showLineWidthPopover]);
 
   function openWidthPopover() {
     if (!widthBtnRef.current) {
@@ -120,12 +99,11 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     }
     const rect = widthBtnRef.current.getBoundingClientRect();
     setWidthPopoverPos({ left: rect.left, top: rect.bottom + 10 });
-    setShowWidthPopover(true);
+    setShowLineWidthPopover(true);
   }
 
-  const showColors = !['colorPicker', 'magicWand', 'select'].includes(tool);
   const showFillToggle = ['circle', 'rect', 'rectRound'].includes(tool);
-  const showWidth = ![
+  const showLineWidth = ![
     'colorPicker',
     'magicWand',
     'paintBucket',
@@ -133,14 +111,45 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     'text',
   ].includes(tool);
   const showTolerance = ['magicWand', 'paintBucket'].includes(tool);
-  const showTextOpts = tool === 'text';
+  const showTextOptions = tool === 'text';
+  const showToolOptions =
+    showFillToggle || showLineWidth || showTolerance || showTextOptions;
+
+  const fillOn = useShapeStore((state) =>
+    showFillToggle ? state.fillOn : false,
+  );
+  const fontFamily = useTextStore((state) =>
+    showTextOptions ? state.fontFamily : '',
+  );
+  const fontSize = useTextStore((state) =>
+    showTextOptions ? state.fontSize : 0,
+  );
+  const lineWidth = useDrawStore((state) =>
+    showLineWidth ? state.lineWidth : 0,
+  );
+
+  const paintBucketTolerance = usePaintBucketStore((state) =>
+    tool === 'paintBucket' ? state.tolerance : 0,
+  );
+  const selectionTolerance = useSelectionStore((state) =>
+    tool === 'magicWand' ? state.tolerance : 0,
+  );
+  const tolerance =
+    tool === 'paintBucket' ? paintBucketTolerance : selectionTolerance;
+
+  const setTolerance = (tolerance: number) => {
+    if (tool === 'paintBucket') {
+      usePaintBucketStore.setState({ tolerance });
+    } else {
+      useSelectionStore.setState({ tolerance });
+    }
+  };
 
   return (
     <div aria-label="Paint tools" className={classes.options} role="toolbar">
-      {/* Tools */}
       <div
         aria-label="Drawing tools"
-        className={classes.toolsGroup}
+        className={cn(classes.group, classes.drawingToolsGroup)}
         role="group"
       >
         {tools.map(({ description, icon, name }) => (
@@ -160,143 +169,120 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           </button>
         ))}
       </div>
-
-      {/* Colors */}
-      {showColors && (
-        <div aria-label="Colors" className={classes.group} role="group">
-          <div
-            className={classes.dualSwatch}
-            title="Stroke (front) / Fill (back)"
-          >
+      {showToolOptions && (
+        <div
+          aria-label="Tool options"
+          className={cn(classes.group, classes.toolOptionsGroup)}
+          role="group"
+        >
+          {showLineWidth && (
             <button
-              aria-label={`Fill color: ${fill}`}
-              className={classes.dsFill}
-              onClick={() => onOpenColorPicker('fill')}
-              style={{ background: fill }}
+              aria-expanded={showLineWidthPopover}
+              aria-haspopup="true"
+              aria-label={`Stroke width: ${lineWidth}px`}
+              className={classes.widthBtn}
+              onClick={
+                showLineWidthPopover
+                  ? () => setShowLineWidthPopover(false)
+                  : openWidthPopover
+              }
+              ref={widthBtnRef}
               type="button"
-            />
-            <button
-              aria-label={`Stroke color: ${stroke}`}
-              className={classes.dsStroke}
-              onClick={() => onOpenColorPicker('stroke')}
-              style={{ background: stroke }}
-              type="button"
-            />
-          </div>
+            >
+              <span
+                aria-hidden="true"
+                className={classes.widthPreview}
+                style={{
+                  height: Math.max(1, Math.min(lineWidth, 14)) + 'px',
+                }}
+              />
+              <FontAwesomeIcon icon={faCaretDown} />
+            </button>
+          )}
           {showFillToggle && (
             <label className={classes.checkbox}>
               <input
                 checked={fillOn}
-                onChange={(e) =>
-                  onFillOnChange((e.target as HTMLInputElement).checked)
-                }
+                onChange={(e) => {
+                  useShapeStore.setState({
+                    fillOn: (e.target as HTMLInputElement).checked,
+                  });
+                }}
                 type="checkbox"
               />
-              Fill shape
+              Fill
             </label>
+          )}
+          {showTolerance && (
+            <>
+              <span aria-hidden="true" className={classes.label}>
+                Tolerance
+              </span>
+              <input
+                aria-label="Tolerance slider"
+                className={classes.toleranceSlider}
+                max={128}
+                min={0}
+                onInput={(event) => {
+                  setTolerance(+(event.target as HTMLInputElement).value);
+                }}
+                type="range"
+                value={tolerance}
+              />
+              <input
+                aria-label="Tolerance input"
+                className={classes.numberInput}
+                max={128}
+                min={0}
+                onInput={(e) => {
+                  setTolerance(+(e.target as HTMLInputElement).value);
+                }}
+                type="number"
+                value={tolerance}
+              />
+            </>
+          )}
+          {showTextOptions && (
+            <>
+              <span aria-hidden="true" className={classes.label}>
+                Size
+              </span>
+              <input
+                aria-label="Font size"
+                className={classes.numberInput}
+                max={200}
+                min={8}
+                onInput={(event) => {
+                  useTextStore.setState({
+                    fontSize: +(event.target as HTMLInputElement).value,
+                  });
+                }}
+                type="number"
+                value={fontSize}
+              />
+              <span aria-hidden="true" className={classes.label}>
+                Font
+              </span>
+              <select
+                aria-label="Font family"
+                className={classes.selectInput}
+                onChange={(event) => {
+                  useTextStore.setState({
+                    fontFamily: (event.target as HTMLSelectElement).value,
+                  });
+                }}
+                value={fontFamily}
+              >
+                {FONT_OPTIONS.map((fontOption) => (
+                  <option key={fontOption.value} value={fontOption.value}>
+                    {fontOption.label}
+                  </option>
+                ))}
+              </select>
+            </>
           )}
         </div>
       )}
-
-      {/* Stroke width */}
-      {showWidth && (
-        <div aria-label="Stroke width" className={classes.group} role="group">
-          <button
-            aria-expanded={showWidthPopover}
-            aria-haspopup="true"
-            aria-label={`Stroke width: ${width}px`}
-            className={classes.widthBtn}
-            onClick={
-              showWidthPopover
-                ? () => setShowWidthPopover(false)
-                : openWidthPopover
-            }
-            ref={widthBtnRef}
-            type="button"
-          >
-            <span
-              aria-hidden="true"
-              className={classes.widthPreview}
-              style={{ height: Math.max(1, Math.min(width, 14)) + 'px' }}
-            />
-            <FontAwesomeIcon icon={faCaretDown} />
-          </button>
-        </div>
-      )}
-
-      {/* Tolerance */}
-      {showTolerance && (
-        <div
-          aria-label="Paint bucket options"
-          className={classes.group}
-          role="group"
-        >
-          <span aria-hidden="true" className={classes.label}>
-            Tolerance
-          </span>
-          <input
-            aria-label="Tolerance"
-            className={classes.toleranceSlider}
-            max={128}
-            min={0}
-            onInput={(e) =>
-              onToleranceChange(+(e.target as HTMLInputElement).value)
-            }
-            type="range"
-            value={tolerance}
-          />
-          <input
-            aria-label="Tolerance"
-            className={classes.numberInput}
-            max={255}
-            min={0}
-            onInput={(e) =>
-              onToleranceChange(+(e.target as HTMLInputElement).value)
-            }
-            type="number"
-            value={tolerance}
-          />
-        </div>
-      )}
-
-      {/* Text options */}
-      {showTextOpts && (
-        <div aria-label="Text options" className={classes.group} role="group">
-          <span aria-hidden="true" className={classes.label}>
-            Size
-          </span>
-          <input
-            aria-label="Font size"
-            className={classes.numberInput}
-            max={200}
-            min={8}
-            onInput={(e) =>
-              onFontSizeChange(+(e.target as HTMLInputElement).value)
-            }
-            type="number"
-            value={fontSize}
-          />
-          <span aria-hidden="true" className={classes.label}>
-            Font
-          </span>
-          <select
-            aria-label="Font family"
-            className={classes.selectInput}
-            onChange={(e) =>
-              onFontFamilyChange((e.target as HTMLSelectElement).value)
-            }
-            value={fontFamily}
-          >
-            {FONT_OPTIONS.map((fontOption) => (
-              <option key={fontOption.value} value={fontOption.value}>
-                {fontOption.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {/* Zoom */}
       <div
         aria-label="Zoom"
         className={classes.group}
@@ -333,8 +319,6 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
         </button>
       </div>
-
-      {/* Actions */}
       <div aria-label="Actions" className={classes.group} role="group">
         <button
           aria-label="New image"
@@ -376,7 +360,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         </button>
       </div>
 
-      {showWidthPopover &&
+      {showLineWidthPopover &&
         createPortal(
           <div
             aria-label="Stroke width options"
@@ -408,17 +392,17 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             style={{ left: widthPopoverPos.left, top: widthPopoverPos.top }}
             tabIndex={-1}
           >
-            {WIDTH_PRESETS.map((widthPreset) => (
+            {LINE_WIDTH_PRESETS.map((widthPreset) => (
               <button
                 aria-label={`${widthPreset}px`}
-                aria-pressed={width === widthPreset}
+                aria-pressed={lineWidth === widthPreset}
                 className={cn(classes.wopt, {
-                  [classes.woptActive]: width === widthPreset,
+                  [classes.woptActive]: lineWidth === widthPreset,
                 })}
                 key={widthPreset}
                 onClick={() => {
-                  onSetWidth(widthPreset);
-                  setShowWidthPopover(false);
+                  useDrawStore.setState({ lineWidth: widthPreset });
+                  setShowLineWidthPopover(false);
                   widthBtnRef.current?.focus();
                 }}
                 type="button"

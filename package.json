@@ -36,7 +36,8 @@
     "snoowrap": "1.23.0",
     "source-map-support": "0.5.21",
     "typescript": "6.0.3",
-    "ws": "8.20.0"
+    "ws": "8.20.0",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/css": "^1.2.0",

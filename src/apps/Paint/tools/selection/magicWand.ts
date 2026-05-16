@@ -1,34 +1,22 @@
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 
-import { MAIN_BUTTON } from '../constants';
+import { MAIN_BUTTON } from '../../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
-import { type Selection } from '../types/SharedState';
-import { getCanvasContext } from '../utils/getCanvasContext';
-import { getPositionInCanvas } from '../utils/getPositionInCanvas';
-import { drawAnts } from './selection';
-
-type MagicWandState = {
-  antsRaf: number;
-  generation: number;
-};
+} from '../../types/DrawToolDescriptor';
+import { getCanvasContext } from '../../utils/getCanvasContext';
+import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
+import { useSelectionStore } from './useSelectionStore';
+import { clearSelection } from './utils/clearSelection';
+import { startAnts } from './utils/startAnts';
 
 export const magicWandDescriptor = {
   description: 'Magic wand',
   icon: faWandMagicSparkles,
-  initialState: { antsRaf: 0, generation: 0 },
   name: 'magicWand' as const,
   onMouseDown: handleMagicWand,
-  shortcuts: [
-    {
-      description: 'Delete selection',
-      handler: (_event, data) => deleteMagicSelection(data),
-      keyStr: 'Backspace,Delete',
-    },
-  ],
-} satisfies DrawToolDescriptor<MagicWandState>;
+} satisfies DrawToolDescriptor;
 
 function bfsConnectedComponent(
   colorMatch: Uint8Array,
@@ -99,20 +87,6 @@ function bfsConnectedComponent(
   return mask;
 }
 
-function cancelAnts(data: DrawToolListenerData<MagicWandState>): void {
-  const { antsRaf } = data.getToolState();
-  if (antsRaf) {
-    cancelAnimationFrame(antsRaf);
-  }
-  getCanvasContext(data.overlayCanvas).clearRect(
-    0,
-    0,
-    data.overlayCanvas.width,
-    data.overlayCanvas.height,
-  );
-  data.setToolState((state) => ({ ...state, antsRaf: 0 }));
-}
-
 function computeColorMatch(
   imageData: ImageData,
   targetR: number,
@@ -137,69 +111,17 @@ function computeColorMatch(
   return colorMatch;
 }
 
-function deleteMagicSelection(
-  data: DrawToolListenerData<MagicWandState>,
-): void {
-  const { getSharedState, mainCanvas, setSharedState, snapshot } = data;
-  const { selection } = getSharedState();
-
-  if (!selection) {
-    return;
-  }
-
-  snapshot();
-  const context = getCanvasContext(mainCanvas);
-
-  if (selection.mask) {
-    const imageData = context.getImageData(
-      0,
-      0,
-      mainCanvas.width,
-      mainCanvas.height,
-    );
-    for (let pixelIndex = 0; pixelIndex < selection.mask.length; pixelIndex++) {
-      if (selection.mask[pixelIndex]) {
-        imageData.data[pixelIndex * 4 + 3] = 0;
-      }
-    }
-    context.putImageData(imageData, 0, 0);
-  } else {
-    context.clearRect(
-      selection.x,
-      selection.y,
-      selection.width,
-      selection.height,
-    );
-  }
-
-  setSharedState((state) => ({ ...state, selection: null }));
-  cancelAnts(data);
-}
-
 async function handleMagicWand(
   event: MouseEvent,
-  data: DrawToolListenerData<MagicWandState>,
+  { mainCanvas, overlayCanvas }: DrawToolListenerData,
 ): Promise<void> {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
-
-  const {
-    getSharedState,
-    getToolState,
-    mainCanvas,
-    overlayCanvas,
-    setSharedState,
-    setToolState,
-  } = data;
-
-  cancelAnts(data);
-
-  const generation = getToolState().generation + 1;
-  setToolState((state) => ({ ...state, generation }));
+  clearSelection(overlayCanvas);
 
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { tolerance } = getSharedState();
+  const { tolerance } = useSelectionStore.getState();
   const { height, width } = mainCanvas;
 
   const context = getCanvasContext(mainCanvas);
@@ -210,7 +132,7 @@ async function handleMagicWand(
   const targetB = imageData.data[startIndex * 4 + 2];
   const targetA = imageData.data[startIndex * 4 + 3];
 
-  const colorMatch = await computeColorMatch(
+  const colorMatch = computeColorMatch(
     imageData,
     targetR,
     targetG,
@@ -218,10 +140,6 @@ async function handleMagicWand(
     targetA,
     tolerance,
   );
-
-  if (getToolState().generation !== generation) {
-    return;
-  }
 
   const mask = bfsConnectedComponent(colorMatch, x, y, width, height);
 
@@ -256,28 +174,19 @@ async function handleMagicWand(
 
   const boundary = traceBoundary(mask, width, height);
 
-  const selection: Selection = {
-    boundary,
-    height: maxY - minY + 1,
-    imageData: null,
-    mask,
-    width: maxX - minX + 1,
-    x: minX,
-    y: minY,
-  };
+  useSelectionStore.setState({
+    selection: {
+      boundary,
+      height: maxY - minY + 1,
+      imageData: null,
+      mask,
+      width: maxX - minX + 1,
+      x: minX,
+      y: minY,
+    },
+  });
 
-  setSharedState((state) => ({ ...state, selection }));
-
-  let offset = 0;
-  const tick = () => {
-    offset = (offset + 0.5) % 8;
-    drawAnts(overlayCanvas, selection, offset);
-    setToolState((state) => ({
-      ...state,
-      antsRaf: requestAnimationFrame(tick),
-    }));
-  };
-  tick();
+  startAnts(overlayCanvas);
 }
 
 // Traces the boundary of a pixel mask into a Path2D using directed pixel edges.

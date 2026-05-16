@@ -1,56 +1,66 @@
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
+import { create } from 'zustand/react';
 
-import { MAIN_BUTTON } from '../constants';
+import { MAIN_BUTTON } from '../../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
-import { type SharedState } from '../types/SharedState';
-import { getCanvasContext } from '../utils/getCanvasContext';
-import { getPositionInCanvas } from '../utils/getPositionInCanvas';
-import { type DrawTool } from './tools';
+} from '../../types/DrawToolDescriptor';
+import { getCanvasContext } from '../../utils/getCanvasContext';
+import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
+import { usePaletteStore } from '../palette/usePaletteStore';
+import { type DrawTool } from '../tools';
+import { useDrawStore } from './useDrawStore';
 
-type ShapeState = { x0: number; y0: number } | null;
+type ShapeState = {
+  fillOn: boolean;
+  startPosition: { x0: number; y0: number } | null;
+};
+
+export const useShapeStore = create<ShapeState>(() => ({
+  fillOn: false,
+  startPosition: null,
+}));
 
 export const circleDescriptor = {
   description: 'Circle',
   icon: faCircle,
-  initialState: null,
   name: 'circle' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'circle'),
-} satisfies DrawToolDescriptor<ShapeState>;
+} satisfies DrawToolDescriptor;
 
 export const rectDescriptor = {
   description: 'Rectangle',
   icon: faSquare,
-  initialState: null,
   name: 'rect' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rect'),
-} satisfies DrawToolDescriptor<ShapeState>;
+} satisfies DrawToolDescriptor;
 
 export const rectRoundDescriptor = {
   description: 'Rounded rectangle',
   icon: faSquare,
-  initialState: null,
   name: 'rectRound' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rectRound'),
-} satisfies DrawToolDescriptor<ShapeState>;
+} satisfies DrawToolDescriptor;
 
-export function drawShape(
+function drawShape(
   context: CanvasRenderingContext2D,
-  state: Pick<SharedState, 'fillColor' | 'fillOn' | 'strokeColor' | 'width'>,
   shapeTool: DrawTool,
-  x0: number,
-  y0: number,
-  x1: number,
-  y1: number,
-  shiftKey = false,
+  rect: { x0: number; x1: number; y0: number; y1: number },
+  style: {
+    fillColor: string;
+    fillOn: boolean;
+    lineWidth: number;
+    strokeColor: string;
+  },
+  keepRatio: boolean,
 ): void {
+  const { x0, x1, y0, y1 } = rect;
   let endX = x1;
   let endY = y1;
 
-  if (shiftKey) {
+  if (keepRatio) {
     const deltaX = x1 - x0;
     const deltaY = y1 - y0;
     const squareSize = Math.max(Math.abs(deltaX), Math.abs(deltaY));
@@ -63,22 +73,24 @@ export function drawShape(
   const y = Math.min(y0, endY);
   const height = Math.abs(endY - y0);
   const width = Math.abs(endX - x0);
+  const { fillColor, fillOn, lineWidth, strokeColor } = style;
 
-  applyStrokeFill(context, state);
+  context.lineWidth = lineWidth;
+  context.strokeStyle = strokeColor;
+  context.fillStyle = fillColor;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+
+  context.setLineDash([]);
   context.beginPath();
 
   if (shapeTool === 'rect') {
     context.rect(x, y, width, height);
   } else if (shapeTool === 'rectRound') {
-    const cornerRadius = Math.min(
-      20,
-      width / 2,
-      height / 2,
-      4 + state.width * 2,
-    );
+    const cornerRadius = Math.min(20, width / 2, height / 2, 4 + lineWidth * 2);
 
-    if ((context as any).roundRect) {
-      (context as any).roundRect(x, y, width, height, cornerRadius);
+    if (context.roundRect) {
+      context.roundRect(x, y, width, height, cornerRadius);
     } else {
       context.moveTo(x + cornerRadius, y);
       context.arcTo(x + width, y, x + width, y + height, cornerRadius);
@@ -99,30 +111,18 @@ export function drawShape(
     );
   }
 
-  if (state.fillOn) {
+  if (fillOn) {
     context.fill();
   }
   context.stroke();
 }
 
-function applyStrokeFill(
-  context: CanvasRenderingContext2D,
-  state: Pick<SharedState, 'fillColor' | 'strokeColor' | 'width'>,
-): void {
-  context.lineWidth = state.width;
-  context.strokeStyle = state.strokeColor;
-  context.fillStyle = state.fillColor;
-  context.lineCap = 'round';
-  context.lineJoin = 'round';
-  context.setLineDash([]);
-}
-
 function handleShapeMouseDown(
   event: MouseEvent,
-  data: DrawToolListenerData<ShapeState>,
+  data: DrawToolListenerData,
   shapeTool: DrawTool,
 ): void {
-  const { mainCanvas, overlayCanvas, setToolState } = data;
+  const { mainCanvas, overlayCanvas } = data;
 
   if (event.button !== MAIN_BUTTON) {
     return;
@@ -135,7 +135,10 @@ function handleShapeMouseDown(
     overlayCanvas.width,
     overlayCanvas.height,
   );
-  setToolState(() => ({ x0: x, y0: y }));
+
+  useShapeStore.setState({
+    startPosition: { x0: x, y0: y },
+  });
 
   function onMouseMove(moveEvent: MouseEvent) {
     handleShapeMouseMove(moveEvent, data, shapeTool);
@@ -153,57 +156,46 @@ function handleShapeMouseDown(
 
 function handleShapeMouseMove(
   event: MouseEvent,
-  {
-    getSharedState,
-    getToolState,
-    mainCanvas,
-    overlayCanvas,
-  }: DrawToolListenerData<ShapeState>,
+  { mainCanvas, overlayCanvas }: DrawToolListenerData,
   shapeTool: DrawTool,
 ): void {
-  const toolState = getToolState();
+  const { fillOn, startPosition } = useShapeStore.getState();
 
-  if (!toolState) {
+  if (!startPosition) {
     return;
   }
 
   const context = getCanvasContext(overlayCanvas);
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
+  const { x0, y0 } = startPosition;
+  const { x: x1, y: y1 } = getPositionInCanvas(event, mainCanvas);
+  const { lineWidth } = useDrawStore.getState();
+  const { fillColor, strokeColor } = usePaletteStore.getState();
 
   context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
   drawShape(
     context,
-    getSharedState(),
     shapeTool,
-    toolState.x0,
-    toolState.y0,
-    x,
-    y,
+    { x0, x1, y0, y1 },
+    { fillColor, fillOn, lineWidth, strokeColor },
     event.shiftKey,
   );
 }
 
 function handleShapeMouseUp(
   event: MouseEvent,
-  {
-    getSharedState,
-    getToolState,
-    mainCanvas,
-    overlayCanvas,
-    setToolState,
-    snapshot,
-  }: DrawToolListenerData<ShapeState>,
+  { mainCanvas, overlayCanvas, snapshot }: DrawToolListenerData,
   shapeTool: DrawTool,
 ): void {
-  const toolState = getToolState();
+  const { fillOn, startPosition } = useShapeStore.getState();
 
-  if (!toolState) {
+  if (!startPosition) {
     return;
   }
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { x0, y0 } = toolState;
+  const { x0, y0 } = startPosition;
 
-  setToolState(() => null);
+  useShapeStore.setState({ startPosition: null });
+
   getCanvasContext(overlayCanvas).clearRect(
     0,
     0,
@@ -211,24 +203,24 @@ function handleShapeMouseUp(
     overlayCanvas.height,
   );
 
-  const endX = event.shiftKey
+  const x1 = event.shiftKey
     ? x0 + Math.sign(x - x0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
     : x;
 
-  const endY = event.shiftKey
+  const y1 = event.shiftKey
     ? y0 + Math.sign(y - y0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
     : y;
 
-  if (x0 !== endX || y0 !== endY) {
+  if (x0 !== x1 || y0 !== y1) {
+    const { lineWidth } = useDrawStore.getState();
+    const { fillColor, strokeColor } = usePaletteStore.getState();
+
     snapshot();
     drawShape(
       getCanvasContext(mainCanvas),
-      getSharedState(),
       shapeTool,
-      x0,
-      y0,
-      endX,
-      endY,
+      { x0, x1, y0, y1 },
+      { fillColor, fillOn, lineWidth, strokeColor },
       event.shiftKey,
     );
   }

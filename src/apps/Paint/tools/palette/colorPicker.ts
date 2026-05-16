@@ -1,32 +1,22 @@
 import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
 
-import { getPositionInCanvas } from '@/apps/Paint/utils/getPositionInCanvas';
-
-import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
+import { MAIN_BUTTON, SECONDARY_BUTTON } from '../../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
-import { getCanvasContext } from '../utils/getCanvasContext';
-
-type ColorPickerState = {
-  activeSwatch: 'fill' | 'stroke';
-};
+} from '../../types/DrawToolDescriptor';
+import { getCanvasContext } from '../../utils/getCanvasContext';
+import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
+import { usePaletteStore } from './usePaletteStore';
 
 export const colorPickerDescriptor = {
   description: 'Color picker',
   icon: faEyeDropper,
-  initialState: {
-    activeSwatch: 'stroke',
-  },
   name: 'colorPicker' as const,
   onMouseDown: handlePicker,
-} satisfies DrawToolDescriptor<ColorPickerState>;
+} satisfies DrawToolDescriptor;
 
-function handlePicker(
-  event: MouseEvent,
-  { mainCanvas, setSharedState }: DrawToolListenerData<ColorPickerState>,
-) {
+function handlePicker(event: MouseEvent, { mainCanvas }: DrawToolListenerData) {
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
   const imageData = context.getImageData(x, y, 1, 1).data;
@@ -35,8 +25,8 @@ function handlePicker(
     .join('')}`;
 
   if (event.button === MAIN_BUTTON) {
-    setSharedState((state) => ({ ...state, strokeColor: hex }));
+    usePaletteStore.setState({ strokeColor: hex });
   } else if (event.button === SECONDARY_BUTTON) {
-    setSharedState((state) => ({ ...state, fillColor: hex }));
+    usePaletteStore.setState({ fillColor: hex });
   }
 }

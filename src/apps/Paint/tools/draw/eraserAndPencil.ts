@@ -1,18 +1,19 @@
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
 import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 
-import { MAIN_BUTTON } from '../constants';
+import { MAIN_BUTTON } from '../../constants';
 import {
   type DrawToolDescriptor,
   type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
-import { getCanvasContext } from '../utils/getCanvasContext';
-import { getPositionInCanvas } from '../utils/getPositionInCanvas';
+} from '../../types/DrawToolDescriptor';
+import { getCanvasContext } from '../../utils/getCanvasContext';
+import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
+import { usePaletteStore } from '../palette/usePaletteStore';
+import { useDrawStore } from './useDrawStore';
 
 export const eraserDescriptor = {
   description: 'Eraser',
   icon: faEraser,
-  initialState: undefined,
   name: 'eraser' as const,
   onMouseDown: handleEraser,
 } satisfies DrawToolDescriptor;
@@ -20,7 +21,6 @@ export const eraserDescriptor = {
 export const pencilDescriptor = {
   description: 'Pencil',
   icon: faPencil,
-  initialState: undefined,
   name: 'pencil' as const,
   onMouseDown: handlePencil,
 } satisfies DrawToolDescriptor;
@@ -38,7 +38,7 @@ function extendPath(ctx: CanvasRenderingContext2D, x: number, y: number): void {
 
 function handleEraser(
   event: MouseEvent,
-  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: DrawToolListenerData,
 ) {
   if (event.button !== MAIN_BUTTON) {
     return;
@@ -46,16 +46,16 @@ function handleEraser(
 
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { width } = getSharedState();
+  const { lineWidth } = useDrawStore.getState();
 
   snapshot();
 
-  context.lineWidth = width;
+  context.lineWidth = lineWidth;
   context.lineCap = 'round';
   context.lineJoin = 'round';
   context.globalCompositeOperation = 'destination-out';
   context.beginPath();
-  context.arc(x, y, width / 2, 0, Math.PI * 2);
+  context.arc(x, y, lineWidth / 2, 0, Math.PI * 2);
   context.fillStyle = 'rgba(0,0,0,1)';
   context.fill();
   context.beginPath();
@@ -78,26 +78,26 @@ function handleEraser(
 
 function handlePencil(
   event: MouseEvent,
-  { getSharedState, mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: DrawToolListenerData,
 ) {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
+  snapshot();
 
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const sharedState = getSharedState();
+  const { lineWidth } = useDrawStore.getState();
+  const { strokeColor } = usePaletteStore.getState();
 
-  snapshot();
-
-  context.lineWidth = sharedState.width;
-  context.strokeStyle = sharedState.strokeColor;
-  context.fillStyle = sharedState.strokeColor;
+  context.lineWidth = lineWidth;
+  context.strokeStyle = strokeColor;
+  context.fillStyle = strokeColor;
   context.lineCap = 'round';
   context.lineJoin = 'round';
   context.globalCompositeOperation = 'source-over';
   context.beginPath();
-  context.arc(x, y, sharedState.width / 2, 0, Math.PI * 2);
+  context.arc(x, y, lineWidth / 2, 0, Math.PI * 2);
   context.fill();
   context.beginPath();
   context.moveTo(x, y);

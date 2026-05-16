@@ -18,19 +18,20 @@
 }
 
 .group {
-  display: flex;
   align-items: center;
-  height: 3.2rem;
-  padding: 0 1rem;
-
+  display: flex;
+  flex-wrap: nowrap;
   gap: var(--spacing-s);
+  height: 3.2rem;
+  padding: 0;
+
+  &:not(:first-child) {
+    padding-left: var(--spacing-m);
+  }
 
   &:not(:last-child) {
     border-right: 0.1rem solid rgba(0, 0, 0, 0.08);
-  }
-
-  &:last-child {
-    padding-right: 0;
+    padding-right: var(--spacing-m);
   }
 }
 
@@ -43,13 +44,12 @@
 
 /* ── Tools ─────────────────────────────────────────────────────────────────── */
 
-.toolsGroup {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  height: 3.2rem;
-  padding-right: 1.2rem;
-  border-right: 0.1rem solid rgba(0, 0, 0, 0.08);
+.drawingToolsGroup {
+  gap: 0;
+}
+
+.toolOptionsGroup:not(:last-child) {
+  border-right: 0;
 }
 
 .tool {
@@ -281,7 +281,7 @@
 }
 
 .numberInput {
-  width: 5.6rem;
+  width: 4.5rem;
 }
 
 .selectInput {

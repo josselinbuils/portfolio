@@ -1,14 +1,14 @@
 import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
-import { colorPickerDescriptor } from './colorPicker';
-import { eraserDescriptor, pencilDescriptor } from './eraserAndPencil';
-import { magicWandDescriptor } from './magicWand';
-import { paintBucketDescriptor } from './paintBucket';
-import { selectDescriptor } from './selection';
+import { eraserDescriptor, pencilDescriptor } from './draw/eraserAndPencil';
 import {
   circleDescriptor,
   rectDescriptor,
   rectRoundDescriptor,
-} from './shapes';
+} from './draw/shapes';
+import { paintBucketDescriptor } from './paintBucket';
+import { colorPickerDescriptor } from './palette/colorPicker';
+import { magicWandDescriptor } from './selection/magicWand';
+import { selectDescriptor } from './selection/selection';
 import { textDescriptor } from './text';
 
 export const tools = [
