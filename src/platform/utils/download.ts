@@ -1,6 +1,6 @@
-export function download(filename: string, base64Content: string): void {
+export function download(filename: string, url: string): void {
   const element = document.createElement('a');
-  element.setAttribute('href', base64Content);
+  element.setAttribute('href', url);
   element.setAttribute('download', filename);
   element.style.display = 'none';
   document.body.appendChild(element);

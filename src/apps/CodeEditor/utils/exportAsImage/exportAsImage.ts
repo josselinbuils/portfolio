@@ -1,5 +1,6 @@
+import { download } from '@/platform/utils/download';
+
 import { convertSvg } from './utils/convertSvg';
-import { download } from './utils/download';
 import { renderSvg } from './utils/renderSvg';
 
 const SCALE = 2;

@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { Window } from '@/platform/components/Window/Window';
 import { type WindowComponent } from '@/platform/components/Window/WindowComponent';
 import { useKeyMap } from '@/platform/hooks/useKeyMap';
+import { download } from '@/platform/utils/download';
 import { throttle } from '@/platform/utils/throttle';
 
 import { Toolbar } from './components/Toolbar/Toolbar';
@@ -71,6 +72,7 @@ export const Paint: WindowComponent = ({
       return;
     }
     const context = getCanvasContext(mainRef.current);
+
     if (pendingImageRef.current) {
       context.drawImage(pendingImageRef.current, 0, 0);
       pendingImageRef.current = null;
@@ -206,6 +208,20 @@ export const Paint: WindowComponent = ({
     };
 
     img.src = url;
+  }
+
+  function saveImage() {
+    if (!mainRef.current) {
+      return;
+    }
+    mainRef.current.toBlob((blob) => {
+      if (!blob) {
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      download('image.png', url);
+      URL.revokeObjectURL(url);
+    });
   }
 
   function clearCanvas() {
@@ -470,6 +486,7 @@ export const Paint: WindowComponent = ({
         const { mainCanvas, overlayCanvas } = createListenerData();
         selectAll(mainCanvas, overlayCanvas);
       },
+      'CtrlCmd+S': saveImage,
       'CtrlCmd+Y,CtrlCmd+Shift+Z': redo,
       'CtrlCmd+Z': undo,
       Escape: () => {
@@ -518,6 +535,7 @@ export const Paint: WindowComponent = ({
           onOpenImage={openImage}
           onRedo={redo}
           onResetZoom={resetZoom}
+          onSaveImage={saveImage}
           onSetTool={setTool}
           onUndo={undo}
           onZoomIn={zoomIn}

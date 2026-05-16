@@ -1,4 +1,5 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons/faFile';
+import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons/faFloppyDisk';
 import { faFolderOpen } from '@fortawesome/free-regular-svg-icons/faFolderOpen';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
@@ -28,6 +29,7 @@ export type ToolbarProps = {
   onOpenImage(): void;
   onRedo(): void;
   onResetZoom(): void;
+  onSaveImage(): void;
   onSetTool(t: DrawTool): void;
   onUndo(): void;
   onZoomIn(): void;
@@ -43,6 +45,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   onOpenImage,
   onRedo,
   onResetZoom,
+  onSaveImage,
   onSetTool,
   onUndo,
   onZoomIn,
@@ -337,6 +340,15 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
           type="button"
         >
           <FontAwesomeIcon icon={faFolderOpen} />
+        </button>
+        <button
+          aria-label="Save image"
+          className={classes.actionBtn}
+          onClick={onSaveImage}
+          title="Save (⌘S)"
+          type="button"
+        >
+          <FontAwesomeIcon icon={faFloppyDisk} />
         </button>
         <button
           aria-label="Undo"
