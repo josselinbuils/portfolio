@@ -1,4 +1,4 @@
-import { type DrawToolDescriptor } from '../types/DrawToolDescriptor';
+import { type ToolDescriptor } from '../types/ToolDescriptor';
 import { eraserDescriptor, pencilDescriptor } from './draw/eraserAndPencil';
 import {
   circleDescriptor,
@@ -7,12 +7,14 @@ import {
 } from './draw/shapes';
 import { paintBucketDescriptor } from './paintBucket';
 import { colorPickerDescriptor } from './palette/colorPicker';
+import { lassoDescriptor } from './selection/lasso';
 import { magicWandDescriptor } from './selection/magicWand';
 import { selectDescriptor } from './selection/selection';
 import { textDescriptor } from './text';
 
 export const tools = [
   selectDescriptor,
+  lassoDescriptor,
   magicWandDescriptor,
   pencilDescriptor,
   eraserDescriptor,
@@ -22,6 +24,6 @@ export const tools = [
   textDescriptor,
   paintBucketDescriptor,
   colorPickerDescriptor,
-] satisfies DrawToolDescriptor[];
+] satisfies ToolDescriptor[];
 
-export type DrawTool = (typeof tools)[number]['name'];
+export type Tool = (typeof tools)[number]['name'];

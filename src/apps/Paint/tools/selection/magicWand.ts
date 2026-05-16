@@ -4,9 +4,9 @@ import { throttle } from '@/platform/utils/throttle';
 
 import { MAIN_BUTTON } from '../../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../../types/ToolDescriptor';
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { useSelectionStore } from './useSelectionStore';
@@ -18,7 +18,7 @@ export const magicWandDescriptor = {
   icon: faWandMagicSparkles,
   name: 'magicWand' as const,
   onMouseDown: handleMagicWand,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 function applyMagicWand(
   imageData: ImageData,
@@ -175,7 +175,7 @@ function computeColorMatch(
 
 function handleMagicWand(
   event: MouseEvent,
-  { mainCanvas, overlayCanvas }: DrawToolListenerData,
+  { mainCanvas, overlayCanvas }: ToolListenerData,
 ): void {
   if (event.button !== MAIN_BUTTON) {
     return;

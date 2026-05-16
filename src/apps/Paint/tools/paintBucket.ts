@@ -4,9 +4,9 @@ import { throttle } from '@/platform/utils/throttle';
 
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../types/ToolDescriptor';
 import { hexToRgba } from '../utils/color';
 import { getCanvasContext } from '../utils/getCanvasContext';
 import { getPositionInCanvas } from '../utils/getPositionInCanvas';
@@ -18,7 +18,7 @@ export const paintBucketDescriptor = {
   icon: faFillDrip,
   name: 'paintBucket' as const,
   onMouseDown: handlePaintBucket,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 function applyFill(
   context: CanvasRenderingContext2D,
@@ -129,7 +129,7 @@ function applyFill(
 
 function handlePaintBucket(
   event: MouseEvent,
-  { mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: ToolListenerData,
 ) {
   if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;

@@ -1,10 +1,10 @@
-import { faVectorPolygon } from '@fortawesome/free-solid-svg-icons/faVectorPolygon';
+import { faObjectGroup } from '@fortawesome/free-solid-svg-icons/faObjectGroup';
 
 import { MAIN_BUTTON } from '../../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../../types/ToolDescriptor';
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { useSelectionStore } from './useSelectionStore';
@@ -13,10 +13,10 @@ import { startAnts } from './utils/startAnts';
 
 export const selectDescriptor = {
   description: 'Marquee select',
-  icon: faVectorPolygon,
+  icon: faObjectGroup,
   name: 'select' as const,
   onMouseDown: handleSelect,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 function handleMarqueeMove(
   event: MouseEvent,
@@ -70,7 +70,7 @@ function handleMarqueeUp(
 
 function handleSelect(
   event: MouseEvent,
-  { mainCanvas, overlayCanvas }: DrawToolListenerData,
+  { mainCanvas, overlayCanvas }: ToolListenerData,
 ) {
   if (event.button !== MAIN_BUTTON) {
     return;

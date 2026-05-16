@@ -3,9 +3,9 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 
 import { MAIN_BUTTON } from '../../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../../types/ToolDescriptor';
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { usePaletteStore } from '../palette/usePaletteStore';
@@ -16,14 +16,14 @@ export const eraserDescriptor = {
   icon: faEraser,
   name: 'eraser' as const,
   onMouseDown: handleEraser,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 export const pencilDescriptor = {
   description: 'Pencil',
   icon: faPencil,
   name: 'pencil' as const,
   onMouseDown: handlePencil,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 function endPath(canvas: HTMLCanvasElement): void {
   getCanvasContext(canvas).globalCompositeOperation = 'source-over';
@@ -38,7 +38,7 @@ function extendPath(ctx: CanvasRenderingContext2D, x: number, y: number): void {
 
 function handleEraser(
   event: MouseEvent,
-  { mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: ToolListenerData,
 ) {
   if (event.button !== MAIN_BUTTON) {
     return;
@@ -78,7 +78,7 @@ function handleEraser(
 
 function handlePencil(
   event: MouseEvent,
-  { mainCanvas, snapshot }: DrawToolListenerData,
+  { mainCanvas, snapshot }: ToolListenerData,
 ) {
   if (event.button !== MAIN_BUTTON) {
     return;

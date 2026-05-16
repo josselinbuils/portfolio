@@ -4,13 +4,13 @@ import { create } from 'zustand/react';
 
 import { MAIN_BUTTON } from '../../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../../types/ToolDescriptor';
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { usePaletteStore } from '../palette/usePaletteStore';
-import { type DrawTool } from '../tools';
+import { type Tool } from '../tools';
 import { useDrawStore } from './useDrawStore';
 
 type ShapeState = {
@@ -28,25 +28,25 @@ export const circleDescriptor = {
   icon: faCircle,
   name: 'circle' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'circle'),
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 export const rectDescriptor = {
   description: 'Rectangle',
   icon: faSquare,
   name: 'rect' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rect'),
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 export const rectRoundDescriptor = {
   description: 'Rounded rectangle',
   icon: faSquare,
   name: 'rectRound' as const,
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rectRound'),
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
 function drawShape(
   context: CanvasRenderingContext2D,
-  shapeTool: DrawTool,
+  shapeTool: Tool,
   rect: { x0: number; x1: number; y0: number; y1: number },
   style: {
     fillColor: string;
@@ -119,8 +119,8 @@ function drawShape(
 
 function handleShapeMouseDown(
   event: MouseEvent,
-  data: DrawToolListenerData,
-  shapeTool: DrawTool,
+  data: ToolListenerData,
+  shapeTool: Tool,
 ): void {
   const { mainCanvas, overlayCanvas } = data;
 
@@ -156,8 +156,8 @@ function handleShapeMouseDown(
 
 function handleShapeMouseMove(
   event: MouseEvent,
-  { mainCanvas, overlayCanvas }: DrawToolListenerData,
-  shapeTool: DrawTool,
+  { mainCanvas, overlayCanvas }: ToolListenerData,
+  shapeTool: Tool,
 ): void {
   const { fillOn, startPosition } = useShapeStore.getState();
 
@@ -183,8 +183,8 @@ function handleShapeMouseMove(
 
 function handleShapeMouseUp(
   event: MouseEvent,
-  { mainCanvas, overlayCanvas, snapshot }: DrawToolListenerData,
-  shapeTool: DrawTool,
+  { mainCanvas, overlayCanvas, snapshot }: ToolListenerData,
+  shapeTool: Tool,
 ): void {
   const { fillOn, startPosition } = useShapeStore.getState();
 

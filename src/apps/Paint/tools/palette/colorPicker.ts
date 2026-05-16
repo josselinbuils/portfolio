@@ -2,9 +2,9 @@ import { faEyeDropper } from '@fortawesome/free-solid-svg-icons/faEyeDropper';
 
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../../constants';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../../types/ToolDescriptor';
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { usePaletteStore } from './usePaletteStore';
@@ -14,9 +14,9 @@ export const colorPickerDescriptor = {
   icon: faEyeDropper,
   name: 'colorPicker' as const,
   onMouseDown: handlePicker,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
-function handlePicker(event: MouseEvent, { mainCanvas }: DrawToolListenerData) {
+function handlePicker(event: MouseEvent, { mainCanvas }: ToolListenerData) {
   const context = getCanvasContext(mainCanvas);
   const { x, y } = getPositionInCanvas(event, mainCanvas);
   const imageData = context.getImageData(x, y, 1, 1).data;

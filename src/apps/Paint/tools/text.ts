@@ -4,9 +4,9 @@ import { create } from 'zustand/react';
 import { FONT_OPTIONS, MAIN_BUTTON } from '../constants';
 import classes from '../Paint.module.css';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from '../types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from '../types/ToolDescriptor';
 import { getCanvasContext } from '../utils/getCanvasContext';
 import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 import { usePaletteStore } from './palette/usePaletteStore';
@@ -27,13 +27,11 @@ export const textDescriptor = {
   description: 'Text',
   icon: faFont,
   name: 'text' as const,
+  onDeactivate: ({ mainCanvas, snapshot }) => commitText(mainCanvas, snapshot),
   onMouseDown: openText,
-} satisfies DrawToolDescriptor;
+} satisfies ToolDescriptor;
 
-export function commitText(
-  mainCanvas: HTMLCanvasElement,
-  snapshot: () => void,
-): void {
+function commitText(mainCanvas: HTMLCanvasElement, snapshot: () => void): void {
   const { input } = useTextStore.getState();
 
   if (!input) {
@@ -69,7 +67,7 @@ export function commitText(
 
 function openText(
   event: MouseEvent,
-  { mainCanvas, snapshot, viewportElement }: DrawToolListenerData,
+  { mainCanvas, snapshot, viewportElement }: ToolListenerData,
 ): void {
   if (event.button !== MAIN_BUTTON) {
     return;

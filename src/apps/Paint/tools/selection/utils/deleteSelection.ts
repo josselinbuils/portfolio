@@ -1,9 +1,9 @@
-import type { DrawToolListenerData } from '@/apps/Paint/types/DrawToolDescriptor';
+import type { ToolListenerData } from '@/apps/Paint/types/ToolDescriptor';
 
 import { getCanvasContext } from '../../../utils/getCanvasContext';
 import { useSelectionStore } from '../useSelectionStore';
 
-export function deleteSelection(data: DrawToolListenerData): void {
+export function deleteSelection(data: ToolListenerData): void {
   const { mainCanvas, snapshot } = data;
   const { selection } = useSelectionStore.getState();
 

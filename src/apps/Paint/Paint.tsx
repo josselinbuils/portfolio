@@ -20,12 +20,11 @@ import { Palette } from './tools/palette/components/Palette/Palette';
 import { clearSelection } from './tools/selection/utils/clearSelection';
 import { deleteSelection } from './tools/selection/utils/deleteSelection';
 import { selectAll } from './tools/selection/utils/selectAll';
-import { commitText } from './tools/text';
-import { type DrawTool, tools } from './tools/tools';
+import { type Tool, tools } from './tools/tools';
 import {
-  type DrawToolDescriptor,
-  type DrawToolListenerData,
-} from './types/DrawToolDescriptor';
+  type ToolDescriptor,
+  type ToolListenerData,
+} from './types/ToolDescriptor';
 import { computeFitCanvasSize } from './utils/computeFitCanvasSize';
 import { computeFitZoom } from './utils/computeFitZoom';
 import { getCanvasContext } from './utils/getCanvasContext';
@@ -36,7 +35,7 @@ export const Paint: WindowComponent = ({
   windowRef,
   ...injectedWindowProps
 }) => {
-  const [currentTool, setCurrentTool] = useState<DrawTool>('pencil');
+  const [currentTool, setCurrentTool] = useState<Tool>('pencil');
   const [status, setStatus] = useState('');
   const [undoRedoState, setUndoRedoState] = useState<{
     redoStack: ImageData[];
@@ -169,12 +168,13 @@ export const Paint: WindowComponent = ({
     }
   }
 
-  function setTool(name: DrawTool) {
-    setCurrentTool(name);
+  function setTool(name: Tool) {
+    const currentDescriptor = tools.find(({ name }) => name === currentTool) as
+      | ToolDescriptor
+      | undefined;
 
-    if (mainRef.current) {
-      commitText(mainRef.current, snapshot);
-    }
+    currentDescriptor?.onDeactivate?.(createListenerData());
+    setCurrentTool(name);
   }
 
   function openImage() {
@@ -237,7 +237,7 @@ export const Paint: WindowComponent = ({
     setCanvasSize(computeFitCanvasSize(viewportRef.current));
   }
 
-  function createListenerData(): DrawToolListenerData {
+  function createListenerData(): ToolListenerData {
     if (!mainRef.current || !overlayRef.current || !viewportInnerRef.current) {
       throw new Error('Canvas or viewport refs null');
     }
@@ -259,7 +259,7 @@ export const Paint: WindowComponent = ({
     }
 
     const toolDescriptor = tools.find(({ name }) => name === currentTool) as
-      | DrawToolDescriptor
+      | ToolDescriptor
       | undefined;
 
     if (!toolDescriptor) {
@@ -490,8 +490,13 @@ export const Paint: WindowComponent = ({
       'CtrlCmd+Y,CtrlCmd+Shift+Z': redo,
       'CtrlCmd+Z': undo,
       Escape: () => {
-        const { overlayCanvas } = createListenerData();
-        clearSelection(overlayCanvas);
+        const listenerData = createListenerData();
+        const descriptor = tools.find(({ name }) => name === currentTool) as
+          | ToolDescriptor
+          | undefined;
+
+        descriptor?.onDeactivate?.(listenerData);
+        clearSelection(listenerData.overlayCanvas);
       },
     },
     active,
@@ -500,7 +505,7 @@ export const Paint: WindowComponent = ({
   useKeyMap(
     Object.fromEntries(
       (
-        tools.find(({ name }) => name === currentTool) as DrawToolDescriptor
+        tools.find(({ name }) => name === currentTool) as ToolDescriptor
       ).shortcuts?.map(({ handler, keyStr }) => [
         keyStr,
         (event: KeyboardEvent) => handler(event, createListenerData()),

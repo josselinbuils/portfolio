@@ -1,18 +1,19 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-export type DrawToolDescriptor = {
+export type ToolDescriptor = {
   description: string;
   icon: IconDefinition;
   name: string;
-  onMouseDown: (event: MouseEvent, data: DrawToolListenerData) => void;
+  onDeactivate?: (data: ToolListenerData) => void;
+  onMouseDown: (event: MouseEvent, data: ToolListenerData) => void;
   shortcuts?: readonly {
     description: string;
-    handler: (event: KeyboardEvent, data: DrawToolListenerData) => void | false;
+    handler: (event: KeyboardEvent, data: ToolListenerData) => void | false;
     keyStr: string;
   }[];
 };
 
-export type DrawToolListenerData = {
+export type ToolListenerData = {
   mainCanvas: HTMLCanvasElement;
   overlayCanvas: HTMLCanvasElement;
   snapshot: () => void;

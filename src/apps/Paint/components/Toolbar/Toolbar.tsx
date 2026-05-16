@@ -17,7 +17,7 @@ import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
 import { useShapeStore } from '../../tools/draw/shapes';
 import { useDrawStore } from '../../tools/draw/useDrawStore';
 import { useTextStore } from '../../tools/text';
-import { type DrawTool, tools } from '../../tools/tools';
+import { type Tool, tools } from '../../tools/tools';
 import classes from './Toolbar.module.css';
 
 export type ToolbarProps = {
@@ -28,11 +28,11 @@ export type ToolbarProps = {
   onRedo(): void;
   onResetZoom(): void;
   onSaveImage(): void;
-  onSetTool(t: DrawTool): void;
+  onSetTool(t: Tool): void;
   onUndo(): void;
   onZoomIn(): void;
   onZoomOut(): void;
-  tool: DrawTool;
+  tool: Tool;
   zoom: number;
 };
 
@@ -104,12 +104,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   }
 
   const showFillToggle = ['circle', 'rect', 'rectRound'].includes(tool);
-  const showLineWidth = ![
-    'colorPicker',
-    'magicWand',
-    'paintBucket',
-    'select',
-    'text',
+  const showLineWidth = [
+    'circle',
+    'eraser',
+    'pencil',
+    'rect',
+    'rectRound',
   ].includes(tool);
   const showTextOptions = tool === 'text';
   const showToolOptions = showFillToggle || showLineWidth || showTextOptions;
