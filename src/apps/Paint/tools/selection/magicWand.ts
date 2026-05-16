@@ -1,5 +1,7 @@
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 
+import { throttle } from '@/platform/utils/throttle';
+
 import { MAIN_BUTTON } from '../../constants';
 import {
   type DrawToolDescriptor,
@@ -17,6 +19,66 @@ export const magicWandDescriptor = {
   name: 'magicWand' as const,
   onMouseDown: handleMagicWand,
 } satisfies DrawToolDescriptor;
+
+function applyMagicWand(
+  imageData: ImageData,
+  clickX: number,
+  clickY: number,
+  tolerance: number,
+): void {
+  const { height, width } = imageData;
+  const colorMatch = computeColorMatch(
+    imageData,
+    imageData.data[(clickY * width + clickX) * 4],
+    imageData.data[(clickY * width + clickX) * 4 + 1],
+    imageData.data[(clickY * width + clickX) * 4 + 2],
+    imageData.data[(clickY * width + clickX) * 4 + 3],
+    tolerance,
+  );
+  const mask = bfsConnectedComponent(colorMatch, clickX, clickY, width, height);
+
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let py = 0; py < height; py++) {
+    for (let px = 0; px < width; px++) {
+      if (!mask[py * width + px]) {
+        continue;
+      }
+      if (px < minX) {
+        minX = px;
+      }
+      if (px > maxX) {
+        maxX = px;
+      }
+      if (py < minY) {
+        minY = py;
+      }
+      if (py > maxY) {
+        maxY = py;
+      }
+    }
+  }
+
+  if (maxX < 0) {
+    useSelectionStore.setState({ selection: null });
+    return;
+  }
+
+  useSelectionStore.setState({
+    selection: {
+      boundary: traceBoundary(mask, width, height),
+      height: maxY - minY + 1,
+      imageData: null,
+      mask,
+      width: maxX - minX + 1,
+      x: minX,
+      y: minY,
+    },
+  });
+}
 
 function bfsConnectedComponent(
   colorMatch: Uint8Array,
@@ -111,82 +173,44 @@ function computeColorMatch(
   return colorMatch;
 }
 
-async function handleMagicWand(
+function handleMagicWand(
   event: MouseEvent,
   { mainCanvas, overlayCanvas }: DrawToolListenerData,
-): Promise<void> {
+): void {
   if (event.button !== MAIN_BUTTON) {
     return;
   }
   clearSelection(overlayCanvas);
 
   const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { tolerance } = useSelectionStore.getState();
   const { height, width } = mainCanvas;
-
-  const context = getCanvasContext(mainCanvas);
-  const imageData = context.getImageData(0, 0, width, height);
-  const startIndex = y * width + x;
-  const targetR = imageData.data[startIndex * 4];
-  const targetG = imageData.data[startIndex * 4 + 1];
-  const targetB = imageData.data[startIndex * 4 + 2];
-  const targetA = imageData.data[startIndex * 4 + 3];
-
-  const colorMatch = computeColorMatch(
-    imageData,
-    targetR,
-    targetG,
-    targetB,
-    targetA,
-    tolerance,
+  const imageData = getCanvasContext(mainCanvas).getImageData(
+    0,
+    0,
+    width,
+    height,
   );
 
-  const mask = bfsConnectedComponent(colorMatch, x, y, width, height);
-
-  let minX = width;
-  let minY = height;
-  let maxX = -1;
-  let maxY = -1;
-
-  for (let py = 0; py < height; py++) {
-    for (let px = 0; px < width; px++) {
-      if (!mask[py * width + px]) {
-        continue;
-      }
-      if (px < minX) {
-        minX = px;
-      }
-      if (px > maxX) {
-        maxX = px;
-      }
-      if (py < minY) {
-        minY = py;
-      }
-      if (py > maxY) {
-        maxY = py;
-      }
-    }
-  }
-
-  if (maxX < 0) {
-    return;
-  }
-
-  const boundary = traceBoundary(mask, width, height);
-
-  useSelectionStore.setState({
-    selection: {
-      boundary,
-      height: maxY - minY + 1,
-      imageData: null,
-      mask,
-      width: maxX - minX + 1,
-      x: minX,
-      y: minY,
-    },
-  });
+  applyMagicWand(imageData, x, y, 1);
 
   startAnts(overlayCanvas);
+
+  const onMouseMove = throttle((moveEvent: MouseEvent) => {
+    const pos = getPositionInCanvas(moveEvent, mainCanvas);
+    const tolerance = Math.min(
+      128,
+      1 + Math.round(Math.hypot(pos.x - x, pos.y - y) * 0.5),
+    );
+    applyMagicWand(imageData, x, y, tolerance);
+  }, 200);
+
+  function onMouseUp() {
+    window.removeEventListener('mousemove', onMouseMove as EventListener);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
+
+  window.addEventListener('mousemove', onMouseMove as EventListener);
+  window.addEventListener('mouseup', onMouseUp);
 }
 
 // Traces the boundary of a pixel mask into a Path2D using directed pixel edges.

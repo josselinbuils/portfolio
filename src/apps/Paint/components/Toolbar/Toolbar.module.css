@@ -48,10 +48,6 @@
   gap: 0;
 }
 
-.toolOptionsGroup:not(:last-child) {
-  border-right: 0;
-}
-
 .tool {
   text-align: inherit;
   border: none;

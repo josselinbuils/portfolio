@@ -17,7 +17,6 @@ import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
 import { useShapeStore } from '../../tools/draw/shapes';
 import { useDrawStore } from '../../tools/draw/useDrawStore';
 import { usePaintBucketStore } from '../../tools/paintBucket';
-import { useSelectionStore } from '../../tools/selection/useSelectionStore';
 import { useTextStore } from '../../tools/text';
 import { type DrawTool, tools } from '../../tools/tools';
 import classes from './Toolbar.module.css';
@@ -113,7 +112,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     'select',
     'text',
   ].includes(tool);
-  const showTolerance = ['magicWand', 'paintBucket'].includes(tool);
+  const showTolerance = tool === 'paintBucket';
   const showTextOptions = tool === 'text';
   const showToolOptions =
     showFillToggle || showLineWidth || showTolerance || showTextOptions;
@@ -130,23 +129,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   const lineWidth = useDrawStore((state) =>
     showLineWidth ? state.lineWidth : 0,
   );
-
-  const paintBucketTolerance = usePaintBucketStore((state) =>
+  const tolerance = usePaintBucketStore((state) =>
     tool === 'paintBucket' ? state.tolerance : 0,
   );
-  const selectionTolerance = useSelectionStore((state) =>
-    tool === 'magicWand' ? state.tolerance : 0,
-  );
-  const tolerance =
-    tool === 'paintBucket' ? paintBucketTolerance : selectionTolerance;
-
-  const setTolerance = (tolerance: number) => {
-    if (tool === 'paintBucket') {
-      usePaintBucketStore.setState({ tolerance });
-    } else {
-      useSelectionStore.setState({ tolerance });
-    }
-  };
 
   return (
     <div aria-label="Paint tools" className={classes.options} role="toolbar">
@@ -173,11 +158,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
         ))}
       </div>
       {showToolOptions && (
-        <div
-          aria-label="Tool options"
-          className={cn(classes.group, classes.toolOptionsGroup)}
-          role="group"
-        >
+        <div aria-label="Tool options" className={classes.group} role="group">
           {showLineWidth && (
             <button
               aria-expanded={showLineWidthPopover}
@@ -227,7 +208,9 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
                 max={128}
                 min={0}
                 onInput={(event) => {
-                  setTolerance(+(event.target as HTMLInputElement).value);
+                  usePaintBucketStore.setState({
+                    tolerance: +(event.target as HTMLInputElement).value,
+                  });
                 }}
                 type="range"
                 value={tolerance}
@@ -237,8 +220,10 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
                 className={classes.numberInput}
                 max={128}
                 min={0}
-                onInput={(e) => {
-                  setTolerance(+(e.target as HTMLInputElement).value);
+                onInput={(event) => {
+                  usePaintBucketStore.setState({
+                    tolerance: +(event.target as HTMLInputElement).value,
+                  });
                 }}
                 type="number"
                 value={tolerance}

@@ -520,8 +520,8 @@ export const Paint: WindowComponent = ({
   return (
     <Window
       active={active}
-      minHeight={600}
-      minWidth={960}
+      minHeight={640}
+      minWidth={1024}
       ref={windowRef}
       resizable
       title="Paint"

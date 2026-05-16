@@ -13,11 +13,9 @@ export type Selection = {
 type SelectionState = {
   antsRaf: number;
   selection: Selection | null;
-  tolerance: number;
 };
 
 export const useSelectionStore = create<SelectionState>(() => ({
   antsRaf: 0,
   selection: null,
-  tolerance: 20,
 }));
