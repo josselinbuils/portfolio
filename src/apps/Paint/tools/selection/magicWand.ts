@@ -198,7 +198,7 @@ function handleMagicWand(
   const onMouseMove = throttle((moveEvent: MouseEvent) => {
     const pos = getPositionInCanvas(moveEvent, mainCanvas);
     const tolerance = Math.min(
-      128,
+      255,
       1 + Math.round(Math.hypot(pos.x - x, pos.y - y) * 0.5),
     );
     applyMagicWand(imageData, x, y, tolerance);

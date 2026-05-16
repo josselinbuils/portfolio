@@ -175,17 +175,17 @@ function handlePaintBucket(
   const onMouseMove = throttle((moveEvent: MouseEvent) => {
     const pos = getPositionInCanvas(moveEvent, mainCanvas);
     const tolerance = Math.min(
-      128,
+      255,
       1 + Math.round(Math.hypot(pos.x - x, pos.y - y) * 0.5),
     );
     applyFill(context, originalData, area, activeColor, tolerance);
   }, 200);
 
   function onMouseUp() {
-    window.removeEventListener('mousemove', onMouseMove as EventListener);
+    window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
   }
 
-  window.addEventListener('mousemove', onMouseMove as EventListener);
+  window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('mouseup', onMouseUp);
 }
