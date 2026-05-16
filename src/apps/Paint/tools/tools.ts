@@ -1,11 +1,7 @@
 import { type ToolDescriptor } from '../types/ToolDescriptor';
 import { eraserDescriptor, pencilDescriptor } from './draw/eraserAndPencil';
 import { polygonDescriptor, starDescriptor } from './draw/polygonStar';
-import {
-  circleDescriptor,
-  rectDescriptor,
-  rectRoundDescriptor,
-} from './draw/shapes';
+import { circleDescriptor, rectDescriptor } from './draw/shapes';
 import { paintBucketDescriptor } from './paintBucket';
 import { colorPickerDescriptor } from './palette/colorPicker';
 import { lassoDescriptor } from './selection/lasso';
@@ -20,7 +16,6 @@ export const tools = [
   pencilDescriptor,
   eraserDescriptor,
   rectDescriptor,
-  rectRoundDescriptor,
   circleDescriptor,
   polygonDescriptor,
   starDescriptor,

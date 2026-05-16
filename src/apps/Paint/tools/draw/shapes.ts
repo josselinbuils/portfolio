@@ -1,5 +1,6 @@
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
+import { create } from 'zustand/react';
 
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../../constants';
 import {
@@ -9,8 +10,13 @@ import {
 import { getCanvasContext } from '../../utils/getCanvasContext';
 import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { usePaletteStore } from '../palette/usePaletteStore';
-import { type Tool } from '../tools';
 import { useDrawStore } from './useDrawStore';
+
+type RectState = {
+  cornerRadius: number;
+};
+
+export const useRectStore = create<RectState>(() => ({ cornerRadius: 20 }));
 
 export const circleDescriptor = {
   description: 'Circle',
@@ -26,18 +32,12 @@ export const rectDescriptor = {
   onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rect'),
 } satisfies ToolDescriptor;
 
-export const rectRoundDescriptor = {
-  description: 'Rounded rectangle',
-  icon: faSquare,
-  name: 'rectRound' as const,
-  onMouseDown: (event, data) => handleShapeMouseDown(event, data, 'rectRound'),
-} satisfies ToolDescriptor;
-
 function drawShape(
   context: CanvasRenderingContext2D,
-  shapeTool: Tool,
+  shapeTool: 'circle' | 'rect',
   rect: { x0: number; x1: number; y0: number; y1: number },
   style: {
+    cornerRadius: number;
     fillColor: string;
     fillOn: boolean;
     lineWidth: number;
@@ -62,7 +62,7 @@ function drawShape(
   const y = Math.min(y0, endY);
   const height = Math.abs(endY - y0);
   const width = Math.abs(endX - x0);
-  const { fillColor, fillOn, lineWidth, strokeColor } = style;
+  const { cornerRadius, fillColor, fillOn, lineWidth, strokeColor } = style;
 
   context.lineWidth = lineWidth;
   context.strokeStyle = strokeColor;
@@ -74,21 +74,23 @@ function drawShape(
   context.beginPath();
 
   if (shapeTool === 'rect') {
-    context.rect(x, y, width, height);
-  } else if (shapeTool === 'rectRound') {
-    const cornerRadius = Math.min(20, width / 2, height / 2, 4 + lineWidth * 2);
+    const r = Math.min(cornerRadius, width / 2, height / 2);
 
-    if (context.roundRect) {
-      context.roundRect(x, y, width, height, cornerRadius);
+    if (r > 0) {
+      if (context.roundRect) {
+        context.roundRect(x, y, width, height, r);
+      } else {
+        context.moveTo(x + r, y);
+        context.arcTo(x + width, y, x + width, y + height, r);
+        context.arcTo(x + width, y + height, x, y + height, r);
+        context.arcTo(x, y + height, x, y, r);
+        context.arcTo(x, y, x + width, y, r);
+        context.closePath();
+      }
     } else {
-      context.moveTo(x + cornerRadius, y);
-      context.arcTo(x + width, y, x + width, y + height, cornerRadius);
-      context.arcTo(x + width, y + height, x, y + height, cornerRadius);
-      context.arcTo(x, y + height, x, y, cornerRadius);
-      context.arcTo(x, y, x + width, y, cornerRadius);
-      context.closePath();
+      context.rect(x, y, width, height);
     }
-  } else if (shapeTool === 'circle') {
+  } else {
     context.ellipse(
       x + width / 2,
       y + height / 2,
@@ -109,7 +111,7 @@ function drawShape(
 function handleShapeMouseDown(
   event: MouseEvent,
   data: ToolListenerData,
-  shapeTool: Tool,
+  shapeTool: 'circle' | 'rect',
 ): void {
   if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;
@@ -127,6 +129,7 @@ function handleShapeMouseDown(
 
   const { lineWidth } = useDrawStore.getState();
   const { fillColor, strokeColor } = usePaletteStore.getState();
+  const { cornerRadius } = useRectStore.getState();
   const fillOn = event.button === SECONDARY_BUTTON;
 
   function onMouseMove(moveEvent: MouseEvent) {
@@ -139,8 +142,8 @@ function handleShapeMouseDown(
       context,
       shapeTool,
       { x0, x1, y0, y1 },
-      { fillColor, fillOn, lineWidth, strokeColor },
-      event.shiftKey,
+      { cornerRadius, fillColor, fillOn, lineWidth, strokeColor },
+      moveEvent.shiftKey,
     );
   }
 
@@ -174,7 +177,7 @@ function handleShapeMouseDown(
         getCanvasContext(mainCanvas),
         shapeTool,
         { x0, x1, y0, y1 },
-        { fillColor, fillOn, lineWidth, strokeColor },
+        { cornerRadius, fillColor, fillOn, lineWidth, strokeColor },
         upEvent.shiftKey,
       );
     }

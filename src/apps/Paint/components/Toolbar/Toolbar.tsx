@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
 import { usePolygonStarStore } from '../../tools/draw/polygonStar';
+import { useRectStore } from '../../tools/draw/shapes';
 import { useDrawStore } from '../../tools/draw/useDrawStore';
 import { useTextStore } from '../../tools/text';
 import { type Tool, tools } from '../../tools/tools';
@@ -103,27 +104,27 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     setShowLineWidthPopover(true);
   }
 
-  const showFillTip = [
-    'circle',
-    'polygon',
-    'rect',
-    'rectRound',
-    'star',
-  ].includes(tool);
+  const showFillTip = ['circle', 'polygon', 'rect', 'star'].includes(tool);
   const showLineWidth = [
     'circle',
     'eraser',
     'pencil',
     'polygon',
     'rect',
-    'rectRound',
     'star',
   ].includes(tool);
   const showTextOptions = tool === 'text';
   const showPolygonStarOptions = ['polygon', 'star'].includes(tool);
+  const showRectOptions = tool === 'rect';
   const showToolOptions =
-    showLineWidth || showTextOptions || showPolygonStarOptions;
+    showLineWidth ||
+    showTextOptions ||
+    showPolygonStarOptions ||
+    showRectOptions;
 
+  const cornerRadius = useRectStore((state) =>
+    showRectOptions ? state.cornerRadius : 0,
+  );
   const sides = usePolygonStarStore((state) =>
     showPolygonStarOptions ? state.sides : 5,
   );
@@ -153,7 +154,6 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             })}
             key={name}
             onClick={() => onSetTool(name)}
-            style={name === 'rectRound' ? 'border-radius:5px' : undefined}
             title={description}
             type="button"
           >
@@ -186,6 +186,25 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               />
               <FontAwesomeIcon icon={faCaretDown} />
             </button>
+          )}
+          {showRectOptions && (
+            <>
+              <span aria-hidden="true" className={classes.label}>
+                Radius
+              </span>
+              <input
+                aria-label="Corner radius"
+                className={classes.numberInput}
+                min={0}
+                onInput={(event) => {
+                  useRectStore.setState({
+                    cornerRadius: +(event.target as HTMLInputElement).value,
+                  });
+                }}
+                type="number"
+                value={cornerRadius}
+              />
+            </>
           )}
           {showPolygonStarOptions && (
             <>
