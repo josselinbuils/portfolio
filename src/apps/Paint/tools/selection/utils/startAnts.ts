@@ -1,28 +1,27 @@
 import { getCanvasContext } from '../../../utils/getCanvasContext';
 import { type Selection, useSelectionStore } from '../useSelectionStore';
 
-export function startAnts(overlayCanvas: HTMLCanvasElement) {
-  const { antsRaf } = useSelectionStore.getState();
+let antsRaf: number = 0;
 
+export function startAnts(overlayCanvas: HTMLCanvasElement) {
   if (antsRaf) {
     cancelAnimationFrame(antsRaf);
   }
-
   let offset = 0;
 
   const tick = () => {
-    const { antsRaf, selection } = useSelectionStore.getState();
+    const { selection } = useSelectionStore.getState();
 
     if (!selection) {
       cancelAnimationFrame(antsRaf);
-      useSelectionStore.setState({ antsRaf: 0 });
+      antsRaf = 0;
       return;
     }
 
     offset = (offset + 0.5) % 8;
 
     drawAnts(overlayCanvas, selection, offset);
-    useSelectionStore.setState({ antsRaf: requestAnimationFrame(tick) });
+    antsRaf = requestAnimationFrame(tick);
   };
   tick();
 }

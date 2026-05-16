@@ -5,12 +5,6 @@ export function selectAll(
   mainCanvas: HTMLCanvasElement,
   overlayCanvas: HTMLCanvasElement,
 ) {
-  const { antsRaf } = useSelectionStore.getState();
-
-  if (antsRaf) {
-    cancelAnimationFrame(antsRaf);
-  }
-
   useSelectionStore.setState({
     selection: {
       height: mainCanvas.height,

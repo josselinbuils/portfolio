@@ -1,7 +1,7 @@
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
 import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 
-import { MAIN_BUTTON } from '../../constants';
+import { MAIN_BUTTON, SECONDARY_BUTTON } from '../../constants';
 import {
   type ToolDescriptor,
   type ToolListenerData,
@@ -45,7 +45,7 @@ function handleEraser(
   }
 
   const context = getCanvasContext(mainCanvas);
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
+  const { x: x0, y: y0 } = getPositionInCanvas(event, mainCanvas);
   const { lineWidth } = useDrawStore.getState();
 
   snapshot();
@@ -55,14 +55,14 @@ function handleEraser(
   context.lineJoin = 'round';
   context.globalCompositeOperation = 'destination-out';
   context.beginPath();
-  context.arc(x, y, lineWidth / 2, 0, Math.PI * 2);
+  context.arc(x0, y0, lineWidth / 2, 0, Math.PI * 2);
   context.fillStyle = 'rgba(0,0,0,1)';
   context.fill();
   context.beginPath();
-  context.moveTo(x, y);
+  context.moveTo(x0, y0);
 
-  function onMouseMove(event: MouseEvent) {
-    const { x, y } = getPositionInCanvas(event, mainCanvas);
+  function onMouseMove(moveEvent: MouseEvent) {
+    const { x, y } = getPositionInCanvas(moveEvent, mainCanvas);
     extendPath(context, x, y);
   }
 
@@ -80,30 +80,32 @@ function handlePencil(
   event: MouseEvent,
   { mainCanvas, snapshot }: ToolListenerData,
 ) {
-  if (event.button !== MAIN_BUTTON) {
+  if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;
   }
+
   snapshot();
 
   const context = getCanvasContext(mainCanvas);
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
+  const { x: x0, y: y0 } = getPositionInCanvas(event, mainCanvas);
   const { lineWidth } = useDrawStore.getState();
-  const { strokeColor } = usePaletteStore.getState();
+  const { fillColor, strokeColor } = usePaletteStore.getState();
+  const color = event.button === MAIN_BUTTON ? strokeColor : fillColor;
 
   context.lineWidth = lineWidth;
-  context.strokeStyle = strokeColor;
-  context.fillStyle = strokeColor;
+  context.strokeStyle = color;
+  context.fillStyle = color;
   context.lineCap = 'round';
   context.lineJoin = 'round';
   context.globalCompositeOperation = 'source-over';
   context.beginPath();
-  context.arc(x, y, lineWidth / 2, 0, Math.PI * 2);
+  context.arc(x0, y0, lineWidth / 2, 0, Math.PI * 2);
   context.fill();
   context.beginPath();
-  context.moveTo(x, y);
+  context.moveTo(x0, y0);
 
-  function onMouseMove(event: MouseEvent) {
-    const { x, y } = getPositionInCanvas(event, mainCanvas);
+  function onMouseMove(moveEvent: MouseEvent) {
+    const { x, y } = getPositionInCanvas(moveEvent, mainCanvas);
     extendPath(context, x, y);
   }
 

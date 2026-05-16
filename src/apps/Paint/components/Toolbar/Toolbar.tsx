@@ -14,7 +14,7 @@ import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
-import { useShapeStore } from '../../tools/draw/shapes';
+import { usePolygonStarStore } from '../../tools/draw/polygonStar';
 import { useDrawStore } from '../../tools/draw/useDrawStore';
 import { useTextStore } from '../../tools/text';
 import { type Tool, tools } from '../../tools/tools';
@@ -103,19 +103,29 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     setShowLineWidthPopover(true);
   }
 
-  const showFillToggle = ['circle', 'rect', 'rectRound'].includes(tool);
+  const showFillTip = [
+    'circle',
+    'polygon',
+    'rect',
+    'rectRound',
+    'star',
+  ].includes(tool);
   const showLineWidth = [
     'circle',
     'eraser',
     'pencil',
+    'polygon',
     'rect',
     'rectRound',
+    'star',
   ].includes(tool);
   const showTextOptions = tool === 'text';
-  const showToolOptions = showFillToggle || showLineWidth || showTextOptions;
+  const showPolygonStarOptions = ['polygon', 'star'].includes(tool);
+  const showToolOptions =
+    showLineWidth || showTextOptions || showPolygonStarOptions;
 
-  const fillOn = useShapeStore((state) =>
-    showFillToggle ? state.fillOn : false,
+  const sides = usePolygonStarStore((state) =>
+    showPolygonStarOptions ? state.sides : 5,
   );
   const fontFamily = useTextStore((state) =>
     showTextOptions ? state.fontFamily : '',
@@ -147,7 +157,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
             title={description}
             type="button"
           >
-            <FontAwesomeIcon icon={icon} />
+            <FontAwesomeIcon className={classes[`${name}Icon`]} icon={icon} />
           </button>
         ))}
       </div>
@@ -177,19 +187,25 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               <FontAwesomeIcon icon={faCaretDown} />
             </button>
           )}
-          {showFillToggle && (
-            <label className={classes.checkbox}>
+          {showPolygonStarOptions && (
+            <>
+              <span aria-hidden="true" className={classes.label}>
+                {tool === 'polygon' ? 'Sides' : 'Branches'}
+              </span>
               <input
-                checked={fillOn}
-                onChange={(e) => {
-                  useShapeStore.setState({
-                    fillOn: (e.target as HTMLInputElement).checked,
+                aria-label="Number of sides"
+                className={classes.numberInput}
+                max={12}
+                min={3}
+                onInput={(event) => {
+                  usePolygonStarStore.setState({
+                    sides: +(event.target as HTMLInputElement).value,
                   });
                 }}
-                type="checkbox"
+                type="number"
+                value={sides}
               />
-              Fill
-            </label>
+            </>
           )}
           {showTextOptions && (
             <>
@@ -230,6 +246,19 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               </select>
             </>
           )}
+        </div>
+      )}
+      {showFillTip && (
+        <div
+          aria-label="Mouse button hints"
+          className={classes.group}
+          role="group"
+        >
+          <span aria-label="Right click" className={classes.mouseIcon}>
+            <span className={cn(classes.mouseHalf, classes.mouseHalfLeft)} />
+            <span className={cn(classes.mouseHalf, classes.mouseHalfRight)} />
+          </span>
+          <span className={classes.fillTipLabel}>Fill</span>
         </div>
       )}
       <div

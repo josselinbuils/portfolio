@@ -169,9 +169,9 @@ export const Paint: WindowComponent = ({
   }
 
   function setTool(name: Tool) {
-    const currentDescriptor = tools.find(({ name }) => name === currentTool) as
-      | ToolDescriptor
-      | undefined;
+    const currentDescriptor = tools.find(
+      (tool) => tool.name === currentTool,
+    ) as ToolDescriptor | undefined;
 
     currentDescriptor?.onDeactivate?.(createListenerData());
     setCurrentTool(name);
@@ -298,14 +298,16 @@ export const Paint: WindowComponent = ({
   }
 
   function zoomIn() {
-    const level = ZOOM_LEVELS.find((level) => level > zoom);
+    const level = ZOOM_LEVELS.find((l) => l > zoom);
+
     if (level !== undefined) {
       applyZoom(level);
     }
   }
 
   function zoomOut() {
-    const level = [...ZOOM_LEVELS].reverse().find((level) => level < zoom);
+    const level = [...ZOOM_LEVELS].reverse().find((l) => l < zoom);
+
     if (level !== undefined) {
       applyZoom(level);
     }

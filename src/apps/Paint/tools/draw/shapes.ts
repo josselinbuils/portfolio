@@ -1,8 +1,7 @@
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
-import { create } from 'zustand/react';
 
-import { MAIN_BUTTON } from '../../constants';
+import { MAIN_BUTTON, SECONDARY_BUTTON } from '../../constants';
 import {
   type ToolDescriptor,
   type ToolListenerData,
@@ -12,16 +11,6 @@ import { getPositionInCanvas } from '../../utils/getPositionInCanvas';
 import { usePaletteStore } from '../palette/usePaletteStore';
 import { type Tool } from '../tools';
 import { useDrawStore } from './useDrawStore';
-
-type ShapeState = {
-  fillOn: boolean;
-  startPosition: { x0: number; y0: number } | null;
-};
-
-export const useShapeStore = create<ShapeState>(() => ({
-  fillOn: false,
-  startPosition: null,
-}));
 
 export const circleDescriptor = {
   description: 'Circle',
@@ -122,12 +111,12 @@ function handleShapeMouseDown(
   data: ToolListenerData,
   shapeTool: Tool,
 ): void {
-  const { mainCanvas, overlayCanvas } = data;
-
-  if (event.button !== MAIN_BUTTON) {
+  if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
     return;
   }
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
+
+  const { mainCanvas, overlayCanvas, snapshot } = data;
+  const { x: x0, y: y0 } = getPositionInCanvas(event, mainCanvas);
 
   getCanvasContext(overlayCanvas).clearRect(
     0,
@@ -136,92 +125,61 @@ function handleShapeMouseDown(
     overlayCanvas.height,
   );
 
-  useShapeStore.setState({
-    startPosition: { x0: x, y0: y },
-  });
-
-  function onMouseMove(moveEvent: MouseEvent) {
-    handleShapeMouseMove(moveEvent, data, shapeTool);
-  }
-
-  function onMouseUp(upEvent: MouseEvent) {
-    window.removeEventListener('mousemove', onMouseMove);
-    window.removeEventListener('mouseup', onMouseUp);
-    handleShapeMouseUp(upEvent, data, shapeTool);
-  }
-
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('mouseup', onMouseUp);
-}
-
-function handleShapeMouseMove(
-  event: MouseEvent,
-  { mainCanvas, overlayCanvas }: ToolListenerData,
-  shapeTool: Tool,
-): void {
-  const { fillOn, startPosition } = useShapeStore.getState();
-
-  if (!startPosition) {
-    return;
-  }
-
-  const context = getCanvasContext(overlayCanvas);
-  const { x0, y0 } = startPosition;
-  const { x: x1, y: y1 } = getPositionInCanvas(event, mainCanvas);
   const { lineWidth } = useDrawStore.getState();
   const { fillColor, strokeColor } = usePaletteStore.getState();
+  const fillOn = event.button === SECONDARY_BUTTON;
 
-  context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-  drawShape(
-    context,
-    shapeTool,
-    { x0, x1, y0, y1 },
-    { fillColor, fillOn, lineWidth, strokeColor },
-    event.shiftKey,
-  );
-}
+  function onMouseMove(moveEvent: MouseEvent) {
+    const context = getCanvasContext(overlayCanvas);
+    const { x: x1, y: y1 } = getPositionInCanvas(moveEvent, mainCanvas);
 
-function handleShapeMouseUp(
-  event: MouseEvent,
-  { mainCanvas, overlayCanvas, snapshot }: ToolListenerData,
-  shapeTool: Tool,
-): void {
-  const { fillOn, startPosition } = useShapeStore.getState();
+    context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
-  if (!startPosition) {
-    return;
-  }
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { x0, y0 } = startPosition;
-
-  useShapeStore.setState({ startPosition: null });
-
-  getCanvasContext(overlayCanvas).clearRect(
-    0,
-    0,
-    overlayCanvas.width,
-    overlayCanvas.height,
-  );
-
-  const x1 = event.shiftKey
-    ? x0 + Math.sign(x - x0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
-    : x;
-
-  const y1 = event.shiftKey
-    ? y0 + Math.sign(y - y0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
-    : y;
-
-  if (x0 !== x1 || y0 !== y1) {
-    const { lineWidth } = useDrawStore.getState();
-    const { fillColor, strokeColor } = usePaletteStore.getState();
-
-    snapshot();
     drawShape(
-      getCanvasContext(mainCanvas),
+      context,
       shapeTool,
       { x0, x1, y0, y1 },
       { fillColor, fillOn, lineWidth, strokeColor },
       event.shiftKey,
     );
   }
+
+  function onMouseUp(upEvent: MouseEvent) {
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+
+    getCanvasContext(overlayCanvas).clearRect(
+      0,
+      0,
+      overlayCanvas.width,
+      overlayCanvas.height,
+    );
+
+    const { x, y } = getPositionInCanvas(upEvent, mainCanvas);
+
+    const x1 = upEvent.shiftKey
+      ? x0 +
+        Math.sign(x - x0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
+      : x;
+
+    const y1 = upEvent.shiftKey
+      ? y0 +
+        Math.sign(y - y0 || 1) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
+      : y;
+
+    if (x0 !== x1 || y0 !== y1) {
+      snapshot();
+
+      drawShape(
+        getCanvasContext(mainCanvas),
+        shapeTool,
+        { x0, x1, y0, y1 },
+        { fillColor, fillOn, lineWidth, strokeColor },
+        upEvent.shiftKey,
+      );
+    }
+  }
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
 }

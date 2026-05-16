@@ -49,6 +49,7 @@ export default defineConfig([
       'default-param-last': 'off', // False positives
       'no-duplicate-imports': ['error', { includeExports: true }],
       'no-empty-function': 'off',
+      'no-shadow': 'error',
       'no-useless-constructor': 'off',
       'perfectionist/sort-union-types': 'off', // Put null before types
       'react-hooks/exhaustive-deps': 'error',

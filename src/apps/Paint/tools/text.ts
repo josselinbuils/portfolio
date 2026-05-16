@@ -99,13 +99,13 @@ function openText(
 
   textarea.addEventListener('blur', () => commitText(mainCanvas, snapshot));
 
-  textarea.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
+  textarea.addEventListener('keydown', (keydownEvent) => {
+    if (keydownEvent.key === 'Escape') {
       textarea.value = '';
       commitText(mainCanvas, snapshot);
     }
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
+    if (keydownEvent.key === 'Enter' && !keydownEvent.shiftKey) {
+      keydownEvent.preventDefault();
       commitText(mainCanvas, snapshot);
     }
   });

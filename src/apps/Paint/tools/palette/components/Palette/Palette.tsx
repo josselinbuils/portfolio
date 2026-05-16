@@ -40,7 +40,6 @@ export const Palette: FunctionComponent<PaletteProps> = ({ status }) => {
       return;
     }
     const colorInput = hiddenColorRef.current;
-    const { fillColor, strokeColor } = usePaletteStore.getState();
 
     colorInput.value = target === 'stroke' ? strokeColor : fillColor;
 
