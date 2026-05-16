@@ -47,11 +47,9 @@ export const Paint: WindowComponent = ({
   });
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
-  const zoomRef = useRef(1);
   const pendingPanOffsetRef = useRef<{ x: number; y: number } | null>(null);
   const panOffsetRef = useRef({ x: 0, y: 0 });
   const [panOffsetStyle, setPanOffsetStyle] = useState('translate(0px, 0px)');
-  const canvasSizeRef = useRef(canvasSize);
   const mainRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -60,10 +58,6 @@ export const Paint: WindowComponent = ({
   const pendingImageRef = useRef<HTMLImageElement | null>(null);
   const redoStack = useRef<ImageData[]>([]);
   const undoStack = useRef<ImageData[]>([]);
-
-  useEffect(() => {
-    canvasSizeRef.current = canvasSize;
-  }, [canvasSize]);
 
   function resetPanOffset() {
     panOffsetRef.current = { x: 0, y: 0 };
@@ -192,7 +186,6 @@ export const Paint: WindowComponent = ({
         img.naturalWidth,
         img.naturalHeight,
       );
-      zoomRef.current = fitZoom;
       setZoom(fitZoom);
       resetPanOffset();
       pendingImageRef.current = img;
@@ -214,7 +207,6 @@ export const Paint: WindowComponent = ({
     redoStack.current.splice(0);
     setCanUndo(false);
     setCanRedo(false);
-    zoomRef.current = 1;
     setZoom(1);
     resetPanOffset();
     if (!viewportRef.current) {
@@ -263,7 +255,7 @@ export const Paint: WindowComponent = ({
       const { x, y } = getPositionInCanvas(event, mainRef.current);
       const { height, width } = mainRef.current;
       setStatus(
-        `${width} × ${height}   ·   ${Math.round(zoomRef.current * 100)}%   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
+        `${width} × ${height}   ·   ${Math.round(zoom * 100)}%   ·   ${String(x).padStart(4, ' ')}, ${String(y).padStart(4, ' ')}`,
       );
     }, 33);
 
@@ -272,29 +264,26 @@ export const Paint: WindowComponent = ({
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, []);
+  }, [zoom]);
 
   function applyZoom(newZoom: number) {
-    const zoomRatio = newZoom / zoomRef.current;
+    const zoomRatio = newZoom / zoom;
     pendingPanOffsetRef.current = {
       x: panOffsetRef.current.x * zoomRatio,
       y: panOffsetRef.current.y * zoomRatio,
     };
-    zoomRef.current = newZoom;
     setZoom(newZoom);
   }
 
   function zoomIn() {
-    const level = ZOOM_LEVELS.find((level) => level > zoomRef.current);
+    const level = ZOOM_LEVELS.find((level) => level > zoom);
     if (level !== undefined) {
       applyZoom(level);
     }
   }
 
   function zoomOut() {
-    const level = [...ZOOM_LEVELS]
-      .reverse()
-      .find((level) => level < zoomRef.current);
+    const level = [...ZOOM_LEVELS].reverse().find((level) => level < zoom);
     if (level !== undefined) {
       applyZoom(level);
     }
@@ -302,7 +291,6 @@ export const Paint: WindowComponent = ({
 
   function resetZoom() {
     resetPanOffset();
-    zoomRef.current = 1;
     setZoom(1);
   }
 
@@ -323,11 +311,10 @@ export const Paint: WindowComponent = ({
         return;
       }
 
-      const prevZoom = zoomRef.current;
       const newZoom =
         event.deltaY < 0
-          ? ZOOM_LEVELS.find((level) => level > prevZoom)
-          : [...ZOOM_LEVELS].reverse().find((level) => level < prevZoom);
+          ? ZOOM_LEVELS.find((level) => level > zoom)
+          : [...ZOOM_LEVELS].reverse().find((level) => level < zoom);
 
       if (newZoom === undefined) {
         return;
@@ -346,10 +333,10 @@ export const Paint: WindowComponent = ({
       const availableHeight =
         currentViewport.clientHeight - paddingTop - paddingBottom;
 
-      const prevCanvasDisplayWidth = canvasSizeRef.current.width * prevZoom;
-      const prevCanvasDisplayHeight = canvasSizeRef.current.height * prevZoom;
-      const newCanvasDisplayWidth = canvasSizeRef.current.width * newZoom;
-      const newCanvasDisplayHeight = canvasSizeRef.current.height * newZoom;
+      const prevCanvasDisplayWidth = canvasSize.width * zoom;
+      const prevCanvasDisplayHeight = canvasSize.height * zoom;
+      const newCanvasDisplayWidth = canvasSize.width * newZoom;
+      const newCanvasDisplayHeight = canvasSize.height * newZoom;
 
       // Natural margin is the centering offset flex gives when canvas fits the
       // viewport; it clamps to 0 when the canvas is larger (margin: auto → 0).
@@ -375,14 +362,13 @@ export const Paint: WindowComponent = ({
         paddingLeft + prevNaturalMarginX + panOffsetRef.current.x;
       const prevCanvasTop =
         paddingTop + prevNaturalMarginY + panOffsetRef.current.y;
-      const imageX = (cursorX - prevCanvasLeft) / prevZoom;
-      const imageY = (cursorY - prevCanvasTop) / prevZoom;
+      const imageX = (cursorX - prevCanvasLeft) / zoom;
+      const imageY = (cursorY - prevCanvasTop) / zoom;
 
       pendingPanOffsetRef.current = {
         x: cursorX - paddingLeft - newNaturalMarginX - imageX * newZoom,
         y: cursorY - paddingTop - newNaturalMarginY - imageY * newZoom,
       };
-      zoomRef.current = newZoom;
       setZoom(newZoom);
     }
 
@@ -418,10 +404,8 @@ export const Paint: WindowComponent = ({
         const viewportHeight = currentViewport.clientHeight;
         const availableWidth = viewportWidth - paddingLeft - paddingRight;
         const availableHeight = viewportHeight - paddingTop - paddingBottom;
-        const canvasDisplayWidth =
-          canvasSizeRef.current.width * zoomRef.current;
-        const canvasDisplayHeight =
-          canvasSizeRef.current.height * zoomRef.current;
+        const canvasDisplayWidth = canvasSize.width * zoom;
+        const canvasDisplayHeight = canvasSize.height * zoom;
 
         // Natural canvas origin: centered when canvas fits, at padding edge when large.
         const naturalCanvasLeft =
@@ -471,7 +455,7 @@ export const Paint: WindowComponent = ({
       viewport.removeEventListener('wheel', handleWheel);
       viewport.removeEventListener('mousedown', handleMiddleMouseDown);
     };
-  }, []);
+  }, [canvasSize, zoom]);
 
   useKeyMap(
     {
