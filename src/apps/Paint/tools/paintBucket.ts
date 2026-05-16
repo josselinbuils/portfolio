@@ -1,5 +1,6 @@
 import { faFillDrip } from '@fortawesome/free-solid-svg-icons/faFillDrip';
-import { create } from 'zustand/react';
+
+import { throttle } from '@/platform/utils/throttle';
 
 import { MAIN_BUTTON, SECONDARY_BUTTON } from '../constants';
 import {
@@ -12,14 +13,6 @@ import { getPositionInCanvas } from '../utils/getPositionInCanvas';
 import { usePaletteStore } from './palette/usePaletteStore';
 import { useSelectionStore } from './selection/useSelectionStore';
 
-type PaintBucketState = {
-  tolerance: number;
-};
-
-export const usePaintBucketStore = create<PaintBucketState>(() => ({
-  tolerance: 20,
-}));
-
 export const paintBucketDescriptor = {
   description: 'Paint bucket',
   icon: faFillDrip,
@@ -27,62 +20,26 @@ export const paintBucketDescriptor = {
   onMouseDown: handlePaintBucket,
 } satisfies DrawToolDescriptor;
 
-function handlePaintBucket(
-  event: MouseEvent,
-  { mainCanvas, snapshot }: DrawToolListenerData,
-) {
-  if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
-    return;
-  }
-
-  const context = getCanvasContext(mainCanvas);
-  const { x, y } = getPositionInCanvas(event, mainCanvas);
-  const { height, width } = mainCanvas;
-
-  if (x < 0 || y < 0 || x >= width || y >= height) {
-    return;
-  }
-
-  snapshot();
-
-  const { selection } = useSelectionStore.getState();
-  const { fillColor, strokeColor } = usePaletteStore.getState();
-  const activeColor = event.button === MAIN_BUTTON ? strokeColor : fillColor;
-
-  if (selection) {
-    context.save();
-    context.fillStyle = activeColor;
-
-    if (selection.boundary) {
-      context.fill(selection.boundary, 'nonzero');
-    } else {
-      context.fillRect(
-        selection.x,
-        selection.y,
-        selection.width,
-        selection.height,
-      );
-    }
-    context.restore();
-    return;
-  }
-
-  const [fillR, fillG, fillB, fillA] = hexToRgba(activeColor);
-
-  const imageData = context.getImageData(0, 0, width, height);
-  const { data } = imageData;
-
-  const startIndex = y * width + x;
-  const targetR = data[startIndex * 4];
-  const targetG = data[startIndex * 4 + 1];
-  const targetB = data[startIndex * 4 + 2];
-  const targetA = data[startIndex * 4 + 3];
-  const { tolerance } = usePaintBucketStore.getState();
+function applyFill(
+  context: CanvasRenderingContext2D,
+  originalData: Uint8ClampedArray,
+  area: { height: number; width: number; x: number; y: number },
+  activeColor: string,
+  tolerance: number,
+): void {
+  const { height, width, x, y } = area;
   const threshold = tolerance * 4;
-
   const pixelCount = width * height;
+  const data = originalData.slice();
   const visited = new Uint8Array(pixelCount);
   const queue = new Int32Array(pixelCount);
+  const startIndex = y * width + x;
+  const targetR = originalData[startIndex * 4];
+  const targetG = originalData[startIndex * 4 + 1];
+  const targetB = originalData[startIndex * 4 + 2];
+  const targetA = originalData[startIndex * 4 + 3];
+  const [fillR, fillG, fillB, fillA] = hexToRgba(activeColor);
+
   let head = 0;
   let tail = 0;
 
@@ -167,5 +124,68 @@ function handlePaintBucket(
     }
   }
 
-  context.putImageData(imageData, 0, 0);
+  context.putImageData(new ImageData(data, width, height), 0, 0);
+}
+
+function handlePaintBucket(
+  event: MouseEvent,
+  { mainCanvas, snapshot }: DrawToolListenerData,
+) {
+  if (![MAIN_BUTTON, SECONDARY_BUTTON].includes(event.button)) {
+    return;
+  }
+
+  const context = getCanvasContext(mainCanvas);
+  const { x, y } = getPositionInCanvas(event, mainCanvas);
+  const { height, width } = mainCanvas;
+
+  if (x < 0 || y < 0 || x >= width || y >= height) {
+    return;
+  }
+
+  snapshot();
+
+  const { selection } = useSelectionStore.getState();
+  const { fillColor, strokeColor } = usePaletteStore.getState();
+  const activeColor = event.button === MAIN_BUTTON ? strokeColor : fillColor;
+
+  if (selection) {
+    context.save();
+    context.fillStyle = activeColor;
+
+    if (selection.boundary) {
+      context.fill(selection.boundary, 'nonzero');
+    } else {
+      context.fillRect(
+        selection.x,
+        selection.y,
+        selection.width,
+        selection.height,
+      );
+    }
+    context.restore();
+    return;
+  }
+
+  const originalData = context.getImageData(0, 0, width, height).data;
+  const area = { height, width, x, y };
+
+  applyFill(context, originalData, area, activeColor, 1);
+
+  const onMouseMove = throttle((moveEvent: MouseEvent) => {
+    const pos = getPositionInCanvas(moveEvent, mainCanvas);
+    const tolerance = Math.min(
+      128,
+      1 + Math.round(Math.hypot(pos.x - x, pos.y - y) * 0.5),
+    );
+    applyFill(context, originalData, area, activeColor, tolerance);
+  }, 200);
+
+  function onMouseUp() {
+    window.removeEventListener('mousemove', onMouseMove as EventListener);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
+
+  window.addEventListener('mousemove', onMouseMove as EventListener);
+  window.addEventListener('mouseup', onMouseUp);
 }

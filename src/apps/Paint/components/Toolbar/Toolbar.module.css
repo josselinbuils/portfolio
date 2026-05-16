@@ -273,12 +273,6 @@
   background: #f7f7f7;
 }
 
-.toleranceSlider {
-  width: 10rem;
-
-  accent-color: var(--primary-color);
-}
-
 .checkbox {
   font-size: 1.3rem;
   display: inline-flex;

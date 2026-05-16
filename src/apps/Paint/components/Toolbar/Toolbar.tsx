@@ -16,7 +16,6 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { FONT_OPTIONS, LINE_WIDTH_PRESETS, ZOOM_LEVELS } from '../../constants';
 import { useShapeStore } from '../../tools/draw/shapes';
 import { useDrawStore } from '../../tools/draw/useDrawStore';
-import { usePaintBucketStore } from '../../tools/paintBucket';
 import { useTextStore } from '../../tools/text';
 import { type DrawTool, tools } from '../../tools/tools';
 import classes from './Toolbar.module.css';
@@ -112,10 +111,8 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
     'select',
     'text',
   ].includes(tool);
-  const showTolerance = tool === 'paintBucket';
   const showTextOptions = tool === 'text';
-  const showToolOptions =
-    showFillToggle || showLineWidth || showTolerance || showTextOptions;
+  const showToolOptions = showFillToggle || showLineWidth || showTextOptions;
 
   const fillOn = useShapeStore((state) =>
     showFillToggle ? state.fillOn : false,
@@ -128,9 +125,6 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
   );
   const lineWidth = useDrawStore((state) =>
     showLineWidth ? state.lineWidth : 0,
-  );
-  const tolerance = usePaintBucketStore((state) =>
-    tool === 'paintBucket' ? state.tolerance : 0,
   );
 
   return (
@@ -196,39 +190,6 @@ export const Toolbar: FunctionComponent<ToolbarProps> = ({
               />
               Fill
             </label>
-          )}
-          {showTolerance && (
-            <>
-              <span aria-hidden="true" className={classes.label}>
-                Tolerance
-              </span>
-              <input
-                aria-label="Tolerance slider"
-                className={classes.toleranceSlider}
-                max={128}
-                min={0}
-                onInput={(event) => {
-                  usePaintBucketStore.setState({
-                    tolerance: +(event.target as HTMLInputElement).value,
-                  });
-                }}
-                type="range"
-                value={tolerance}
-              />
-              <input
-                aria-label="Tolerance input"
-                className={classes.numberInput}
-                max={128}
-                min={0}
-                onInput={(event) => {
-                  usePaintBucketStore.setState({
-                    tolerance: +(event.target as HTMLInputElement).value,
-                  });
-                }}
-                type="number"
-                value={tolerance}
-              />
-            </>
           )}
           {showTextOptions && (
             <>
