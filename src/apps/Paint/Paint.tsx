@@ -39,8 +39,13 @@ export const Paint: WindowComponent = ({
   const [status, setStatus] = useState(
     `${CANVAS_WIDTH} × ${CANVAS_HEIGHT} · 100%`,
   );
-  const [canUndo, setCanUndo] = useState(false);
-  const [canRedo, setCanRedo] = useState(false);
+  const [undoRedoState, setUndoRedoState] = useState<{
+    redoStack: ImageData[];
+    undoStack: ImageData[];
+  }>({
+    redoStack: [],
+    undoStack: [],
+  });
   const [canvasSize, setCanvasSize] = useState({
     height: CANVAS_HEIGHT,
     width: CANVAS_WIDTH,
@@ -56,8 +61,6 @@ export const Paint: WindowComponent = ({
   const viewportInnerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingImageRef = useRef<HTMLImageElement | null>(null);
-  const redoStack = useRef<ImageData[]>([]);
-  const undoStack = useRef<ImageData[]>([]);
 
   function resetPanOffset() {
     panOffsetRef.current = { x: 0, y: 0 };
@@ -110,49 +113,63 @@ export const Paint: WindowComponent = ({
     }
     const canvas = mainRef.current;
     const context = getCanvasContext(canvas);
-    undoStack.current.push(
-      context.getImageData(0, 0, canvas.width, canvas.height),
-    );
-    if (undoStack.current.length > UNDO_MAX) {
-      undoStack.current.shift();
-    }
-    redoStack.current.splice(0);
-    setCanUndo(true);
-    setCanRedo(false);
+    const { undoStack } = undoRedoState;
+
+    setUndoRedoState({
+      redoStack: [],
+      undoStack: [
+        ...undoStack.slice(0, UNDO_MAX - 1),
+        context.getImageData(0, 0, canvas.width, canvas.height),
+      ],
+    });
   }
 
   function undo() {
-    if (!undoStack.current.length || !mainRef.current) {
+    const { redoStack, undoStack } = undoRedoState;
+
+    if (!undoStack.length || !mainRef.current) {
       return;
     }
     const canvas = mainRef.current;
     const context = getCanvasContext(canvas);
-    redoStack.current.push(
-      context.getImageData(0, 0, canvas.width, canvas.height),
-    );
-    const imageData = undoStack.current.pop();
-    if (imageData) {
-      context.putImageData(imageData, 0, 0);
+
+    setUndoRedoState({
+      redoStack: [
+        ...redoStack,
+        context.getImageData(0, 0, canvas.width, canvas.height),
+      ],
+      undoStack: undoStack.slice(0, -1),
+    });
+
+    const previousImageData = undoStack.at(-1);
+
+    if (previousImageData) {
+      context.putImageData(previousImageData, 0, 0);
     }
-    setCanUndo(undoStack.current.length > 0);
-    setCanRedo(true);
   }
 
   function redo() {
-    if (!redoStack.current.length || !mainRef.current) {
+    const { redoStack, undoStack } = undoRedoState;
+
+    if (!redoStack.length || !mainRef.current) {
       return;
     }
     const canvas = mainRef.current;
     const context = getCanvasContext(canvas);
-    undoStack.current.push(
-      context.getImageData(0, 0, canvas.width, canvas.height),
-    );
-    const imageData = redoStack.current.pop();
-    if (imageData) {
-      context.putImageData(imageData, 0, 0);
+
+    setUndoRedoState({
+      redoStack: redoStack.slice(0, -1),
+      undoStack: [
+        ...undoStack.slice(0, UNDO_MAX - 1),
+        context.getImageData(0, 0, canvas.width, canvas.height),
+      ],
+    });
+
+    const nextImageData = redoStack.at(-1);
+
+    if (nextImageData) {
+      context.putImageData(nextImageData, 0, 0);
     }
-    setCanUndo(true);
-    setCanRedo(redoStack.current.length > 0);
   }
 
   function setTool(name: DrawTool) {
@@ -177,10 +194,7 @@ export const Paint: WindowComponent = ({
     const img = new Image();
 
     img.onload = () => {
-      undoStack.current.splice(0);
-      redoStack.current.splice(0);
-      setCanUndo(false);
-      setCanRedo(false);
+      setUndoRedoState({ redoStack: [], undoStack: [] });
       const fitZoom = computeFitZoom(
         viewportRef.current!,
         img.naturalWidth,
@@ -203,10 +217,7 @@ export const Paint: WindowComponent = ({
     if (!confirm('Start a new image? Unsaved work will be lost.')) {
       return;
     }
-    undoStack.current.splice(0);
-    redoStack.current.splice(0);
-    setCanUndo(false);
-    setCanRedo(false);
+    setUndoRedoState({ redoStack: [], undoStack: [] });
     setZoom(1);
     resetPanOffset();
     if (!viewportRef.current) {
@@ -506,8 +517,8 @@ export const Paint: WindowComponent = ({
     >
       <div className={classes.paint}>
         <Toolbar
-          canRedo={canRedo}
-          canUndo={canUndo}
+          canRedo={undoRedoState.redoStack.length > 0}
+          canUndo={undoRedoState.undoStack.length > 0}
           onClear={clearCanvas}
           onOpenImage={openImage}
           onRedo={redo}
