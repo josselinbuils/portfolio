@@ -14,13 +14,13 @@ export const tools = [
   lassoDescriptor,
   magicWandDescriptor,
   pencilDescriptor,
-  eraserDescriptor,
   rectDescriptor,
   circleDescriptor,
   polygonDescriptor,
   starDescriptor,
   textDescriptor,
   paintBucketDescriptor,
+  eraserDescriptor,
   colorPickerDescriptor,
 ] satisfies ToolDescriptor[];
 
