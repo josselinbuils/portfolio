@@ -124,10 +124,35 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
     let targetValue = properties.leftLimit +
       (properties.rightLimit - properties.leftLimit) / properties.targetRatio;
 
+    // Bones use targetRatio 1.1, skin uses 100 (see WebGPUVolumeRenderer).
+    // Skin is a smooth matte surface sampled right at the noisy tissue/air
+    // boundary, so it needs gentler shading than the bone-tuned path below.
+    let isSkin = properties.targetRatio > 10.0;
+
   for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
     if (rawPixelValue > targetValue) {
+      // Sub-voxel surface refinement (skin only). The ray marches a full
+      // voxel per step and takes the first sample above the threshold, so on
+      // the large smooth skin surface — nearly tangent to the slice planes —
+      // the hit snaps to the march grid and reads as horizontal terracing.
+      // Bisect between the last outside sample and this one to land on the
+      // true crossing. Bones stay crisp by design; draft skips it so
+      // interaction stays responsive.
+      if (isSkin) {
+        var lo = pointLPS - directionScaled;
+        var hi = pointLPS;
+        for (var r = 0; r < 5; r++) {
+          let mid = (lo + hi) * 0.5;
+          if (getLPSPixelValue(mid) > targetValue) {
+            hi = mid;
+          } else {
+            lo = mid;
+          }
+        }
+        pointLPS = hi;
+      }
       let textureSize = textureDimensions(renderingTexture);
       let textureValue = textureLoad(
         renderingTexture, vec2<u32>(u32(position[0]) % (textureSize[0] - 1),
@@ -174,36 +199,34 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       // come out darker, which is what reads as solid 3D. Skipped in draft so
       // interaction stays responsive.
       var ao = 1.0;
-      if (properties.draft != 1) {
-        let aoDirs = array<vec3<f32>, 14>(
-          vec3<f32>(1, 0, 0), vec3<f32>(-1, 0, 0),
-          vec3<f32>(0, 1, 0), vec3<f32>(0, -1, 0),
-          vec3<f32>(0, 0, 1), vec3<f32>(0, 0, -1),
-          vec3<f32>(0.5773, 0.5773, 0.5773),
-          vec3<f32>(-0.5773, 0.5773, 0.5773),
-          vec3<f32>(0.5773, -0.5773, 0.5773),
-          vec3<f32>(0.5773, 0.5773, -0.5773),
-          vec3<f32>(-0.5773, -0.5773, 0.5773),
-          vec3<f32>(-0.5773, 0.5773, -0.5773),
-          vec3<f32>(0.5773, -0.5773, -0.5773),
-          vec3<f32>(-0.5773, -0.5773, -0.5773),
-        );
-        let aoRadius = h * 4.0;
-        let aoOrigin = pointLPS + normal * h;
-        var occ = 0.0;
-        var cnt = 0.0;
-        for (var s = 0; s < 14; s++) {
-          let d = aoDirs[s];
-          if (dot(d, normal) > 0.0) {
-            cnt += 1.0;
-            if (getLPSPixelValue(aoOrigin + d * aoRadius) > targetValue) {
-              occ += 1.0;
-            }
+      let aoDirs = array<vec3<f32>, 14>(
+        vec3<f32>(1, 0, 0), vec3<f32>(-1, 0, 0),
+        vec3<f32>(0, 1, 0), vec3<f32>(0, -1, 0),
+        vec3<f32>(0, 0, 1), vec3<f32>(0, 0, -1),
+        vec3<f32>(0.5773, 0.5773, 0.5773),
+        vec3<f32>(-0.5773, 0.5773, 0.5773),
+        vec3<f32>(0.5773, -0.5773, 0.5773),
+        vec3<f32>(0.5773, 0.5773, -0.5773),
+        vec3<f32>(-0.5773, -0.5773, 0.5773),
+        vec3<f32>(-0.5773, 0.5773, -0.5773),
+        vec3<f32>(0.5773, -0.5773, -0.5773),
+        vec3<f32>(-0.5773, -0.5773, -0.5773),
+      );
+      let aoRadius = h * 4.0;
+      let aoOrigin = pointLPS + normal * h;
+      var occ = 0.0;
+      var cnt = 0.0;
+      for (var s = 0; s < 14; s++) {
+        let d = aoDirs[s];
+        if (dot(d, normal) > 0.0) {
+          cnt += 1.0;
+          if (getLPSPixelValue(aoOrigin + d * aoRadius) > targetValue) {
+            occ += 1.0;
           }
         }
-        if (cnt > 0.0) {
-          ao = clamp(1.0 - 0.9 * (occ / cnt), 0.15, 1.0);
-        }
+      }
+      if (cnt > 0.0) {
+        ao = clamp(1.0 - 0.9 * (occ / cnt), 0.15, 1.0);
       }
 
       // Gentle near/far depth cue so deep structure recedes.
@@ -211,11 +234,32 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       let depthCue = clamp(min(80000.0 / (dist * dist), 1.0), 0.4, 1.0);
 
       let shade = (ambient + 0.85 * diffuse) * depthCue * ao;
-      let color = clamp(
+      var color = clamp(
         albedo * shade + vec3<f32>(0.5) * specular * ao,
         vec3<f32>(0.0),
         vec3<f32>(1.0),
       );
+
+      // Skin: RadiAnt-style finish. A soft wrapped key light keeps the
+      // whole torso gently lit with no harsh terminator, so the form reads
+      // from smooth gradients; a broad satin highlight gives the sheen; a
+      // warm pink tone, bright and even (no distance darkening) instead of
+      // the flat, muddy bone look.
+      if (isSkin) {
+        let pink = vec3<f32>(0.98, 0.76, 0.74);
+        let wrap = dot(normal, lightDir) * 0.5 + 0.5;
+        let soft = wrap * wrap;
+        let sheen = pow(max(dot(normal, halfDir), 0.0), 16.0);
+        let fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 4.0);
+        let aoSoft = 0.55 + 0.45 * ao;
+        color = clamp(
+          pink * (0.25 + 0.6 * soft) * aoSoft
+            + vec3<f32>(1.0, 0.95, 0.92) * sheen * 0.15
+            + pink * fresnel * 0.12,
+          vec3<f32>(0.0),
+          vec3<f32>(1.0),
+        );
+      }
 
       return vec4<f32>(color, 1);
     }
