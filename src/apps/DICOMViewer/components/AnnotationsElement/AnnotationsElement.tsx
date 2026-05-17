@@ -19,11 +19,11 @@ const viewTypeLabels: Record<ViewType, string> = {
   axial: 'Axial',
   bones: '3D Bones',
   coronal: 'Coronal',
-  mip: 'MIP',
   native: 'Native',
   oblique: 'Oblique',
   sagittal: 'Sagittal',
   skin: '3D Skin',
+  tissues: '3D Tissues',
 };
 
 export type AnnotationsElementProps = {

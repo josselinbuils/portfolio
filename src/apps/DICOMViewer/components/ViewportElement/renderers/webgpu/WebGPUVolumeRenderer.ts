@@ -109,17 +109,9 @@ export class WebGPUVolumeRenderer implements Renderer {
       })),
     });
 
-    let fragmentEntryPoint = 'fragmentMPR';
-
-    if (viewport.viewType === 'mip') {
-      fragmentEntryPoint = 'fragmentMIP';
-    } else if (viewport.is3D()) {
-      fragmentEntryPoint = 'fragment3D';
-    }
-
     this.pipeline = this.device.createRenderPipeline({
       fragment: {
-        entryPoint: fragmentEntryPoint,
+        entryPoint: viewport.is3D() ? 'fragment3D' : 'fragmentMPR',
         module: shaderModule,
         targets: [{ format: 'bgra8unorm' }],
       },
@@ -212,7 +204,14 @@ export class WebGPUVolumeRenderer implements Renderer {
     yAxis = V(yAxis).scale(displayHeight / imageHeight);
 
     // 3D rendering properties
-    const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
+    // Mode discriminator read by fragment3D: bones 1.1, skin 100,
+    // tissues 1000 (HU colormap DVR — see volumeShaders.wgsl).
+    const targetRatio =
+      viewport.viewType === 'bones'
+        ? 1.1
+        : viewport.viewType === 'tissues'
+          ? 1000
+          : 100;
     const correctionVector = V(direction).scale(
       -volume.getOrientedDimensionMm(direction) / 2 - 500,
     );

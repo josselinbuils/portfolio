@@ -68,8 +68,8 @@ export class Camera extends Renderable implements CoordinateSpace {
 
       case 'bones':
       case 'coronal':
-      case 'mip':
       case 'skin':
+      case 'tissues':
         direction = [0, 1, 0];
         upVector = [0, 0, 1];
         break;

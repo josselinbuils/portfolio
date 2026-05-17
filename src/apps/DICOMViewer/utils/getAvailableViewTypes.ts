@@ -12,7 +12,7 @@ export function getAvailableViewTypes(
     availableViewTypes.push('axial', 'coronal', 'sagittal', 'bones', 'skin');
 
     if (rendererType === 'WebGPU') {
-      availableViewTypes.push('mip');
+      availableViewTypes.push('tissues');
     }
   }
   return availableViewTypes;

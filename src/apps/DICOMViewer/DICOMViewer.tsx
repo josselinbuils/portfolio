@@ -171,7 +171,7 @@ const DICOMViewer: WindowComponent = ({
           />
           {rendererType === 'JavaScript' ||
           (rendererType === 'WebGPU' &&
-            !['bones', 'skin'].includes(viewport.viewType)) ? (
+            !['bones', 'skin', 'tissues'].includes(viewport.viewType)) ? (
             <Suspense fallback={null}>
               <ColorPalette
                 onLUTComponentsUpdate={setLutComponents}

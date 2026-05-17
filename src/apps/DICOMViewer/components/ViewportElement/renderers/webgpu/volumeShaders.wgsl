@@ -73,28 +73,6 @@ fn vertex(@builtin(vertex_index) vertexIndex: u32) -> @builtin(position) vec4<f3
 }
 
 @fragment
-fn fragmentMIP(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
-  var pointLPS = getPointLPS(
-    viewport.worldOrigin,
-    image.xAxis,
-    image.yAxis,
-    position[0],
-    position[1],
-  );
-
-  let directionScaled = camera.direction *
-    length(volume.voxelSpacing * camera.direction);
-
-  var maxPixelValue = MIN_FLOAT_VALUE;
-
-  for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
-    maxPixelValue = max(maxPixelValue, getLPSPixelValue(pointLPS));
-    pointLPS += directionScaled;
-  }
-  return applyLUT(maxPixelValue, 1);
-}
-
-@fragment
 fn fragmentMPR(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
   let pointLPS = getPointLPS(
     viewport.worldOrigin,
@@ -124,10 +102,43 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
     let targetValue = properties.leftLimit +
       (properties.rightLimit - properties.leftLimit) / properties.targetRatio;
 
-    // Bones use targetRatio 1.1, skin uses 100 (see WebGPUVolumeRenderer).
-    // Skin takes the original alpha-compositing path; the gradient-lit,
-    // AO-shaded path below is bones-only.
+    // Mode discriminator (targetRatio set in WebGPUVolumeRenderer):
+    // bones 1.1, skin 100, tissues 1000. Skin takes the original
+    // alpha-compositing path; the gradient-lit, AO-shaded path below is
+    // bones-only.
     let isSkin = properties.targetRatio > 10.0;
+
+    // Tissues: HU transfer-function direct volume rendering. Rather than a
+    // single iso-surface, march the whole ray and composite each voxel's
+    // tissue class (air/lung, fat, soft tissue, contrast, bone)
+    // front-to-back, so internal structures show through the
+    // semi-transparent outer tissue. Fully isolated — returns before the
+    // bones/skin iso-surface loop, which stays untouched.
+    let isTissues = properties.targetRatio > 500.0;
+
+    if (isTissues) {
+      var accumColor = vec3<f32>(0.0);
+      var accumAlpha = 0.0;
+      var samplePoint = pointLPS;
+
+      for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
+        let hu = getLPSPixelValue(samplePoint);
+
+        if (hu > MIN_FLOAT_VALUE) {
+          let sample = tissueTransfer(hu);
+          let a = sample.w * (1.0 - accumAlpha);
+          accumColor += a * sample.xyz;
+          accumAlpha += a;
+
+          if (accumAlpha > 0.97) {
+            break;
+          }
+        }
+        samplePoint += directionScaled;
+      }
+
+      return vec4<f32>(accumColor, 1.0);
+    }
 
   for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
@@ -261,6 +272,36 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
     pointLPS += directionScaled;
   }
   return applyLUT(MIN_FLOAT_VALUE, 0);
+}
+
+// Maps a Hounsfield value to an emissive colour + per-sample opacity for
+// the 3D Tissues view. Bands follow standard CT densities; soft tissue and
+// fat are kept low-opacity so the skeleton and contrast-filled vessels read
+// through, bone near-opaque so it stays solid.
+fn tissueTransfer(hu: f32) -> vec4<f32> {
+  // Air & lung: almost transparent, cool grey-blue.
+  if (hu < -600.0) {
+    let t = smoothstep(-980.0, -600.0, hu);
+    return vec4<f32>(0.42, 0.52, 0.68, t * 0.010);
+  }
+  // Fat: pale yellow, very low opacity.
+  if (hu < -30.0) {
+    let t = smoothstep(-200.0, -40.0, hu);
+    return vec4<f32>(0.94, 0.82, 0.46, mix(0.004, 0.018, t));
+  }
+  // Soft tissue / muscle / organs: warm red, low opacity so deeper
+  // structures stay visible.
+  if (hu < 90.0) {
+    return vec4<f32>(0.84, 0.34, 0.30, 0.028);
+  }
+  // Contrast-enhanced blood & dense soft tissue: brighter orange-red.
+  if (hu < 300.0) {
+    let t = smoothstep(90.0, 300.0, hu);
+    return vec4<f32>(0.93, 0.46, 0.34, mix(0.045, 0.085, t));
+  }
+  // Bone: near-opaque warm cream.
+  let t = smoothstep(300.0, 1400.0, hu);
+  return vec4<f32>(0.98, 0.95, 0.88, mix(0.32, 0.85, t));
 }
 
 // 0 < baseAlpha < 1
