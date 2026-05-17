@@ -133,23 +133,91 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
         renderingTexture, vec2<u32>(u32(position[0]) % (textureSize[0] - 1),
         u32(position[1]) % (textureSize[1] - 1)), 0
       );
-      let dist = distance(properties.lightPoint, pointLPS);
-      let maxValue = properties.rightLimit - properties.leftLimit - 1;
-      let value = floor(clamp(
-        rawPixelValue - properties.leftLimit, 0, maxValue
-      ));
-      var alpha = value / maxValue * 0.8 + min(20000 / pow(i, 2), 0.5) +
-        min(140000 / pow(dist, 2), 0.4);
+      let albedo = vec3<f32>(
+        textureValue[0], textureValue[1], textureValue[2]
+      );
 
-      // Bones
-      if (properties.targetRatio < 2) {
-        alpha -= 0.5;
+      // Surface normal from the density gradient (central differences).
+      // Air / removed voxels read MIN_FLOAT_VALUE, so clamp each sample to the
+      // window floor first — that yields a clean outward normal at the
+      // bone/air boundary instead of a garbage spike.
+      let h = length(volume.voxelSpacing);
+      let floorV = properties.leftLimit;
+      let gx =
+        max(getLPSPixelValue(pointLPS + vec3<f32>(h, 0, 0)), floorV) -
+        max(getLPSPixelValue(pointLPS - vec3<f32>(h, 0, 0)), floorV);
+      let gy =
+        max(getLPSPixelValue(pointLPS + vec3<f32>(0, h, 0)), floorV) -
+        max(getLPSPixelValue(pointLPS - vec3<f32>(0, h, 0)), floorV);
+      let gz =
+        max(getLPSPixelValue(pointLPS + vec3<f32>(0, 0, h)), floorV) -
+        max(getLPSPixelValue(pointLPS - vec3<f32>(0, 0, h)), floorV);
+      let grad = vec3<f32>(gx, gy, gz);
+      let gradLen = length(grad);
+
+      var normal = -camera.direction;
+      if (gradLen > 0.0001) {
+        normal = -grad / gradLen;
       }
 
-      return vec4<f32>(
-        textureValue[0] * alpha, textureValue[1] * alpha,
-        textureValue[2] * alpha, 1
+      let lightDir = normalize(properties.lightPoint - pointLPS);
+      let viewDir = normalize(camera.eyePoint - pointLPS);
+      let halfDir = normalize(lightDir + viewDir);
+
+      let ambient = 0.85;
+      let diffuse = max(dot(normal, lightDir), 0.0);
+      let specular = pow(max(dot(normal, halfDir), 0.0), 32.0);
+
+      // Ambient occlusion (hemispherical vicinity shading): probe a small
+      // neighbourhood in the outward hemisphere; concavities — between ribs,
+      // around vertebrae, inside the pelvic ring — are enclosed by bone and
+      // come out darker, which is what reads as solid 3D. Skipped in draft so
+      // interaction stays responsive.
+      var ao = 1.0;
+      if (properties.draft != 1) {
+        let aoDirs = array<vec3<f32>, 14>(
+          vec3<f32>(1, 0, 0), vec3<f32>(-1, 0, 0),
+          vec3<f32>(0, 1, 0), vec3<f32>(0, -1, 0),
+          vec3<f32>(0, 0, 1), vec3<f32>(0, 0, -1),
+          vec3<f32>(0.5773, 0.5773, 0.5773),
+          vec3<f32>(-0.5773, 0.5773, 0.5773),
+          vec3<f32>(0.5773, -0.5773, 0.5773),
+          vec3<f32>(0.5773, 0.5773, -0.5773),
+          vec3<f32>(-0.5773, -0.5773, 0.5773),
+          vec3<f32>(-0.5773, 0.5773, -0.5773),
+          vec3<f32>(0.5773, -0.5773, -0.5773),
+          vec3<f32>(-0.5773, -0.5773, -0.5773),
+        );
+        let aoRadius = h * 4.0;
+        let aoOrigin = pointLPS + normal * h;
+        var occ = 0.0;
+        var cnt = 0.0;
+        for (var s = 0; s < 14; s++) {
+          let d = aoDirs[s];
+          if (dot(d, normal) > 0.0) {
+            cnt += 1.0;
+            if (getLPSPixelValue(aoOrigin + d * aoRadius) > targetValue) {
+              occ += 1.0;
+            }
+          }
+        }
+        if (cnt > 0.0) {
+          ao = clamp(1.0 - 0.9 * (occ / cnt), 0.15, 1.0);
+        }
+      }
+
+      // Gentle near/far depth cue so deep structure recedes.
+      let dist = distance(properties.lightPoint, pointLPS);
+      let depthCue = clamp(min(80000.0 / (dist * dist), 1.0), 0.4, 1.0);
+
+      let shade = (ambient + 0.85 * diffuse) * depthCue * ao;
+      let color = clamp(
+        albedo * shade + vec3<f32>(0.5) * specular * ao,
+        vec3<f32>(0.0),
+        vec3<f32>(1.0),
       );
+
+      return vec4<f32>(color, 1);
     }
     pointLPS += directionScaled;
   }

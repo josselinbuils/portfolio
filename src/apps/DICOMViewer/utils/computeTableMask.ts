@@ -8,6 +8,14 @@ const BODY_HU_THRESHOLD = -350;
 // slices look fused); dilation by the same amount restores the patient so the
 // skeleton — well interior to the soft-tissue envelope — is never clipped.
 const OPENING_RADIUS = 3;
+// Mirrors the bones-view render threshold (renderers' targetRatio): a voxel is
+// opaque when its HU exceeds leftLimit + (rightLimit - leftLimit) / this. The
+// speckle cleanup labels dense voxels at exactly this value so calcific
+// granules stay isolated from bone (a lower value bridges them together).
+const BONES_TARGET_RATIO = 1.1;
+// Dense connected components smaller than this many voxels are calcific/
+// contrast noise (vessel, cartilage, bowel), not bone, and are dropped.
+const MIN_BONE_COMPONENT_SIZE = 1500;
 
 /**
  * Detects the patient's body across the whole volume so the WebGPU volume
@@ -37,6 +45,11 @@ export function computeTableMask(frames: Frame[]): void {
   const S = W * H;
   const N = S * D;
 
+  const leftLimit = Math.floor(sample.windowCenter - sample.windowWidth / 2);
+  const rightLimit = Math.floor(sample.windowCenter + sample.windowWidth / 2);
+  const renderThreshold =
+    leftLimit + (rightLimit - leftLimit) / BONES_TARGET_RATIO;
+
   const vol = new Uint8Array(N);
   const queue = new Int32Array(N);
   const line = new Uint8Array(Math.max(W, H, D));
@@ -61,22 +74,29 @@ export function computeTableMask(frames: Frame[]): void {
   // every component to 2 while measuring sizes; we remember the largest seed.
   let bestSeed = -1;
   let bestSize = 0;
+
   for (let p = 0; p < N; p++) {
     if (vol[p] !== 1) {
       continue;
     }
+
     let head = 0;
     let tail = 0;
+
     queue[tail++] = p;
     vol[p] = 2;
+
     let size = 0;
+
     while (head < tail) {
       const q = queue[head++];
-      size++;
       const z = (q / S) | 0;
       const r = q - z * S;
       const y = (r / W) | 0;
       const x = r - y * W;
+
+      size++;
+
       if (x > 0 && vol[q - 1] === 1) {
         vol[q - 1] = 2;
         queue[tail++] = q - 1;
@@ -125,14 +145,17 @@ export function computeTableMask(frames: Frame[]): void {
 
   let head = 0;
   let tail = 0;
+
   queue[tail++] = bestSeed;
   vol[bestSeed] = 3;
+
   while (head < tail) {
     const q = queue[head++];
     const z = (q / S) | 0;
     const r = q - z * S;
     const y = (r / W) | 0;
     const x = r - y * W;
+
     if (x > 0 && vol[q - 1] === 1) {
       vol[q - 1] = 3;
       queue[tail++] = q - 1;
@@ -166,6 +189,82 @@ export function computeTableMask(frames: Frame[]): void {
 
   morph(vol, line, W, H, D, OPENING_RADIUS, true); // 3-D dilation
 
+  // Speckle cleanup: inside the patient, label dense voxels as candidates (2),
+  // then size-filter their connected components. Real bones are huge connected
+  // structures; calcific/contrast noise is tiny and isolated, so dropping
+  // small dense components removes the granular cloud without touching bone.
+  for (let z = 0; z < D; z++) {
+    const frame = frames[z];
+
+    if (!frame.pixelData) {
+      continue;
+    }
+
+    const { pixelData, rescaleIntercept, rescaleSlope } = frame;
+    const base = z * S;
+
+    for (let i = 0; i < S; i++) {
+      if (vol[base + i] !== 1) {
+        continue;
+      }
+      const hu = (pixelData as Int16Array)[i] * rescaleSlope + rescaleIntercept;
+
+      if (hu >= renderThreshold) {
+        vol[base + i] = 2;
+      }
+    }
+  }
+
+  for (let p = 0; p < N; p++) {
+    if (vol[p] !== 2) {
+      continue;
+    }
+
+    head = 0;
+    tail = 0;
+    queue[tail++] = p;
+    vol[p] = 3;
+
+    while (head < tail) {
+      const q = queue[head++];
+      const z = (q / S) | 0;
+      const r = q - z * S;
+      const y = (r / W) | 0;
+      const x = r - y * W;
+
+      if (x > 0 && vol[q - 1] === 2) {
+        vol[q - 1] = 3;
+        queue[tail++] = q - 1;
+      }
+      if (x < W - 1 && vol[q + 1] === 2) {
+        vol[q + 1] = 3;
+        queue[tail++] = q + 1;
+      }
+      if (y > 0 && vol[q - W] === 2) {
+        vol[q - W] = 3;
+        queue[tail++] = q - W;
+      }
+      if (y < H - 1 && vol[q + W] === 2) {
+        vol[q + W] = 3;
+        queue[tail++] = q + W;
+      }
+      if (z > 0 && vol[q - S] === 2) {
+        vol[q - S] = 3;
+        queue[tail++] = q - S;
+      }
+      if (z < D - 1 && vol[q + S] === 2) {
+        vol[q + S] = 3;
+        queue[tail++] = q + S;
+      }
+    }
+
+    const keep = tail >= MIN_BONE_COMPONENT_SIZE ? 1 : 0;
+
+    for (let k = 0; k < tail; k++) {
+      vol[queue[k]] = keep;
+    }
+  }
+
   for (let z = 0; z < D; z++) {
     frames[z].bodyMask = vol.subarray(z * S, z * S + S);
   }
@@ -196,23 +295,32 @@ function morph(
     for (let i = 0; i < len; i++) {
       line[i] = vol[start + i * stride];
     }
+
     let sum = 0;
+
     for (let k = 0; k <= r && k < len; k++) {
       sum += line[k];
     }
+
     for (let i = 0; i < len; i++) {
       let on: boolean;
+
       if (dilate) {
         on = sum > 0;
       } else {
         on = i - r >= 0 && i + r < len && sum === full;
       }
+
       vol[start + i * stride] = on ? 1 : 0;
+
       const removeIdx = i - r;
+
       if (removeIdx >= 0) {
         sum -= line[removeIdx];
       }
+
       const addIdx = i + 1 + r;
+
       if (addIdx < len) {
         sum += line[addIdx];
       }
