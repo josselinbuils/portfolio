@@ -40,6 +40,15 @@
   }
 }
 
+.waveform .bar {
+  transition: height 0.25s linear;
+  animation: none;
+
+  &::after {
+    display: none;
+  }
+}
+
 .playing .bar:nth-child(6n + 2) {
   animation-name: bounce-b;
 }

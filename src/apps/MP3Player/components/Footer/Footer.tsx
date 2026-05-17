@@ -25,7 +25,7 @@ export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
     return null;
   }
 
-  const { currentMusic, currentTime, paused } = audioState;
+  const { currentMusic, currentTime, paused, progress } = audioState;
   const isPlaying = !paused && currentMusic !== undefined;
 
   return (
@@ -48,7 +48,12 @@ export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
             />
           </div>
           <div className={classes.lcdBottom}>
-            <Visualizer className={classes.visualizer} playing={isPlaying} />
+            <Visualizer
+              className={classes.visualizer}
+              peaks={currentMusic?.waveform?.peaks}
+              playing={isPlaying}
+              progress={progress}
+            />
             <span
               className={cn(classes.indicators, {
                 [classes.lit]: currentMusic !== undefined,

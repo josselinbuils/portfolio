@@ -12,5 +12,6 @@ export function formatTracks(tracks: JamendoTrack[]): Music[] {
     id: track.id,
     image: track.image,
     name: track.name,
+    waveform: JSON.parse(track.waveform),
   }));
 }

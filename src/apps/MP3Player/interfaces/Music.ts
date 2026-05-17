@@ -6,4 +6,5 @@ export type Music = {
   id: string;
   image: string;
   name: string;
+  waveform: { peaks: number[] };
 };

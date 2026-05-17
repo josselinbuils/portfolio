@@ -30,5 +30,5 @@ export type JamendoTrack = {
   releasedate: string;
   shareurl: string;
   shorturl: string;
-  waveform: { peaks: number[] };
+  waveform: string;
 };
