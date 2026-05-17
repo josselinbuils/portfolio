@@ -125,39 +125,38 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       (properties.rightLimit - properties.leftLimit) / properties.targetRatio;
 
     // Bones use targetRatio 1.1, skin uses 100 (see WebGPUVolumeRenderer).
-    // Skin is a smooth matte surface sampled right at the noisy tissue/air
-    // boundary, so it needs gentler shading than the bone-tuned path below.
+    // Skin takes the original alpha-compositing path; the gradient-lit,
+    // AO-shaded path below is bones-only.
     let isSkin = properties.targetRatio > 10.0;
 
   for (var i: f32 = 0; i < volume.depthVoxels; i += 1) {
     let rawPixelValue = getLPSPixelValue(pointLPS);
 
     if (rawPixelValue > targetValue) {
-      // Sub-voxel surface refinement (skin only). The ray marches a full
-      // voxel per step and takes the first sample above the threshold, so on
-      // the large smooth skin surface — nearly tangent to the slice planes —
-      // the hit snaps to the march grid and reads as horizontal terracing.
-      // Bisect between the last outside sample and this one to land on the
-      // true crossing. Bones stay crisp by design; draft skips it so
-      // interaction stays responsive.
-      if (isSkin) {
-        var lo = pointLPS - directionScaled;
-        var hi = pointLPS;
-        for (var r = 0; r < 5; r++) {
-          let mid = (lo + hi) * 0.5;
-          if (getLPSPixelValue(mid) > targetValue) {
-            hi = mid;
-          } else {
-            lo = mid;
-          }
-        }
-        pointLPS = hi;
-      }
       let textureSize = textureDimensions(renderingTexture);
       let textureValue = textureLoad(
         renderingTexture, vec2<u32>(u32(position[0]) % (textureSize[0] - 1),
         u32(position[1]) % (textureSize[1] - 1)), 0
       );
+
+      // Skin: original a2c6bce alpha-compositing look, restored. None of the
+      // surface refinement / gradient normals / AO below applies to skin —
+      // that is the bones-only path.
+      if (isSkin) {
+        let dist = distance(properties.lightPoint, pointLPS);
+        let maxValue = properties.rightLimit - properties.leftLimit - 1;
+        let value = floor(clamp(
+          rawPixelValue - properties.leftLimit, 0, maxValue
+        ));
+        let alpha = value / maxValue * 0.8 + min(20000 / pow(i, 2), 0.5) +
+          min(140000 / pow(dist, 2), 0.4);
+
+        return vec4<f32>(
+          textureValue[0] * alpha, textureValue[1] * alpha,
+          textureValue[2] * alpha, 1
+        );
+      }
+
       let albedo = vec3<f32>(
         textureValue[0], textureValue[1], textureValue[2]
       );
@@ -168,19 +167,24 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       // bone/air boundary instead of a garbage spike.
       let h = length(volume.voxelSpacing);
       let floorV = properties.leftLimit;
+
       let gx =
         max(getLPSPixelValue(pointLPS + vec3<f32>(h, 0, 0)), floorV) -
         max(getLPSPixelValue(pointLPS - vec3<f32>(h, 0, 0)), floorV);
+
       let gy =
         max(getLPSPixelValue(pointLPS + vec3<f32>(0, h, 0)), floorV) -
         max(getLPSPixelValue(pointLPS - vec3<f32>(0, h, 0)), floorV);
+
       let gz =
         max(getLPSPixelValue(pointLPS + vec3<f32>(0, 0, h)), floorV) -
         max(getLPSPixelValue(pointLPS - vec3<f32>(0, 0, h)), floorV);
+
       let grad = vec3<f32>(gx, gy, gz);
       let gradLen = length(grad);
 
       var normal = -camera.direction;
+
       if (gradLen > 0.0001) {
         normal = -grad / gradLen;
       }
@@ -212,15 +216,19 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       let aoOrigin = pointLPS + normal * h;
       var occ = 0.0;
       var cnt = 0.0;
+
       for (var s = 0; s < 14; s++) {
         let d = aoDirs[s];
+
         if (dot(d, normal) > 0.0) {
           cnt += 1.0;
+
           if (getLPSPixelValue(aoOrigin + d * aoRadius) > targetValue) {
             occ += 1.0;
           }
         }
       }
+
       if (cnt > 0.0) {
         ao = clamp(1.0 - 0.9 * (occ / cnt), 0.15, 1.0);
       }
@@ -231,7 +239,6 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       // grey and too dark. A view-facing fill keeps camera-facing bone
       // bright regardless of key direction; AO only gently deepens
       // crevices; no distance falloff (it was crushing the midtones).
-      // Skin overrides `color` wholesale in the isSkin block below.
       let warm = vec3<f32>(0.98, 0.83, 0.64);
       let facing = max(dot(normal, viewDir), 0.0);
       let key = max(dot(normal, lightDir), 0.0);
@@ -247,28 +254,7 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       let rim = pow(1.0 - facing, 3.0);
       bone += vec3<f32>(0.55, 0.24, 0.16) * rim * 0.14;
 
-      var color = clamp(bone, vec3<f32>(0.0), vec3<f32>(1.0));
-
-      // Skin: RadiAnt-style finish. A soft wrapped key light keeps the
-      // whole torso gently lit with no harsh terminator, so the form reads
-      // from smooth gradients; a broad satin highlight gives the sheen; a
-      // warm pink tone, bright and even (no distance darkening) instead of
-      // the flat, muddy bone look.
-      if (isSkin) {
-        let pink = vec3<f32>(0.98, 0.76, 0.74);
-        let wrap = dot(normal, lightDir) * 0.5 + 0.7;
-        let soft = wrap * wrap;
-        let sheen = pow(max(dot(normal, halfDir), 0.0), 16.0);
-        let fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 4.0);
-        let aoSoft = 0.55 + 0.45 * ao;
-        color = clamp(
-          pink * (0.25 + 0.6 * soft) * aoSoft
-            + vec3<f32>(1.0, 0.95, 0.92) * sheen * 0.15
-            + pink * fresnel * 0.12,
-          vec3<f32>(0.0),
-          vec3<f32>(1.0),
-        );
-      }
+      let color = clamp(bone, vec3<f32>(0.0), vec3<f32>(1.0));
 
       return vec4<f32>(color, 1);
     }
