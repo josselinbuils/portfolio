@@ -189,10 +189,6 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       let viewDir = normalize(camera.eyePoint - pointLPS);
       let halfDir = normalize(lightDir + viewDir);
 
-      let ambient = 1.2;
-      let diffuse = max(dot(normal, lightDir), 0.0);
-      let specular = pow(max(dot(normal, halfDir), 0.0), 32.0);
-
       // Ambient occlusion (hemispherical vicinity shading): probe a small
       // neighbourhood in the outward hemisphere; concavities — between ribs,
       // around vertebrae, inside the pelvic ring — are enclosed by bone and
@@ -229,16 +225,29 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
         ao = clamp(1.0 - 0.9 * (occ / cnt), 0.15, 1.0);
       }
 
-      // Gentle near/far depth cue so deep structure recedes.
-      let dist = distance(properties.lightPoint, pointLPS);
-      let depthCue = clamp(min(80000.0 / (dist * dist), 1.0), 0.4, 1.0);
+      // Warm CT-angio bone: a single warm cream hue at varying
+      // brightness (high-key and fairly even, like the reference),
+      // rather than mixing toward a desaturated dark which read muddy
+      // grey and too dark. A view-facing fill keeps camera-facing bone
+      // bright regardless of key direction; AO only gently deepens
+      // crevices; no distance falloff (it was crushing the midtones).
+      // Skin overrides `color` wholesale in the isSkin block below.
+      let warm = vec3<f32>(0.98, 0.83, 0.64);
+      let facing = max(dot(normal, viewDir), 0.0);
+      let key = max(dot(normal, lightDir), 0.0);
+      let bright = clamp(0.62 + 0.30 * facing + 0.22 * key, 0.0, 1.15);
+      var bone = warm * bright * (0.45 + 0.55 * ao);
 
-      let shade = (ambient + 0.85 * diffuse) * depthCue * ao;
-      var color = clamp(
-        albedo * shade + vec3<f32>(0.5) * specular * ao,
-        vec3<f32>(0.0),
-        vec3<f32>(1.0),
-      );
+      // Subtle organic variation from the bone texture.
+      bone *= 0.94 + 0.12 * albedo.r;
+
+      let gloss = pow(max(dot(normal, halfDir), 0.0), 28.0);
+      bone += vec3<f32>(0.95, 0.88, 0.72) * gloss * 0.16 * ao;
+
+      let rim = pow(1.0 - facing, 3.0);
+      bone += vec3<f32>(0.55, 0.24, 0.16) * rim * 0.14;
+
+      var color = clamp(bone, vec3<f32>(0.0), vec3<f32>(1.0));
 
       // Skin: RadiAnt-style finish. A soft wrapped key light keeps the
       // whole torso gently lit with no harsh terminator, so the form reads
@@ -247,7 +256,7 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       // the flat, muddy bone look.
       if (isSkin) {
         let pink = vec3<f32>(0.98, 0.76, 0.74);
-        let wrap = dot(normal, lightDir) * 0.5 + 0.5;
+        let wrap = dot(normal, lightDir) * 0.5 + 0.7;
         let soft = wrap * wrap;
         let sheen = pow(max(dot(normal, halfDir), 0.0), 16.0);
         let fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 4.0);
