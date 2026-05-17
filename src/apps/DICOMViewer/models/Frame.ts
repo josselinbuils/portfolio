@@ -30,14 +30,15 @@ export class Frame extends Model {
    * DICOM (filled with computed/default values if necessary)
    */
   bitsAllocated!: number;
+  bodyMask?: Uint8Array;
   columns!: number;
   /**
    * Computed
    */
   dicom!: DicomFrame;
   dimensionsMm!: number[];
-  id!: string;
 
+  id!: string;
   imageCenter!: number[];
   imageNormal!: number[];
   imageOrientation!: number[][];

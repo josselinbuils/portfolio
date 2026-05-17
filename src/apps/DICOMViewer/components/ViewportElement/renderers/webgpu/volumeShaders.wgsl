@@ -7,6 +7,7 @@
 @group(0) @binding(6)  var<uniform> properties: RenderingProperties;
 @group(0) @binding(7)  var<uniform> viewport: Viewport;
 @group(0) @binding(8)  var<uniform> volume: Volume;
+@group(0) @binding(9)  var keepTexture: texture_3d<u32>;
 
 const MIN_FLOAT_VALUE = -2e31;
 
@@ -257,6 +258,14 @@ fn getRawValue(pointLPS: vec3<f32>, frameIndex: f32) -> f32 {
     y0 >= 0 && y0 < frame.rows &&
     y1 >= 0 && y1 < frame.rows
   ) {
+    if (textureLoad(
+      keepTexture,
+      vec3<u32>(u32(round(x)), u32(round(y)), frameIndexUnsigned),
+      0
+    )[0] == 0u) {
+      return MIN_FLOAT_VALUE;
+    }
+
     if (properties.draft == 1) {
       return getPixelValue(round(x), round(y), frameIndex) *
         frame.rescaleSlope + frame.rescaleIntercept;

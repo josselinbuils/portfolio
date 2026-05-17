@@ -1,6 +1,7 @@
 import { type CoordinateSpace } from '../interfaces/CoordinateSpace';
 import { computeFrames } from '../utils/computeFrames';
 import { computeSharedProperties } from '../utils/computeSharedProperties';
+import { computeTableMask } from '../utils/computeTableMask';
 import { computeVolume } from '../utils/computeVolume';
 import { V } from '../utils/math/Vector';
 import { type DicomFrame } from './DicomFrame';
@@ -30,6 +31,9 @@ export class Dataset extends Model implements CoordinateSpace {
     const frames = computeFrames(dicomFrames);
     const sharedProperties = computeSharedProperties(frames);
     const volume = computeVolume(frames, sharedProperties);
+    if (volume) {
+      computeTableMask(frames);
+    }
     return new Dataset({ frames, name, ...sharedProperties, volume });
   }
 

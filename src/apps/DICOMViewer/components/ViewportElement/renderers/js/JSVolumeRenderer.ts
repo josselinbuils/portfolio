@@ -82,9 +82,10 @@ export class JSVolumeRenderer implements Renderer {
         imagePositionToPoint[2] * imageOrientation[1][2]) |
       0;
 
-    return i >= 0 && i < columns && j >= 0 && j < rows
-      ? pixelData[j * columns + i] * rescaleSlope + rescaleIntercept
-      : -Number.MAX_SAFE_INTEGER;
+    if (i < 0 || i >= columns || j < 0 || j >= rows) {
+      return -Number.MAX_SAFE_INTEGER;
+    }
+    return pixelData[j * columns + i] * rescaleSlope + rescaleIntercept;
   }
 
   private static getImageWorldBasis(viewport: Viewport): number[][] {
@@ -249,7 +250,6 @@ export class JSVolumeRenderer implements Renderer {
       (displayWidth * displayHeight) / 4,
     );
     const imageData32 = new Uint32Array(displayWidth * displayHeight);
-    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     const { camera, dataset } = viewport;
     const { dimensionsVoxels, voxelSpacing } = dataset.volume!;
@@ -259,6 +259,8 @@ export class JSVolumeRenderer implements Renderer {
     );
     const targetRatio = viewport.viewType === 'bones' ? 1.1 : 100;
     const targetValue = leftLimit + (rightLimit - leftLimit) / targetRatio;
+
+    const getPixelValue = this.getPixelValue.bind(this, leftLimit, rightLimit);
 
     const offsets = [
       [0, 0],

@@ -14,6 +14,7 @@ import shaders from './volumeShaders.wgsl?raw';
 export class WebGPUVolumeRenderer implements Renderer {
   private context?: GPUCanvasContext;
   private device?: GPUDevice;
+  private keepTexture?: GPUTexture;
   private lut?: VOILUT;
   private pipeline?: GPURenderPipeline;
   private pixelDataTexture?: GPUTexture;
@@ -48,12 +49,14 @@ export class WebGPUVolumeRenderer implements Renderer {
 
   destroy(): void {
     this.device?.destroy();
+    this.keepTexture?.destroy();
     this.pixelDataTexture?.destroy();
     this.renderingTexture?.texture.destroy();
     this.unsubscribeToViewportUpdates?.();
     delete this.context;
     delete this.device;
     delete this.pipeline;
+    delete this.keepTexture;
     delete this.pixelDataTexture;
     delete this.renderingTexture;
   }
@@ -97,6 +100,7 @@ export class WebGPUVolumeRenderer implements Renderer {
           { buffer: { type: 'uniform' } },
           { buffer: { type: 'uniform' } },
           { buffer: { type: 'uniform' } },
+          { texture: { sampleType: 'uint', viewDimension: '3d' } },
         ] satisfies Omit<GPUBindGroupLayoutEntry, 'binding' | 'visibility'>[]
       ).map((props, binding) => ({
         ...props,
@@ -149,6 +153,10 @@ export class WebGPUVolumeRenderer implements Renderer {
 
     if (this.pixelDataTexture === undefined) {
       this.pixelDataTexture = this.createTexture(dataset);
+    }
+
+    if (this.keepTexture === undefined) {
+      this.keepTexture = this.createKeepTexture(dataset);
     }
 
     if (viewport.viewType === 'skin') {
@@ -276,6 +284,7 @@ export class WebGPUVolumeRenderer implements Renderer {
             ]),
           ),
         ),
+        this.keepTexture.createView(),
       ].map((resource, binding) => ({ binding, resource })),
       layout: this.pipeline.getBindGroupLayout(0),
     });
@@ -311,6 +320,40 @@ export class WebGPUVolumeRenderer implements Renderer {
     this.device.queue.writeBuffer(buffer, 0, source);
 
     return { buffer };
+  }
+
+  private createKeepTexture(dataset: Dataset): GPUTexture {
+    if (this.device === undefined) {
+      throw new Error('No device');
+    }
+
+    const [width, height, depth] = dataset.volume!.dimensionsVoxels;
+    const sliceSize = width * height;
+    const merged = new Uint8Array(sliceSize * depth);
+
+    dataset.frames.forEach(({ bodyMask }, index) => {
+      if (bodyMask === undefined) {
+        merged.fill(1, index * sliceSize, (index + 1) * sliceSize);
+      } else {
+        merged.set(bodyMask, index * sliceSize);
+      }
+    });
+
+    const texture = this.device.createTexture({
+      dimension: '3d',
+      format: 'r8uint',
+      size: [width, height, depth],
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+    });
+
+    this.device.queue.writeTexture(
+      { texture },
+      merged,
+      { bytesPerRow: width, rowsPerImage: height },
+      { depthOrArrayLayers: depth, height, width },
+    );
+
+    return texture;
   }
 
   private createTexture(dataset: Dataset): GPUTexture {
