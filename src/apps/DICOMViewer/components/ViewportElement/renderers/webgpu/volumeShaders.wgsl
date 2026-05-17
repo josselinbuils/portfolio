@@ -125,9 +125,9 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
         let hu = getLPSPixelValue(samplePoint);
 
         if (hu > MIN_FLOAT_VALUE) {
-          let sample = tissueTransfer(hu);
-          let a = sample.w * (1.0 - accumAlpha);
-          accumColor += a * sample.xyz;
+          let s = tissueTransfer(hu);
+          let a = s.w * (1.0 - accumAlpha);
+          accumColor += a * s.xyz;
           accumAlpha += a;
 
           if (accumAlpha > 0.97) {

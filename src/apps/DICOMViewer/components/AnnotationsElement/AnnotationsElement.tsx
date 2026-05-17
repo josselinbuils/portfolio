@@ -1,6 +1,7 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons/faSquareCaretDown';
+import cn from 'classnames';
 import { type FunctionComponent, type RefObject } from 'preact';
 import { useRef } from 'preact/hooks';
 
@@ -60,17 +61,18 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
   function showContextMenu(
     elementRef: RefObject<HTMLElement>,
     items: MenuItemDescriptor[],
+    position: 'left' | 'right',
   ): void {
     if (elementRef.current === null) {
       return;
     }
-    const { bottom, left } = elementRef.current.getBoundingClientRect();
+    const { bottom, left, right } = elementRef.current.getBoundingClientRect();
 
     showMenu({
       className: classes.contextMenu,
       items,
       position: {
-        x: left,
+        x: position === 'left' ? left : right - 140,
         y: bottom + 5,
       },
     });
@@ -94,7 +96,7 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
         };
       },
     );
-    showContextMenu(rendererElementRef, items);
+    showContextMenu(rendererElementRef, items, 'right');
   }
 
   function showViewTypeMenu(): void {
@@ -113,7 +115,7 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
         ),
       };
     });
-    showContextMenu(viewTypeElementRef, items);
+    showContextMenu(viewTypeElementRef, items, 'left');
   }
 
   return (
@@ -142,22 +144,26 @@ export const AnnotationsElement: FunctionComponent<AnnotationsElementProps> = ({
             {rendererType || '-'} <FontAwesomeIcon icon={faSquareCaretDown} />
           </button>
         </p>
-        <p className={classes.annotation}>
+        <p className={cn(classes.annotation, classes.mono)}>
           framerate: {fps ? `${fps}fps` : '-'}
         </p>
-        <p className={classes.annotation}>
+        <p className={cn(classes.annotation, classes.mono)}>
           rendering:{' '}
           {meanRenderDuration ? `${meanRenderDuration.toFixed(2)}ms` : '-'}
         </p>
       </div>
       <div className={classes.overlayBottomRight}>
-        <p className={classes.annotation}>
+        <p className={cn(classes.annotation, classes.mono)}>
           zoom: {zoom ? zoom.toFixed(2) : '-'}
         </p>
       </div>
       <div className={classes.overlayBottomLeft}>
-        <p className={classes.annotation}>wc: {windowCenter || '-'}</p>
-        <p className={classes.annotation}>ww: {windowWidth || '-'}</p>
+        <p className={cn(classes.annotation, classes.mono)}>
+          wc: {windowCenter || '-'}
+        </p>
+        <p className={cn(classes.annotation, classes.mono)}>
+          ww: {windowWidth || '-'}
+        </p>
       </div>
       {menuElement}
     </>

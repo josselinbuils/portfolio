@@ -57,4 +57,19 @@
   /* DICOMViewer */
   --dv-bg: black;
   --dv-color: #efefef;
+  --dv-font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial;
+  --dv-font-data: 'JetBrainsMono', ui-monospace, SFMono-Regular, Menlo;
+  --dv-accent: #2fcfe0;
+  --dv-accent-soft: hsl(from var(--dv-accent) h s l / 0.16);
+  --dv-accent-ring: hsl(from var(--dv-accent) h s l / 0.55);
+  --dv-surface: rgb(18 20 24 / 72%);
+  --dv-surface-strong: rgb(24 27 32 / 94%);
+  --dv-hover: rgb(255 255 255 / 8%);
+  --dv-border: rgb(255 255 255 / 12%);
+  --dv-border-strong: rgb(255 255 255 / 22%);
+  --dv-text-muted: hsl(from var(--dv-color) h s l / 0.6);
+  --dv-radius: 0.8rem;
+  --dv-radius-sm: 0.5rem;
+  --dv-shadow: 0 0.4rem 1.8rem rgb(0 0 0 / 48%);
+  --dv-transition: 140ms ease;
 }

@@ -8,7 +8,7 @@
 }
 
 .dicomViewer {
-  font-family: monospace;
+  font-family: var(--dv-font-ui), sans-serif;
   font-size: 1.3rem;
   position: relative;
   display: flex;
@@ -18,32 +18,52 @@
   * {
     user-select: none;
   }
+
+  :focus-visible {
+    outline: 0.2rem solid var(--dv-accent-ring);
+    outline-offset: 0.2rem;
+  }
 }
 
 .button {
+  font: inherit;
   position: absolute;
+  z-index: 2;
   top: 1rem;
   left: 1rem;
-  padding: var(--spacing-4) var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-12);
   color: var(--dv-color);
-  border: 0.1rem solid var(--dv-color);
-  border-radius: var(--radius-4);
+  border: 0.1rem solid var(--dv-border);
+  border-radius: var(--dv-radius-sm);
   outline: none;
-  background: var(--dv-bg);
-
-  &:active:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 25));
-  }
+  background: var(--dv-surface);
+  backdrop-filter: blur(0.8rem);
+  box-shadow: var(--dv-shadow);
+  transition:
+    background var(--dv-transition),
+    border-color var(--dv-transition),
+    transform var(--dv-transition);
 
   &:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 20));
+    border-color: var(--dv-border-strong);
+    background: var(--dv-surface-strong);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 
 .error {
   position: absolute;
-  top: 50%;
+  top: 1rem;
   left: 50%;
-  transform: translate(-50%, -50%);
-  color: red;
+  transform: translateX(-50%);
+  padding: var(--spacing-12) var(--spacing-20);
+  color: #ff6b6b;
+  border: 0.1rem solid hsl(0deg 100% 71% / 35%);
+  border-radius: var(--dv-radius-sm);
+  background: var(--dv-surface-strong);
+  backdrop-filter: blur(0.8rem);
+  box-shadow: var(--dv-shadow);
 }

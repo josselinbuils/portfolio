@@ -1,85 +1,61 @@
 .mouseTool {
-  font-size: 2rem;
+  font-size: 1.9rem;
   position: relative;
-  display: block;
-  width: 3.2rem;
-  height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.6rem;
+  height: 3.4rem;
   color: var(--dv-color);
-  border: 0.1rem solid var(--dv-color);
-  border-radius: 0;
+  border: none;
+  border-radius: var(--dv-radius-sm);
   outline: none;
-  background: rgba(0, 0, 0, 0.6);
+  background: transparent;
+  transition:
+    background var(--dv-transition),
+    color var(--dv-transition);
 
-  &:active:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 25));
+  &::before,
+  &::after {
+    position: absolute;
+    top: 50%;
+    width: 0.3rem;
+    height: 1.8rem;
+    content: '';
+    transform: translateY(-50%) scaleY(0);
+    border-radius: 0.3rem;
+    background: var(--dv-accent);
+    transition: transform var(--dv-transition);
+  }
+
+  &::before {
+    left: 0.2rem;
+  }
+
+  &::after {
+    right: 0.2rem;
   }
 
   &:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 20));
-  }
-
-  &:first-child {
-    border-top-left-radius: var(--radius-4);
-    border-top-right-radius: var(--radius-4);
-
-    &.activeLeft:before {
-      border-top-left-radius: var(--radius-4);
-    }
-
-    &.activeRight:before {
-      border-top-right-radius: var(--radius-4);
-    }
-  }
-
-  &:last-child {
-    border-bottom-right-radius: var(--radius-4);
-    border-bottom-left-radius: var(--radius-4);
-
-    &.activeLeft:before {
-      border-bottom-left-radius: var(--radius-4);
-    }
-
-    &.activeRight:before {
-      border-bottom-right-radius: var(--radius-4);
-    }
-  }
-
-  &:not(:last-child) {
-    border-bottom: none;
-  }
-
-  &.activeLeft:before {
-    left: -0.1rem;
-  }
-
-  &.activeLeft.activeRight:before {
-    width: 3.2rem;
+    background: var(--dv-hover);
   }
 
   &.activeLeft,
   &.activeRight {
-    &:before {
-      position: absolute;
-      top: -0.1rem;
-      width: 1.6rem;
-      height: 3.2rem;
-      content: '';
-      background: var(--dv-color);
-    }
+    color: var(--dv-accent);
+    background: var(--dv-accent-soft);
 
     svg {
-      color: var(--dv-color);
-
-      mix-blend-mode: difference;
+      filter: drop-shadow(0 0 0.4rem var(--dv-accent-ring));
     }
   }
 
-  &.activeRight:before {
-    right: -0.1rem;
+  &.activeLeft::before {
+    transform: translateY(-50%) scaleY(1);
   }
 
-  & + & {
-    border-top: 0.1rem solid var(--dv-color);
+  &.activeRight::after {
+    transform: translateY(-50%) scaleY(1);
   }
 }
 
@@ -87,5 +63,14 @@
   position: absolute;
   top: 50%;
   left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: var(--spacing-4);
   transform: translateY(-50%);
+  border: 0.1rem solid var(--dv-border);
+  border-radius: var(--dv-radius);
+  background: var(--dv-surface);
+  backdrop-filter: blur(0.9rem);
+  box-shadow: var(--dv-shadow);
 }

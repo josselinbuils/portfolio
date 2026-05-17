@@ -2,25 +2,33 @@
   width: 148px;
   height: 15px;
   margin-bottom: 1rem;
+  border-radius: var(--dv-radius-sm);
 }
 
 .button {
-  font-size: 2rem;
-  display: block;
-  width: 3.2rem;
-  height: 3.2rem;
+  font-size: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
   color: var(--dv-color);
-  border: 0.1rem solid var(--dv-color);
-  border-radius: var(--radius-4);
+  border: none;
+  border-radius: var(--dv-radius-sm);
   outline: none;
   background: transparent;
-
-  &:active:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 25));
-  }
+  transition:
+    background var(--dv-transition),
+    color var(--dv-transition),
+    transform var(--dv-transition);
 
   &:hover {
-    background: hsl(from var(--dv-bg) h s calc(l + 20));
+    color: var(--dv-accent);
+    background: var(--dv-hover);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 
@@ -28,24 +36,29 @@
   width: 148px;
   height: 100px;
   margin-bottom: 1rem;
+  border-radius: var(--dv-radius-sm);
 }
 
 .colorPalette {
   position: absolute;
-  top: calc(50%);
+  top: 50%;
   right: 1rem;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
+  border: 0.1rem solid var(--dv-border);
+  border-radius: var(--dv-radius);
+  background: var(--dv-surface);
+  backdrop-filter: blur(0.9rem);
+  box-shadow: var(--dv-shadow);
 
   &.open {
-    padding: var(--spacing-8);
-    border: 0.1rem solid var(--dv-color);
-    border-radius: var(--radius-4);
+    padding: var(--spacing-12);
+    border-color: var(--dv-border);
+    background: var(--dv-surface-strong);
 
     .button {
-      margin-top: calc(-1 * var(--spacing-8));
-      margin-left: calc(-1 * var(--spacing-8));
-      border: none;
+      margin-top: calc(-1 * var(--spacing-4));
+      margin-bottom: var(--spacing-8);
+      margin-left: calc(-1 * var(--spacing-4));
     }
   }
 }

@@ -1,7 +1,7 @@
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faAdjust } from '@fortawesome/free-solid-svg-icons/faAdjust';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons/faArrowsAlt';
-import { faArrowsAltV } from '@fortawesome/free-solid-svg-icons/faArrowsAltV';
+import { faArrowsUpDown } from '@fortawesome/free-solid-svg-icons/faArrowsUpDown';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons/faSyncAlt';
 import cn from 'classnames';
@@ -22,7 +22,7 @@ const mouseTools: {
   {
     condition: (viewport: Viewport) =>
       viewport.dataset.frames.length > 1 && !viewport.is3D(),
-    icon: faArrowsAltV,
+    icon: faArrowsUpDown,
     tool: 'paging',
   },
   {

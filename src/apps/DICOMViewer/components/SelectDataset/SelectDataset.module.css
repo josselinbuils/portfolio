@@ -1,53 +1,69 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  width: calc(100% + 2rem);
-  margin: 2rem 0 0 -1rem;
+  gap: var(--spacing-20);
+  margin-top: 2.4rem;
 }
 
 .dataset {
-  line-height: 13rem;
   position: relative;
-  width: 13rem;
-  height: 13rem;
-  margin: var(--spacing-12);
+  overflow: hidden;
+  width: 14rem;
+  height: 14rem;
   padding: 0;
   text-align: center;
-  border: 0;
+  border: 0.1rem solid var(--dv-border);
+  border-radius: var(--dv-radius);
   outline: none;
   background: #080808;
+  box-shadow: var(--dv-shadow);
+  transition:
+    transform var(--dv-transition),
+    border-color var(--dv-transition),
+    box-shadow var(--dv-transition);
 
   &:hover {
-    filter: brightness(115%);
+    border-color: var(--dv-accent-ring);
+    box-shadow:
+      0 0 0 0.1rem var(--dv-accent-ring),
+      0 1rem 2.4rem rgb(0 0 0 / 55%);
+
+    img {
+      transform: scale(1.04);
+    }
   }
 
   &.thd::after {
-    font-weight: bold;
-    line-height: 2rem;
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    width: 2.3rem;
-    height: 2rem;
+    backdrop-filter: blur(0.4rem);
+    background: var(--dv-accent-soft);
+    border-radius: 0.5rem;
+    border: 0.1rem solid var(--dv-accent-ring);
+    bottom: var(--spacing-8);
+    color: var(--dv-accent);
     content: '3D';
+    font-family: var(--dv-font-ui), sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    padding: var(--spacing-4);
     pointer-events: none;
-    border-radius: 100%;
-    background: var(--dv-color);
+    position: absolute;
+    right: var(--spacing-8);
   }
 
   img {
     height: 100%;
     cursor: pointer;
+    transition: transform 220ms ease;
   }
 
   span {
-    display: block;
     overflow: hidden;
-    width: calc(100% - 1rem);
-    margin: 0 auto;
+    width: calc(100% - 1.6rem);
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--dv-color);
+    color: var(--dv-text-muted);
   }
 }
 
@@ -59,7 +75,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   padding: 6rem;
-  scrollbar-color: hsl(from var(--dv-bg) h s calc(l + 15)) transparent;
+  scrollbar-color: var(--dv-border-strong) transparent;
 
   h1 {
     margin-top: 0;
