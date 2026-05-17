@@ -38,12 +38,31 @@
   --ce-toolbar-width: 5rem;
   --ce-button-size: calc(5rem - 0.8rem);
 
-  /* MP3Player */
-  --mp3-bg: #111625;
-  --mp3-secondary: hsl(from #111625 h s calc(l + 10));
-  --mp3-text: hsl(from #111625 h s calc(l + 80));
-  --mp3-text-secondary: hsl(from var(--mp3-text) h s calc(l - 20));
+  /* MP3Player — classic Winamp 2.x */
+  --mp3-bg: #2c2c34;
+  --mp3-bg-light: #3c3c47;
+  --mp3-bg-dark: #1b1b20;
+  --mp3-bevel-light: #71717e;
+  --mp3-bevel-dark: #09090b;
+  --mp3-secondary: #4a4a55;
+  --mp3-text: #c8c8d0;
+  --mp3-text-secondary: hsl(from var(--mp3-text) h s calc(l - 28));
   --mp3-text-size: 0.9em;
+  --mp3-accent: #1fe61f;
+  --mp3-lcd-bg: #04140a;
+  --mp3-lcd: #1fe61f;
+  --mp3-lcd-dim: #108b28;
+  --mp3-lcd-glow: hsl(from var(--mp3-lcd) h s l / 55%);
+  --mp3-viz-low: #1fe61f;
+  --mp3-viz-mid: #bce61f;
+  --mp3-viz-high: #e69020;
+  --mp3-font-lcd: 'VT323', 'JetBrainsMono', ui-monospace;
+  --mp3-bevel-out:
+    inset 0.1rem 0.1rem 0 0 var(--mp3-bevel-light),
+    inset -0.1rem -0.1rem 0 0 var(--mp3-bevel-dark);
+  --mp3-bevel-in:
+    inset 0.1rem 0.1rem 0 0 var(--mp3-bevel-dark),
+    inset -0.1rem -0.1rem 0 0 var(--mp3-bevel-light);
 
   /* Reddit */
   --reddit: #ff4501;

@@ -2,8 +2,8 @@ import cn from 'classnames';
 import { type FunctionComponent } from 'preact';
 
 import { type MusicList } from '@/apps/MP3Player/interfaces/MusicList';
-import { ButtonLink } from '@/platform/components/ButtonLink/ButtonLink';
 
+import { Button } from '../../../Button/Button';
 import classes from './MenuItem.module.css';
 
 export type MenuItemProps = {
@@ -20,13 +20,13 @@ export const MenuItem: FunctionComponent<MenuItemProps> = ({
   const isActiveMusicList = musicList === activeMusicList;
 
   return (
-    <ButtonLink
+    <Button
       className={cn(classes.item, { [classes.checked]: isActiveMusicList })}
       disabled={isActiveMusicList}
       onClick={() => onClickPlaylist(musicList)}
       role="menuitem"
     >
       {musicList.name}
-    </ButtonLink>
+    </Button>
   );
 };

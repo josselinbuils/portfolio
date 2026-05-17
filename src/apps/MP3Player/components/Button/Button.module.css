@@ -1,36 +1,70 @@
 .button {
   font-family: var(--font-family), sans-serif;
   font-size: inherit;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   vertical-align: middle;
   color: var(--mp3-text);
   border: none;
   outline: none;
-  background: none;
+  background: linear-gradient(
+    180deg,
+    var(--mp3-bg-light) 0%,
+    var(--mp3-bg) 55%,
+    var(--mp3-bg-dark) 100%
+  );
+  box-shadow: var(--mp3-bevel-out);
+
+  i {
+    filter: drop-shadow(0 0.1rem 0 var(--mp3-bevel-dark));
+  }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   &:not(:disabled) {
     &:hover {
-      color: hsl(from var(--mp3-text) h s calc(l + 20));
+      color: hsl(from var(--mp3-text) h s calc(l + 18));
     }
 
     &:active {
-      color: var(--primary-color);
-    }
+      color: var(--mp3-accent);
+      background: linear-gradient(
+        180deg,
+        var(--mp3-bg-dark) 0%,
+        var(--mp3-bg) 60%,
+        var(--mp3-bg-light) 100%
+      );
+      box-shadow: var(--mp3-bevel-in);
 
-    &:active,
-    &.checked {
-      &:hover {
-        color: hsl(from var(--primary-color) h s calc(l + 20));
+      i {
+        filter: none;
+        transform: translate(0.1rem, 0.1rem);
       }
     }
   }
 
   &.checked {
-    color: var(--primary-color);
+    color: var(--mp3-accent);
+    background: linear-gradient(
+      180deg,
+      var(--mp3-bg-dark) 0%,
+      #06200c 60%,
+      #082a10 100%
+    );
+    box-shadow:
+      var(--mp3-bevel-in),
+      inset 0 0 0.8rem hsl(from var(--mp3-accent) h s l / 35%);
+
+    i {
+      filter: drop-shadow(0 0 0.4rem var(--mp3-lcd-glow));
+    }
+
+    &:hover {
+      color: hsl(from var(--mp3-accent) h s calc(l + 12));
+    }
   }
 }

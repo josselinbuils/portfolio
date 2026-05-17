@@ -61,7 +61,7 @@ export const Musics: FunctionComponent<MusicsProps> = ({
 
   return (
     <div className={cn(classes.musicList, className)}>
-      {loading && <Spinner color="#007ad8" />}
+      {loading && <Spinner color="#1fe61f" />}
       <div className={classes.header}>
         <div className={classes.listInfo}>
           <h2>{musicList.name}</h2>

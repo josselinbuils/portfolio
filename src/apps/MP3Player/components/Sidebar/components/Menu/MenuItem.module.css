@@ -1,9 +1,31 @@
 .item {
-  font-size: 1.3em;
   display: block;
-  margin-top: var(--spacing-8);
+  width: 100%;
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-8) var(--spacing-12);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+  text-decoration: none !important;
+  color: var(--mp3-text);
+  background: linear-gradient(
+    180deg,
+    var(--mp3-bg-light) 0%,
+    var(--mp3-bg) 55%,
+    var(--mp3-bg-dark) 100%
+  );
+  box-shadow: var(--mp3-bevel-out);
+
+  &:not(.checked):hover {
+    color: hsl(from var(--mp3-text) h s calc(l + 18));
+  }
 
   &.checked {
-    color: var(--primary-color);
+    color: var(--mp3-accent);
+    background: linear-gradient(180deg, var(--mp3-bg-dark) 0%, #07230d 100%);
+    box-shadow:
+      var(--mp3-bevel-in),
+      inset 0 0 0.7rem hsl(from var(--mp3-accent) h s l / 28%);
+    text-shadow: 0 0 0.5rem var(--mp3-lcd-glow);
   }
 }

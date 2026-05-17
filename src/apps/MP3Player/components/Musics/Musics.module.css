@@ -1,7 +1,6 @@
 .album,
 .artistName {
   font-size: var(--mp3-text-size);
-  color: var(--mp3-text-secondary);
 }
 
 .artistName {
@@ -10,33 +9,52 @@
 
 .header {
   flex: 0 0 auto;
-  padding-right: var(--spacing-8);
+  padding: var(--spacing-12) var(--spacing-12) 0;
+  background: linear-gradient(
+    180deg,
+    var(--mp3-bg-light) 0%,
+    var(--mp3-bg) 60%,
+    var(--mp3-bg-dark) 100%
+  );
+  box-shadow:
+    inset 0.1rem 0.1rem 0 0 var(--mp3-bevel-light),
+    inset -0.1rem 0 0 0 var(--mp3-bevel-dark);
 }
 
 .listInfo {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
 
   h2 {
-    margin: auto 0;
+    margin: 0;
+    font-family: var(--mp3-font-lcd), monospace;
+    font-size: 2.2rem;
+    letter-spacing: 0.25rem;
+    text-transform: uppercase;
+    color: var(--mp3-lcd);
+    text-shadow: 0 0 0.7rem var(--mp3-lcd-glow);
   }
 }
 
 .musicList {
   display: flex;
   flex-direction: column;
-  margin: var(--spacing-8) var(--spacing-12) var(--spacing-12) var(--spacing-12);
+  box-sizing: border-box;
+  background: var(--mp3-lcd-bg);
+  box-shadow: var(--mp3-bevel-in);
+  position: relative;
 
   table {
-    width: calc(100% - 1rem);
+    width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
 
     td {
       position: relative;
       overflow: hidden;
-      height: 4.6rem;
+      height: 4.4rem;
       padding-right: var(--spacing-20);
       user-select: text;
       white-space: nowrap;
@@ -44,19 +62,25 @@
     }
 
     tr {
-      height: 6rem;
-      color: var(--mp3-text);
-      border-bottom: 0.1rem solid hsl(from var(--mp3-bg) h s calc(l + 5));
+      height: 5rem;
+      color: var(--mp3-lcd-dim);
+      border-bottom: 0.1rem solid hsl(from var(--mp3-lcd) h s l / 8%);
 
       .colPreview {
-        width: 3.5rem;
-        padding-left: 0.7rem;
+        width: 4rem;
+        padding-left: 0.8rem;
       }
     }
 
     tbody tr {
       &.active {
-        color: var(--primary-color);
+        color: var(--mp3-lcd);
+        background: hsl(from var(--mp3-lcd) h s l / 9%);
+        text-shadow: 0 0 0.6rem var(--mp3-lcd-glow);
+
+        .musicName::before {
+          content: '\25b6  ';
+        }
 
         .inlineMusicPreview {
           background-color: transparent;
@@ -64,18 +88,18 @@
 
           .previewIcon {
             display: inherit;
+            color: var(--mp3-lcd);
           }
         }
-      }
 
-      &.active:hover .inlineMusicPreview {
-        i:hover:not(:active) {
-          color: hsl(from var(--primary-color) h s calc(l + 10));
+        &:hover .inlineMusicPreview i:hover:not(:active) {
+          color: hsl(from var(--mp3-lcd) h s calc(l + 12));
         }
       }
 
       &:hover {
-        background: hsl(from var(--mp3-bg) h s calc(l + 2));
+        color: hsl(from var(--mp3-lcd) h s calc(l + 6));
+        background: hsl(from var(--mp3-lcd) h s l / 12%);
 
         .inlineMusicPreview {
           background-color: transparent;
@@ -86,26 +110,27 @@
           }
 
           i:active {
-            color: var(--primary-color);
+            color: hsl(from var(--mp3-lcd) h s calc(l - 12));
           }
 
           i:hover:not(:active) {
-            color: hsl(from var(--mp3-text) h s calc(l + 10));
+            color: hsl(from var(--mp3-lcd) h s calc(l + 12));
           }
         }
       }
 
       .inlineMusicPreview {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 3.6rem;
+        height: 3.6rem;
         text-align: center;
         background-repeat: no-repeat;
-        background-size: 3.5rem;
+        background-size: 3.6rem;
 
         .previewIcon {
-          font-size: 3.5rem;
-          line-height: 3.5rem;
+          font-size: 3.6rem;
+          line-height: 3.6rem;
           display: none;
+          color: var(--mp3-lcd-dim);
         }
       }
     }
@@ -120,16 +145,27 @@
   overflow-x: hidden;
   overflow-y: auto;
   flex-grow: 1;
-  scrollbar-color: var(--mp3-secondary) transparent;
+  padding: var(--spacing-8) var(--spacing-12);
+  scrollbar-color: var(--mp3-lcd-dim) transparent;
 }
 
 .select {
-  font-family: var(--font-family), sans-serif;
-  color: var(--mp3-text);
-  border-color: var(--mp3-secondary);
+  font-family: var(--mp3-font-lcd), monospace;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  color: var(--mp3-lcd);
+
+  select {
+    border: none;
+    border-radius: 0;
+    background: var(--mp3-lcd-bg);
+    box-shadow: var(--mp3-bevel-in);
+  }
 
   select:focus {
-    border-color: var(--primary-color);
+    outline: 0.1rem solid hsl(from var(--mp3-accent) h s l / 60%);
+    outline-offset: -0.1rem;
   }
 }
 
@@ -137,7 +173,12 @@
   width: 100%;
 
   th {
-    padding: var(--spacing-4) var(--spacing-20) var(--spacing-12) 0;
+    padding: var(--spacing-4) var(--spacing-20) var(--spacing-8) 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+    letter-spacing: 0.12rem;
     text-align: left;
+    text-transform: uppercase;
+    color: var(--mp3-lcd-dim);
   }
 }

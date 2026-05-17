@@ -15,7 +15,7 @@ export async function getTracks(req: Request): Promise<Music[]> {
   const jamendoParameters: JamendoTrackParameters = {
     client_id: config.jamendo.clientId,
     format: 'json',
-    imagesize: 65,
+    imagesize: 130,
     limit: '50',
   };
 

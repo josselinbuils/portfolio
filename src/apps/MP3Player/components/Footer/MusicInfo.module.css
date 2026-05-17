@@ -1,23 +1,53 @@
 .musicInfo {
-  line-height: 2rem;
-  display: flex;
   overflow: hidden;
-  flex: 0 0 20ch;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: 6.2rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 2.4rem;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 1.2rem,
+    #000 calc(100% - 1.2rem),
+    transparent 100%
+  );
+}
 
-  .artist {
-    font-size: 1.2rem;
+.scroll {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: marquee 16s linear infinite;
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding-right: 4rem;
+  font-size: 2.1rem;
+  line-height: 2.4rem;
+  white-space: nowrap;
+  color: var(--mp3-lcd);
+  text-shadow: 0 0 0.7rem var(--mp3-lcd-glow);
+
+  &::after {
+    content: '✱   ✱   ✱';
+    padding-left: 4rem;
+    color: var(--mp3-lcd-dim);
+    text-shadow: none;
+  }
+}
+
+.paused .scroll {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
 
-  .artist,
-  .name {
-    overflow: hidden;
-    user-select: text;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  to {
+    transform: translateX(-50%);
   }
 }

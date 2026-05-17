@@ -1,0 +1,159 @@
+.visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.2rem;
+  height: 2.8rem;
+  padding: 0 0.2rem;
+}
+
+.bar {
+  position: relative;
+  width: 0.4rem;
+  height: 16%;
+  background: linear-gradient(
+    180deg,
+    var(--mp3-viz-high) 0%,
+    var(--mp3-viz-mid) 42%,
+    var(--mp3-viz-low) 100%
+  );
+  opacity: 0.55;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    height: 0.2rem;
+    content: '';
+    background: hsl(from var(--mp3-viz-mid) h s l / 80%);
+    opacity: 0;
+  }
+}
+
+.playing .bar {
+  opacity: 1;
+  animation: bounce-a 0.55s ease-in-out infinite alternate;
+
+  &::after {
+    opacity: 1;
+    animation: peak 1.5s ease-out infinite;
+  }
+}
+
+.playing .bar:nth-child(6n + 2) {
+  animation-name: bounce-b;
+}
+
+.playing .bar:nth-child(6n + 3) {
+  animation-name: bounce-c;
+}
+
+.playing .bar:nth-child(6n + 4) {
+  animation-name: bounce-d;
+}
+
+.playing .bar:nth-child(6n + 5) {
+  animation-name: bounce-e;
+}
+
+.playing .bar:nth-child(6n + 6) {
+  animation-name: bounce-f;
+}
+
+.playing .bar:nth-child(4n + 1) {
+  animation-duration: 0.72s;
+}
+
+.playing .bar:nth-child(4n + 3) {
+  animation-duration: 0.61s;
+}
+
+.playing .bar:nth-child(5n + 2) {
+  animation-duration: 0.85s;
+}
+
+.playing .bar:nth-child(3n + 2) {
+  animation-delay: -0.21s;
+}
+
+.playing .bar:nth-child(3n + 3) {
+  animation-delay: -0.39s;
+}
+
+.playing .bar:nth-child(7n + 4) {
+  animation-delay: -0.55s;
+}
+
+@keyframes bounce-a {
+  0% {
+    height: 8%;
+  }
+
+  100% {
+    height: 66%;
+  }
+}
+
+@keyframes bounce-b {
+  0% {
+    height: 10%;
+  }
+
+  100% {
+    height: 92%;
+  }
+}
+
+@keyframes bounce-c {
+  0% {
+    height: 8%;
+  }
+
+  100% {
+    height: 74%;
+  }
+}
+
+@keyframes bounce-d {
+  0% {
+    height: 12%;
+  }
+
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes bounce-e {
+  0% {
+    height: 8%;
+  }
+
+  100% {
+    height: 58%;
+  }
+}
+
+@keyframes bounce-f {
+  0% {
+    height: 10%;
+  }
+
+  100% {
+    height: 84%;
+  }
+}
+
+@keyframes peak {
+  0% {
+    transform: translateY(-2.2rem);
+  }
+
+  16% {
+    transform: translateY(-2.6rem);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

@@ -1,20 +1,26 @@
 .jamendoLink {
-  font-size: 1.4rem;
+  font-family: var(--mp3-font-lcd), monospace;
+  font-size: 1.6rem;
   display: block;
-  margin-top: var(--spacing-20);
+  margin-top: auto;
+  padding-top: 1.6rem;
+  letter-spacing: 0.1rem;
+  text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
   text-decoration: none;
   outline: none;
 
   &,
   &:active,
-  &:hover,
-  &:focus {
-    color: var(--primary-color);
+  &:focus,
+  &:hover {
+    color: var(--mp3-lcd-dim);
   }
 
-  &:hover,
-  &:focus {
-    text-decoration: underline;
+  &:focus,
+  &:hover {
+    color: var(--mp3-lcd);
+    text-shadow: 0 0 0.7rem var(--mp3-lcd-glow);
   }
 }

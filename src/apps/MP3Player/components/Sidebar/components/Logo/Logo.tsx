@@ -7,6 +7,7 @@ import classes from './Logo.module.css';
 
 export const Logo: FunctionComponent = () => (
   <figure className={classes.logo}>
-    <FontAwesomeIcon icon={faHeadphones} />
+    <FontAwesomeIcon className={classes.icon} icon={faHeadphones} />
+    <figcaption className={classes.wordmark}>MP3 PLAYER</figcaption>
   </figure>
 );

@@ -36,7 +36,7 @@
   &.thd::after {
     backdrop-filter: blur(0.4rem);
     background: var(--dv-accent-soft);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-4);
     border: 0.1rem solid var(--dv-accent-ring);
     bottom: var(--spacing-8);
     color: var(--dv-accent);

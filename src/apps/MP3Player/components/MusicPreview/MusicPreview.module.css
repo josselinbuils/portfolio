@@ -1,14 +1,29 @@
 .defaultPreview {
-  height: 6.25rem;
-  text-align: center;
-  color: #000;
-  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mp3-lcd-dim);
+  background:
+    radial-gradient(
+      120% 120% at 50% 0%,
+      hsl(from var(--mp3-lcd) h s l / 6%) 0%,
+      transparent 60%
+    ),
+    var(--mp3-lcd-bg);
+
+  i {
+    filter: drop-shadow(0 0 0.6rem hsl(from var(--mp3-lcd) h s l / 30%));
+  }
 }
 
 .musicPreview {
-  flex: 0 0 6.25rem;
-  height: 6.25rem;
-  margin-right: 1.5rem;
+  align-self: stretch;
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: 7rem;
+  background-size: cover;
+  box-shadow:
+    var(--mp3-bevel-in),
+    inset 0 0 0 0.1rem var(--mp3-bevel-dark);
 }

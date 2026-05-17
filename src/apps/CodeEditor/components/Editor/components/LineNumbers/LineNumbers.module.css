@@ -8,7 +8,7 @@
   line-height: var(--ce-line-height);
   overflow: hidden;
   box-sizing: border-box;
-  padding: 0.5rem 0.7rem;
+  padding: var(--spacing-4) var(--spacing-8);
   user-select: none;
   text-align: right;
   white-space: pre-wrap;

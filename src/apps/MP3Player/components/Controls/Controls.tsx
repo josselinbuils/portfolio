@@ -1,5 +1,5 @@
-import { faPauseCircle } from '@fortawesome/free-solid-svg-icons/faPauseCircle';
-import { faPlayCircle } from '@fortawesome/free-solid-svg-icons/faPlayCircle';
+import { faPause } from '@fortawesome/free-solid-svg-icons/faPause';
+import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faRandom } from '@fortawesome/free-solid-svg-icons/faRandom';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons/faRedoAlt';
 import { faStepBackward } from '@fortawesome/free-solid-svg-icons/faStepBackward';
@@ -57,7 +57,7 @@ export const Controls: FunctionComponent<ControlsProps> = ({
         disabled={!isThereCurrentMusic}
         onClick={play}
       >
-        <FontAwesomeIcon icon={paused ? faPlayCircle : faPauseCircle} />
+        <FontAwesomeIcon icon={paused ? faPlay : faPause} />
       </Button>
       <Button
         className={classes.nextButton}

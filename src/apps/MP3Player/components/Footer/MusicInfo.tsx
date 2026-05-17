@@ -8,14 +8,42 @@ import classes from './MusicInfo.module.css';
 export type MusicInfoProps = {
   className?: string;
   music: Music | undefined;
+  paused: boolean;
 };
 
 export const MusicInfo: FunctionComponent<MusicInfoProps> = ({
   className,
   music,
-}) => (
-  <div className={cn(classes.musicInfo, className)}>
-    <div className={classes.name}>{music?.name}</div>
-    <div className={classes.artist}>{music?.artistName}</div>
-  </div>
-);
+  paused,
+}) => {
+  const text = music
+    ? `${music.name} — ${music.artistName}`
+    : ' Royalty-free radio · powered by Jamendo';
+
+  return (
+    <div
+      className={cn(classes.musicInfo, className, {
+        [classes.paused]: paused,
+      })}
+    >
+      <div className={classes.scroll}>
+        <span className={classes.segment}>{text}</span>
+        <span aria-hidden="true" className={classes.segment}>
+          {text}
+        </span>
+        <span aria-hidden="true" className={classes.segment}>
+          {text}
+        </span>
+        <span aria-hidden="true" className={classes.segment}>
+          {text}
+        </span>
+        <span aria-hidden="true" className={classes.segment}>
+          {text}
+        </span>
+        <span aria-hidden="true" className={classes.segment}>
+          {text}
+        </span>
+      </div>
+    </div>
+  );
+};

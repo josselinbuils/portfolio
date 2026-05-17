@@ -17,7 +17,7 @@ export const SeekBar: FunctionComponent = () => {
   }
 
   const { setCurrentTime } = audioController;
-  const { currentMusic, currentTime, progress } = audioState;
+  const { currentMusic, progress } = audioState;
 
   function onSeekStart(
     downEvent: PointerEvent,
@@ -37,15 +37,11 @@ export const SeekBar: FunctionComponent = () => {
 
   return (
     <div className={classes.seekBar}>
-      <time className={classes.currentTime}>{currentTime}</time>
       <ProgressBar
         onSeekStart={seekStartHandler}
         progress={progress}
         ref={progressBarRef}
       />
-      <time className={classes.duration}>
-        {currentMusic ? currentMusic.duration : '00:00'}
-      </time>
     </div>
   );
 };

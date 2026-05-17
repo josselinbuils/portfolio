@@ -1,6 +1,14 @@
 .sidebar {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  width: 19rem;
-  padding: 1.5rem;
-  background-color: var(--mp3-bg);
+  width: 18rem;
+  padding: var(--spacing-12);
+  background: linear-gradient(
+    180deg,
+    var(--mp3-bg-light) 0%,
+    var(--mp3-bg) 35%,
+    var(--mp3-bg-dark) 100%
+  );
+  box-shadow: var(--mp3-bevel-out);
 }
