@@ -164,7 +164,7 @@ fn fragment3D(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> 
       let viewDir = normalize(camera.eyePoint - pointLPS);
       let halfDir = normalize(lightDir + viewDir);
 
-      let ambient = 0.85;
+      let ambient = 1.5;
       let diffuse = max(dot(normal, lightDir), 0.0);
       let specular = pow(max(dot(normal, halfDir), 0.0), 32.0);
 
