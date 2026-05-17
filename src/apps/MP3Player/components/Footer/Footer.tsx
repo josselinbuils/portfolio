@@ -25,7 +25,8 @@ export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
     return null;
   }
 
-  const { currentMusic, currentTime, paused, progress } = audioState;
+  const { currentMusic, currentTime, paused, progress, sampleRateHz } =
+    audioState;
   const isPlaying = !paused && currentMusic !== undefined;
 
   return (
@@ -59,9 +60,9 @@ export const Footer: FunctionComponent<FooterProps> = ({ className }) => {
                 [classes.lit]: currentMusic !== undefined,
               })}
             >
-              <b>192</b> kbps
+              <b>{currentMusic?.bitrateKbps ?? '--'}</b> kbps
               <i className={classes.sep} />
-              <b>44</b> kHz
+              <b>{Math.round(sampleRateHz / 1000)}</b> kHz
               <i className={classes.sep} />
               <b>stereo</b>
             </span>

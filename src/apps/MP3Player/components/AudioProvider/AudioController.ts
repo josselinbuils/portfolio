@@ -11,11 +11,13 @@ export type AudioState = {
   progress: number;
   random: boolean;
   repeat: boolean;
+  sampleRateHz: number;
 };
 
 export class AudioController {
   audioStateSubject: Subject<AudioState>;
 
+  private readonly audioContext = new AudioContext();
   private readonly audioElement = new Audio();
   private currentMusic?: Music;
   private currentTime = '00:00';
@@ -40,6 +42,7 @@ export class AudioController {
       this.timeUpdateListener,
     );
     this.audioElement.pause();
+    this.audioContext.close();
   }
 
   next = async (): Promise<void> => {
@@ -149,6 +152,7 @@ export class AudioController {
       progress: this.progress,
       random: this.random,
       repeat: this.repeat,
+      sampleRateHz: this.audioContext.sampleRate,
     };
   }
 
