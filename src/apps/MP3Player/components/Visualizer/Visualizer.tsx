@@ -20,7 +20,7 @@ function computeBarHeights(peaks: number[], progress: number): number[] {
   const currentPeakIndex = Math.ceil((progress / 100) * (peaks.length - 1));
 
   return Array.from({ length: BAR_COUNT }, (_, i) => {
-    const barPeak = peaks[currentPeakIndex - BAR_COUNT + i];
+    const barPeak = peaks[Math.max(currentPeakIndex - BAR_COUNT + i, 0)];
     return MIN_HEIGHT + (barPeak / maxPeak) * (MAX_HEIGHT - MIN_HEIGHT);
   });
 }
